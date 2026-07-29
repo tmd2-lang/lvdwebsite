@@ -56,14 +56,23 @@ export default function Testimonials() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="w-full bg-ecru relative min-h-screen" id="testimonials">
+    <section ref={sectionRef} className="w-full relative min-h-screen bg-ink" id="testimonials">
       
+      {/* Parallax Background Image */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div 
+          className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522748906645-95d8adfa52c1?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center bg-fixed opacity-50"
+        />
+        {/* Dark overlay gradient for text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-ink/90 via-ink/60 to-ink/90" />
+      </div>
+
       {/* PINNED TITLE CONTAINER */}
       <div 
         ref={titleRef} 
         className="absolute top-0 left-0 w-full h-screen flex flex-col items-center justify-center pointer-events-none z-0 px-6"
       >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,theme(colors.ecru)_30%,transparent_70%)] opacity-90" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,theme(colors.ink/40)_20%,transparent_60%)]" />
         
         <div className="relative z-10 font-body text-xs uppercase tracking-[0.2em] text-gold mb-6 text-center flex items-center gap-4">
            <span className="w-8 h-px bg-gold/50"></span>
@@ -71,15 +80,15 @@ export default function Testimonials() {
            <span className="w-8 h-px bg-gold/50"></span>
         </div>
         
-        <h2 className="relative z-10 font-display text-[clamp(2.5rem,5vw,4.5rem)] text-ink text-center leading-[1.1] max-w-2xl mb-8">
+        <h2 className="relative z-10 font-display text-[clamp(2.5rem,5vw,4.5rem)] text-ivory text-center leading-[1.1] max-w-2xl mb-8 drop-shadow-2xl">
           Crafted to Be <br/>Remembered
         </h2>
         
-        <p className="relative z-10 text-ink/70 font-body text-center max-w-md text-sm md:text-base leading-relaxed mb-8">
+        <p className="relative z-10 text-ivory/80 font-body text-center max-w-md text-sm md:text-base leading-relaxed mb-8 drop-shadow-md">
           With years of trusted craftsmanship, clients return to Lady Victoria Designs for events that mark life’s most meaningful moments.
         </p>
 
-        <button className="relative z-10 font-body text-xs uppercase tracking-[0.2em] text-ink border border-ink/20 px-8 py-4 hover:bg-ink/5 transition-colors pointer-events-auto">
+        <button className="relative z-10 font-body text-xs uppercase tracking-[0.2em] text-ivory border border-ivory/30 px-8 py-4 hover:bg-ivory hover:text-ink transition-colors pointer-events-auto backdrop-blur-sm">
           Book Your Consultation
         </button>
       </div>
@@ -94,14 +103,14 @@ export default function Testimonials() {
                 key={idx}
                 className={`w-full flex px-6 md:px-12 ${isLeft ? "justify-start md:pr-[10%]" : "justify-end md:pl-[10%]"}`}
               >
-                {/* Re-added the stunning frosted glass cards */}
-                <div className="flex flex-col items-center text-center max-w-[40ch] p-8 md:p-12 backdrop-blur-md bg-ivory/60 border border-ink/5 shadow-2xl rounded-sm hover:scale-[1.02] transition-transform duration-500">
+                {/* Dark Mode Frosted Glass Cards */}
+                <div className="flex flex-col items-center text-center max-w-[40ch] p-8 md:p-12 backdrop-blur-xl bg-ink/40 border border-ivory/10 shadow-2xl rounded-sm hover:scale-[1.02] transition-transform duration-500">
                   <div className="flex gap-1 mb-6">
                     {[1,2,3,4,5].map(star => (
-                       <span key={star} className="text-gold text-sm md:text-base">★</span>
+                       <span key={star} className="text-gold text-sm md:text-base drop-shadow-lg">★</span>
                     ))}
                   </div>
-                  <p className="font-display italic text-xl md:text-2xl leading-[1.4] text-ink mb-6">
+                  <p className="font-display italic text-xl md:text-2xl leading-[1.4] text-ivory mb-6 drop-shadow-md">
                     "{t.quote}"
                   </p>
                   <div className="font-body text-[10px] md:text-xs uppercase tracking-[0.2em] text-gold font-bold">

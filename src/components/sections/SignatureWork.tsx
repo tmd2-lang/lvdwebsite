@@ -9,10 +9,10 @@ export default function SignatureWork() {
   const trackRef = useRef<HTMLDivElement>(null);
 
   const images = [
-    { id: 1, src: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&q=80&w=1600", title: "Meridian House, DC", desc: "250 Guests" },
-    { id: 2, src: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=1600", title: "The Anderson House", desc: "150 Guests" },
-    { id: 3, src: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=1600", title: "National Museum", desc: "300 Guests" },
-    { id: 4, src: "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80&w=1600", title: "Private Estate", desc: "100 Guests" },
+    { id: 1, src: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&q=80&w=1600", title: "Meridian House, DC" },
+    { id: 2, src: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=1600", title: "The Anderson House" },
+    { id: 3, src: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=1600", title: "National Museum" },
+    { id: 4, src: "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80&w=1600", title: "Private Estate" },
   ];
 
   useEffect(() => {
@@ -69,15 +69,18 @@ export default function SignatureWork() {
   }, []);
 
   return (
-    <section ref={containerRef} className="w-full h-screen bg-ivory flex flex-col justify-center overflow-hidden relative pt-24 pb-12">
+    <section 
+      ref={containerRef} 
+      className="w-full h-screen bg-ivory flex flex-col justify-center relative pt-32 pb-12 rounded-t-[3rem] md:rounded-t-[5rem] -mt-[15vh] z-20 shadow-[0_-20px_60px_rgba(0,0,0,0.4)]"
+    >
       <div className="w-full px-6 md:px-12 mb-8 md:mb-12 max-w-[1440px] mx-auto">
         <h2 className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-gold mb-4">Portfolio</h2>
         <h3 className="font-display text-5xl md:text-6xl lg:text-7xl text-ink tracking-tight">
-          Signature <span className="italic text-gold">Work</span>
+          Our <span className="italic text-gold">Work</span>
         </h3>
       </div>
       
-      <div ref={trackRef} className="flex gap-12 px-6 md:px-12 w-max h-[50vh] md:h-[65vh] items-center will-change-transform">
+      <div ref={trackRef} className="flex gap-12 px-6 md:px-12 w-max h-[45vh] md:h-[55vh] items-center will-change-transform">
         {images.map((item) => (
           <div key={item.id} className="w-[85vw] md:w-[50vw] lg:w-[40vw] h-full flex flex-col shrink-0">
             <div className="flex-1 bg-ecru border border-ink/10 relative overflow-hidden group cursor-none gallery-img-container">
@@ -90,10 +93,15 @@ export default function SignatureWork() {
             </div>
             <div className="mt-6 flex justify-between font-body text-[10px] md:text-xs uppercase tracking-[0.2em] text-ink/70">
               <span>{item.title}</span>
-              <span>{item.desc}</span>
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="w-full flex justify-center mt-10 md:mt-12 shrink-0">
+        <button className="font-body text-xs md:text-sm uppercase tracking-[0.2em] text-ink border border-ink/20 px-8 py-4 hover:bg-ink hover:text-ivory transition-colors duration-300">
+          View Full Gallery
+        </button>
       </div>
     </section>
   );

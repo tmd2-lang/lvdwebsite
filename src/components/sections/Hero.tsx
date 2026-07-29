@@ -5,8 +5,9 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export default function Hero() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
+  const videoWrapperRef = useRef<HTMLDivElement>(null);
   
   const textTopRef = useRef<HTMLSpanElement>(null);
   const textMidRef = useRef<HTMLSpanElement>(null);
@@ -14,81 +15,69 @@ export default function Hero() {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 12vh", // Pin exactly below the 12vh collapsed header
-          end: "+=100%",
+          trigger: wrapperRef.current,
+          start: "top top",
+          end: `+=${window.innerHeight * 4}`, // Total scroll distance is 400vh
           scrub: 1,
-          pin: true,
+          pin: containerRef.current, // Pin the inner section
+          pinSpacing: false, // The 400vh wrapper provides all the spacing needed
         }
       });
 
-      // The slit is fully closed initially (0%)
-      gsap.set(imageRef.current, {
+      // --- INITIAL STATES ---
+      gsap.set(videoWrapperRef.current, {
         clipPath: "polygon(50% 0%, 50% 0%, 50% 100%, 50% 100%)",
       });
+      gsap.set([textTopRef.current, textMidRef.current, textBotRef.current], {
+        clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)",
+      });
 
-      // Step 1: Doors blow open violently
-      tl.to(imageRef.current, {
-        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-        ease: "power4.inOut",
-      }, 0);
+      // --- TIMELINE (Spans exactly 300vh, leaving the last 100vh for overlap) ---
+      tl.to(textTopRef.current, { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", ease: "none", duration: 1 });
+      tl.to(textMidRef.current, { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", ease: "none", duration: 1 });
+      tl.to(textBotRef.current, { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", ease: "none", duration: 1.5 });
+      tl.to({}, { duration: 0.5 }); // short pause
 
-      // Step 2: The text gets ripped apart horizontally
-      tl.to(textTopRef.current, {
-        x: "-50vw",
-        opacity: 0,
-        ease: "power4.inOut",
-      }, 0);
+      tl.addLabel("shutter");
+      tl.to(videoWrapperRef.current, { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", ease: "power4.inOut", duration: 2 }, "shutter");
+      tl.to(textTopRef.current, { x: "-50vw", opacity: 0, ease: "power4.inOut", duration: 2 }, "shutter");
+      tl.to(textBotRef.current, { x: "50vw", opacity: 0, ease: "power4.inOut", duration: 2 }, "shutter");
+      tl.to(textMidRef.current, { scale: 1.5, opacity: 0, ease: "power4.inOut", duration: 2 }, "shutter");
 
-      tl.to(textBotRef.current, {
-        x: "50vw",
-        opacity: 0,
-        ease: "power4.inOut",
-      }, 0);
+      // Total active duration = 1 + 1 + 1.5 + 0.5 + 2 = 6.0
+      // If 6.0 represents 300vh, then 100vh is 2.0 duration.
+      // We add a 2.0 duration dummy tween so the timeline spans the full 400vh.
+      tl.to({}, { duration: 2 }); 
 
-      tl.to(textMidRef.current, {
-        scale: 1.5,
-        opacity: 0,
-        ease: "power4.inOut",
-      }, 0);
-
-    }, containerRef);
+    }, containerRef); // Scoped to the component
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={containerRef} className="relative h-[88vh] w-full bg-ivory overflow-hidden">
-      {/* Background Image Container (The Transformation) */}
-      <div 
-        ref={imageRef}
-        className="absolute inset-0 z-0 w-full h-full will-change-transform bg-ecru"
-      >
-        <img 
-          src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&q=80&w=2000" 
-          alt="Luxury Ballroom Setup" 
-          className="w-full h-full object-cover scale-[1.05]"
-        />
-        {/* Dark Overlay inside the clipped container to darken the image */}
-        <div className="absolute inset-0 z-10 w-full h-full bg-ink/40" />
-      </div>
+    <div ref={wrapperRef} className="relative w-full h-[400vh] z-0">
+      <section ref={containerRef} className="relative h-screen w-full bg-ivory flex items-center justify-center overflow-hidden z-0">
+        
+        {/* Background Video */}
+        <div ref={videoWrapperRef} className="absolute inset-0 z-10 w-full h-full will-change-transform bg-ink">
+          <video src="/canyouhearthemusic.mp4" autoPlay muted loop playsInline className="w-full h-full object-cover scale-[1.05]" />
+          <div className="absolute inset-0 z-10 w-full h-full bg-ink/30" />
+        </div>
 
-      {/* Foreground Content */}
-      <div 
-        className="absolute inset-0 z-20 w-full h-full flex flex-col justify-center items-center px-6 md:px-12 pointer-events-none mix-blend-difference text-ivory"
-      >
-        <h2 className="font-display text-[7vw] leading-[0.8] flex flex-col items-center justify-center w-full">
-          <span ref={textTopRef} className="block -ml-[25vw] tracking-tighter will-change-transform italic">Your wedding</span>
-          <span ref={textMidRef} className="block text-gold tracking-tight will-change-transform z-10">isn't an event.</span>
-          <span ref={textBotRef} className="block ml-[25vw] tracking-tighter will-change-transform italic">It's a masterpiece.</span>
-        </h2>
-      </div>
-    </section>
+        {/* Foreground Text Layer */}
+        <div className="absolute inset-0 z-20 w-full h-full flex flex-col justify-center items-center px-6 md:px-12 pointer-events-none mix-blend-difference">
+          <h2 className="font-display text-[clamp(2.5rem,7vw,8rem)] leading-[0.8] flex flex-col items-center justify-center w-full text-ivory">
+            <span ref={textTopRef} className="block -ml-[25vw] tracking-tighter will-change-transform italic whitespace-nowrap pb-2">Your wedding</span>
+            <span ref={textMidRef} className="block tracking-tight will-change-transform whitespace-nowrap z-10 pb-2">isn't an event.</span>
+            <span ref={textBotRef} className="block ml-[25vw] tracking-tighter will-change-transform italic whitespace-nowrap pb-2">It's a masterpiece.</span>
+          </h2>
+        </div>
+      </section>
+    </div>
   );
 }

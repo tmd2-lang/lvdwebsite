@@ -29,6 +29,8 @@ export default function CollapsingHero() {
           start: "top top",
           end: `+=${window.innerHeight * (shrinkAmountVH / 100)}`,
           scrub: true,
+          pin: curtainRef.current,
+          pinSpacing: false,
         }
       });
 
@@ -99,18 +101,11 @@ export default function CollapsingHero() {
 
   return (
     <>
-      {/* The Fixed Curtain */}
+      {/* The Animated Curtain */}
       <div 
         ref={curtainRef} 
-        className="fixed top-0 left-0 w-full h-[45vh] bg-ivory z-30 flex flex-col items-center justify-center overflow-hidden border-b border-ink/10 will-change-[height]"
+        className="absolute top-0 left-0 w-full h-[45vh] bg-ivory z-30 flex flex-col items-center justify-center overflow-hidden border-b border-ink/10 will-change-[height]"
       >
-        {/* Top Navbar items */}
-        <div className="absolute top-6 left-6 md:left-12 flex gap-8 font-body text-[10px] md:text-xs uppercase tracking-[0.2em] text-ink z-50">
-           <Magnetic><button className="hover:text-gold transition-colors">Menu</button></Magnetic>
-        </div>
-        <div className="absolute top-6 right-6 md:right-12 flex gap-8 font-body text-[10px] md:text-xs uppercase tracking-[0.2em] text-ink z-50">
-           <Magnetic><button className="hover:text-gold transition-colors border-b border-transparent hover:border-gold">Inquire</button></Magnetic>
-        </div>
         
         {/* The persistent header utility text anchored to the bottom */}
         <div ref={utilityTextRef} className="w-full h-full absolute inset-0 pointer-events-none">
