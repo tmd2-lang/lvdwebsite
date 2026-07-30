@@ -65,7 +65,7 @@ export default function Hero() {
         
         {/* Background Video */}
         <div ref={videoWrapperRef} className="absolute inset-0 z-10 w-full h-full will-change-transform bg-ink">
-          <video src="/canyouhearthemusic.mp4" autoPlay muted loop playsInline className="w-full h-full object-cover scale-[1.05]" />
+          <video src="/0720_2.mp4" autoPlay muted loop playsInline className="w-full h-full object-cover scale-[1.05]" />
           <div className="absolute inset-0 z-10 w-full h-full bg-ink/30" />
         </div>
 
