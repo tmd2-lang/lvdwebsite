@@ -9,10 +9,11 @@ export default function SignatureWork() {
   const trackRef = useRef<HTMLDivElement>(null);
 
   const images = [
-    { id: 1, src: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&q=80&w=1600", title: "Meridian House, DC" },
-    { id: 2, src: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=1600", title: "The Anderson House" },
-    { id: 3, src: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=1600", title: "National Museum" },
-    { id: 4, src: "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80&w=1600", title: "Private Estate" },
+    { id: 1, src: "/gallery/Amber & Kendall Wedding/Amber&KendallTableShot.jpeg", title: "Meridian House, DC" },
+    { id: 2, src: "/gallery/Jenny & Jordan Wedding/Jenny&JordanCoupleShot1.jpeg", title: "The Anderson House" },
+    { id: 3, src: "/gallery/Amber & Kendall Wedding/Amber&KendallFlowerShot2.jpeg", title: "National Museum" },
+    { id: 4, src: "/gallery/Jenny & Jordan Wedding/Jenny&JordanStageShot.jpeg", title: "Private Estate" },
+    { id: 5, src: "/gallery/LVD Floral Images/LVDFloralCouple.jpeg", title: "Floral Design" },
   ];
 
   useEffect(() => {

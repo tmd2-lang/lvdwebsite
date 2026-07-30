@@ -6,7 +6,7 @@ export default function Contact() {
     <section className="relative w-full min-h-screen flex items-center justify-center bg-ink" id="contact">
       {/* Full Bleed Background Image */}
       <img
-        src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=2560"
+        src="/gallery/LVD Floral Images/LVDFloralBride2.jpeg"
         alt="Wedding Details"
         className="absolute inset-0 w-full h-full object-cover opacity-60"
       />

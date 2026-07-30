@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import MasonryGrid from "@/components/sections/MasonryGrid";
+import { galleryImages } from "@/lib/gallery-data";
 
 export const metadata: Metadata = {
   title: "Gallery | Lady Victoria Designs",
@@ -12,12 +14,11 @@ export default function GalleryPage() {
          THE ARCHIVE
          <span className="w-8 h-px bg-gold/50"></span>
       </div>
-      <h1 className="font-display text-[clamp(3rem,6vw,6rem)] text-ivory mb-8 text-center leading-none">
+      <h1 className="font-display text-[clamp(3rem,6vw,6rem)] text-ivory mb-16 text-center leading-none">
         Full <span className="italic text-gold">Gallery</span>
       </h1>
-      <p className="font-body text-ivory/70 max-w-2xl text-center">
-        This immersive experience is currently being crafted. Check back soon.
-      </p>
+      
+      <MasonryGrid images={galleryImages} />
     </main>
   );
 }

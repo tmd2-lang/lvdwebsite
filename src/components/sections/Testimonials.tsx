@@ -60,8 +60,10 @@ export default function Testimonials() {
       
       {/* Parallax Background Image */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div 
-          className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522748906645-95d8adfa52c1?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center bg-fixed opacity-50"
+        <img 
+          src="/gallery/Jenny & Jordan Wedding/Jenny&JordanTablesOverheadShot.jpeg" 
+          alt="Wedding Ambiance" 
+          className="w-full h-full object-cover opacity-60"
         />
         {/* Dark overlay gradient for text legibility */}
         <div className="absolute inset-0 bg-gradient-to-b from-ink/90 via-ink/60 to-ink/90" />

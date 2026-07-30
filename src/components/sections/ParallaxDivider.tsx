@@ -36,7 +36,7 @@ export default function ParallaxDivider() {
         className="absolute top-[-10%] left-0 w-full h-[120%] will-change-transform"
       >
         <img 
-          src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&q=80&w=2000" 
+          src="/gallery/Amber & Kendall Wedding/Amber&KendallVenueShot.jpeg" 
           alt="Luxury Wedding Design"
           className="w-full h-full object-cover"
         />
