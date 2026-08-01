@@ -108,7 +108,7 @@ export default function Header() {
               <Link 
                 href={link.path}
                 onClick={() => setIsMenuOpen(false)}
-                className="menu-link block font-display text-5xl md:text-7xl lg:text-8xl hover:text-gold hover:italic transition-all duration-300 w-fit"
+                className="menu-link block font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl hover:text-gold hover:italic transition-all duration-300 w-fit"
               >
                 {link.name}
               </Link>

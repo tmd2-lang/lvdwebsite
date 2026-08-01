@@ -45,7 +45,7 @@ export default function MasonryGrid({ images, onImageClick }: MasonryGridProps) 
   return (
     <div 
       ref={containerRef} 
-      className="w-full max-w-[1600px] mx-auto columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 px-6 md:px-12 mt-12 pb-32"
+      className="w-full max-w-[1600px] mx-auto columns-2 lg:columns-3 xl:columns-4 gap-4 md:gap-6 px-4 md:px-12 mt-12 pb-32"
     >
       {images.map((img, index) => (
         <div 

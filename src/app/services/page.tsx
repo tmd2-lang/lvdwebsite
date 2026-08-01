@@ -224,7 +224,7 @@ export default function ServicesPage() {
           const isEven = index % 2 === 0;
           
           return (
-            <div key={service.id} className={`w-full flex flex-col lg:flex-row border-t border-ink/20 ${!isEven ? 'lg:flex-row-reverse' : ''}`}>
+            <div key={service.id} className={`w-full flex flex-col-reverse lg:flex-row border-t border-ink/20 ${!isEven ? 'lg:flex-row-reverse' : ''}`}>
               
               {/* TEXT HALF */}
               <div className={`w-full lg:w-1/3 flex flex-col justify-between p-8 md:p-12 lg:p-16 ${isEven ? 'lg:border-r border-ink/20' : 'lg:border-l border-ink/20'} min-h-[50vh]`}>
@@ -258,8 +258,8 @@ export default function ServicesPage() {
               </div>
 
               {/* IMAGE HALF */}
-              <div className="w-full lg:w-2/3 p-8 md:p-12 lg:p-16">
-                <div className="w-full h-[60vh] lg:h-[80vh] overflow-hidden relative service-image-container">
+              <div className="w-full lg:w-2/3 p-0 md:p-8 lg:p-16">
+                <div className="w-full h-[50vh] md:h-[60vh] lg:h-[80vh] overflow-hidden relative service-image-container">
                   <img 
                     src={service.image} 
                     alt={service.title}
@@ -331,7 +331,7 @@ export default function ServicesPage() {
                   <div className="relative z-10 w-full h-full">
                     
                     {/* Collapsed State Content */}
-                    <div className={`absolute inset-0 flex flex-col items-center justify-end pb-8 md:pb-12 transition-opacity duration-500 delay-100 ${
+                    <div className={`absolute inset-0 flex flex-col items-center justify-end pb-4 md:pb-12 transition-opacity duration-500 delay-100 ${
                       isActive ? "opacity-0 pointer-events-none" : "opacity-100"
                     }`}>
                       {/* Subtle dark gradient scrim for bottom third */}
@@ -340,7 +340,7 @@ export default function ServicesPage() {
                       <h3 className="font-display text-3xl xl:text-4xl text-ivory whitespace-nowrap hidden md:block -rotate-90 origin-center absolute bottom-1/2 translate-y-1/2">
                         {service.title}
                       </h3>
-                      <h3 className="font-display text-3xl text-ivory block md:hidden mb-6 px-6 text-center">
+                      <h3 className="font-display text-2xl md:text-3xl text-ivory block md:hidden mb-1 md:mb-6 px-6 text-center">
                         {service.title}
                       </h3>
                       <div className="font-body text-[7px] uppercase tracking-widest text-ivory hidden md:block mt-auto text-center px-4 w-full">

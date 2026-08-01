@@ -83,7 +83,7 @@ export default function SignatureWork() {
       
       <div ref={trackRef} className="flex gap-12 px-6 md:px-12 w-max h-[45vh] md:h-[55vh] items-center will-change-transform">
         {images.map((item) => (
-          <div key={item.id} className="w-[85vw] md:w-[50vw] lg:w-[40vw] h-full flex flex-col shrink-0">
+          <div key={item.id} className="w-[75vw] sm:w-[85vw] md:w-[50vw] lg:w-[40vw] h-full flex flex-col shrink-0">
             <div className="flex-1 bg-ecru border border-ink/10 relative overflow-hidden group cursor-none gallery-img-container">
               <img 
                 src={item.src} 
