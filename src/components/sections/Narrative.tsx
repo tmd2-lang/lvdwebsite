@@ -22,7 +22,7 @@ export default function Narrative() {
         scrollTrigger: {
           trigger: titleWrapperRef.current,
           start: "top top", // Pin ONLY when it completely covers the viewport!
-          end: () => `+=${window.innerHeight * 1.2}`, // Shorter pin so it releases faster!
+          end: () => `+=${window.innerHeight * 0.6}`, // Drastically shorter pin to reduce empty space
           pin: true,
           pinSpacing: true, // Automatically pushes the paragraphs down!
           scrub: 1, // Add a tiny bit of smoothing to the scrub
@@ -47,15 +47,15 @@ export default function Narrative() {
       if (paragraphs) {
         paragraphs.forEach((p) => {
           gsap.fromTo(p, 
-            { opacity: 0, y: 50 },
+            { opacity: 0, y: 40 },
             {
               opacity: 1,
               y: 0,
-              ease: "none",
+              ease: "power1.out",
               scrollTrigger: {
                 trigger: p,
-                start: "top 90%",
-                end: "top 60%",
+                start: "top 95%",
+                end: "top 55%",
                 scrub: true,
               }
             }
@@ -86,16 +86,16 @@ export default function Narrative() {
 
       {/* 2. The Paragraphs (Normal Document Flow) */}
       {/* Because pinSpacing: true is used above, these automatically wait for the animation to finish before scrolling into view! */}
-      <div ref={copyWrapperRef} className="relative z-10 w-full flex justify-center pt-[10vh] pb-[20vh]">
-        <div className="max-w-[700px] text-center font-body text-base md:text-lg lg:text-xl leading-[1.8] text-ivory/80 flex flex-col gap-[25vh] px-6">
+      <div ref={copyWrapperRef} className="relative z-10 w-full flex justify-center -mt-[15vh] pb-[20vh] px-6 md:px-12">
+        <div className="w-full max-w-4xl mx-auto flex flex-col text-center font-body text-xl md:text-2xl lg:text-[32px] leading-relaxed text-ivory/80 gap-[6vh]">
           <p className="will-change-transform">
-            We are deeply passionate about flowers and their incredible ability to transform any space and evoke powerful emotions. We truly appreciate clients who share our excitement for this beautiful transformation.
+            Flowers change a room before anyone says a word. That's the part we're obsessed with: the moment someone walks in and stops.
           </p>
           <p className="will-change-transform">
-            Event, production, floral design, and rentals… Lady Victoria Designs is much more. We’re a full-service event design and production company giving clarity to the biggest visions, transforming spaces into stunning oases that create unforgettable experiences.
+            Lady Victoria Designs is a full-service event design and production company. Weddings, corporate, private gatherings, and the quiet floral gifts in between. We give shape to visions that are too big to describe.
           </p>
           <p className="will-change-transform">
-            We live and breathe events in every way. From luxury weddings, corporate events, and private gatherings to intimate floral gifting, we build trust through a blend of creativity and technical expertise to bring your ideal event to life.
+            Creativity is the easy part. What earns trust is the technical work behind it: the rigging, the load-in, the timing, the thousand things that have to hold while nobody notices them. Beauty that doesn't survive contact with a real venue isn't design, it's a mood board.
           </p>
         </div>
       </div>

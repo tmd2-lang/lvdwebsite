@@ -12,16 +12,19 @@ export default function ParallaxDivider() {
     
     // Smooth GSAP Parallax Effect
     // As the user scrolls past the container, the image moves at a different speed
-    gsap.to(imageRef.current, {
-      yPercent: 20, 
-      ease: "none",
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true,
+    gsap.fromTo(imageRef.current, 
+      { yPercent: -15 },
+      {
+        yPercent: 15, 
+        ease: "none",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        }
       }
-    });
+    );
   }, []);
 
   return (

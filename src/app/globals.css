@@ -10,6 +10,10 @@
   --font-body: var(--font-inter);
 }
 
+html {
+  scroll-padding-top: 100px;
+}
+
 body {
   background-color: var(--color-ivory);
   color: var(--color-ink);

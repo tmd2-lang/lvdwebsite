@@ -9,33 +9,17 @@ export default function Header() {
   const headerRef = useRef<HTMLElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  // Scroll hiding logic
+  // Scroll styling logic
   useEffect(() => {
-    let lastScroll = 0;
-    const header = headerRef.current;
-    
-    if (!header) return;
-
     const handleScroll = () => {
-      if (isMenuOpen) return; // don't hide header if menu is open
-      
-      const currentScroll = window.scrollY;
-      
-      if (currentScroll > 50 && currentScroll > lastScroll) {
-        // Scrolling down -> hide header
-        gsap.to(header, { yPercent: -100, duration: 0.4, ease: "power2.out" });
-      } else {
-        // Scrolling up -> show header
-        gsap.to(header, { yPercent: 0, duration: 0.4, ease: "power2.out" });
-      }
-      
-      lastScroll = currentScroll;
+      setIsScrolled(window.scrollY > 100);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isMenuOpen]);
+  }, []);
 
   // Super Menu GSAP Animation
   useEffect(() => {
@@ -66,19 +50,30 @@ export default function Header() {
     <>
       <header 
         ref={headerRef} 
-        className="fixed top-0 left-0 w-full z-40 px-6 md:px-12 py-6 flex justify-between items-center mix-blend-difference text-ivory pointer-events-none transition-transform"
+        className={`fixed top-0 left-0 w-full z-40 px-6 md:px-12 py-6 grid grid-cols-2 md:grid-cols-3 items-center mix-blend-difference text-ivory pointer-events-none transition-all duration-300 ${
+          isScrolled && !isMenuOpen ? "bg-ink/80 backdrop-blur-[12px] !mix-blend-normal py-4" : "bg-transparent"
+        }`}
       >
-        <div className="font-display italic text-xl md:text-2xl pointer-events-auto cursor-pointer hover:opacity-70 transition-opacity">
+        <div className="justify-self-start font-display italic text-xl md:text-2xl pointer-events-auto cursor-pointer hover:opacity-70 transition-opacity">
           <Link href="/" onClick={() => setIsMenuOpen(false)}>
             Lady Victoria
           </Link>
         </div>
         
-        <div className="flex gap-8 items-center font-body text-[10px] md:text-xs uppercase tracking-[0.2em] pointer-events-auto">
+        <div className={`justify-self-center hidden md:flex gap-12 font-body text-[10px] uppercase tracking-[0.2em] pointer-events-auto transition-opacity duration-300 ${
+          isMenuOpen ? "opacity-0 invisible" : "opacity-100 visible"
+        }`}>
+          <Link href="/" className="hover:opacity-70 transition-opacity">Home</Link>
+          <Link href="/about" className="hover:opacity-70 transition-opacity">About</Link>
+          <Link href="/services" className="hover:opacity-70 transition-opacity">Services</Link>
+          <Link href="/gallery" className="hover:opacity-70 transition-opacity">Gallery</Link>
+        </div>
+
+        <div className="justify-self-end flex gap-8 items-center font-body text-[10px] md:text-xs uppercase tracking-[0.2em] pointer-events-auto">
           <Magnetic>
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="hover:opacity-70 transition-opacity w-[50px] text-right"
+              className="md:hidden hover:opacity-70 transition-opacity w-[50px] text-right"
             >
               {isMenuOpen ? "Close" : "Menu"}
             </button>

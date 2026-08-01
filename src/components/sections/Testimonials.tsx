@@ -8,32 +8,32 @@ gsap.registerPlugin(ScrollTrigger);
 const testimonials = [
   {
     quote: "Irene and her team completely transformed our venue into a stunning oasis. Her attention to detail and ability to execute our complex vision was beyond anything we could have imagined.",
-    author: "Bride & Groom · Washington D.C.",
+    author: "JANE & JOHN · THE ANDERSON HOUSE",
     align: "left",
   },
   {
-    quote: "I walked in and literally gasped. It was a masterpiece. The floral designs and custom fabrication were nothing short of spectacular. They went above and beyond to deliver a luxury experience.",
-    author: "Mother of the Bride · Meridian House",
+    quote: "I walked in and literally gasped. It was breathtaking. The floral designs and custom fabrication were nothing short of spectacular. They went above and beyond to deliver a luxury experience.",
+    author: "EMILY & MARK · MERIDIAN HOUSE",
     align: "right",
   },
   {
     quote: "Working with Lady Victoria Designs was an absolute dream. Irene's professionalism and kindness put us at ease immediately. She took our loose ideas and turned them into an elegant reality.",
-    author: "Couple · Maryland",
+    author: "SARAH & MICHAEL · PRIVATE ESTATE",
     align: "left",
   },
   {
     quote: "Irene is not just a floral designer, she is a miracle worker. She remained calm and composed despite the pressure, and her dedication to making our vision a reality was incredible.",
-    author: "Bride",
+    author: "CHLOE & DAVID · NATIONAL MUSEUM",
     align: "right",
   },
   {
     quote: "The decor and floral arrangements were absolutely stunning. Irene even volunteered to assist with coordination beyond her core duties to ensure our day was perfect. Highly recommend!",
-    author: "Bride & Groom",
+    author: "AMANDA & JAMES · THE WALDORF",
     align: "left",
   },
   {
     quote: "Lady Victoria Designs exceeded all our expectations. The team was incredibly accommodating and flexible when challenges arose. The final result was elegant and flawless.",
-    author: "Corporate Client",
+    author: "LILY & THOMAS · DISTRICT WINERY",
     align: "right",
   }
 ];
@@ -78,7 +78,7 @@ export default function Testimonials() {
         
         <div className="relative z-10 font-body text-xs uppercase tracking-[0.2em] text-gold mb-6 text-center flex items-center gap-4">
            <span className="w-8 h-px bg-gold/50"></span>
-           TESTIMONY
+           KIND WORDS
            <span className="w-8 h-px bg-gold/50"></span>
         </div>
         

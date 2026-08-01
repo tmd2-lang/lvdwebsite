@@ -1,10 +1,17 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { GalleryImage } from "@/lib/gallery-data";
 
-export default function MasonryGrid({ images }: { images: string[] }) {
+type MasonryGridProps = {
+  images: GalleryImage[];
+  onImageClick: (index: number) => void;
+};
+
+export default function MasonryGrid({ images, onImageClick }: MasonryGridProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -28,9 +35,6 @@ export default function MasonryGrid({ images }: { images: string[] }) {
         ease: "power3.out",
         overwrite: true
       }),
-      // We set the initial state (autoAlpha: 0, y: 50) in CSS or initial GSAP state
-      // But using batch, it's safer to just let CSS handle initial opacity=0, transform=translateY(50px)
-      // and GSAP handles the entrance.
     });
 
     return () => {
@@ -43,15 +47,16 @@ export default function MasonryGrid({ images }: { images: string[] }) {
       ref={containerRef} 
       className="w-full max-w-[1600px] mx-auto columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 px-6 md:px-12 mt-12 pb-32"
     >
-      {images.map((src, index) => (
+      {images.map((img, index) => (
         <div 
           key={index} 
+          onClick={() => onImageClick(index)}
           className="gallery-item break-inside-avoid mb-6 w-full opacity-0 translate-y-12 overflow-hidden rounded-sm relative group cursor-pointer"
         >
-          <img 
-            src={src} 
-            alt={`Lady Victoria Design ${index}`} 
-            loading="lazy"
+          <Image 
+            src={img.src} 
+            alt={img.alt || `Lady Victoria Design ${index}`} 
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
             className="w-full h-auto object-cover transform transition-transform duration-[1.5s] ease-out group-hover:scale-110"
           />
           {/* Subtle overlay on hover for that ultra-premium feel */}

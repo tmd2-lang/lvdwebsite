@@ -75,7 +75,7 @@ export default function SignatureWork() {
       className="w-full h-screen bg-ivory flex flex-col justify-center relative pt-32 pb-12 rounded-t-[3rem] md:rounded-t-[5rem] -mt-[15vh] z-20 shadow-[0_-20px_60px_rgba(0,0,0,0.4)]"
     >
       <div className="w-full px-6 md:px-12 mb-8 md:mb-12 max-w-[1440px] mx-auto">
-        <h2 className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-gold mb-4">Portfolio</h2>
+        <h2 className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-gold mb-4">GALLERY / Our Work</h2>
         <h3 className="font-display text-5xl md:text-6xl lg:text-7xl text-ink tracking-tight">
           Our <span className="italic text-gold">Work</span>
         </h3>
@@ -91,9 +91,6 @@ export default function SignatureWork() {
                 alt={item.title} 
                 onLoad={() => ScrollTrigger.refresh()}
               />
-            </div>
-            <div className="mt-6 flex justify-between font-body text-[10px] md:text-xs uppercase tracking-[0.2em] text-ink/70">
-              <span>{item.title}</span>
             </div>
           </div>
         ))}

@@ -12,18 +12,21 @@ export default function Footer() {
         <div className="flex flex-col gap-6 lg:pr-12">
           <div className="font-display text-4xl text-gold italic">LV</div>
           <p className="font-body text-xs md:text-sm text-ivory/70 leading-relaxed">
-            Curating breathtaking floral masterpieces and unforgettable luxury events across the East Coast. Your vision, meticulously crafted.
+            Curating breathtaking floral design and unforgettable luxury events. Your vision, meticulously crafted.
+          </p>
+          <p className="font-body text-[10px] uppercase tracking-[0.1em] text-ivory/50">
+            Serving Washington D.C., Maryland, Virginia, Delaware, Pennsylvania, and New Jersey.
           </p>
         </div>
 
         {/* Navigation */}
         <div className="flex flex-col gap-4">
           <h4 className="font-body text-[9px] uppercase tracking-[0.3em] text-gold font-bold mb-2">Explore</h4>
-          <a href="#" className="font-body text-sm hover:text-gold transition-colors w-fit">Home</a>
-          <a href="#" className="font-body text-sm hover:text-gold transition-colors w-fit">About Irene</a>
-          <a href="#" className="font-body text-sm hover:text-gold transition-colors w-fit">Signature Work</a>
-          <a href="#" className="font-body text-sm hover:text-gold transition-colors w-fit">Services</a>
-          <a href="#" className="font-body text-sm hover:text-gold transition-colors w-fit">Inquire</a>
+          <a href="/" className="font-body text-sm hover:text-gold transition-colors w-fit">Home</a>
+          <a href="/about" className="font-body text-sm hover:text-gold transition-colors w-fit">About</a>
+          <a href="/services" className="font-body text-sm hover:text-gold transition-colors w-fit">Services</a>
+          <a href="/gallery" className="font-body text-sm hover:text-gold transition-colors w-fit">Gallery</a>
+          <a href="/inquire" className="font-body text-sm hover:text-gold transition-colors w-fit">Inquire</a>
         </div>
 
         {/* Socials */}

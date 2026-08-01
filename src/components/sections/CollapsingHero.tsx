@@ -6,53 +6,15 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Magnetic from "@/components/Magnetic";
 
 export default function CollapsingHero() {
-  const curtainRef = useRef<HTMLDivElement>(null);
-  const logoRef = useRef<HTMLHeadingElement>(null);
-  const spacerRef = useRef<HTMLDivElement>(null);
-  const utilityTextRef = useRef<HTMLDivElement>(null);
+
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    // Mathematical translation:
-    // Top block shrinks from 45vh to 12vh over exactly 33vh of scroll distance.
-    const shrinkAmountVH = 33; 
-
+    // Removed unused GSAP variables
     const ctx = gsap.context(() => {
-      // 1. Shrink the curtain precisely 1:1 with scroll
-      gsap.to(curtainRef.current, {
-        height: "12vh",
-        ease: "none",
-        scrollTrigger: {
-          trigger: spacerRef.current,
-          start: "top top",
-          end: `+=${window.innerHeight * (shrinkAmountVH / 100)}`,
-          scrub: true,
-          pin: curtainRef.current,
-          pinSpacing: false,
-        }
-      });
-
-      // 2. Logo stays permanently in the header (no animation needed)
-      // Flexbox automatically keeps it vertically centered as the container shrinks.
-
-      // 3. Fade out utility text to prevent overlap on short screens
-      // We fade this out very quickly (over the first 10vh of scroll) so it's gone before the container gets too small.
-      gsap.fromTo(utilityTextRef.current, 
-        { opacity: 1 },
-        {
-          opacity: 0,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: spacerRef.current,
-            start: "top top",
-            end: `+=${window.innerHeight * 0.1}`,
-            scrub: true,
-          }
-        }
-      );
-      
+      // We only need the slideshow context now, since we removed the pinning logic
     });
 
     // Slideshow Animation Context
@@ -100,15 +62,15 @@ export default function CollapsingHero() {
   ];
 
   return (
-    <>
-      {/* The Animated Curtain */}
-      <div 
-        ref={curtainRef} 
-        className="absolute top-0 left-0 w-full h-[45vh] bg-ivory z-30 flex flex-col items-center justify-center overflow-hidden border-b border-ink/10 will-change-[height]"
-      >
+    <div className="w-full flex flex-col relative">
+      {/* The Static Logo Header */}
+      <div className="w-full h-[45vh] bg-ivory z-30 flex flex-col items-center justify-center relative border-b border-ink/10">
+        <h1 className="font-display text-[7.5vw] leading-none text-ink tracking-tighter flex items-center">
+          LADY <span className="italic ml-[1.5vw] mr-[1.5vw] font-normal tracking-normal text-[7.5vw]">Victoria</span> DESIGNS
+        </h1>
         
-        {/* The persistent header utility text anchored to the bottom */}
-        <div ref={utilityTextRef} className="w-full h-full absolute inset-0 pointer-events-none">
+        {/* Utility text anchored to bottom */}
+        <div className="w-full h-full absolute inset-0 pointer-events-none">
           <div className="absolute bottom-6 left-6 md:left-12 font-body text-[10px] md:text-[11px] uppercase tracking-[0.2em] text-ink max-w-[20ch]">
             Luxury Wedding Design
           </div>
@@ -118,13 +80,6 @@ export default function CollapsingHero() {
         </div>
       </div>
 
-      {/* The Spacer to allow native scrolling without jitter (and hold the Logo) */}
-      <div ref={spacerRef} className="w-full h-[45vh] relative z-40 flex flex-col items-center justify-center pointer-events-none">
-        <h1 ref={logoRef} className="font-display text-[7.5vw] leading-none text-ink tracking-tighter flex items-center pointer-events-auto">
-          LADY <span className="italic ml-[1.5vw] mr-[1.5vw] font-normal tracking-normal text-[7.5vw]">Victoria</span> DESIGNS
-        </h1>
-      </div>
-
       {/* The Hero Imagery (Slideshow) */}
       <section className="relative w-full h-[88vh] bg-ecru z-10 overflow-hidden">
         {heroImages.map((src, i) => (
@@ -132,11 +87,11 @@ export default function CollapsingHero() {
             <img 
               src={src} 
               alt={`Lady Victoria Hero ${i}`} 
-              className="w-full h-full object-cover scale-[1.05]"
+              className="w-full h-full object-cover scale-[1.15]"
             />
           </div>
         ))}
       </section>
-    </>
+    </div>
   );
 }

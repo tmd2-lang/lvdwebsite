@@ -28,6 +28,7 @@ export default function Services() {
   return (
     <section className="w-full bg-ivory py-32 md:py-48 px-6 md:px-12" id="services">
       <div className="max-w-[1440px] mx-auto flex flex-col">
+        <div className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-gold mb-4 text-center">INVESTMENTS</div>
         <h2 className="font-display text-[clamp(2.5rem,5vw,5rem)] text-ink mb-16 text-center">Investments</h2>
         
         <div className="flex flex-col md:flex-row w-full h-[70vh] gap-4 md:gap-4">
@@ -59,19 +60,26 @@ export default function Services() {
                 {/* Content Wrapper */}
                 <div className="relative z-10 w-full h-full">
                   
-                  {/* Vertical Title (when collapsed) */}
-                  <div className={`absolute inset-0 flex items-end justify-center pb-12 transition-opacity duration-500 delay-100 ${
-                    isActive ? "opacity-0 pointer-events-none" : "opacity-100"
-                  }`}>
-                    {/* Desktop: Rotated vertical text */}
-                    <h3 className="font-display text-3xl xl:text-4xl text-ivory whitespace-nowrap hidden md:block -rotate-90 origin-center absolute bottom-1/2 translate-y-1/2">
-                      {service.title}
-                    </h3>
-                    {/* Mobile: Standard horizontal text */}
-                    <h3 className="font-display text-3xl text-ivory block md:hidden mb-6 px-6 text-center">
-                      {service.title}
-                    </h3>
-                  </div>
+                    {/* Collapsed State Content */}
+                    <div className={`absolute inset-0 flex flex-col items-center justify-end pb-8 md:pb-12 transition-opacity duration-500 delay-100 ${
+                      isActive ? "opacity-0 pointer-events-none" : "opacity-100"
+                    }`}>
+                      {/* Subtle dark gradient scrim for bottom third */}
+                      <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-ink/90 to-transparent pointer-events-none -z-10" />
+                      
+                      {/* Desktop: Rotated vertical text */}
+                      <h3 className="font-display text-3xl xl:text-4xl text-ivory whitespace-nowrap hidden md:block -rotate-90 origin-center absolute bottom-1/2 translate-y-1/2">
+                        {service.title}
+                      </h3>
+                      {/* Mobile: Standard horizontal text */}
+                      <h3 className="font-display text-3xl text-ivory block md:hidden mb-6 px-6 text-center">
+                        {service.title}
+                      </h3>
+                      {/* Horizontal Price at bottom */}
+                      <div className="font-body text-[7px] uppercase tracking-widest text-ivory hidden md:block mt-auto text-center px-4 w-full">
+                        {service.price}
+                      </div>
+                    </div>
 
                   {/* Expanded Content */}
                   <div className={`absolute inset-0 p-6 md:p-12 flex flex-col justify-end transition-all duration-700 ease-out ${
