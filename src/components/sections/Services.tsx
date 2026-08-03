@@ -1,24 +1,25 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 
 const services = [
   {
     title: "The Full Production",
     desc: "Comprehensive design, custom fabrication, and white-glove execution.",
     price: "Beginning at $55,000",
-    image: "/hero/6203022671217922801_edited.jpg"
+    image: "/gallery/purple-grandeur/purple-grandeur-01.jpg"
   },
   {
     title: "Design + Florals",
     desc: "Bespoke floral styling and foundational aesthetic direction.",
     price: "Beginning at $20,000",
-    image: "/hero/3042192127745071772.JPG"
+    image: "/gallery/white-green-botanicals/white-green-botanicals-01.jpeg"
   },
   {
     title: "The Essentials",
     desc: "Our signature floral collections for intimate gatherings.",
     price: "Beginning at $8,000",
-    image: "/hero/TFR54012_websize.jpg"
+    image: "/gallery/two-tone-luxe/two-tone-luxe-01.jpeg"
   }
 ];
 
@@ -39,17 +40,21 @@ export default function Services() {
             const isActive = activeIndex === idx;
             
             return (
-              <div 
+              <button
+                type="button"
                 key={idx}
                 onClick={() => setActiveIndex(idx)}
                 onMouseEnter={() => setActiveIndex(idx)}
+                aria-pressed={isActive}
                 className={`relative flex flex-col justify-end overflow-hidden group cursor-pointer transition-[flex-grow,width] duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] rounded-sm ${
                   isActive ? "flex-[3_3_0%] md:w-[60%]" : "flex-[1_1_0%] md:w-[20%]"
                 }`}
               >
                 {/* Background Image */}
-                <img 
+                <Image
                   src={service.image} 
+                  fill
+                  sizes={isActive ? "(max-width: 767px) 100vw, 60vw" : "(max-width: 767px) 100vw, 20vw"}
                   className={`absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out ${
                     isActive ? "scale-100" : "scale-110"
                   }`}
@@ -103,7 +108,7 @@ export default function Services() {
                   </div>
 
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>

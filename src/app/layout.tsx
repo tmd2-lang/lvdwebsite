@@ -20,8 +20,41 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Lady Victoria Designs | Luxury Wedding Design",
-  description: "Your wedding isn't an event. It's a masterpiece.",
+  metadataBase: new URL("https://www.ladyvictoriadesigns.com"),
+  title: {
+    default: "Lady Victoria Designs | Luxury Wedding & Event Design",
+    template: "%s | Lady Victoria Designs",
+  },
+  description:
+    "Full-service luxury wedding design, floral artistry, décor, and event production in Washington, DC and beyond.",
+  applicationName: "Lady Victoria Designs",
+  creator: "Lady Victoria Designs",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName: "Lady Victoria Designs",
+    title: "Lady Victoria Designs | Luxury Wedding & Event Design",
+    description:
+      "Full-service luxury wedding design, floral artistry, décor, and event production in Washington, DC and beyond.",
+    images: [
+      {
+        url: "/gallery/amber-kendall/amber-kendall-23.jpeg",
+        width: 1348,
+        height: 898,
+        alt: "A luxury wedding reception designed by Lady Victoria Designs",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Lady Victoria Designs | Luxury Wedding & Event Design",
+    description:
+      "Full-service luxury wedding design, floral artistry, décor, and event production in Washington, DC and beyond.",
+    images: ["/gallery/amber-kendall/amber-kendall-23.jpeg"],
+  },
 };
 
 export default function RootLayout({

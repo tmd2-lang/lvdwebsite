@@ -265,7 +265,7 @@ export default function QuizClient() {
               </div>
 
               <p className="font-body text-base md:text-xl text-ink/80 max-w-xl mx-auto mb-10 leading-relaxed">
-                "{currentResult.message}"
+                “{currentResult.message}”
               </p>
 
               <div className="w-full h-px bg-ink/10 mb-8 max-w-md mx-auto"></div>
@@ -326,7 +326,7 @@ export default function QuizClient() {
                   NEXT STEPS
                 </div>
                 <h3 className="font-display text-3xl md:text-4xl text-ink text-center mb-2">
-                  Let's Discuss Your Vision
+                  Let’s Discuss Your Vision
                 </h3>
                 <p className="font-body text-ink/70 text-center mb-8 text-xs md:text-sm">
                   Share your details below and Irene will reach out to schedule your consultation.

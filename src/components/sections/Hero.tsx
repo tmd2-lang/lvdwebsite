@@ -65,7 +65,17 @@ export default function Hero() {
         
         {/* Background Video */}
         <div ref={videoWrapperRef} className="absolute inset-0 z-10 w-full h-full will-change-transform bg-ink">
-          <video src="/0720_2.mp4" autoPlay muted loop playsInline className="w-full h-full object-cover scale-[1.05]" />
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster="/gallery/white-green-botanicals/white-green-botanicals-04.jpeg"
+            aria-hidden="true"
+            className="w-full h-full object-cover scale-[1.05]"
+          >
+            <source src="/lvd-hero-web.m4v" type="video/mp4" />
+          </video>
           <div className="absolute inset-0 z-10 w-full h-full bg-ink/30" />
         </div>
 
@@ -73,8 +83,8 @@ export default function Hero() {
         <div className="absolute inset-0 z-20 w-full h-full flex flex-col justify-center items-center px-4 md:px-12 pointer-events-none mix-blend-difference">
           <h2 className="font-display text-[clamp(2rem,6vw,8rem)] leading-[1.0] md:leading-[0.85] flex flex-col items-center justify-center w-full text-ivory text-center">
             <span ref={textTopRef} className="block md:-ml-[20vw] tracking-tighter will-change-transform italic pb-1 md:pb-2">Your wedding</span>
-            <span ref={textMidRef} className="block tracking-tight will-change-transform z-10 pb-1 md:pb-2">isn't an event.</span>
-            <span ref={textBotRef} className="block md:ml-[20vw] tracking-tighter will-change-transform italic pb-1 md:pb-2">It's a masterpiece.</span>
+            <span ref={textMidRef} className="block tracking-tight will-change-transform z-10 pb-1 md:pb-2">isn’t an event.</span>
+            <span ref={textBotRef} className="block md:ml-[20vw] tracking-tighter will-change-transform italic pb-1 md:pb-2">It’s a masterpiece.</span>
           </h2>
         </div>
       </section>

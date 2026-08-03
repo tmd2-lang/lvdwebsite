@@ -5,17 +5,19 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import Link from "next/link";
+import Image from "next/image";
 
 export default function SignatureWork() {
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
   const images = [
-    { id: 1, src: "/gallery/Amber & Kendall Wedding/Amber&KendallTableShot.jpeg", title: "Meridian House, DC" },
-    { id: 2, src: "/gallery/Jenny & Jordan Wedding/Jenny&JordanCoupleShot1.jpeg", title: "The Anderson House" },
-    { id: 3, src: "/gallery/Amber & Kendall Wedding/Amber&KendallFlowerShot2.jpeg", title: "National Museum" },
-    { id: 4, src: "/gallery/Jenny & Jordan Wedding/Jenny&JordanStageShot.jpeg", title: "Private Estate" },
-    { id: 5, src: "/gallery/LVD Floral Images/LVDFloralCouple.jpeg", title: "Floral Design" },
+    { id: 1, src: "/gallery/white-green-botanicals/white-green-botanicals-01.jpeg", title: "Meridian House, DC" },
+    { id: 2, src: "/gallery/purple-grandeur/purple-grandeur-01.jpg", title: "The Anderson House" },
+    { id: 3, src: "/gallery/amber-kendall/amber-kendall-22.jpeg", title: "National Museum Reception" },
+    { id: 4, src: "/gallery/two-tone-luxe/two-tone-luxe-01.jpeg", title: "Private Country Estate" },
+    { id: 5, src: "/gallery/jenny-jordan/jenny-jordan-19.jpeg", title: "Bespoke Floral Design" },
+    { id: 6, src: "/gallery/r-and-j/r-and-j-01.jpeg", title: "Grand Architectural Arch" },
   ];
 
   useEffect(() => {
@@ -53,12 +55,13 @@ export default function SignatureWork() {
 
       // Parallax effect on images
       const imgElements = gsap.utils.toArray(".gallery-img");
-      imgElements.forEach((img: any) => {
-        gsap.to(img, {
+      imgElements.forEach((img) => {
+        const image = img as HTMLElement;
+        gsap.to(image, {
             scale: 1,
             ease: "none",
             scrollTrigger: {
-              trigger: img.parentElement,
+              trigger: image.parentElement,
               containerAnimation: tl,
               start: "left right",
               end: "right left",
@@ -88,8 +91,10 @@ export default function SignatureWork() {
         {images.map((item) => (
           <div key={item.id} className="w-[75vw] sm:w-[85vw] md:w-[50vw] lg:w-[40vw] h-full flex flex-col shrink-0">
             <div className="flex-1 bg-ecru border border-ink/10 relative overflow-hidden group cursor-none gallery-img-container">
-              <img 
+              <Image
                 src={item.src} 
+                fill
+                sizes="(max-width: 767px) 75vw, (max-width: 1023px) 50vw, 40vw"
                 className="gallery-img absolute inset-0 w-full h-full object-cover scale-[1.15] transition-opacity duration-700 hover:opacity-90" 
                 alt={item.title} 
                 loading="lazy"

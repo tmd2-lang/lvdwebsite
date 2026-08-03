@@ -1,5 +1,4 @@
-"use client";
-import React from "react";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -22,11 +21,11 @@ export default function Footer() {
         {/* Navigation */}
         <div className="flex flex-col gap-4">
           <h4 className="font-body text-[9px] uppercase tracking-[0.3em] text-gold font-bold mb-2">Explore</h4>
-          <a href="/" className="font-body text-sm hover:text-gold transition-colors w-fit">Home</a>
-          <a href="/about" className="font-body text-sm hover:text-gold transition-colors w-fit">About</a>
-          <a href="/services" className="font-body text-sm hover:text-gold transition-colors w-fit">Services</a>
-          <a href="/gallery" className="font-body text-sm hover:text-gold transition-colors w-fit">Gallery</a>
-          <a href="/inquire" className="font-body text-sm hover:text-gold transition-colors w-fit">Inquire</a>
+          <Link href="/" className="font-body text-sm hover:text-gold transition-colors w-fit">Home</Link>
+          <Link href="/about" className="font-body text-sm hover:text-gold transition-colors w-fit">About</Link>
+          <Link href="/services" className="font-body text-sm hover:text-gold transition-colors w-fit">Services</Link>
+          <Link href="/gallery" className="font-body text-sm hover:text-gold transition-colors w-fit">Gallery</Link>
+          <Link href="/inquire" className="font-body text-sm hover:text-gold transition-colors w-fit">Inquire</Link>
         </div>
 
         {/* Socials & Directories */}
@@ -40,39 +39,32 @@ export default function Footer() {
           <a href="https://www.weddingwire.com/biz/lady-victoria-design-brandywine/f0e91afe3a54e207.html" target="_blank" rel="noopener noreferrer" className="font-body text-sm hover:text-gold transition-colors w-fit">WeddingWire</a>
         </div>
 
-        {/* Newsletter */}
+        {/* Direct Contact */}
         <div className="flex flex-col gap-4">
-          <h4 className="font-body text-[9px] uppercase tracking-[0.3em] text-gold font-bold mb-2">The Inner Circle</h4>
+          <h4 className="font-body text-[9px] uppercase tracking-[0.3em] text-gold font-bold mb-2">Contact</h4>
           <p className="font-body text-xs text-ivory/70 mb-2 leading-relaxed">
-            Subscribe to receive occasional floral inspiration and updates from our atelier.
+            Planning a celebration? Reach the studio directly or begin with our guided inquiry.
           </p>
-          <form className="flex border-b border-ivory/20 pb-2 hover:border-gold transition-colors group" onSubmit={e => e.preventDefault()}>
-            <input 
-              type="email" 
-              placeholder="Email address..." 
-              className="bg-transparent font-body text-sm text-ivory placeholder:text-ivory/30 outline-none w-full"
-            />
-            <button type="submit" className="text-gold font-body text-xs uppercase tracking-wider group-hover:text-ivory transition-colors">
-              Join
-            </button>
-          </form>
+          <a href="mailto:hello@ladyvictoriadesigns.com" className="font-body text-sm text-ivory hover:text-gold transition-colors w-fit">
+            hello@ladyvictoriadesigns.com
+          </a>
+          <Link href="/inquire" className="font-body text-[10px] uppercase tracking-[0.2em] text-gold hover:text-ivory transition-colors w-fit">
+            Begin Your Inquiry →
+          </Link>
         </div>
       </div>
 
       {/* Massive Typography */}
       <div className="w-full flex items-center justify-center border-t border-ivory/10 pt-12 md:pt-20 mb-12 md:mb-16">
-        <h1 className="font-display text-[clamp(2.5rem,8vw,8.5rem)] leading-[0.85] text-ivory tracking-tighter text-center uppercase">
+        <h2 className="font-display text-[clamp(2.5rem,8vw,8.5rem)] leading-[0.85] text-ivory tracking-tighter text-center uppercase">
           Lady Victoria <span className="italic text-gold lowercase font-normal">Designs</span>
-        </h1>
+        </h2>
       </div>
 
       {/* Bottom Bar */}
       <div className="w-full max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-[9px] font-body text-ivory/40 uppercase tracking-[0.2em] text-center md:text-left">
         <p>© 2026 Lady Victoria Designs</p>
-        <div className="flex gap-8">
-          <a href="#" className="hover:text-ivory transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-ivory transition-colors">Terms of Service</a>
-        </div>
+        <p>Washington, DC & Beyond</p>
         <p>Designed by Antigravity</p>
       </div>
 

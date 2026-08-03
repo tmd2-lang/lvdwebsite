@@ -22,15 +22,15 @@ export default function StyleGuide() {
           <div>
             <div className="text-xs text-ink/50 mb-2">Display (Fraunces) - Section Header 4-6vw</div>
             <div className="font-display text-[clamp(2.5rem,5vw,5rem)] leading-[1.1]">
-              Your wedding isn't an event.<br/>
-              <span className="italic">It's a masterpiece.</span>
+              Your wedding isn’t an event.<br/>
+              <span className="italic">It’s a masterpiece.</span>
             </div>
           </div>
           
           <div>
             <div className="text-xs text-ink/50 mb-2">Body (Manrope) - max 65ch</div>
             <p className="font-body text-base md:text-lg leading-[1.7] max-w-[65ch]">
-              The doors open, the bride walks in, and the room is unrecognizable. Guests gasp. People text for weeks asking "who did this?" This is maximalist opulence—crystal chandeliers, saturated florals, gold, dramatic ceiling installations.
+              The doors open, the bride walks in, and the room is unrecognizable. Guests gasp. People text for weeks asking “who did this?” This is maximalist opulence—crystal chandeliers, saturated florals, gold, dramatic ceiling installations.
             </p>
           </div>
 

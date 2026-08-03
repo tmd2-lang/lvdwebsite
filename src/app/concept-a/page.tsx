@@ -76,13 +76,16 @@ export default function ConceptAPage() {
             {/* Video / Photo Frame */}
             <div className="relative w-full h-full rounded-t-[140px] rounded-b-md overflow-hidden border border-ink/20 shadow-2xl bg-ink group">
               <video
-                src="/0720_2.mp4"
                 autoPlay
                 muted
                 loop
                 playsInline
+                poster="/gallery/white-green-botanicals/white-green-botanicals-04.jpeg"
+                aria-hidden="true"
                 className="w-full h-full object-cover scale-[1.05] group-hover:scale-100 transition-transform duration-1000 ease-out"
-              />
+              >
+                <source src="/lvd-hero-web.m4v" type="video/mp4" />
+              </video>
               <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent pointer-events-none" />
               
               {/* Floating Caption inside frame */}

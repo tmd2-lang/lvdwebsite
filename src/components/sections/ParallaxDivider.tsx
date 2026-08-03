@@ -2,6 +2,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
 
 export default function ParallaxDivider() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -38,9 +39,11 @@ export default function ParallaxDivider() {
         ref={imageRef}
         className="absolute top-[-10%] left-0 w-full h-[120%] will-change-transform"
       >
-        <img 
-          src="/gallery/Amber & Kendall Wedding/Amber&KendallVenueShot.jpeg" 
-          alt="Luxury Wedding Design"
+        <Image
+          src="/gallery/white-green-botanicals/white-green-botanicals-04.jpeg"
+          alt="Luxury Wedding Design - Lady Victoria Designs"
+          fill
+          sizes="100vw"
           className="w-full h-full object-cover"
         />
         {/* Subtle vignette/overlay to blend beautifully out of the black Narrative section */}

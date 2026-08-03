@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import Magnetic from "@/components/Magnetic";
+import Image from "next/image";
 
 export default function Contact() {
   return (
@@ -10,9 +11,11 @@ export default function Contact() {
         
         {/* Background Floral Image with Cinematic Overlay */}
         <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
-          <img 
-            src="/gallery/Amber%20&%20Kendall%20Wedding/Amber&KendallFlowerShot2.jpeg" 
-            alt="Lady Victoria Designs Floral Artistry" 
+          <Image
+            src="/gallery/white-green-botanicals/white-green-botanicals-01.jpeg"
+            alt="Lady Victoria Designs Floral Artistry"
+            fill
+            sizes="(max-width: 1535px) 100vw, 1440px"
             className="w-full h-full object-cover object-center scale-105 group-hover:scale-110 transition-transform duration-1000 ease-out opacity-75"
           />
           {/* Multi-layered cinematic gradient for text contrast */}
@@ -25,7 +28,7 @@ export default function Contact() {
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ivory/10 backdrop-blur-md border border-ivory/20 mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
             <span className="font-body text-[10px] md:text-xs uppercase tracking-[0.25em] text-ivory font-medium">
-              Let's Begin
+              Let’s Begin
             </span>
           </div>
 

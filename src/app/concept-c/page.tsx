@@ -12,6 +12,7 @@ import Services from "@/components/sections/Services";
 import MeetIrene from "@/components/sections/MeetIrene";
 import Testimonials from "@/components/sections/Testimonials";
 import Contact from "@/components/sections/Contact";
+import Image from "next/image";
 
 export default function ConceptCPage() {
   const [hoveredCol, setHoveredCol] = useState<number | null>(null);
@@ -81,9 +82,11 @@ export default function ConceptCPage() {
                     : "opacity-100"
                 }`}
               >
-                <img
+                <Image
                   src={col.image}
                   alt={col.title}
+                  fill
+                  sizes="(max-width: 767px) 100vw, 33vw"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 ease-out"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent" />

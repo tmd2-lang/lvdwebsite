@@ -31,8 +31,6 @@ export default function Narrative() {
 
       // Responsive Crash Animation
       const isMobile = window.innerWidth < 768;
-      const xOffset = isMobile ? "0px" : "20vw";
-
       tl.fromTo(titleLeftRef.current, 
         { x: isMobile ? -20 : "-20vw", opacity: 0 },
         { x: 0, opacity: 1, ease: "power2.out" }
@@ -105,7 +103,7 @@ export default function Narrative() {
           <div className="narrative-p will-change-transform flex flex-col items-center">
             <span className="text-[10px] uppercase tracking-[0.25em] text-gold mb-6">THE ESSENCE</span>
             <p className="text-ivory/95">
-              Flowers change a room before anyone says a word. That's the part we're obsessed with: the moment someone walks in and stops.
+              Flowers change a room before anyone says a word. That’s the part we’re obsessed with: the moment someone walks in and stops.
             </p>
           </div>
 
@@ -119,7 +117,7 @@ export default function Narrative() {
           <div className="narrative-p will-change-transform flex flex-col items-center">
             <span className="text-[10px] uppercase tracking-[0.25em] text-gold mb-6">THE CRAFT</span>
             <p className="text-ivory/95">
-              Creativity is the easy part. What earns trust is the technical work behind it: the rigging, the load-in, the timing, the thousand things that have to hold while nobody notices them. Beauty that doesn't survive contact with a real venue isn't design, it's a mood board.
+              Creativity is the easy part. What earns trust is the technical work behind it: the rigging, the load-in, the timing, the thousand things that have to hold while nobody notices them. Beauty that doesn’t survive contact with a real venue isn’t design, it’s a mood board.
             </p>
           </div>
 

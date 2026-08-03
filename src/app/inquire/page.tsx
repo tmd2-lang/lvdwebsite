@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import gsap from "gsap";
 import Magnetic from "@/components/Magnetic";
+import Image from "next/image";
 
 type FormData = {
   celebrationType: string;
@@ -37,6 +39,8 @@ export default function InquirePage() {
   // Handle GSAP animation between steps
   useEffect(() => {
     if (!containerRef.current) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     const ctx = gsap.context(() => {
       gsap.fromTo(
         ".step-content",
@@ -72,20 +76,23 @@ export default function InquirePage() {
   };
 
   return (
-    <main className="w-full min-h-screen bg-ivory text-ink flex flex-col lg:flex-row relative">
+    <main className="w-full min-h-screen bg-ivory text-ink flex flex-col lg:flex-row relative overflow-x-clip">
       {/* LEFT SIDE: Sticky Editorial Image */}
       <div className="w-full lg:w-1/2 h-[40vh] lg:h-screen lg:sticky lg:top-0 relative overflow-hidden z-10">
-        <img 
-          src="/gallery/Amber & Kendall Wedding/Amber&KendallTableShot3.jpeg" 
+        <Image
+          src="/gallery/amber-kendall/amber-kendall-23.jpeg"
           alt="Lady Victoria Designs Event Planning"
+          fill
+          sizes="(max-width: 1023px) 100vw, 50vw"
+          fetchPriority="high"
           className="w-full h-full object-cover scale-[1.05]"
         />
         <div className="absolute inset-0 bg-ink/20" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent" />
         
-        <div className="absolute bottom-8 left-8 lg:bottom-16 lg:left-12 text-ivory">
-          <h2 className="font-display text-4xl lg:text-6xl mb-2">
-            "Every detail from the flowers<br/>to the lighting was perfect."
+        <div className="absolute bottom-8 left-6 right-6 sm:left-8 sm:right-8 lg:bottom-16 lg:left-12 lg:right-12 text-ivory min-w-0">
+          <h2 className="font-display text-[clamp(1.9rem,8vw,3rem)] lg:text-6xl leading-[1.08] mb-2 max-w-[12ch] lg:max-w-[14ch]">
+            &ldquo;Every detail from the flowers<span className="hidden lg:inline"><br /></span>{" "}to the lighting was perfect.&rdquo;
           </h2>
           <p className="font-body text-xs uppercase tracking-widest text-ivory/70 mt-4">NICOLE • WEDDINGWIRE</p>
         </div>
@@ -111,9 +118,11 @@ export default function InquirePage() {
                   { id: "corporate", title: "Corporate or nonprofit", desc: "Gala, dinner, or brand event" },
                   { id: "other", title: "Something else", desc: "Tell us what you have in mind" }
                 ].map(type => (
-                  <div 
+                  <button
+                    type="button"
                     key={type.id}
                     onClick={() => setFormData({...formData, celebrationType: type.title})}
+                    aria-pressed={formData.celebrationType === type.title}
                     className={`border p-6 cursor-pointer transition-all duration-300 flex flex-col justify-center ${
                       formData.celebrationType === type.title 
                         ? 'border-ink bg-ink/5' 
@@ -127,7 +136,7 @@ export default function InquirePage() {
                       </div>
                     </div>
                     <p className="font-body text-[10px] text-ink/60">{type.desc}</p>
-                  </div>
+                  </button>
                 ))}
               </div>
 
@@ -274,8 +283,10 @@ export default function InquirePage() {
                   <div className="flex flex-wrap gap-3">
                     {["Still exploring", "Under $25K", "$25K–$50K", "$50K–$100K", "$100K+"].map(tier => (
                       <button
+                        type="button"
                         key={tier}
                         onClick={() => setFormData({...formData, investment: tier})}
+                        aria-pressed={formData.investment === tier}
                         className={`px-5 py-2.5 rounded-full border font-body text-xs transition-all duration-300 ${
                           formData.investment === tier 
                             ? 'border-ink bg-ink text-ivory' 
@@ -403,9 +414,9 @@ export default function InquirePage() {
               </p>
               
               <Magnetic>
-                <a href="/" className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 hover:bg-gold transition-colors inline-block">
+                <Link href="/" className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 hover:bg-gold transition-colors inline-block">
                   Return to Home
-                </a>
+                </Link>
               </Magnetic>
             </div>
           )}

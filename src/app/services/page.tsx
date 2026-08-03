@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Magnetic from "@/components/Magnetic";
 import Contact from "@/components/sections/Contact";
+import Image from "next/image";
 
 const services = [
   {
@@ -14,7 +14,7 @@ const services = [
     description: "Our signature service. We orchestrate every visual and experiential element of your celebration from the ground up. From structural architecture and custom lighting design to bespoke tablescapes and spatial flow, we ensure your event holds together as one idea from the first sightline to the last dance.",
     scope: "Design & Production",
     includes: "Architecture, Logistics, Timeline",
-    image: "/gallery/Jenny & Jordan Wedding/Jenny&JordanTablesOverheadShot.jpeg"
+    image: "/gallery/purple-grandeur/purple-grandeur-01.jpg"
   },
   {
     id: "floral",
@@ -23,7 +23,7 @@ const services = [
     description: "Florals are the soul of our designs. We source rare, premium blooms globally to craft breathtaking installations. Whether it is a cascading ceiling treatment, a sculptural ceremony arch, or textured, romantic centerpieces, our floral team treats every arrangement as fine art.\n\nBeyond events, we design for the smaller moments. Sympathy arrangements, seasonal bouquets, and custom gifting, treated with the same care as a full installation.",
     scope: "Floristry",
     includes: "Installations, Centerpieces, Gifting",
-    image: "/gallery/LVD Floral Images/LVDFloralBride.jpeg"
+    image: "/gallery/white-green-botanicals/white-green-botanicals-01.jpeg"
   },
   {
     id: "event-production",
@@ -32,8 +32,7 @@ const services = [
     description: "The part nobody is supposed to notice. Our production team builds and runs the technical side of your event: custom stage wraps, dance floor treatments, drapery and fabric work, and full lighting design. Everything is delivered, installed, and managed by the same crew, which means one team is accountable from load-in to strike.",
     scope: "Technical",
     includes: "Staging, Drapery, Lighting",
-    // FLAG: Needs distinct technical replacement photograph (a lit stage, installed drapery, or a dance floor treatment)
-    image: "/gallery/Jenny & Jordan Wedding/Jenny&JordanStageShot.jpeg"
+    image: "/gallery/amber-kendall/amber-kendall-24.jpeg"
   },
   {
     id: "decor",
@@ -42,7 +41,7 @@ const services = [
     description: "The difference between a beautiful room and a luxury experience lies in the details. We curate an exclusive inventory of high-end linens, artisanal tableware, custom seating, and atmospheric lighting to build a tactile environment that your guests will never forget. Available à la carte or as part of a full commission.",
     scope: "Curation",
     includes: "Tablescapes, Furniture, Linens",
-    image: "/gallery/Amber & Kendall Wedding/Amber&KendallTableShot3.jpeg"
+    image: "/gallery/two-tone-luxe/two-tone-luxe-01.jpeg"
   }
 ];
 
@@ -51,25 +50,25 @@ const designFor = [
     id: "weddings",
     title: "Weddings",
     description: "Ceremony, reception, and everything in between. Our largest commissions and our first love.",
-    image: "/gallery/Jenny & Jordan Wedding/Jenny&JordanKissingShot.jpeg"
+    image: "/gallery/jenny-jordan/jenny-jordan-19.jpeg"
   },
   {
     id: "corporate",
     title: "Corporate",
     description: "Branded stages, activations, and gatherings that need to look like the company hosting them.",
-    image: "/hero/TFR54012_websize.jpg"
+    image: "/gallery/r-and-j/r-and-j-01.jpeg"
   },
   {
     id: "private",
     title: "Private Celebrations",
     description: "Milestones, anniversaries, and the parties people talk about for years.",
-    image: "/gallery/Amber & Kendall Wedding/AmberKendallHero.jpeg"
+    image: "/gallery/amber-kendall/amber-kendall-22.jpeg"
   },
   {
     id: "gifting",
     title: "Floral Gifting",
     description: "Sympathy arrangements and seasonal bouquets, designed with the same care as a full installation.",
-    image: "/hero/3042192127745071772.JPG"
+    image: "/gallery/estate-florals/estate-florals-01.jpeg"
   }
 ];
 
@@ -78,19 +77,19 @@ const investmentsData = [
     title: "The Full Production",
     desc: "Comprehensive design, custom fabrication, and white-glove execution.",
     price: "FROM $55,000",
-    image: "/hero/6203022671217922801_edited.jpg"
+    image: "/gallery/purple-grandeur/purple-grandeur-01.jpg"
   },
   {
     title: "Design + Florals",
     desc: "Bespoke floral styling and foundational aesthetic direction.",
     price: "FROM $20,000",
-    image: "/hero/3042192127745071772.JPG"
+    image: "/gallery/white-green-botanicals/white-green-botanicals-01.jpeg"
   },
   {
     title: "The Essentials",
     desc: "Our signature floral collections for intimate gatherings.",
     price: "FROM $8,000",
-    image: "/hero/TFR54012_websize.jpg"
+    image: "/gallery/two-tone-luxe/two-tone-luxe-01.jpeg"
   }
 ];
 
@@ -100,6 +99,9 @@ export default function ServicesPage() {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const ctx = gsap.context(() => {
 
     // FIX: White band bug
     // Changed yPercent from -15/15 to -10/10 so the image translation 
@@ -169,9 +171,9 @@ export default function ServicesPage() {
       }
     );
 
-    return () => {
-      ScrollTrigger.getAll().forEach(t => t.kill());
-    };
+    }, containerRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -195,9 +197,12 @@ export default function ServicesPage() {
       {/* VERO-STYLE FLOATING HERO IMAGE */}
       <section className="w-full px-4 md:px-8 flex justify-center bg-ivory">
         <div className="w-full h-[70vh] md:h-[80vh] overflow-hidden floating-hero-image rounded-sm relative">
-          <img 
-            src="/gallery/Amber & Kendall Wedding/AmberKendallHero.jpeg" 
+          <Image
+            src="/gallery/white-green-botanicals/white-green-botanicals-04.jpeg"
             alt="Lady Victoria Designs Excellence"
+            fill
+            sizes="100vw"
+            fetchPriority="high"
             className="w-full h-full object-cover scale-[1.3] floating-hero-img-inner origin-center"
           />
         </div>
@@ -261,9 +266,11 @@ export default function ServicesPage() {
               {/* IMAGE HALF */}
               <div className="w-full lg:w-2/3 p-0 md:p-8 lg:p-16">
                 <div className="w-full h-[50vh] md:h-[60vh] lg:h-[80vh] overflow-hidden relative service-image-container">
-                  <img 
+                  <Image
                     src={service.image} 
                     alt={service.title}
+                    fill
+                    sizes="(max-width: 1023px) 100vw, 67vw"
                     className="w-full h-full object-cover scale-[1.3] origin-center"
                   />
                 </div>
@@ -283,8 +290,8 @@ export default function ServicesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
             {designFor.map((item) => (
               <div key={item.id} className="flex flex-col design-for-card">
-                <div className="w-full aspect-[4/5] overflow-hidden mb-8">
-                  <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                <div className="w-full aspect-[4/5] overflow-hidden mb-8 relative">
+                  <Image src={item.image} alt={item.title} fill sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 25vw" className="w-full h-full object-cover" />
                 </div>
                 <h3 className="font-display text-2xl text-ink mb-4">{item.title}</h3>
                 <p className="font-body text-sm text-ink/70 leading-relaxed max-w-[35ch]">
@@ -310,15 +317,21 @@ export default function ServicesPage() {
               const isActive = activeInvestmentIndex === idx;
               
               return (
-                <div 
+                <button
+                  type="button"
                   key={idx}
                   onMouseEnter={() => setActiveInvestmentIndex(idx)}
+                  onFocus={() => setActiveInvestmentIndex(idx)}
+                  onClick={() => setActiveInvestmentIndex(idx)}
+                  aria-pressed={isActive}
                   className={`relative flex flex-col justify-end overflow-hidden group cursor-pointer transition-[flex-grow,width] duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] rounded-sm ${
                     isActive ? "flex-[3_3_0%] md:w-[60%]" : "flex-[1_1_0%] md:w-[20%]"
                   }`}
                 >
-                  <img 
+                  <Image
                     src={service.image} 
+                    fill
+                    sizes={isActive ? "(max-width: 767px) 100vw, 60vw" : "(max-width: 767px) 100vw, 20vw"}
                     className={`absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out ${
                       isActive ? "scale-100" : "scale-110"
                     }`}
@@ -367,7 +380,7 @@ export default function ServicesPage() {
                     </div>
 
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>

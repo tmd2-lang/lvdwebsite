@@ -3,7 +3,9 @@ import Testimonials from "@/components/sections/Testimonials";
 import Contact from "@/components/sections/Contact";
 
 export const metadata: Metadata = {
-  title: "Testimonials | Lady Victoria Designs",
+  title: "Client Testimonials",
+  description: "Read what clients say about working with Lady Victoria Designs on weddings and luxury celebrations.",
+  alternates: { canonical: "/testimonials" },
 };
 
 export default function TestimonialsPage() {

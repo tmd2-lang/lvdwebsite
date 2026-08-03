@@ -9,6 +9,7 @@ import Magnetic from "@/components/Magnetic";
 export default function Header() {
   const headerRef = useRef<HTMLElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
@@ -44,11 +45,50 @@ export default function Header() {
       );
     } else {
       // Unlock body scroll
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = "";
       
       // Animate menu up
       gsap.to(menuRef.current, { y: "-100%", duration: 0.8, ease: "power4.inOut" });
     }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMenuOpen]);
+
+  useEffect(() => {
+    if (!isMenuOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMenuOpen(false);
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const menuLinks = Array.from(
+        menuRef.current?.querySelectorAll<HTMLElement>("a[href]") ?? [],
+      );
+      const focusable = menuButtonRef.current
+        ? [menuButtonRef.current, ...menuLinks]
+        : menuLinks;
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    menuButtonRef.current?.focus();
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isMenuOpen]);
 
   const getHeaderStyle = () => {
@@ -68,9 +108,9 @@ export default function Header() {
     <>
       <header 
         ref={headerRef} 
-        className={`fixed top-0 left-0 w-full z-40 px-6 md:px-12 grid grid-cols-2 md:grid-cols-3 items-center pointer-events-none transition-all duration-300 ${getHeaderStyle()}`}
+        className={`fixed top-0 left-0 w-full z-40 px-5 sm:px-6 md:px-12 grid grid-cols-2 md:grid-cols-3 gap-4 items-center pointer-events-none transition-all duration-300 ${getHeaderStyle()}`}
       >
-        <div className="justify-self-start font-display italic text-lg md:text-xl pointer-events-auto cursor-pointer hover:opacity-70 transition-opacity">
+        <div className="min-w-0 justify-self-start font-display italic text-base sm:text-lg md:text-xl pointer-events-auto cursor-pointer hover:opacity-70 transition-opacity whitespace-nowrap">
           <Link href="/" onClick={() => setIsMenuOpen(false)}>
             Lady Victoria Designs
           </Link>
@@ -89,8 +129,12 @@ export default function Header() {
         <div className="justify-self-end flex gap-8 items-center font-body text-[10px] md:text-xs uppercase tracking-[0.2em] pointer-events-auto">
           <Magnetic>
             <button 
+              type="button"
+              ref={menuButtonRef}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden hover:opacity-70 transition-opacity w-[50px] text-right cursor-pointer"
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-navigation"
+              className="md:hidden hover:opacity-70 transition-opacity min-w-11 min-h-11 text-right cursor-pointer"
             >
               {isMenuOpen ? "Close" : "Menu"}
             </button>
@@ -111,9 +155,12 @@ export default function Header() {
 
       {/* FULL SCREEN SUPER MENU */}
       <div 
+        id="mobile-navigation"
         ref={menuRef}
-        className="fixed inset-0 w-full h-screen bg-ink text-ivory z-[35] flex flex-col justify-center px-6 md:px-24 pointer-events-auto"
-        style={{ transform: "translateY(-100%)" }}
+        aria-hidden={!isMenuOpen}
+        inert={!isMenuOpen}
+        className="fixed inset-0 w-full min-h-[100dvh] bg-ink text-ivory z-[35] flex flex-col justify-center px-6 md:px-24 overflow-y-auto"
+        style={{ transform: "translateY(-100%)", pointerEvents: isMenuOpen ? "auto" : "none" }}
       >
         <div className="flex flex-col gap-4">
           {[

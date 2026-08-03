@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 
 const steps = [
   {
@@ -80,10 +81,12 @@ export default function Process() {
         {/* Right: Image Frame */}
         <div className="w-full md:w-7/12 h-[60vh] md:h-[80vh] bg-ecru relative overflow-hidden mt-8 md:mt-0">
           {steps.map((step, idx) => (
-            <img 
+            <Image
               key={step.num}
               src={step.image} 
               alt={step.title}
+              fill
+              sizes="(max-width: 767px) 100vw, 58vw"
               className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-[cubic-bezier(0.4,0,0.2,1)] ${
                 activeTab === idx ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"
               }`}

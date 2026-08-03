@@ -1,8 +1,9 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Services | Lady Victoria Designs",
-  description: "Lady Victoria Designs is a premier event architecture and floral design studio.",
+  title: "Wedding Design, Florals & Event Production",
+  description: "Explore full-service event production, floral design, staging, lighting, décor, and rentals from Lady Victoria Designs.",
+  alternates: { canonical: "/services" },
 };
 
 export default function ServicesLayout({

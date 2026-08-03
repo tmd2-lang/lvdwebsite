@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function MeetIrene() {
   return (
     <section className="w-full bg-ivory py-20 md:py-36 relative overflow-hidden border-t border-ink/10">
@@ -13,16 +15,18 @@ export default function MeetIrene() {
           </div>
 
           <div className="w-full aspect-[4/5] relative bg-ecru overflow-hidden mb-8 border border-ink/10 shadow-md">
-            <img 
-              src="/Irene.avif" 
-              alt="Irene - Creative Director" 
+            <Image
+              src="/Irene.avif"
+              alt="Irene - Creative Director"
+              fill
+              sizes="100vw"
               className="w-full h-full object-cover grayscale opacity-90"
             />
           </div>
 
           <div className="bg-ecru/60 border border-ink/10 p-6 sm:p-8">
             <p className="font-body text-ink/85 text-base leading-relaxed mb-6">
-              "I believe that true luxury is not just what you see, but how you feel. My approach to design is deeply personal, obsessively detailed, and unapologetically bold. We don't just build events; we craft memories that linger for a lifetime."
+              “I believe that true luxury is not just what you see, but how you feel. My approach to design is deeply personal, obsessively detailed, and unapologetically bold. We don’t just build events; we craft memories that linger for a lifetime.”
             </p>
             <div className="font-display italic text-2xl text-ink">Irene</div>
             <div className="font-body text-[10px] uppercase tracking-[0.2em] text-gold mt-1">Creative Director</div>
@@ -41,7 +45,7 @@ export default function MeetIrene() {
 
             <div className="bg-ecru/80 border border-ink/10 p-10 lg:p-12 max-w-[54ch] shadow-sm backdrop-blur-sm">
               <p className="font-body text-ink/85 text-lg leading-[1.8] mb-8">
-                "I believe that true luxury is not just what you see, but how you feel. My approach to design is deeply personal, obsessively detailed, and unapologetically bold. We don't just build events; we craft memories that linger for a lifetime."
+                “I believe that true luxury is not just what you see, but how you feel. My approach to design is deeply personal, obsessively detailed, and unapologetically bold. We don’t just build events; we craft memories that linger for a lifetime.”
               </p>
               <div className="font-display italic text-3xl text-ink">Irene</div>
               <div className="font-body text-[10px] uppercase tracking-[0.2em] text-gold mt-1">Creative Director & Lead Designer</div>
@@ -51,9 +55,11 @@ export default function MeetIrene() {
           {/* Right Column: Portrait */}
           <div className="md:col-span-5 relative h-[600px] lg:h-[680px]">
             <div className="w-full h-full bg-ecru border border-ink/10 relative overflow-hidden group shadow-xl">
-              <img 
-                src="/Irene.avif" 
-                alt="Irene Portrait" 
+              <Image
+                src="/Irene.avif"
+                alt="Irene Portrait"
+                fill
+                sizes="(max-width: 1023px) 42vw, 600px"
                 className="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
               />
             </div>

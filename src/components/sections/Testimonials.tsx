@@ -2,6 +2,8 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
+import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -43,7 +45,9 @@ export default function Testimonials() {
   const titleRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let ctx = gsap.context(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const ctx = gsap.context(() => {
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top top",
@@ -60,9 +64,11 @@ export default function Testimonials() {
       
       {/* Parallax Background Image */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <img 
-          src="/gallery/Jenny & Jordan Wedding/Jenny&JordanTablesOverheadShot.jpeg" 
-          alt="Wedding Ambiance" 
+        <Image
+          src="/gallery/purple-grandeur/purple-grandeur-02.jpg"
+          alt="Wedding Ambiance"
+          fill
+          sizes="100vw"
           className="w-full h-full object-cover opacity-60"
         />
         {/* Dark overlay gradient for text legibility */}
@@ -90,9 +96,9 @@ export default function Testimonials() {
           With years of trusted craftsmanship, clients return to Lady Victoria Designs for events that mark life’s most meaningful moments.
         </p>
 
-        <button className="relative z-10 font-body text-xs uppercase tracking-[0.2em] text-ivory border border-ivory/30 px-8 py-4 hover:bg-ivory hover:text-ink transition-colors pointer-events-auto backdrop-blur-sm">
+        <Link href="/inquire" className="relative z-10 font-body text-xs uppercase tracking-[0.2em] text-ivory border border-ivory/30 px-8 py-4 hover:bg-ivory hover:text-ink transition-colors pointer-events-auto backdrop-blur-sm">
           Book Your Consultation
-        </button>
+        </Link>
       </div>
 
       {/* SCROLLING CONTENT (The Stream) */}
@@ -113,7 +119,7 @@ export default function Testimonials() {
                     ))}
                   </div>
                   <p className="font-display italic text-xl md:text-2xl leading-[1.4] text-ivory mb-6 drop-shadow-md">
-                    "{t.quote}"
+                    “{t.quote}”
                   </p>
                   <div className="font-body text-[10px] md:text-xs uppercase tracking-[0.2em] text-gold font-bold">
                     {t.author}

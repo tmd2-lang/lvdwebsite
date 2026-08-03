@@ -12,6 +12,8 @@ export default function AboutClient() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     const ctx = gsap.context(() => {
       // Fade in hero intro
       gsap.fromTo(
@@ -65,22 +67,29 @@ export default function AboutClient() {
   }, []);
 
   return (
-    <main ref={containerRef} className="w-full min-h-screen bg-ivory text-ink flex flex-col items-center justify-start pt-36 md:pt-48 pb-0">
+    <main ref={containerRef} className="w-full min-h-screen bg-ivory text-ink flex flex-col items-center justify-start pt-36 md:pt-48 pb-0 overflow-x-clip">
       
       {/* SECTION 1: EDITORIAL HERO */}
-      <section className="w-full max-w-[1440px] mx-auto px-6 md:px-12 mb-20 md:mb-32 flex flex-col items-center text-center">
-        <div className="about-fade font-body text-xs uppercase tracking-[0.25em] text-gold mb-6 flex items-center gap-4">
-          <span className="w-8 h-px bg-gold/50"></span>
-          ABOUT LADY VICTORIA DESIGNS
-          <span className="w-8 h-px bg-gold/50"></span>
+      <section className="w-full min-w-0 max-w-[1440px] mx-auto px-6 md:px-12 mb-20 md:mb-32 flex flex-col items-center text-center">
+        <div className="about-fade w-full min-w-0 font-body text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.25em] text-gold mb-6 flex items-center justify-center gap-3 sm:gap-4 text-center">
+          <span className="hidden sm:block w-8 h-px bg-gold/50" />
+          <span>ABOUT LADY VICTORIA DESIGNS</span>
+          <span className="hidden sm:block w-8 h-px bg-gold/50" />
         </div>
 
-        <h1 className="about-fade font-display text-[clamp(2.75rem,6vw,5.5rem)] text-ink leading-[1.05] tracking-tight max-w-5xl mb-8">
-          Embodying Unique Visions, <br className="hidden sm:inline"/>
-          <span className="italic text-gold">Crafting Unforgettable Events</span>
+        <h1 className="about-fade w-full min-w-0 font-display text-[2.15rem] sm:text-[clamp(2.75rem,6vw,5.5rem)] text-ink leading-[1.02] sm:leading-[1.05] tracking-tight max-w-5xl mb-8">
+          <span className="sm:hidden">
+            <span className="block">Embodying Unique</span>
+            <span className="block">Visions, <span className="italic text-gold">Crafting</span></span>
+            <span className="block italic text-gold">Unforgettable Events</span>
+          </span>
+          <span className="hidden sm:inline">
+            Embodying Unique Visions, <br />
+            <span className="italic text-gold">Crafting Unforgettable Events</span>
+          </span>
         </h1>
 
-        <p className="about-fade font-body text-base md:text-xl text-ink/75 max-w-3xl leading-relaxed">
+        <p className="about-fade w-full min-w-0 font-body text-base md:text-xl text-ink/75 max-w-[32ch] sm:max-w-3xl leading-relaxed">
           At the heart of every extraordinary event is a team that sees both the big picture and the tiniest details. Lady Victoria Designs is a full-service event design and production company specializing in creating stunning experiences in the DC Metro area and beyond.
         </p>
       </section>
@@ -182,23 +191,29 @@ export default function AboutClient() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           <div className="about-gallery-item aspect-[4/5] relative overflow-hidden bg-ecru rounded-sm border border-ink/10 group">
-            <img 
-              src="/gallery/Amber & Kendall Wedding/Amber&KendallTableShot3.jpeg" 
-              alt="Intricate Table Design" 
+            <Image
+              src="/gallery/two-tone-luxe/two-tone-luxe-01.jpeg"
+              alt="Intricate Table Design"
+              fill
+              sizes="(max-width: 767px) 100vw, 33vw"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
             />
           </div>
           <div className="about-gallery-item aspect-[4/5] relative overflow-hidden bg-ecru rounded-sm border border-ink/10 group md:-translate-y-6">
-            <img 
-              src="/gallery/LVD Floral Images/LVDFloralBride.jpeg" 
-              alt="Bespoke Bridal Floral Artistry" 
+            <Image
+              src="/gallery/white-green-botanicals/white-green-botanicals-01.jpeg"
+              alt="Bespoke Bridal Floral Artistry"
+              fill
+              sizes="(max-width: 767px) 100vw, 33vw"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
             />
           </div>
           <div className="about-gallery-item aspect-[4/5] relative overflow-hidden bg-ecru rounded-sm border border-ink/10 group">
-            <img 
-              src="/gallery/Jenny & Jordan Wedding/Jenny&JordanTablesOverheadShot.jpeg" 
-              alt="Grand Venue Production" 
+            <Image
+              src="/gallery/purple-grandeur/purple-grandeur-01.jpg"
+              alt="Grand Venue Production"
+              fill
+              sizes="(max-width: 767px) 100vw, 33vw"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
             />
           </div>

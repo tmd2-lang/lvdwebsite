@@ -2,8 +2,6 @@ const fs = require('fs');
 const path = require('path');
 
 const galleryPath = path.join(__dirname, '../public/gallery');
-const outputPath = path.join(__dirname, '../src/lib/gallery-data.ts');
-
 function getImagesRecursively(dir) {
   let results = [];
   const list = fs.readdirSync(dir);
