@@ -6,7 +6,7 @@ export default function MeetIrene() {
         {/* Mobile Layout (< md) */}
         <div className="flex flex-col md:hidden">
           <div className="mb-8">
-            <span className="font-body text-[10px] uppercase tracking-[0.25em] text-gold font-semibold block mb-2">The Visionary</span>
+            <span className="font-body text-xs uppercase tracking-[0.25em] text-gold font-semibold mb-4">Founder & Creative Director</span>
             <h2 className="font-display text-4xl sm:text-5xl text-ink tracking-tight uppercase">
               Meet <span className="italic font-normal text-gold lowercase">Irene</span>
             </h2>
@@ -34,7 +34,7 @@ export default function MeetIrene() {
           
           {/* Left Column: Heading & Quote Card */}
           <div className="md:col-span-7 flex flex-col justify-center z-10">
-            <span className="font-body text-xs uppercase tracking-[0.25em] text-gold font-semibold mb-4">The Visionary</span>
+            <span className="font-body text-xs uppercase tracking-[0.25em] text-gold font-semibold mb-4">Founder & Creative Director</span>
             <h2 className="font-display text-7xl lg:text-8xl text-ink tracking-tighter uppercase mb-10 leading-[0.9]">
               Meet <span className="italic font-normal text-gold block">Irene</span>
             </h2>
