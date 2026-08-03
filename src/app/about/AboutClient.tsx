@@ -28,6 +28,22 @@ export default function AboutClient() {
         }
       );
 
+      // Floating Hero Image Parallax
+      gsap.fromTo(
+        ".about-floating-hero-inner",
+        { yPercent: -10 },
+        {
+          yPercent: 10,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".about-floating-hero",
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        }
+      );
+
       // Stagger fade-in for approach steps
       gsap.fromTo(
         ".approach-step",
@@ -70,7 +86,7 @@ export default function AboutClient() {
     <main ref={containerRef} className="w-full min-h-screen bg-ivory text-ink flex flex-col items-center justify-start pt-36 md:pt-48 pb-0 overflow-x-clip">
       
       {/* SECTION 1: EDITORIAL HERO */}
-      <section className="w-full min-w-0 max-w-[1440px] mx-auto px-6 md:px-12 mb-20 md:mb-32 flex flex-col items-center text-center">
+      <section className="w-full min-w-0 max-w-[1440px] mx-auto px-6 md:px-12 mb-16 md:mb-20 flex flex-col items-center text-center">
         <div className="about-fade w-full min-w-0 font-body text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.25em] text-gold mb-6 flex items-center justify-center gap-3 sm:gap-4 text-center">
           <span className="hidden sm:block w-8 h-px bg-gold/50" />
           <span>ABOUT LADY VICTORIA DESIGNS</span>
@@ -94,6 +110,23 @@ export default function AboutClient() {
         </p>
       </section>
 
+      {/* FLOATING HERO PARALLAX FRAME */}
+      <div className="w-full max-w-5xl mx-auto px-6 mb-28 md:mb-40">
+        <div className="about-floating-hero w-full h-[45vh] sm:h-[55vh] md:h-[70vh] relative overflow-hidden rounded-sm border border-ink/10 shadow-2xl">
+          <div className="about-floating-hero-inner absolute inset-[-15%] w-[130%] h-[130%]">
+            <Image 
+              src="/gallery/curated-installations/curated-installations-01.jpeg" 
+              alt="Curated Floral Masterpiece - Lady Victoria Designs" 
+              fill 
+              sizes="(max-width: 1200px) 100vw, 1200px"
+              className="w-full h-full object-cover"
+              priority
+            />
+          </div>
+          <div className="absolute inset-0 bg-ink/10 pointer-events-none" />
+        </div>
+      </div>
+
       {/* SECTION 2: MEET IRENE & THE ATELIER (Two-Column Split) */}
       <section className="w-full max-w-[1440px] mx-auto px-6 md:px-12 mb-28 md:mb-40">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
@@ -109,7 +142,7 @@ export default function AboutClient() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="absolute bottom-6 left-6 text-ivory opacity-0 group-hover:opacity-100 transition-opacity duration-500 font-body text-xs uppercase tracking-widest">
-              Irene · Creative Director
+              Irene · Founder & Creative Director
             </div>
           </div>
 
@@ -192,8 +225,8 @@ export default function AboutClient() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           <div className="about-gallery-item aspect-[4/5] relative overflow-hidden bg-ecru rounded-sm border border-ink/10 group">
             <Image
-              src="/gallery/two-tone-luxe/two-tone-luxe-01.jpeg"
-              alt="Intricate Table Design"
+              src="/gallery/table-artistry/table-artistry-01.jpeg"
+              alt="Bespoke Table Architecture"
               fill
               sizes="(max-width: 767px) 100vw, 33vw"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
@@ -201,8 +234,8 @@ export default function AboutClient() {
           </div>
           <div className="about-gallery-item aspect-[4/5] relative overflow-hidden bg-ecru rounded-sm border border-ink/10 group md:-translate-y-6">
             <Image
-              src="/gallery/white-green-botanicals/white-green-botanicals-01.jpeg"
-              alt="Bespoke Bridal Floral Artistry"
+              src="/gallery/grand-staircase-wedding/grand-staircase-wedding-01.jpg"
+              alt="Grand Architectural Floral Installation"
               fill
               sizes="(max-width: 767px) 100vw, 33vw"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
@@ -210,8 +243,8 @@ export default function AboutClient() {
           </div>
           <div className="about-gallery-item aspect-[4/5] relative overflow-hidden bg-ecru rounded-sm border border-ink/10 group">
             <Image
-              src="/gallery/purple-grandeur/purple-grandeur-01.jpg"
-              alt="Grand Venue Production"
+              src="/gallery/white-silver-reception/white-silver-reception-01.jpg"
+              alt="Fine Editorial Reception"
               fill
               sizes="(max-width: 767px) 100vw, 33vw"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
