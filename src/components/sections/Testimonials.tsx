@@ -7,33 +7,33 @@ gsap.registerPlugin(ScrollTrigger);
 
 const testimonials = [
   {
-    quote: "Irene and her team completely transformed our venue into a stunning oasis. Her attention to detail and ability to execute our complex vision was beyond anything we could have imagined.",
-    author: "JANE & JOHN · THE ANDERSON HOUSE",
+    quote: "Working with Irene for my wedding was the best decision that we made! From day one, the level of professionalism, design recommendations, and dedication were unmatched. Day of, words cannot describe, everything was beautiful beyond my imagination.",
+    author: "LATISHA · WEDDINGWIRE REVIEW",
     align: "left",
   },
   {
-    quote: "I walked in and literally gasped. It was breathtaking. The floral designs and custom fabrication were nothing short of spectacular. They went above and beyond to deliver a luxury experience.",
-    author: "EMILY & MARK · MERIDIAN HOUSE",
+    quote: "From the moment I met Irene, I knew there was no one else I would rather work with. She was very professional and attentive to all our needs. She took our loose ideas and Pinterest boards and completely exceeded our expectations.",
+    author: "SCOTT · WEDDINGWIRE REVIEW",
     align: "right",
   },
   {
-    quote: "Working with Lady Victoria Designs was an absolute dream. Irene's professionalism and kindness put us at ease immediately. She took our loose ideas and turned them into an elegant reality.",
-    author: "SARAH & MICHAEL · PRIVATE ESTATE",
+    quote: "Lady Victoria Designs made our wedding day look absolutely stunning. Irene made the entire planning process stress-free. 10/10 would highly recommend if you care about quality and want the absolute best in the business.",
+    author: "NICOLE & ERIC · WEDDINGWIRE REVIEW",
     align: "left",
   },
   {
-    quote: "Irene is not just a floral designer, she is a miracle worker. She remained calm and composed despite the pressure, and her dedication to making our vision a reality was incredible.",
-    author: "CHLOE & DAVID · NATIONAL MUSEUM",
+    quote: "Irene was an absolute joy to work with. She was professional and kind throughout the entire process, and I was so impressed with her ability to remain joyful and poised even through stressful times.",
+    author: "NAWA · WEDDINGWIRE REVIEW",
     align: "right",
   },
   {
-    quote: "The decor and floral arrangements were absolutely stunning. Irene even volunteered to assist with coordination beyond her core duties to ensure our day was perfect. Highly recommend!",
-    author: "AMANDA & JAMES · THE WALDORF",
+    quote: "Delighted with the work from Lady Victoria Designs. The attention to detail on every element was thoughtfully executed, elegant, and seamlessly integrated with the overall luxury atmosphere of our wedding.",
+    author: "DEAN · WEDDINGWIRE REVIEW",
     align: "left",
   },
   {
-    quote: "Lady Victoria Designs exceeded all our expectations. The team was incredibly accommodating and flexible when challenges arose. The final result was elegant and flawless.",
-    author: "LILY & THOMAS · DISTRICT WINERY",
+    quote: "Irene is an absolute gem. She was incredibly responsive and supportive throughout our planning. She went above and beyond to bring our dream floral vision to life and transform our venue into a breathtaking reality.",
+    author: "VERIFIED CLIENT · THE KNOT REVIEW",
     align: "right",
   }
 ];

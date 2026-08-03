@@ -76,7 +76,7 @@ const investmentsData = [
   {
     title: "The Full Production",
     desc: "Comprehensive design, custom fabrication, and white-glove execution.",
-    price: "FROM $45,000",
+    price: "FROM $55,000",
     image: "/hero/6203022671217922801_edited.jpg"
   },
   {

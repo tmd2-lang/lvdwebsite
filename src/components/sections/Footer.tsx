@@ -29,13 +29,15 @@ export default function Footer() {
           <a href="/inquire" className="font-body text-sm hover:text-gold transition-colors w-fit">Inquire</a>
         </div>
 
-        {/* Socials */}
-        <div className="flex flex-col gap-4">
+        {/* Socials & Directories */}
+        <div className="flex flex-col gap-3">
           <h4 className="font-body text-[9px] uppercase tracking-[0.3em] text-gold font-bold mb-2">Connect</h4>
-          <a href="#" className="font-body text-sm hover:text-gold transition-colors w-fit">Instagram</a>
-          <a href="#" className="font-body text-sm hover:text-gold transition-colors w-fit">Pinterest</a>
-          <a href="#" className="font-body text-sm hover:text-gold transition-colors w-fit">Facebook</a>
-          <a href="#" className="font-body text-sm hover:text-gold transition-colors w-fit">The Knot</a>
+          <a href="https://www.instagram.com/ladyvictoriadesigns/" target="_blank" rel="noopener noreferrer" className="font-body text-sm hover:text-gold transition-colors w-fit">Instagram</a>
+          <a href="https://www.pinterest.com/ladyvictoriadesigns/" target="_blank" rel="noopener noreferrer" className="font-body text-sm hover:text-gold transition-colors w-fit">Pinterest</a>
+          <a href="https://www.facebook.com/LadyVictoriaDesign/" target="_blank" rel="noopener noreferrer" className="font-body text-sm hover:text-gold transition-colors w-fit">Facebook</a>
+          <a href="https://www.tiktok.com/@ladyvictoriadesigns" target="_blank" rel="noopener noreferrer" className="font-body text-sm hover:text-gold transition-colors w-fit">TikTok</a>
+          <a href="https://www.theknot.com/marketplace/lady-victoria-design-brandywine-md-2036012" target="_blank" rel="noopener noreferrer" className="font-body text-sm hover:text-gold transition-colors w-fit">The Knot</a>
+          <a href="https://www.weddingwire.com/biz/lady-victoria-design-brandywine/f0e91afe3a54e207.html" target="_blank" rel="noopener noreferrer" className="font-body text-sm hover:text-gold transition-colors w-fit">WeddingWire</a>
         </div>
 
         {/* Newsletter */}
