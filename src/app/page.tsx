@@ -6,7 +6,6 @@ import Narrative from "@/components/sections/Narrative";
 import ParallaxDivider from "@/components/sections/ParallaxDivider";
 import SignatureWork from "@/components/sections/SignatureWork";
 import Services from "@/components/sections/Services";
-import ConceptSwitcher from "@/components/ConceptSwitcher";
 import MeetIrene from "@/components/sections/MeetIrene";
 import Testimonials from "@/components/sections/Testimonials";
 import Contact from "@/components/sections/Contact";
@@ -14,7 +13,6 @@ import Contact from "@/components/sections/Contact";
 export default function Home() {
   return (
     <main className="w-full min-h-screen overflow-x-hidden block">
-      <ConceptSwitcher />
       <Preloader />
       <CollapsingHero />
       <Hero />
