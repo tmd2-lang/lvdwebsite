@@ -30,7 +30,7 @@ export default function StyleGuide() {
           <div>
             <div className="text-xs text-ink/50 mb-2">Body (Manrope) - max 65ch</div>
             <p className="font-body text-base md:text-lg leading-[1.7] max-w-[65ch]">
-              The doors open, the bride walks in, and the room is unrecognizable. Guests gasp. People text for weeks asking “who did this?” This is maximalist opulence—crystal chandeliers, saturated florals, gold, dramatic ceiling installations.
+              The doors open, the bride walks in, and the room is unrecognizable. Guests gasp. People text for weeks asking “who did this?” This is maximalist opulence: crystal chandeliers, saturated florals, gold, and dramatic ceiling installations.
             </p>
           </div>
 

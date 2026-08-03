@@ -11,17 +11,17 @@ const services = [
     id: "production",
     typeLabel: "Signature Service",
     title: "Full Production",
-    description: "Our signature service. We orchestrate every visual and experiential element of your celebration from the ground up. From structural architecture and custom lighting design to bespoke tablescapes and spatial flow, we ensure your event holds together as one idea from the first sightline to the last dance.",
+    description: "One vision, carried all the way through. We lead the design and production of your celebration, from floor plans, staging, lighting, and custom fabrication to florals, tablescapes, and the final room reveal. Every element is developed together, then managed by one team from load-in through the last dance.",
     scope: "Design & Production",
-    includes: "Architecture, Logistics, Timeline",
+    includes: "Creative Direction, Logistics, Installation",
     image: "/services/full-production.jpg"
   },
   {
     id: "floral",
     typeLabel: "Artistry",
     title: "Floral Design",
-    description: "Florals are the soul of our designs. We source rare, premium blooms globally to craft breathtaking installations. Whether it is a cascading ceiling treatment, a sculptural ceremony arch, or textured, romantic centerpieces, our floral team treats every arrangement as fine art.\n\nBeyond events, we design for the smaller moments. Sympathy arrangements, seasonal bouquets, and custom gifting, treated with the same care as a full installation.",
-    scope: "Floristry",
+    description: "Flowers set the emotional tone of a room. We design each floral story around your setting, palette, and sense of occasion, from sculptural ceremony pieces and suspended installations to layered centerpieces and personal flowers.\n\nWe also create sympathy arrangements, seasonal bouquets, and custom floral gifts with the same considered approach.",
+    scope: "Floral Design",
     includes: "Installations, Centerpieces, Gifting",
     image: "/gallery/white-green-botanicals/white-green-botanicals-01.jpeg"
   },
@@ -29,18 +29,18 @@ const services = [
     id: "event-production",
     typeLabel: "Execution",
     title: "Staging & Lighting",
-    description: "The part nobody is supposed to notice. Our production team builds and runs the technical side of your event: custom stage wraps, dance floor treatments, drapery and fabric work, and full lighting design. Everything is delivered, installed, and managed by the same crew, which means one team is accountable from load-in to strike.",
+    description: "Beautiful events rely on technical work guests never see. Our production team handles stage and dance-floor treatments, draping, rigging, and lighting design, then coordinates installation and strike. With one crew overseeing the room, what was imagined is what your guests experience.",
     scope: "Technical",
-    includes: "Staging, Drapery, Lighting",
+    includes: "Stages, Drapery, Lighting",
     image: "/services/staging-and-lighting.jpg"
   },
   {
     id: "decor",
     typeLabel: "Curation",
     title: "Décor & Rentals",
-    description: "The difference between a beautiful room and a luxury experience lies in the details. We curate an exclusive inventory of high-end linens, artisanal tableware, custom seating, and atmospheric lighting to build a tactile environment that your guests will never forget. Available à la carte or as part of a full commission.",
+    description: "Décor gives a room its rhythm: where guests gather, what they touch, and how each view feels. We curate furniture, linens, tabletop pieces, and finishing details to support the larger design instead of competing with it. Available as part of a full commission or for select à la carte needs.",
     scope: "Curation",
-    includes: "Tablescapes, Furniture, Linens",
+    includes: "Furniture, Linens, Tabletop",
     image: "/gallery/amber-kendall/amber-kendall-23.jpeg"
   }
 ];
@@ -49,25 +49,25 @@ const designFor = [
   {
     id: "weddings",
     title: "Weddings",
-    description: "Ceremony, reception, and everything in between. Our largest commissions and our first love.",
+    description: "From ceremony to last dance, we design each chapter as part of one story.",
     image: "/services/weddings.jpg"
   },
   {
     id: "corporate",
     title: "Corporate",
-    description: "Branded stages, activations, and gatherings that need to look like the company hosting them.",
+    description: "Galas, brand events, and leadership gatherings shaped around the identity and purpose of the organization hosting them.",
     image: "/gallery/amber-kendall/amber-kendall-05.jpeg"
   },
   {
     id: "private",
     title: "Private Celebrations",
-    description: "Milestones, anniversaries, and the parties people talk about for years.",
+    description: "Milestone birthdays, anniversaries, and intimate dinners designed to feel personal, generous, and worth remembering.",
     image: "/gallery/two-tone-luxe/two-tone-luxe-08.jpeg"
   },
   {
     id: "gifting",
     title: "Floral Gifting",
-    description: "Sympathy arrangements and seasonal bouquets, designed with the same care as a full installation.",
+    description: "Sympathy flowers, seasonal bouquets, and one-of-a-kind arrangements for moments that deserve more than something off the shelf.",
     image: "/gallery/editorial-wedding-archive/editorial-wedding-archive-16.jpg"
   }
 ];
@@ -75,19 +75,19 @@ const designFor = [
 const investmentsData = [
   {
     title: "The Full Production",
-    desc: "Comprehensive design, custom fabrication, and white-glove execution.",
+    desc: "Creative direction, floral design, production, custom elements, and on-site execution.",
     price: "FROM $55,000",
     image: "/investments/the-essentials.jpg"
   },
   {
     title: "Design + Florals",
-    desc: "Bespoke floral styling and foundational aesthetic direction.",
+    desc: "A focused design plan paired with bespoke florals and installation.",
     price: "FROM $20,000",
     image: "/investments/design-and-florals.jpeg"
   },
   {
     title: "The Essentials",
-    desc: "Our signature floral collections for intimate gatherings.",
+    desc: "Signature florals and considered details for intimate celebrations.",
     price: "FROM $8,000",
     image: "/gallery/white-green-botanicals/white-green-botanicals-04.jpeg"
   }
@@ -190,7 +190,7 @@ export default function ServicesPage() {
           Architects of the <span className="italic text-gold">Extraordinary</span>
         </h1>
         <p className="font-body text-ink/70 max-w-2xl mx-auto leading-relaxed text-sm md:text-base">
-          Lady Victoria Designs is a full-service event design and production company. We specialize in transforming raw spaces into highly curated, immersive environments for the most discerning clientele.
+          Lady Victoria Designs shapes weddings and celebrations from first concept through final installation. We bring design, florals, production, lighting, and décor together under one creative direction. The result is a room where every element feels considered and every detail belongs.
         </p>
       </section>
 
@@ -212,14 +212,14 @@ export default function ServicesPage() {
       <section className="w-full px-6 md:px-12 py-32 flex flex-col items-center justify-center text-center bg-ivory intro-text-block">
         <h2 className="font-display text-[clamp(2.5rem,4vw,4.5rem)] text-ink max-w-5xl mx-auto leading-tight mb-12">
           Design + Décor + Details.<br/>
-          <span className="italic text-gold">And everything in-between, Flawlessly Delivered.</span>
+          <span className="italic text-gold">And everything in between, flawlessly delivered.</span>
         </h2>
         <div className="font-body text-sm md:text-base text-ink/70 max-w-xl mx-auto leading-relaxed flex flex-col gap-6">
           <p>
-            No two events are the same. Each vision, color scheme, idea, mood board, or inspiration is truly unique. Neither are the solutions we offer at Lady Victoria Designs.
+            No two celebrations begin in the same place. You may arrive with a complete vision, a favorite color, a saved image, or simply a feeling. Our work is to translate that starting point into a room that feels unmistakably yours.
           </p>
           <p>
-            Our comprehensive range of services is tailored to each client’s unique needs to deliver stunning results that align with your aesthetic, purpose, and budget.
+            Each commission is shaped around your venue, guest experience, priorities, and investment, then carried from concept through installation by one accountable team.
           </p>
         </div>
       </section>
@@ -237,7 +237,7 @@ export default function ServicesPage() {
                 
                 {/* Top: Title & Type */}
                 <div className="mb-24">
-                  <span className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 block mb-4">type</span>
+                  <span className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 block mb-4">{service.typeLabel}</span>
                   <h2 className="font-display text-4xl md:text-5xl text-ink uppercase tracking-wide leading-tight">
                     {service.title}
                   </h2>
@@ -309,7 +309,7 @@ export default function ServicesPage() {
           <div className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-gold mb-4 text-center">INVESTMENTS</div>
           <h2 className="font-display text-[clamp(2.5rem,5vw,5rem)] text-ink mb-4 text-center">Investments</h2>
           <p className="font-body text-ink/70 text-sm md:text-base text-center max-w-xl mx-auto mb-16">
-            Every commission is quoted individually. These are starting points, not packages.
+            Every commission is tailored to its venue, guest count, and design scope. These figures are starting points, not fixed packages.
           </p>
           
           <div className="flex flex-col md:flex-row w-full h-[70vh] gap-4 md:gap-4">
@@ -389,20 +389,20 @@ export default function ServicesPage() {
           <div className="w-full mt-12 md:mt-16 bg-ecru/80 border border-ink/10 p-8 md:p-12 rounded-sm flex flex-col md:flex-row items-center justify-between gap-8 shadow-xs">
             <div className="flex flex-col text-center md:text-left">
               <span className="font-body text-[10px] md:text-xs uppercase tracking-[0.25em] text-gold font-semibold mb-2">
-                INTERACTIVE INVESTMENT CALCULATOR
+                SCOPE ESTIMATOR
               </span>
               <h4 className="font-display text-2xl md:text-3xl text-ink mb-2">
-                Not sure what your vision requires?
+                Which level of service fits your plans?
               </h4>
               <p className="font-body text-sm md:text-base text-ink/75 max-w-xl">
-                Answer 7 brief questions about your guest count, venue, and design ambition to find your tailored tier estimate.
+                Share seven details about your celebration to see which starting point most closely matches your scope.
               </p>
             </div>
             <a
               href="/quiz"
               className="shrink-0 bg-ink text-ivory px-8 py-4 font-body text-xs uppercase tracking-[0.2em] hover:bg-gold hover:text-ink transition-colors duration-300 shadow-sm"
             >
-              Take the 2-Minute Quiz →
+              Estimate Your Scope →
             </a>
           </div>
 
