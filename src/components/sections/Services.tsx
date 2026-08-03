@@ -7,19 +7,19 @@ const services = [
     title: "The Full Production",
     desc: "Comprehensive design, custom fabrication, and white-glove execution.",
     price: "Beginning at $55,000",
-    image: "/gallery/purple-grandeur/purple-grandeur-01.jpg"
+    image: "/investments/full-production.jpg"
   },
   {
     title: "Design + Florals",
     desc: "Bespoke floral styling and foundational aesthetic direction.",
     price: "Beginning at $20,000",
-    image: "/gallery/white-green-botanicals/white-green-botanicals-01.jpeg"
+    image: "/investments/design-and-florals.jpeg"
   },
   {
     title: "The Essentials",
     desc: "Our signature floral collections for intimate gatherings.",
     price: "Beginning at $8,000",
-    image: "/gallery/two-tone-luxe/two-tone-luxe-01.jpeg"
+    image: "/investments/the-essentials.jpg"
   }
 ];
 
