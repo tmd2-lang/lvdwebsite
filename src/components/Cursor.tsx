@@ -41,16 +41,19 @@ export default function Cursor() {
 
     window.addEventListener("mousemove", onMouseMove);
 
-    gsap.ticker.add(() => {
+    const onTick = () => {
       const dt = 1.0 - Math.pow(1.0 - speed, gsap.ticker.deltaRatio()); 
       pos.x += (mouse.x - pos.x) * dt;
       pos.y += (mouse.y - pos.y) * dt;
       xSet(pos.x);
       ySet(pos.y);
-    });
+    };
+
+    gsap.ticker.add(onTick);
 
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
+      gsap.ticker.remove(onTick);
     };
   }, []);
 

@@ -89,7 +89,7 @@ export default function SignatureWork() {
                 src={item.src} 
                 className="gallery-img absolute inset-0 w-full h-full object-cover scale-[1.15] transition-opacity duration-700 hover:opacity-90" 
                 alt={item.title} 
-                onLoad={() => ScrollTrigger.refresh()}
+                loading="lazy"
               />
             </div>
           </div>
