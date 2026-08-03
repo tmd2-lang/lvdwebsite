@@ -568,10 +568,28 @@ export const galleryImages: GalleryImage[] = [
     "slug": "classic-wedding-archive"
   },
   {
+    "src": "/gallery/curated-installations/1000451218.jpg",
+    "width": 1079,
+    "height": 1612,
+    "alt": "Curated Floral Masterpiece - Lady Victoria Designs",
+    "collection": "Curated Masterpieces",
+    "category": "Artistry",
+    "slug": "curated-installations"
+  },
+  {
     "src": "/gallery/curated-installations/6203022671217922801.jpg",
     "width": 1077,
     "height": 712,
     "alt": "Lady Victoria Designs portfolio image",
+    "collection": "Curated Masterpieces",
+    "category": "Artistry",
+    "slug": "curated-installations"
+  },
+  {
+    "src": "/gallery/curated-installations/7696255556127739026.jpg",
+    "width": 1079,
+    "height": 1612,
+    "alt": "Curated Floral Masterpiece - Lady Victoria Designs",
     "collection": "Curated Masterpieces",
     "category": "Artistry",
     "slug": "curated-installations"

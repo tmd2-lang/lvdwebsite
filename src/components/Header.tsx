@@ -29,15 +29,18 @@ export default function Header() {
 
   // Super Menu GSAP Animation
   useEffect(() => {
-    if (!menuRef.current) return;
+    const menu = menuRef.current;
+    if (!menu) return;
+
+    gsap.killTweensOf(menu);
     
     if (isMenuOpen) {
       // Lock body scroll
       document.body.style.overflow = "hidden";
       
       // Ensure visible before animating in
-      gsap.set(menuRef.current, { visibility: "visible" });
-      gsap.to(menuRef.current, { yPercent: 0, duration: 0.7, ease: "power4.inOut" });
+      gsap.set(menu, { visibility: "visible" });
+      gsap.to(menu, { y: 0, duration: 0.7, ease: "power4.inOut" });
       // Stagger animate links up
       gsap.fromTo(
         ".menu-link", 
@@ -49,20 +52,19 @@ export default function Header() {
       document.body.style.overflow = "";
       
       // Animate menu up and hide visibility on complete
-      gsap.to(menuRef.current, { 
-        yPercent: -100, 
+      gsap.to(menu, {
+        y: "-100%",
         duration: 0.6, 
         ease: "power4.inOut",
         onComplete: () => {
-          if (menuRef.current) {
-            menuRef.current.style.visibility = "hidden";
-          }
+          menu.style.visibility = "hidden";
         }
       });
     }
 
     return () => {
       document.body.style.overflow = "";
+      gsap.killTweensOf(menu);
     };
   }, [isMenuOpen]);
 
@@ -170,7 +172,7 @@ export default function Header() {
         aria-hidden={!isMenuOpen}
         inert={!isMenuOpen}
         className="fixed inset-0 w-full min-h-[100dvh] bg-ink text-ivory z-[35] flex flex-col justify-center px-6 md:px-24 overflow-y-auto"
-        style={{ transform: "translateY(-100%)", visibility: isMenuOpen ? "visible" : "hidden", pointerEvents: isMenuOpen ? "auto" : "none" }}
+        style={{ transform: "translateY(-100%)", visibility: "hidden", pointerEvents: isMenuOpen ? "auto" : "none" }}
       >
         <div className="flex flex-col gap-4">
           {[

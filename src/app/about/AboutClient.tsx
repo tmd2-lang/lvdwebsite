@@ -225,8 +225,8 @@ export default function AboutClient() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           <div className="about-gallery-item aspect-[4/5] relative overflow-hidden bg-ecru rounded-sm border border-ink/10 group">
             <Image
-              src="/gallery/table-artistry/table-artistry-01.jpeg"
-              alt="Bespoke Table Architecture"
+              src="/gallery/curated-installations/1000451218.jpg"
+              alt="Artisanal Celebration Detail"
               fill
               sizes="(max-width: 767px) 100vw, 33vw"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
@@ -234,7 +234,7 @@ export default function AboutClient() {
           </div>
           <div className="about-gallery-item aspect-[4/5] relative overflow-hidden bg-ecru rounded-sm border border-ink/10 group md:-translate-y-6">
             <Image
-              src="/gallery/grand-staircase-wedding/grand-staircase-wedding-01.jpg"
+              src="/gallery/curated-installations/7696255556127739026.jpg"
               alt="Grand Architectural Floral Installation"
               fill
               sizes="(max-width: 767px) 100vw, 33vw"
@@ -243,8 +243,8 @@ export default function AboutClient() {
           </div>
           <div className="about-gallery-item aspect-[4/5] relative overflow-hidden bg-ecru rounded-sm border border-ink/10 group">
             <Image
-              src="/gallery/white-silver-reception/white-silver-reception-01.jpg"
-              alt="Fine Editorial Reception"
+              src="/gallery/purple-grandeur/purple-grandeur-04.jpg"
+              alt="Curated Floral Masterpiece"
               fill
               sizes="(max-width: 767px) 100vw, 33vw"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
