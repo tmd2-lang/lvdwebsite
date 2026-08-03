@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Magnetic from "@/components/Magnetic";
+import Contact from "@/components/sections/Contact";
 
 const services = [
   {
@@ -374,18 +375,7 @@ export default function ServicesPage() {
       </section>
 
       {/* FINAL CTA SECTION */}
-      <section className="w-full bg-ivory text-ink py-48 px-6 flex flex-col items-center justify-center text-center">
-        <h2 className="font-display text-[clamp(3rem,6vw,5.5rem)] leading-none mb-12">
-          Ready to <br/>
-          <span className="italic text-gold">bring your vision</span><br/>
-          to life?
-        </h2>
-        <Magnetic>
-          <a href="/inquire" className="group relative inline-flex items-center justify-center font-body text-xs uppercase tracking-[0.2em] text-ink py-4 px-12 border border-ink/20 hover:border-gold hover:text-gold transition-all duration-300">
-            Book a Consultation
-          </a>
-        </Magnetic>
-      </section>
+      <Contact />
 
     </main>
   );

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import MasonryGrid from "@/components/sections/MasonryGrid";
 import Lightbox from "@/components/ui/Lightbox";
+import Contact from "@/components/sections/Contact";
 import { galleryImages } from "@/lib/gallery-data";
 
 export default function GalleryClient() {
@@ -31,21 +31,8 @@ export default function GalleryClient() {
           onImageClick={(index) => setLightboxIndex(index)} 
         />
 
-        {/* Final CTA matching Services page */}
-        <section className="w-full bg-ivory text-ink py-32 md:py-48 px-6 md:px-12 flex flex-col items-center justify-center border-t border-ink/20 mt-12">
-          <h2 className="font-display text-[clamp(2.5rem,5vw,5rem)] text-center mb-12 max-w-4xl mx-auto leading-tight">
-            Ready to bring your <span className="italic text-gold">vision</span> to life?
-          </h2>
-          <Link 
-            href="/inquire" 
-            className="group relative px-8 py-4 border border-ink overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-ink translate-y-[101%] transition-transform duration-500 ease-out group-hover:translate-y-0" />
-            <span className="relative z-10 font-body text-xs md:text-sm uppercase tracking-widest text-ink transition-colors duration-500 group-hover:text-ivory">
-              BOOK A CONSULTATION
-            </span>
-          </Link>
-        </section>
+        {/* Universal Floral CTA */}
+        <Contact />
 
       </main>
 

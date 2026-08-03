@@ -5,7 +5,7 @@ import Magnetic from "@/components/Magnetic";
 
 export default function Contact() {
   return (
-    <section className="w-full bg-ivory py-12 md:py-24 px-4 sm:px-6 md:px-12" id="contact">
+    <section className="w-full bg-transparent py-12 md:py-24 px-4 sm:px-6 md:px-12" id="contact">
       <div className="max-w-[1440px] mx-auto relative rounded-[2rem] md:rounded-[3rem] overflow-hidden min-h-[500px] md:min-h-[620px] flex flex-col items-center justify-center text-center p-8 sm:p-12 md:p-20 shadow-2xl border border-ink/10 group bg-ink">
         
         {/* Background Floral Image with Cinematic Overlay */}
