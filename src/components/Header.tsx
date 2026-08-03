@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import Magnetic from "@/components/Magnetic";
 
@@ -10,6 +11,10 @@ export default function Header() {
   const menuRef = useRef<HTMLDivElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
+
+  // Pages with split photo / white backgrounds where mix-blend causes contrast issues
+  const isLightPage = pathname === "/inquire" || pathname === "/quiz";
 
   // Scroll styling logic
   useEffect(() => {
@@ -46,13 +51,24 @@ export default function Header() {
     }
   }, [isMenuOpen]);
 
+  const getHeaderStyle = () => {
+    if (isMenuOpen) {
+      return "bg-transparent mix-blend-difference text-ivory";
+    }
+    if (isLightPage) {
+      return "bg-ivory/90 backdrop-blur-[12px] border-b border-ink/10 text-ink !mix-blend-normal py-4 shadow-xs";
+    }
+    if (isScrolled) {
+      return "bg-ink/80 backdrop-blur-[12px] !mix-blend-normal text-ivory py-4";
+    }
+    return "bg-transparent mix-blend-difference text-ivory py-6";
+  };
+
   return (
     <>
       <header 
         ref={headerRef} 
-        className={`fixed top-0 left-0 w-full z-40 px-6 md:px-12 py-6 grid grid-cols-2 md:grid-cols-3 items-center mix-blend-difference text-ivory pointer-events-none transition-all duration-300 ${
-          isScrolled && !isMenuOpen ? "bg-ink/80 backdrop-blur-[12px] !mix-blend-normal py-4" : "bg-transparent"
-        }`}
+        className={`fixed top-0 left-0 w-full z-40 px-6 md:px-12 grid grid-cols-2 md:grid-cols-3 items-center pointer-events-none transition-all duration-300 ${getHeaderStyle()}`}
       >
         <div className="justify-self-start font-display italic text-lg md:text-xl pointer-events-auto cursor-pointer hover:opacity-70 transition-opacity">
           <Link href="/" onClick={() => setIsMenuOpen(false)}>
@@ -63,18 +79,18 @@ export default function Header() {
         <div className={`justify-self-center hidden md:flex gap-10 lg:gap-12 font-body text-[10px] uppercase tracking-[0.2em] pointer-events-auto transition-opacity duration-300 ${
           isMenuOpen ? "opacity-0 invisible" : "opacity-100 visible"
         }`}>
-          <Link href="/" className="hover:opacity-70 transition-opacity">Home</Link>
-          <Link href="/about" className="hover:opacity-70 transition-opacity">About</Link>
-          <Link href="/services" className="hover:opacity-70 transition-opacity">Services</Link>
-          <Link href="/gallery" className="hover:opacity-70 transition-opacity">Gallery</Link>
-          <Link href="/quiz" className="hover:text-gold transition-colors">Quiz</Link>
+          <Link href="/" className="hover:text-gold transition-colors">Home</Link>
+          <Link href="/about" className="hover:text-gold transition-colors">About</Link>
+          <Link href="/services" className="hover:text-gold transition-colors">Services</Link>
+          <Link href="/gallery" className="hover:text-gold transition-colors">Gallery</Link>
+          <Link href="/quiz" className={`hover:text-gold transition-colors ${pathname === "/quiz" ? "text-gold font-bold" : ""}`}>Quiz</Link>
         </div>
 
         <div className="justify-self-end flex gap-8 items-center font-body text-[10px] md:text-xs uppercase tracking-[0.2em] pointer-events-auto">
           <Magnetic>
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden hover:opacity-70 transition-opacity w-[50px] text-right"
+              className="md:hidden hover:opacity-70 transition-opacity w-[50px] text-right cursor-pointer"
             >
               {isMenuOpen ? "Close" : "Menu"}
             </button>
@@ -83,7 +99,9 @@ export default function Header() {
             <Link 
               href="/inquire" 
               onClick={() => setIsMenuOpen(false)}
-              className="hidden md:block hover:opacity-70 transition-opacity border-b border-ivory pb-1"
+              className={`hidden md:block hover:opacity-70 transition-opacity border-b pb-1 ${
+                isLightPage && !isMenuOpen ? "border-ink text-ink" : "border-ivory text-ivory"
+              }`}
             >
               Inquire
             </Link>

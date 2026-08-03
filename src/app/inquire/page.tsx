@@ -92,7 +92,7 @@ export default function InquirePage() {
       </div>
 
       {/* RIGHT SIDE: The Form */}
-      <div className="w-full lg:w-1/2 flex justify-center items-center py-16 px-6 lg:px-20 z-20 min-h-[60vh]">
+      <div className="w-full lg:w-1/2 flex justify-center items-center pt-28 lg:pt-32 pb-16 px-6 lg:px-20 z-20 min-h-[60vh]">
         <div ref={containerRef} className="w-full max-w-[600px] relative">
           
           {/* STEP 1: Celebration Type */}
