@@ -5,7 +5,7 @@ const services = [
   {
     title: "The Full Production",
     desc: "Comprehensive design, custom fabrication, and white-glove execution.",
-    price: "Beginning at $45,000",
+    price: "Beginning at $55,000",
     image: "/hero/6203022671217922801_edited.jpg"
   },
   {
@@ -26,18 +26,19 @@ export default function Services() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <section className="w-full bg-ivory py-32 md:py-48 px-6 md:px-12" id="services">
+    <section className="w-full bg-ivory py-24 md:py-48 px-6 md:px-12" id="services">
       <div className="max-w-[1440px] mx-auto flex flex-col">
         <div className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-gold mb-4 text-center">INVESTMENTS</div>
-        <h2 className="font-display text-[clamp(2.5rem,5vw,5rem)] text-ink mb-16 text-center">Investments</h2>
+        <h2 className="font-display text-[clamp(2.5rem,5vw,5rem)] text-ink mb-12 md:mb-16 text-center">Investments</h2>
         
-        <div className="flex flex-col md:flex-row w-full h-[70vh] gap-4 md:gap-4">
+        <div className="flex flex-col md:flex-row w-full h-[75vh] md:h-[70vh] gap-3 md:gap-4">
           {services.map((service, idx) => {
             const isActive = activeIndex === idx;
             
             return (
               <div 
                 key={idx}
+                onClick={() => setActiveIndex(idx)}
                 onMouseEnter={() => setActiveIndex(idx)}
                 className={`relative flex flex-col justify-end overflow-hidden group cursor-pointer transition-[flex-grow,width] duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] rounded-sm ${
                   isActive ? "flex-[3_3_0%] md:w-[60%]" : "flex-[1_1_0%] md:w-[20%]"

@@ -64,9 +64,9 @@ export default function CollapsingHero() {
   return (
     <div className="w-full flex flex-col relative">
       {/* The Static Logo Header */}
-      <div className="w-full h-[45vh] bg-ivory z-30 flex flex-col items-center justify-center relative border-b border-ink/10">
-        <h1 className="font-display text-[7.5vw] leading-none text-ink tracking-tighter flex items-center">
-          LADY <span className="italic ml-[1.5vw] mr-[1.5vw] font-normal tracking-normal text-[7.5vw]">Victoria</span> DESIGNS
+      <div className="w-full h-[40vh] md:h-[45vh] bg-ivory z-30 flex flex-col items-center justify-center relative border-b border-ink/10 px-4">
+        <h1 className="font-display text-[clamp(1.85rem,7vw,7.5vw)] leading-none text-ink tracking-tighter flex items-center justify-center text-center">
+          LADY <span className="italic ml-[1.5vw] mr-[1.5vw] font-normal tracking-normal text-[clamp(1.85rem,7vw,7.5vw)]">Victoria</span> DESIGNS
         </h1>
         
         {/* Utility text anchored to bottom */}

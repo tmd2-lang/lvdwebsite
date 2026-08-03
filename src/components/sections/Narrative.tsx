@@ -29,17 +29,19 @@ export default function Narrative() {
         }
       });
 
-      // Crash Animation
-      tl.fromTo([titleLeftRef.current, titleRightRef.current], 
-        { 
-          x: (i) => i === 0 ? "-30vw" : "30vw", 
-          opacity: 0 
-        },
-        {
-          x: 0,
-          opacity: 1,
-          ease: "power2.out", // Eases into the center gracefully
-        }
+      // Responsive Crash Animation
+      const isMobile = window.innerWidth < 768;
+      const xOffset = isMobile ? "0px" : "20vw";
+
+      tl.fromTo(titleLeftRef.current, 
+        { x: isMobile ? -20 : "-20vw", opacity: 0 },
+        { x: 0, opacity: 1, ease: "power2.out" }
+      );
+
+      tl.fromTo(titleRightRef.current, 
+        { x: isMobile ? 20 : "20vw", opacity: 0 },
+        { x: 0, opacity: 1, ease: "power2.out" },
+        "<" // run simultaneously
       );
 
       // 2. Paragraphs Fade In (Scrubbed to scroll position)
@@ -72,13 +74,12 @@ export default function Narrative() {
     <section ref={sectionRef} className="w-full relative bg-ink text-ivory z-10 overflow-hidden">
       
       {/* 1. The Title (Pinned by GSAP) */}
-      {/* We make this exactly h-screen so it completely hides the video behind it before pinning! */}
-      <div ref={titleWrapperRef} className="w-full h-screen flex items-center justify-center z-0">
-        <h2 className="font-display text-[clamp(2.5rem,6vw,7rem)] leading-[0.9] tracking-tight flex flex-col items-center w-full uppercase">
-          <span ref={titleLeftRef} className="block text-left w-full md:w-auto md:-ml-[15vw] will-change-transform">
+      <div ref={titleWrapperRef} className="w-full h-screen flex items-center justify-center px-6 md:px-12 z-0">
+        <h2 className="font-display text-[clamp(2rem,5vw,6.5rem)] leading-[1.05] md:leading-[0.95] tracking-tight flex flex-col items-center w-full max-w-5xl mx-auto uppercase">
+          <span ref={titleLeftRef} className="block text-left w-full md:w-auto md:-ml-[10vw] will-change-transform">
             A Sweeping Curtsy
           </span>
-          <span ref={titleRightRef} className="block text-right w-full md:w-auto md:ml-[15vw] italic text-gold will-change-transform">
+          <span ref={titleRightRef} className="block text-right w-full md:w-auto md:ml-[10vw] italic text-gold will-change-transform mt-2 md:mt-0">
             From Lady Victoria
           </span>
         </h2>

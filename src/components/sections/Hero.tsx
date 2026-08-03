@@ -70,11 +70,11 @@ export default function Hero() {
         </div>
 
         {/* Foreground Text Layer */}
-        <div className="absolute inset-0 z-20 w-full h-full flex flex-col justify-center items-center px-6 md:px-12 pointer-events-none mix-blend-difference">
-          <h2 className="font-display text-[clamp(2.5rem,7vw,8rem)] leading-[0.8] flex flex-col items-center justify-center w-full text-ivory">
-            <span ref={textTopRef} className="block -ml-[25vw] tracking-tighter will-change-transform italic whitespace-nowrap pb-2">Your wedding</span>
-            <span ref={textMidRef} className="block tracking-tight will-change-transform whitespace-nowrap z-10 pb-2">isn't an event.</span>
-            <span ref={textBotRef} className="block ml-[25vw] tracking-tighter will-change-transform italic whitespace-nowrap pb-2">It's a masterpiece.</span>
+        <div className="absolute inset-0 z-20 w-full h-full flex flex-col justify-center items-center px-4 md:px-12 pointer-events-none mix-blend-difference">
+          <h2 className="font-display text-[clamp(2rem,6vw,8rem)] leading-[1.0] md:leading-[0.85] flex flex-col items-center justify-center w-full text-ivory text-center">
+            <span ref={textTopRef} className="block md:-ml-[20vw] tracking-tighter will-change-transform italic pb-1 md:pb-2">Your wedding</span>
+            <span ref={textMidRef} className="block tracking-tight will-change-transform z-10 pb-1 md:pb-2">isn't an event.</span>
+            <span ref={textBotRef} className="block md:ml-[20vw] tracking-tighter will-change-transform italic pb-1 md:pb-2">It's a masterpiece.</span>
           </h2>
         </div>
       </section>
