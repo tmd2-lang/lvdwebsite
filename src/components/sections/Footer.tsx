@@ -10,7 +10,7 @@ export default function Footer() {
         
         {/* Brand / Tagline */}
         <div className="flex flex-col gap-6 lg:pr-12">
-          <div className="font-display text-4xl text-gold italic">LV</div>
+          <div className="font-display text-4xl text-gold italic">LVD</div>
           <p className="font-body text-xs md:text-sm text-ivory/70 leading-relaxed">
             Curating breathtaking floral design and unforgettable luxury events. Your vision, meticulously crafted.
           </p>
@@ -61,8 +61,8 @@ export default function Footer() {
 
       {/* Massive Typography */}
       <div className="w-full flex items-center justify-center border-t border-ivory/10 pt-12 md:pt-20 mb-12 md:mb-16">
-        <h1 className="font-display text-[12vw] leading-[0.8] text-ivory tracking-tighter text-center uppercase">
-          Lady Victoria
+        <h1 className="font-display text-[clamp(2.5rem,8vw,8.5rem)] leading-[0.85] text-ivory tracking-tighter text-center uppercase">
+          Lady Victoria <span className="italic text-gold lowercase font-normal">Designs</span>
         </h1>
       </div>
 

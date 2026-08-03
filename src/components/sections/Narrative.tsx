@@ -80,7 +80,7 @@ export default function Narrative() {
             A Sweeping Curtsy
           </span>
           <span ref={titleRightRef} className="block text-right w-full md:w-auto md:ml-[10vw] italic text-gold will-change-transform mt-2 md:mt-0">
-            From Lady Victoria
+            From Lady Victoria Designs
           </span>
         </h2>
       </div>

@@ -12,7 +12,7 @@ export default function Contact() {
         <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
           <img 
             src="/gallery/Amber%20&%20Kendall%20Wedding/Amber&KendallFlowerShot2.jpeg" 
-            alt="Lady Victoria Floral Design" 
+            alt="Lady Victoria Designs Floral Artistry" 
             className="w-full h-full object-cover object-center scale-105 group-hover:scale-110 transition-transform duration-1000 ease-out opacity-75"
           />
           {/* Multi-layered cinematic gradient for text contrast */}

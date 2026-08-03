@@ -86,7 +86,7 @@ export default function CollapsingHero() {
           <div key={i} className="hero-slide absolute inset-0 w-full h-full z-0">
             <img 
               src={src} 
-              alt={`Lady Victoria Hero ${i}`} 
+              alt={`Lady Victoria Designs Hero ${i}`} 
               className="w-full h-full object-cover scale-[1.15]"
             />
           </div>

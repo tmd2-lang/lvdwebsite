@@ -55,7 +55,7 @@ export default function MasonryGrid({ images, onImageClick }: MasonryGridProps) 
         >
           <Image 
             src={img.src} 
-            alt={img.alt || `Lady Victoria Design ${index}`} 
+            alt={img.alt || `Lady Victoria Designs ${index}`} 
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
             className="w-full h-auto object-cover transform transition-transform duration-[1.5s] ease-out group-hover:scale-110"
           />

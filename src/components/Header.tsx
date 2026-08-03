@@ -54,9 +54,9 @@ export default function Header() {
           isScrolled && !isMenuOpen ? "bg-ink/80 backdrop-blur-[12px] !mix-blend-normal py-4" : "bg-transparent"
         }`}
       >
-        <div className="justify-self-start font-display italic text-xl md:text-2xl pointer-events-auto cursor-pointer hover:opacity-70 transition-opacity">
+        <div className="justify-self-start font-display italic text-lg md:text-xl pointer-events-auto cursor-pointer hover:opacity-70 transition-opacity">
           <Link href="/" onClick={() => setIsMenuOpen(false)}>
-            Lady Victoria
+            Lady Victoria Designs
           </Link>
         </div>
         

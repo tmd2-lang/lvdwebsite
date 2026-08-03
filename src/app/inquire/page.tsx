@@ -77,7 +77,7 @@ export default function InquirePage() {
       <div className="w-full lg:w-1/2 h-[40vh] lg:h-screen lg:sticky lg:top-0 relative overflow-hidden z-10">
         <img 
           src="/gallery/Amber & Kendall Wedding/Amber&KendallTableShot3.jpeg" 
-          alt="Lady Victoria Design Process"
+          alt="Lady Victoria Designs Event Planning"
           className="w-full h-full object-cover scale-[1.05]"
         />
         <div className="absolute inset-0 bg-ink/20" />
