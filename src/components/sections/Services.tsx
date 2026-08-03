@@ -28,8 +28,11 @@ export default function Services() {
   return (
     <section className="w-full bg-ivory py-24 md:py-48 px-6 md:px-12" id="services">
       <div className="max-w-[1440px] mx-auto flex flex-col">
-        <div className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-gold mb-4 text-center">INVESTMENTS</div>
-        <h2 className="font-display text-[clamp(2.5rem,5vw,5rem)] text-ink mb-12 md:mb-16 text-center">Investments</h2>
+        <div className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-gold mb-4 text-center">INVESTMENTS & SCOPE</div>
+        <h2 className="font-display text-[clamp(2.5rem,5vw,5rem)] text-ink mb-4 text-center">Investments</h2>
+        <p className="font-body text-base md:text-lg text-ink/75 text-center max-w-2xl mx-auto mb-12 md:mb-16">
+          Every celebration is uniquely architected. Explore our core investment tiers or take our interactive calculator to estimate your scope.
+        </p>
         
         <div className="flex flex-col md:flex-row w-full h-[75vh] md:h-[70vh] gap-3 md:gap-4">
           {services.map((service, idx) => {
@@ -104,6 +107,28 @@ export default function Services() {
             );
           })}
         </div>
+
+        {/* QUIZ INTERACTIVE CALLOUT BANNER */}
+        <div className="w-full mt-12 md:mt-16 bg-ecru/80 border border-ink/10 p-8 md:p-12 rounded-sm flex flex-col md:flex-row items-center justify-between gap-8 shadow-xs">
+          <div className="flex flex-col text-center md:text-left">
+            <span className="font-body text-[10px] md:text-xs uppercase tracking-[0.25em] text-gold font-semibold mb-2">
+              INTERACTIVE INVESTMENT CALCULATOR
+            </span>
+            <h4 className="font-display text-2xl md:text-3xl text-ink mb-2">
+              Not sure what your vision requires?
+            </h4>
+            <p className="font-body text-sm md:text-base text-ink/75 max-w-xl">
+              Answer 7 brief questions about your guest count, venue, and design ambition to find your tailored tier estimate.
+            </p>
+          </div>
+          <a
+            href="/quiz"
+            className="shrink-0 bg-ink text-ivory px-8 py-4 font-body text-xs uppercase tracking-[0.2em] hover:bg-gold hover:text-ink transition-colors duration-300 shadow-sm"
+          >
+            Take the 2-Minute Quiz →
+          </a>
+        </div>
+
       </div>
     </section>
   );

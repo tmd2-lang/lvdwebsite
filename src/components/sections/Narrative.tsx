@@ -44,24 +44,37 @@ export default function Narrative() {
         "<" // run simultaneously
       );
 
-      // 2. Paragraphs Fade In (Scrubbed to scroll position)
-      const paragraphs = copyWrapperRef.current?.querySelectorAll("p");
+      // 2. Sequential Paragraph Spotlight Scroll
+      const paragraphs = copyWrapperRef.current?.querySelectorAll(".narrative-p");
       if (paragraphs) {
         paragraphs.forEach((p) => {
           gsap.fromTo(p, 
-            { opacity: 0, y: 40 },
+            { opacity: 0.2, y: 30, scale: 0.98 },
             {
               opacity: 1,
               y: 0,
-              ease: "power1.out",
+              scale: 1,
+              ease: "power2.out",
               scrollTrigger: {
                 trigger: p,
-                start: "top 95%",
-                end: "top 55%",
+                start: "top 75%",
+                end: "top 45%",
                 scrub: true,
               }
             }
           );
+
+          // Softly dim when scrolling past
+          gsap.to(p, {
+            opacity: 0.3,
+            ease: "power1.in",
+            scrollTrigger: {
+              trigger: p,
+              start: "bottom 45%",
+              end: "bottom 15%",
+              scrub: true,
+            }
+          });
         });
       }
 
@@ -85,19 +98,31 @@ export default function Narrative() {
         </h2>
       </div>
 
-      {/* 2. The Paragraphs (Normal Document Flow) */}
-      {/* Because pinSpacing: true is used above, these automatically wait for the animation to finish before scrolling into view! */}
-      <div ref={copyWrapperRef} className="relative z-10 w-full flex justify-center -mt-[15vh] pb-[20vh] px-6 md:px-12">
-        <div className="w-full max-w-4xl mx-auto flex flex-col text-center font-body text-xl md:text-2xl lg:text-[32px] leading-relaxed text-ivory/80 gap-[6vh]">
-          <p className="will-change-transform">
-            Flowers change a room before anyone says a word. That's the part we're obsessed with: the moment someone walks in and stops.
-          </p>
-          <p className="will-change-transform">
-            Lady Victoria Designs is a full-service event design and production company. Weddings, corporate, private gatherings, and the quiet floral gifts in between. We give shape to visions that are too big to describe.
-          </p>
-          <p className="will-change-transform">
-            Creativity is the easy part. What earns trust is the technical work behind it: the rigging, the load-in, the timing, the thousand things that have to hold while nobody notices them. Beauty that doesn't survive contact with a real venue isn't design, it's a mood board.
-          </p>
+      {/* 2. The Paragraphs (Sequential Editorial Reveal) */}
+      <div ref={copyWrapperRef} className="relative z-10 w-full flex flex-col items-center pb-[25vh] px-6 md:px-12">
+        <div className="w-full max-w-3xl mx-auto flex flex-col text-center font-body text-xl sm:text-2xl md:text-3xl lg:text-[32px] leading-[1.75] md:leading-[1.85] text-ivory gap-[22vh] md:gap-[28vh]">
+          
+          <div className="narrative-p will-change-transform flex flex-col items-center">
+            <span className="text-[10px] uppercase tracking-[0.25em] text-gold mb-6">THE ESSENCE</span>
+            <p className="text-ivory/95">
+              Flowers change a room before anyone says a word. That's the part we're obsessed with: the moment someone walks in and stops.
+            </p>
+          </div>
+
+          <div className="narrative-p will-change-transform flex flex-col items-center">
+            <span className="text-[10px] uppercase tracking-[0.25em] text-gold mb-6">THE SCOPE</span>
+            <p className="text-ivory/95">
+              Lady Victoria Designs is a full-service event design and production company. Weddings, corporate, private gatherings, and the quiet floral gifts in between. We give shape to visions that are too big to describe.
+            </p>
+          </div>
+
+          <div className="narrative-p will-change-transform flex flex-col items-center">
+            <span className="text-[10px] uppercase tracking-[0.25em] text-gold mb-6">THE CRAFT</span>
+            <p className="text-ivory/95">
+              Creativity is the easy part. What earns trust is the technical work behind it: the rigging, the load-in, the timing, the thousand things that have to hold while nobody notices them. Beauty that doesn't survive contact with a real venue isn't design, it's a mood board.
+            </p>
+          </div>
+
         </div>
       </div>
 

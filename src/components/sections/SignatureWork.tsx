@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+import Link from "next/link";
+
 export default function SignatureWork() {
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -28,11 +30,12 @@ export default function SignatureWork() {
       const getScrollDistance = () => {
         const lastChild = track.lastElementChild as HTMLElement;
         if (!lastChild) return 0;
-        // The distance we need to shift the track left is the right-most point of the last child
-        // minus the width of the window, plus the right padding (48px for px-12).
+        // The distance we need to shift the track left plus generous end buffer
+        // so the final image fully glides across and settles before unpinning.
         const rightEdge = lastChild.offsetLeft + lastChild.offsetWidth;
-        const paddingRight = 48; // px-12 = 3rem = 48px
-        return -(rightEdge + paddingRight - window.innerWidth);
+        const paddingRight = 48;
+        const endBuffer = window.innerWidth * 0.15;
+        return -(rightEdge + paddingRight + endBuffer - window.innerWidth);
       };
 
       const tl = gsap.to(track, {
@@ -42,7 +45,7 @@ export default function SignatureWork() {
           trigger: containerRef.current,
           pin: true,
           start: "top top",
-          end: () => `+=${Math.abs(getScrollDistance())}`,
+          end: () => `+=${Math.abs(getScrollDistance()) * 1.15}`,
           scrub: 1,
           invalidateOnRefresh: true,
         }
@@ -97,9 +100,12 @@ export default function SignatureWork() {
       </div>
 
       <div className="w-full flex justify-center mt-10 md:mt-12 shrink-0">
-        <button className="font-body text-xs md:text-sm uppercase tracking-[0.2em] text-ink border border-ink/20 px-8 py-4 hover:bg-ink hover:text-ivory transition-colors duration-300">
+        <Link 
+          href="/gallery"
+          className="font-body text-xs md:text-sm uppercase tracking-[0.2em] text-ink border border-ink/20 px-8 py-4 hover:bg-ink hover:text-ivory transition-colors duration-300"
+        >
           View Full Gallery
-        </button>
+        </Link>
       </div>
     </section>
   );

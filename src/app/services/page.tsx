@@ -371,6 +371,28 @@ export default function ServicesPage() {
               );
             })}
           </div>
+
+          {/* QUIZ INTERACTIVE CALLOUT BANNER */}
+          <div className="w-full mt-12 md:mt-16 bg-ecru/80 border border-ink/10 p-8 md:p-12 rounded-sm flex flex-col md:flex-row items-center justify-between gap-8 shadow-xs">
+            <div className="flex flex-col text-center md:text-left">
+              <span className="font-body text-[10px] md:text-xs uppercase tracking-[0.25em] text-gold font-semibold mb-2">
+                INTERACTIVE INVESTMENT CALCULATOR
+              </span>
+              <h4 className="font-display text-2xl md:text-3xl text-ink mb-2">
+                Not sure what your vision requires?
+              </h4>
+              <p className="font-body text-sm md:text-base text-ink/75 max-w-xl">
+                Answer 7 brief questions about your guest count, venue, and design ambition to find your tailored tier estimate.
+              </p>
+            </div>
+            <a
+              href="/quiz"
+              className="shrink-0 bg-ink text-ivory px-8 py-4 font-body text-xs uppercase tracking-[0.2em] hover:bg-gold hover:text-ink transition-colors duration-300 shadow-sm"
+            >
+              Take the 2-Minute Quiz →
+            </a>
+          </div>
+
         </div>
       </section>
 

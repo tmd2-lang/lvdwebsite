@@ -60,13 +60,14 @@ export default function Header() {
           </Link>
         </div>
         
-        <div className={`justify-self-center hidden md:flex gap-12 font-body text-[10px] uppercase tracking-[0.2em] pointer-events-auto transition-opacity duration-300 ${
+        <div className={`justify-self-center hidden md:flex gap-10 lg:gap-12 font-body text-[10px] uppercase tracking-[0.2em] pointer-events-auto transition-opacity duration-300 ${
           isMenuOpen ? "opacity-0 invisible" : "opacity-100 visible"
         }`}>
           <Link href="/" className="hover:opacity-70 transition-opacity">Home</Link>
           <Link href="/about" className="hover:opacity-70 transition-opacity">About</Link>
           <Link href="/services" className="hover:opacity-70 transition-opacity">Services</Link>
           <Link href="/gallery" className="hover:opacity-70 transition-opacity">Gallery</Link>
+          <Link href="/quiz" className="hover:text-gold transition-colors">Quiz</Link>
         </div>
 
         <div className="justify-self-end flex gap-8 items-center font-body text-[10px] md:text-xs uppercase tracking-[0.2em] pointer-events-auto">
@@ -102,6 +103,7 @@ export default function Header() {
             { name: "About", path: "/about" },
             { name: "Services", path: "/services" },
             { name: "Gallery", path: "/gallery" },
+            { name: "Quiz", path: "/quiz" },
             { name: "Inquire", path: "/inquire" }
           ].map((link, i) => (
             <div key={i} className="overflow-hidden py-1">
