@@ -48,10 +48,10 @@ export default function CollapsingHero() {
   }, []);
 
   const heroImages = [
-    "/gallery/white-green-botanicals/white-green-botanicals-01.jpeg",
-    "/gallery/purple-grandeur/purple-grandeur-01.jpg",
-    "/gallery/amber-kendall/amber-kendall-21.jpeg",
-    "/gallery/jenny-jordan/jenny-jordan-19.jpeg"
+    "/gallery/white-green-botanicals/white-green-botanicals-08.jpeg",
+    "/gallery/amber-kendall/amber-kendall-01.jpeg",
+    "/hero/3042192127745071772.jpg",
+    "/hero/TFR54093_websize.jpg"
   ];
 
   return (

@@ -12,12 +12,11 @@ export default function SignatureWork() {
   const trackRef = useRef<HTMLDivElement>(null);
 
   const images = [
-    { id: 1, src: "/gallery/white-green-botanicals/white-green-botanicals-01.jpeg", title: "Meridian House, DC" },
-    { id: 2, src: "/gallery/purple-grandeur/purple-grandeur-01.jpg", title: "The Anderson House" },
-    { id: 3, src: "/gallery/amber-kendall/amber-kendall-22.jpeg", title: "National Museum Reception" },
-    { id: 4, src: "/gallery/two-tone-luxe/two-tone-luxe-01.jpeg", title: "Private Country Estate" },
-    { id: 5, src: "/gallery/jenny-jordan/jenny-jordan-19.jpeg", title: "Bespoke Floral Design" },
-    { id: 6, src: "/gallery/r-and-j/r-and-j-01.jpeg", title: "Grand Architectural Arch" },
+    { id: 1, src: "/gallery/curated-installations/6203022671217922801.jpg", title: "Curated Floral Installation" },
+    { id: 2, src: "/gallery/amber-kendall/amber-kendall-30.jpeg", title: "Meridian House, DC" },
+    { id: 3, src: "/gallery/two-tone-luxe/two-tone-luxe-09.jpeg", title: "Private Country Estate" },
+    { id: 4, src: "/gallery/estate-florals/estate-florals-11.jpeg", title: "Sculptural Botanical Design" },
+    { id: 5, src: "/gallery/r-and-j/r-and-j-04.jpeg", title: "Grand Architectural Arch" },
   ];
 
   useEffect(() => {

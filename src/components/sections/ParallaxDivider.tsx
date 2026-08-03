@@ -40,7 +40,7 @@ export default function ParallaxDivider() {
         className="absolute top-[-10%] left-0 w-full h-[120%] will-change-transform"
       >
         <Image
-          src="/gallery/white-green-botanicals/white-green-botanicals-04.jpeg"
+          src="/hero/7077359122696507779.jpg"
           alt="Luxury Wedding Design - Lady Victoria Designs"
           fill
           sizes="100vw"
