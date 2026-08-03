@@ -7,7 +7,7 @@ const services = [
     title: "The Full Production",
     desc: "Comprehensive design, custom fabrication, and white-glove execution.",
     price: "Beginning at $55,000",
-    image: "/investments/full-production.jpg"
+    image: "/investments/the-essentials.jpg"
   },
   {
     title: "Design + Florals",
@@ -19,7 +19,7 @@ const services = [
     title: "The Essentials",
     desc: "Our signature floral collections for intimate gatherings.",
     price: "Beginning at $8,000",
-    image: "/investments/the-essentials.jpg"
+    image: "/gallery/white-green-botanicals/white-green-botanicals-04.jpeg"
   }
 ];
 

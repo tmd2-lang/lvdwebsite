@@ -14,7 +14,7 @@ const services = [
     description: "Our signature service. We orchestrate every visual and experiential element of your celebration from the ground up. From structural architecture and custom lighting design to bespoke tablescapes and spatial flow, we ensure your event holds together as one idea from the first sightline to the last dance.",
     scope: "Design & Production",
     includes: "Architecture, Logistics, Timeline",
-    image: "/gallery/purple-grandeur/purple-grandeur-01.jpg"
+    image: "/services/full-production.jpg"
   },
   {
     id: "floral",
@@ -32,7 +32,7 @@ const services = [
     description: "The part nobody is supposed to notice. Our production team builds and runs the technical side of your event: custom stage wraps, dance floor treatments, drapery and fabric work, and full lighting design. Everything is delivered, installed, and managed by the same crew, which means one team is accountable from load-in to strike.",
     scope: "Technical",
     includes: "Staging, Drapery, Lighting",
-    image: "/gallery/amber-kendall/amber-kendall-24.jpeg"
+    image: "/services/staging-and-lighting.jpg"
   },
   {
     id: "decor",
@@ -41,7 +41,7 @@ const services = [
     description: "The difference between a beautiful room and a luxury experience lies in the details. We curate an exclusive inventory of high-end linens, artisanal tableware, custom seating, and atmospheric lighting to build a tactile environment that your guests will never forget. Available à la carte or as part of a full commission.",
     scope: "Curation",
     includes: "Tablescapes, Furniture, Linens",
-    image: "/gallery/two-tone-luxe/two-tone-luxe-01.jpeg"
+    image: "/gallery/amber-kendall/amber-kendall-23.jpeg"
   }
 ];
 
@@ -50,25 +50,25 @@ const designFor = [
     id: "weddings",
     title: "Weddings",
     description: "Ceremony, reception, and everything in between. Our largest commissions and our first love.",
-    image: "/gallery/jenny-jordan/jenny-jordan-19.jpeg"
+    image: "/services/weddings.jpg"
   },
   {
     id: "corporate",
     title: "Corporate",
     description: "Branded stages, activations, and gatherings that need to look like the company hosting them.",
-    image: "/gallery/r-and-j/r-and-j-01.jpeg"
+    image: "/gallery/amber-kendall/amber-kendall-05.jpeg"
   },
   {
     id: "private",
     title: "Private Celebrations",
     description: "Milestones, anniversaries, and the parties people talk about for years.",
-    image: "/gallery/amber-kendall/amber-kendall-22.jpeg"
+    image: "/gallery/two-tone-luxe/two-tone-luxe-08.jpeg"
   },
   {
     id: "gifting",
     title: "Floral Gifting",
     description: "Sympathy arrangements and seasonal bouquets, designed with the same care as a full installation.",
-    image: "/gallery/estate-florals/estate-florals-01.jpeg"
+    image: "/gallery/editorial-wedding-archive/editorial-wedding-archive-16.jpg"
   }
 ];
 
@@ -77,7 +77,7 @@ const investmentsData = [
     title: "The Full Production",
     desc: "Comprehensive design, custom fabrication, and white-glove execution.",
     price: "FROM $55,000",
-    image: "/investments/full-production.jpg"
+    image: "/investments/the-essentials.jpg"
   },
   {
     title: "Design + Florals",
@@ -89,7 +89,7 @@ const investmentsData = [
     title: "The Essentials",
     desc: "Our signature floral collections for intimate gatherings.",
     price: "FROM $8,000",
-    image: "/investments/the-essentials.jpg"
+    image: "/gallery/white-green-botanicals/white-green-botanicals-04.jpeg"
   }
 ];
 
@@ -198,8 +198,8 @@ export default function ServicesPage() {
       <section className="w-full px-4 md:px-8 flex justify-center bg-ivory">
         <div className="w-full h-[70vh] md:h-[80vh] overflow-hidden floating-hero-image rounded-sm relative">
           <Image
-            src="/gallery/white-green-botanicals/white-green-botanicals-04.jpeg"
-            alt="Lady Victoria Designs Excellence"
+            src="/gallery/editorial-wedding-archive/editorial-wedding-archive-31.jpg"
+            alt="White floral ceremony aisle designed by Lady Victoria Designs"
             fill
             sizes="100vw"
             fetchPriority="high"
