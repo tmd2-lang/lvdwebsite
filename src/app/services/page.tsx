@@ -5,6 +5,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Contact from "@/components/sections/Contact";
 import Image from "next/image";
+import InvestmentModal from "@/components/sections/InvestmentModal";
+import { INVESTMENT_TIERS } from "@/data/investments";
 
 const services = [
   {
@@ -38,7 +40,7 @@ const services = [
     id: "decor",
     typeLabel: "Curation",
     title: "Décor & Rentals",
-    description: "Décor gives a room its rhythm: where guests gather, what they touch, and how each view feels. We curate furniture, linens, tabletop pieces, and finishing details to support the larger design instead of competing with it. Available as part of a full commission or for select à la carte needs.",
+    description: "Décor gives a room its rhythm: where guests gather, what they touch, and how each view feels. We curate furniture, linens, tabletop pieces, and finishing details to support the larger design instead of competing with it. Available as part of a full-service design experience or for select à la carte needs.",
     scope: "Curation",
     includes: "Furniture, Linens, Tabletop",
     image: "/gallery/amber-kendall/amber-kendall-23.jpeg"
@@ -72,40 +74,22 @@ const designFor = [
   }
 ];
 
-const investmentsData = [
-  {
-    title: "The Full Production",
-    desc: "Creative direction, floral design, production, custom elements, and on-site execution.",
-    price: "FROM $55,000",
-    image: "/investments/the-essentials.jpg"
-  },
-  {
-    title: "Design + Florals",
-    desc: "A focused design plan paired with bespoke florals and installation.",
-    price: "FROM $20,000",
-    image: "/investments/design-and-florals.jpeg"
-  },
-  {
-    title: "The Essentials",
-    desc: "Signature florals and considered details for intimate celebrations.",
-    price: "FROM $8,000",
-    image: "/gallery/white-green-botanicals/white-green-botanicals-04.jpeg"
-  }
-];
-
 export default function ServicesPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeInvestmentIndex, setActiveInvestmentIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalTierId, setModalTierId] = useState<string | null>(null);
+
+  const openModalForTier = (tierId: string) => {
+    setModalTierId(tierId);
+    setIsModalOpen(true);
+  };
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
-
-    // FIX: White band bug
-    // Changed yPercent from -15/15 to -10/10 so the image translation 
-    // doesn't exceed the scale-[1.3] overflow bounds.
     
     // 1. Floating Hero Image Parallax (Vero Style)
     gsap.fromTo(".floating-hero-img-inner", 
@@ -122,9 +106,11 @@ export default function ServicesPage() {
       }
     );
 
-    // 2. Swiss Grid Service Images Parallax
-    gsap.utils.toArray<HTMLElement>('.service-image-container').forEach((container) => {
-      const img = container.querySelector('img');
+    // 2. Service Images Parallax
+    gsap.utils.toArray<HTMLElement>(".service-image-container").forEach((container) => {
+      const img = container.querySelector("img");
+      if (!img) return;
+
       gsap.fromTo(img, 
         { yPercent: -10 },
         {
@@ -140,36 +126,18 @@ export default function ServicesPage() {
       );
     });
 
-    // 3. Intro Text Fade-up
-    gsap.fromTo(".intro-text-block", 
-      { opacity: 0, y: 50 },
-      {
-        opacity: 1, 
-        y: 0,
-        duration: 1.2,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".intro-text-block",
-          start: "top 80%"
-        }
+    // 3. Design For Cards Stagger
+    gsap.from(".design-for-card", {
+      y: 40,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.15,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: ".design-for-container",
+        start: "top 80%"
       }
-    );
-    
-    // 4. What We Design For Fade-up stagger
-    gsap.fromTo(".design-for-card",
-      { opacity: 0, y: 30 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: ".design-for-container",
-          start: "top 75%"
-        }
-      }
-    );
+    });
 
     }, containerRef);
 
@@ -177,40 +145,40 @@ export default function ServicesPage() {
   }, []);
 
   return (
-    <main className="w-full bg-ivory text-ink relative" ref={containerRef}>
+    <main ref={containerRef} className="w-full bg-ivory text-ink flex flex-col relative">
       
-      {/* HEADER SECTION */}
-      <section className="w-full pt-48 pb-24 px-6 md:px-12 flex flex-col items-center justify-center text-center bg-ivory">
-        <div className="font-body text-xs uppercase tracking-[0.2em] text-gold mb-6 flex items-center gap-4">
-           <span className="w-8 h-px bg-gold/50"></span>
-           OUR EXPERTISE
-           <span className="w-8 h-px bg-gold/50"></span>
+      {/* HERO SECTION */}
+      <section className="w-full min-h-[90vh] md:min-h-[85vh] flex flex-col justify-end px-6 md:px-12 pb-16 md:pb-24 pt-32 md:pt-48 border-b border-ink/20">
+        <div className="max-w-[1440px] w-full mx-auto flex flex-col">
+          <div className="flex items-center gap-3 mb-6">
+            <span className="w-2.5 h-2.5 rounded-full bg-gold" />
+            <span className="font-body text-xs md:text-sm uppercase tracking-[0.2em] text-ink/70">SERVICES &amp; CAPABILITIES</span>
+          </div>
+          <h1 className="font-display text-[clamp(2.5rem,7vw,6.5rem)] text-ink leading-[1.05] tracking-tight max-w-5xl mb-8">
+            Spatial Design, Artful Florals &amp; Masterful Production.
+          </h1>
+          <p className="font-body text-lg md:text-xl text-ink/75 max-w-2xl leading-relaxed">
+            From historic private estates to grand ballrooms, we design cohesive celebration environments where every visual element is developed in concert.
+          </p>
         </div>
-        <h1 className="font-display text-[clamp(3rem,6vw,6rem)] text-ink max-w-4xl mx-auto leading-none mb-8">
-          Architects of the <span className="italic text-gold">Extraordinary</span>
-        </h1>
-        <p className="font-body text-ink/70 max-w-2xl mx-auto leading-relaxed text-sm md:text-base">
-          Lady Victoria Designs shapes weddings and celebrations from first concept through final installation. We bring design, florals, production, lighting, and décor together under one creative direction. The result is a room where every element feels considered and every detail belongs.
-        </p>
       </section>
 
-      {/* VERO-STYLE FLOATING HERO IMAGE */}
-      <section className="w-full px-4 md:px-8 flex justify-center bg-ivory">
-        <div className="w-full h-[70vh] md:h-[80vh] overflow-hidden floating-hero-image rounded-sm relative">
+      {/* FLOATING HERO IMAGE */}
+      <section className="w-full px-6 md:px-12 py-12 md:py-20 border-b border-ink/20 flex justify-center bg-ivory">
+        <div className="max-w-[1440px] w-full h-[50vh] md:h-[70vh] overflow-hidden relative floating-hero-image">
           <Image
-            src="/gallery/editorial-wedding-archive/editorial-wedding-archive-31.jpg"
-            alt="White floral ceremony aisle designed by Lady Victoria Designs"
+            src="/investments/the-essentials.jpg"
+            alt="Grand suspended floral ceiling installation by Lady Victoria Designs"
             fill
             sizes="100vw"
-            fetchPriority="high"
             className="w-full h-full object-cover scale-[1.3] floating-hero-img-inner origin-center"
           />
         </div>
       </section>
 
       {/* TYPOGRAPHY INTRO BLOCK */}
-      <section className="w-full px-6 md:px-12 py-32 flex flex-col items-center justify-center text-center bg-ivory intro-text-block">
-        <h2 className="font-display text-[clamp(2.5rem,4vw,4.5rem)] text-ink max-w-5xl mx-auto leading-tight mb-12">
+      <section className="w-full px-6 md:px-12 py-20 md:py-32 flex flex-col items-center justify-center text-center bg-ivory intro-text-block">
+        <h2 className="font-display text-[clamp(2.5rem,4vw,4.5rem)] text-ink max-w-5xl mx-auto leading-tight mb-8 md:mb-12">
           Design + Décor + Details.<br/>
           <span className="italic text-gold">And everything in between, flawlessly delivered.</span>
         </h2>
@@ -219,7 +187,7 @@ export default function ServicesPage() {
             No two celebrations begin in the same place. You may arrive with a complete vision, a favorite color, a saved image, or simply a feeling. Our work is to translate that starting point into a room that feels unmistakably yours.
           </p>
           <p>
-            Each commission is shaped around your venue, guest experience, priorities, and investment, then carried from concept through installation by one accountable team.
+            Each celebration is shaped around your venue, guest experience, priorities, and investment, then carried from concept through installation by one accountable team.
           </p>
         </div>
       </section>
@@ -233,10 +201,10 @@ export default function ServicesPage() {
             <div key={service.id} className={`w-full flex flex-col-reverse lg:flex-row border-t border-ink/20 ${!isEven ? 'lg:flex-row-reverse' : ''}`}>
               
               {/* TEXT HALF */}
-              <div className={`w-full lg:w-1/3 flex flex-col justify-between p-8 md:p-12 lg:p-16 ${isEven ? 'lg:border-r border-ink/20' : 'lg:border-l border-ink/20'} min-h-[50vh]`}>
+              <div className={`w-full lg:w-1/3 flex flex-col justify-between p-8 md:p-12 lg:p-16 ${isEven ? 'lg:border-r border-ink/20' : 'lg:border-l border-ink/20'} min-h-0 lg:min-h-[50vh]`}>
                 
                 {/* Top: Title & Type */}
-                <div className="mb-24">
+                <div className="mb-12 md:mb-16 lg:mb-24">
                   <span className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 block mb-4">{service.typeLabel}</span>
                   <h2 className="font-display text-4xl md:text-5xl text-ink uppercase tracking-wide leading-tight">
                     {service.title}
@@ -244,12 +212,12 @@ export default function ServicesPage() {
                 </div>
                 
                 {/* Bottom: Description & Specs */}
-                <div className="flex flex-col gap-12 mt-auto">
+                <div className="flex flex-col gap-8 md:gap-12 mt-auto">
                   <p className="font-body text-sm md:text-base text-ink/80 leading-relaxed max-w-md whitespace-pre-wrap">
                     {service.description}
                   </p>
                   
-                  <div className="flex gap-12">
+                  <div className="flex flex-wrap gap-8 md:gap-12">
                     <div className="flex flex-col gap-2">
                       <span className="font-body text-[9px] uppercase tracking-[0.2em] text-ink/50">SCOPE</span>
                       <span className="font-body text-xs md:text-sm text-ink/90">{service.scope}</span>
@@ -265,7 +233,7 @@ export default function ServicesPage() {
 
               {/* IMAGE HALF */}
               <div className="w-full lg:w-2/3 p-0 md:p-8 lg:p-16">
-                <div className="w-full h-[50vh] md:h-[60vh] lg:h-[80vh] overflow-hidden relative service-image-container">
+                <div className="w-full h-[45vh] sm:h-[50vh] md:h-[60vh] lg:h-[80vh] overflow-hidden relative service-image-container">
                   <Image
                     src={service.image} 
                     alt={service.title}
@@ -282,15 +250,15 @@ export default function ServicesPage() {
       </section>
 
       {/* NEW SECTION: WHAT WE DESIGN FOR */}
-      <section className="w-full bg-ivory py-32 px-6 md:px-12 border-b border-ink/20 design-for-container">
+      <section className="w-full bg-ivory py-20 md:py-32 px-6 md:px-12 border-b border-ink/20 design-for-container">
         <div className="max-w-[1440px] mx-auto">
-          <div className="font-body text-[10px] uppercase tracking-[0.2em] text-gold mb-16 text-center">
+          <div className="font-body text-[10px] uppercase tracking-[0.2em] text-gold mb-10 md:mb-16 text-center">
             WHAT WE DESIGN FOR
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
             {designFor.map((item) => (
               <div key={item.id} className="flex flex-col design-for-card">
-                <div className="w-full aspect-[4/5] overflow-hidden mb-8 relative">
+                <div className="w-full aspect-[4/5] overflow-hidden mb-5 md:mb-8 relative">
                   <Image src={item.image} alt={item.title} fill sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 25vw" className="w-full h-full object-cover" />
                 </div>
                 <h3 className="font-display text-2xl text-ink mb-4">{item.title}</h3>
@@ -304,42 +272,46 @@ export default function ServicesPage() {
       </section>
 
       {/* NEW SECTION: INVESTMENTS */}
-      <section className="w-full bg-ivory py-32 md:py-48 px-6 md:px-12 border-b border-ink/20">
+      <section className="w-full bg-ivory py-20 md:py-32 lg:py-40 px-6 md:px-12 border-b border-ink/20">
         <div className="max-w-[1440px] mx-auto flex flex-col">
           <div className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-gold mb-4 text-center">INVESTMENTS</div>
           <h2 className="font-display text-[clamp(2.5rem,5vw,5rem)] text-ink mb-4 text-center">Investments</h2>
           <p className="font-body text-ink/70 text-sm md:text-base text-center max-w-xl mx-auto mb-16">
-            Every commission is tailored to its venue, guest count, and design scope. These figures are starting points, not fixed packages.
+            Every event is tailored to its venue, guest count, and design scope. Click any tier below to explore its comprehensive deliverables and scope.
           </p>
           
           <div className="flex flex-col md:flex-row w-full h-[70vh] gap-4 md:gap-4">
-            {investmentsData.map((service, idx) => {
+            {INVESTMENT_TIERS.map((tier, idx) => {
               const isActive = activeInvestmentIndex === idx;
               
               return (
-                <button
-                  type="button"
-                  key={idx}
+                <div
+                  key={tier.id}
                   onMouseEnter={() => setActiveInvestmentIndex(idx)}
                   onFocus={() => setActiveInvestmentIndex(idx)}
-                  onClick={() => setActiveInvestmentIndex(idx)}
-                  aria-pressed={isActive}
+                  onClick={() => {
+                    if (isActive) {
+                      openModalForTier(tier.id);
+                    } else {
+                      setActiveInvestmentIndex(idx);
+                    }
+                  }}
                   className={`relative flex flex-col justify-end overflow-hidden group cursor-pointer transition-[flex-grow,width] duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] rounded-sm ${
                     isActive ? "flex-[3_3_0%] md:w-[60%]" : "flex-[1_1_0%] md:w-[20%]"
                   }`}
                 >
                   <Image
-                    src={service.image} 
+                    src={tier.image} 
                     fill
                     sizes={isActive ? "(max-width: 767px) 100vw, 60vw" : "(max-width: 767px) 100vw, 20vw"}
                     className={`absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out ${
                       isActive ? "scale-100" : "scale-110"
                     }`}
-                    alt={service.title}
+                    alt={tier.name}
                   />
                   
-                  <div className={`absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-transparent transition-opacity duration-700 ${
-                    isActive ? "opacity-100" : "opacity-40 group-hover:opacity-70"
+                  <div className={`absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/30 to-transparent transition-opacity duration-700 ${
+                    isActive ? "opacity-100" : "opacity-50 group-hover:opacity-70"
                   }`} />
 
                   <div className="relative z-10 w-full h-full">
@@ -352,13 +324,13 @@ export default function ServicesPage() {
                       <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-ink/90 to-transparent pointer-events-none -z-10" />
                       
                       <h3 className="font-display text-3xl xl:text-4xl text-ivory whitespace-nowrap hidden md:block -rotate-90 origin-center absolute bottom-1/2 translate-y-1/2">
-                        {service.title}
+                        {tier.name}
                       </h3>
                       <h3 className="font-display text-2xl md:text-3xl text-ivory block md:hidden mb-1 md:mb-6 px-6 text-center">
-                        {service.title}
+                        {tier.name}
                       </h3>
-                      <div className="font-body text-[7px] uppercase tracking-widest text-ivory hidden md:block mt-auto text-center px-4 w-full">
-                        {service.price}
+                      <div className="font-body text-[8px] uppercase tracking-widest text-gold hidden md:block mt-auto text-center px-4 w-full">
+                        {tier.price}
                       </div>
                     </div>
 
@@ -366,21 +338,44 @@ export default function ServicesPage() {
                     <div className={`absolute inset-0 p-6 md:p-12 flex flex-col justify-end transition-all duration-700 ease-out ${
                       isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8 pointer-events-none"
                     }`}>
-                      <h3 className="font-display text-4xl md:text-5xl lg:text-6xl mb-6 text-ivory">
-                        {service.title}
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="font-body text-[10px] uppercase tracking-[0.25em] text-gold font-bold">
+                          {tier.tierLabel}
+                        </span>
+                      </div>
+                      <h3 className="font-display text-4xl md:text-5xl lg:text-6xl mb-3 text-ivory">
+                        {tier.name}
                       </h3>
+                      <p className="font-display italic text-base md:text-lg text-gold/90 mb-6">
+                        &ldquo;{tier.tagline}&rdquo;
+                      </p>
+
                       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-t border-ivory/30 pt-6">
-                        <p className="font-body text-base md:text-lg leading-[1.6] max-w-[40ch] text-ivory/90">
-                          {service.desc}
+                        <p className="font-body text-sm md:text-base leading-[1.6] max-w-[40ch] text-ivory/90">
+                          {tier.desc}
                         </p>
-                        <p className="font-body text-xs uppercase tracking-[0.2em] text-gold whitespace-nowrap">
-                          {service.price}
-                        </p>
+                        
+                        <div className="flex flex-col items-start md:items-end gap-3 shrink-0">
+                          <span className="font-body text-xs uppercase tracking-[0.2em] text-gold whitespace-nowrap font-medium">
+                            {tier.price}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openModalForTier(tier.id);
+                            }}
+                            className="px-5 py-2.5 rounded-full bg-ivory/15 hover:bg-gold hover:text-ink text-ivory backdrop-blur-sm border border-ivory/30 font-body text-[11px] uppercase tracking-[0.18em] transition-all duration-300 flex items-center gap-2 cursor-pointer shadow-sm"
+                          >
+                            <span>Explore Full Scope</span>
+                            <span className="text-xs">↗</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
 
                   </div>
-                </button>
+                </div>
               );
             })}
           </div>
@@ -411,6 +406,14 @@ export default function ServicesPage() {
 
       {/* FINAL CTA SECTION */}
       <Contact />
+
+      {/* INVESTMENT MODAL POPUP */}
+      <InvestmentModal
+        isOpen={isModalOpen}
+        activeTierId={modalTierId}
+        onClose={() => setIsModalOpen(false)}
+        onSelectTier={(tierId) => setModalTierId(tierId)}
+      />
 
     </main>
   );
