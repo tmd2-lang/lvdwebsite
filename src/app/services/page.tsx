@@ -162,11 +162,12 @@ export default function ServicesPage() {
       <section className="w-full px-6 md:px-12 py-12 md:py-20 border-b border-ink/20 flex justify-center bg-ivory">
         <div className="max-w-[1440px] w-full h-[50vh] md:h-[70vh] overflow-hidden relative floating-hero-image">
           <Image
-            src="/investments/the-essentials.jpg"
-            alt="Grand suspended floral ceiling installation by Lady Victoria Designs"
+            src="/services/services-hero.jpg"
+            alt="Luxury celebration design and floral artistry by Lady Victoria Designs"
             fill
             sizes="100vw"
             className="w-full h-full object-cover scale-[1.3] floating-hero-img-inner origin-center"
+            priority
           />
         </div>
       </section>
