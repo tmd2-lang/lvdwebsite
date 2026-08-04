@@ -10,6 +10,132 @@ export type GalleryImage = {
 
 export const galleryImages: GalleryImage[] = [
   {
+    "src": "/gallery/aniedi-ekemini/aniedi-ekemini-13.jpg",
+    "width": 2400,
+    "height": 1801,
+    "alt": "Aniedi & Ekemini Luxury Ballroom Floral Arch - Lady Victoria Designs",
+    "collection": "Aniedi & Ekemini Wedding",
+    "category": "Receptions",
+    "slug": "aniedi-ekemini"
+  },
+  {
+    "src": "/gallery/aniedi-ekemini/aniedi-ekemini-12.jpg",
+    "width": 2400,
+    "height": 1801,
+    "alt": "Aniedi & Ekemini Grand Reception Ballroom - Lady Victoria Designs",
+    "collection": "Aniedi & Ekemini Wedding",
+    "category": "Receptions",
+    "slug": "aniedi-ekemini"
+  },
+  {
+    "src": "/gallery/aniedi-ekemini/aniedi-ekemini-01.jpg",
+    "width": 1537,
+    "height": 2048,
+    "alt": "Aniedi & Ekemini Wedding - Lady Victoria Designs",
+    "collection": "Aniedi & Ekemini Wedding",
+    "category": "Weddings",
+    "slug": "aniedi-ekemini"
+  },
+  {
+    "src": "/gallery/aniedi-ekemini/aniedi-ekemini-02.jpg",
+    "width": 1537,
+    "height": 2048,
+    "alt": "Aniedi & Ekemini Wedding - Lady Victoria Designs",
+    "collection": "Aniedi & Ekemini Wedding",
+    "category": "Weddings",
+    "slug": "aniedi-ekemini"
+  },
+  {
+    "src": "/gallery/aniedi-ekemini/aniedi-ekemini-03.jpg",
+    "width": 2048,
+    "height": 1537,
+    "alt": "Aniedi & Ekemini Wedding - Lady Victoria Designs",
+    "collection": "Aniedi & Ekemini Wedding",
+    "category": "Weddings",
+    "slug": "aniedi-ekemini"
+  },
+  {
+    "src": "/gallery/aniedi-ekemini/aniedi-ekemini-04.jpg",
+    "width": 1537,
+    "height": 2048,
+    "alt": "Aniedi & Ekemini Ceremony Floral Architecture - Lady Victoria Designs",
+    "collection": "Aniedi & Ekemini Wedding",
+    "category": "Ceremonies",
+    "slug": "aniedi-ekemini"
+  },
+  {
+    "src": "/gallery/aniedi-ekemini/aniedi-ekemini-05.jpg",
+    "width": 1537,
+    "height": 2048,
+    "alt": "Aniedi & Ekemini Ceremony Arch - Lady Victoria Designs",
+    "collection": "Aniedi & Ekemini Wedding",
+    "category": "Ceremonies",
+    "slug": "aniedi-ekemini"
+  },
+  {
+    "src": "/gallery/aniedi-ekemini/aniedi-ekemini-06.jpg",
+    "width": 1537,
+    "height": 2048,
+    "alt": "Aniedi & Ekemini Wedding - Lady Victoria Designs",
+    "collection": "Aniedi & Ekemini Wedding",
+    "category": "Weddings",
+    "slug": "aniedi-ekemini"
+  },
+  {
+    "src": "/gallery/aniedi-ekemini/aniedi-ekemini-07.jpg",
+    "width": 1537,
+    "height": 2048,
+    "alt": "Aniedi & Ekemini Wedding - Lady Victoria Designs",
+    "collection": "Aniedi & Ekemini Wedding",
+    "category": "Weddings",
+    "slug": "aniedi-ekemini"
+  },
+  {
+    "src": "/gallery/aniedi-ekemini/aniedi-ekemini-08.jpg",
+    "width": 1537,
+    "height": 2048,
+    "alt": "Aniedi & Ekemini Wedding - Lady Victoria Designs",
+    "collection": "Aniedi & Ekemini Wedding",
+    "category": "Weddings",
+    "slug": "aniedi-ekemini"
+  },
+  {
+    "src": "/gallery/aniedi-ekemini/aniedi-ekemini-09.jpg",
+    "width": 1537,
+    "height": 2048,
+    "alt": "Aniedi & Ekemini Reception Tablescape - Lady Victoria Designs",
+    "collection": "Aniedi & Ekemini Wedding",
+    "category": "Tablescapes",
+    "slug": "aniedi-ekemini"
+  },
+  {
+    "src": "/gallery/aniedi-ekemini/aniedi-ekemini-10.jpg",
+    "width": 1537,
+    "height": 2048,
+    "alt": "Aniedi & Ekemini Reception Design - Lady Victoria Designs",
+    "collection": "Aniedi & Ekemini Wedding",
+    "category": "Receptions",
+    "slug": "aniedi-ekemini"
+  },
+  {
+    "src": "/gallery/aniedi-ekemini/aniedi-ekemini-11.jpg",
+    "width": 1537,
+    "height": 2048,
+    "alt": "Aniedi & Ekemini Reception Design - Lady Victoria Designs",
+    "collection": "Aniedi & Ekemini Wedding",
+    "category": "Receptions",
+    "slug": "aniedi-ekemini"
+  },
+  {
+    "src": "/gallery/aniedi-ekemini/aniedi-ekemini-14.jpg",
+    "width": 1365,
+    "height": 2048,
+    "alt": "Aniedi & Ekemini Sweetheart Stage - Lady Victoria Designs",
+    "collection": "Aniedi & Ekemini Wedding",
+    "category": "Receptions",
+    "slug": "aniedi-ekemini"
+  },
+  {
     "src": "/gallery/amber-kendall/amber-kendall-01.jpeg",
     "width": 1348,
     "height": 898,
@@ -310,15 +436,6 @@ export const galleryImages: GalleryImage[] = [
     "src": "/gallery/amber-kendall/amber-kendall-34.jpeg",
     "width": 2752,
     "height": 4128,
-    "alt": "Amber & Kendall Wedding - Lady Victoria Designs",
-    "collection": "Amber & Kendall Wedding",
-    "category": "Weddings",
-    "slug": "amber-kendall"
-  },
-  {
-    "src": "/gallery/amber-kendall/amber-kendall-35.jpeg",
-    "width": 5120,
-    "height": 3413,
     "alt": "Amber & Kendall Wedding - Lady Victoria Designs",
     "collection": "Amber & Kendall Wedding",
     "category": "Weddings",
@@ -685,15 +802,6 @@ export const galleryImages: GalleryImage[] = [
     "slug": "editorial-wedding-archive"
   },
   {
-    "src": "/gallery/editorial-wedding-archive/editorial-wedding-archive-07.jpg",
-    "width": 1472,
-    "height": 2200,
-    "alt": "Editorial wedding and floral design by Lady Victoria Designs",
-    "collection": "Editorial Wedding Archive",
-    "category": "Weddings",
-    "slug": "editorial-wedding-archive"
-  },
-  {
     "src": "/gallery/editorial-wedding-archive/editorial-wedding-archive-08.jpg",
     "width": 1472,
     "height": 2200,
@@ -767,15 +875,6 @@ export const galleryImages: GalleryImage[] = [
   },
   {
     "src": "/gallery/editorial-wedding-archive/editorial-wedding-archive-16.jpg",
-    "width": 2200,
-    "height": 1466,
-    "alt": "Editorial wedding and floral design by Lady Victoria Designs",
-    "collection": "Editorial Wedding Archive",
-    "category": "Weddings",
-    "slug": "editorial-wedding-archive"
-  },
-  {
-    "src": "/gallery/editorial-wedding-archive/editorial-wedding-archive-17.jpg",
     "width": 2200,
     "height": 1466,
     "alt": "Editorial wedding and floral design by Lady Victoria Designs",
@@ -912,15 +1011,6 @@ export const galleryImages: GalleryImage[] = [
   {
     "src": "/gallery/editorial-wedding-archive/editorial-wedding-archive-32.jpg",
     "width": 1467,
-    "height": 2200,
-    "alt": "Editorial wedding and floral design by Lady Victoria Designs",
-    "collection": "Editorial Wedding Archive",
-    "category": "Weddings",
-    "slug": "editorial-wedding-archive"
-  },
-  {
-    "src": "/gallery/editorial-wedding-archive/editorial-wedding-archive-33.jpg",
-    "width": 1465,
     "height": 2200,
     "alt": "Editorial wedding and floral design by Lady Victoria Designs",
     "collection": "Editorial Wedding Archive",
@@ -1315,15 +1405,6 @@ export const galleryImages: GalleryImage[] = [
     "slug": "estate-florals"
   },
   {
-    "src": "/gallery/grand-staircase-wedding/grand-staircase-wedding-01.jpg",
-    "width": 1472,
-    "height": 2200,
-    "alt": "Grand staircase wedding and floral design by Lady Victoria Designs",
-    "collection": "Grand Staircase Wedding",
-    "category": "Weddings",
-    "slug": "grand-staircase-wedding"
-  },
-  {
     "src": "/gallery/grand-staircase-wedding/grand-staircase-wedding-02.jpg",
     "width": 1472,
     "height": 2200,
@@ -1387,24 +1468,6 @@ export const galleryImages: GalleryImage[] = [
     "slug": "grand-staircase-wedding"
   },
   {
-    "src": "/gallery/grand-staircase-wedding/grand-staircase-wedding-09.jpg",
-    "width": 1472,
-    "height": 2200,
-    "alt": "Grand staircase wedding and floral design by Lady Victoria Designs",
-    "collection": "Grand Staircase Wedding",
-    "category": "Weddings",
-    "slug": "grand-staircase-wedding"
-  },
-  {
-    "src": "/gallery/grand-staircase-wedding/grand-staircase-wedding-10.jpg",
-    "width": 1472,
-    "height": 2200,
-    "alt": "Grand staircase wedding and floral design by Lady Victoria Designs",
-    "collection": "Grand Staircase Wedding",
-    "category": "Weddings",
-    "slug": "grand-staircase-wedding"
-  },
-  {
     "src": "/gallery/grand-staircase-wedding/grand-staircase-wedding-11.jpg",
     "width": 2200,
     "height": 1451,
@@ -1414,36 +1477,9 @@ export const galleryImages: GalleryImage[] = [
     "slug": "grand-staircase-wedding"
   },
   {
-    "src": "/gallery/grand-staircase-wedding/grand-staircase-wedding-12.jpg",
-    "width": 2200,
-    "height": 1454,
-    "alt": "Grand staircase wedding and floral design by Lady Victoria Designs",
-    "collection": "Grand Staircase Wedding",
-    "category": "Weddings",
-    "slug": "grand-staircase-wedding"
-  },
-  {
-    "src": "/gallery/grand-staircase-wedding/grand-staircase-wedding-13.jpg",
-    "width": 1472,
-    "height": 2200,
-    "alt": "Grand staircase wedding and floral design by Lady Victoria Designs",
-    "collection": "Grand Staircase Wedding",
-    "category": "Weddings",
-    "slug": "grand-staircase-wedding"
-  },
-  {
     "src": "/gallery/grand-staircase-wedding/grand-staircase-wedding-14.jpg",
     "width": 2200,
     "height": 1451,
-    "alt": "Grand staircase wedding and floral design by Lady Victoria Designs",
-    "collection": "Grand Staircase Wedding",
-    "category": "Weddings",
-    "slug": "grand-staircase-wedding"
-  },
-  {
-    "src": "/gallery/grand-staircase-wedding/grand-staircase-wedding-15.jpg",
-    "width": 1472,
-    "height": 2200,
     "alt": "Grand staircase wedding and floral design by Lady Victoria Designs",
     "collection": "Grand Staircase Wedding",
     "category": "Weddings",
@@ -1723,15 +1759,6 @@ export const galleryImages: GalleryImage[] = [
     "src": "/gallery/jenny-jordan/jenny-jordan-31.jpeg",
     "width": 2304,
     "height": 4096,
-    "alt": "Jenny & Jordan Wedding - Lady Victoria Designs",
-    "collection": "Jenny & Jordan Wedding",
-    "category": "Weddings",
-    "slug": "jenny-jordan"
-  },
-  {
-    "src": "/gallery/jenny-jordan/jenny-jordan-32.jpeg",
-    "width": 2263,
-    "height": 3394,
     "alt": "Jenny & Jordan Wedding - Lady Victoria Designs",
     "collection": "Jenny & Jordan Wedding",
     "category": "Weddings",
@@ -2080,96 +2107,6 @@ export const galleryImages: GalleryImage[] = [
     "slug": "r-and-j"
   },
   {
-    "src": "/gallery/table-artistry/table-artistry-01.jpeg",
-    "width": 1600,
-    "height": 1066,
-    "alt": "Bespoke Table Artistry - Lady Victoria Designs",
-    "collection": "Bespoke Table Artistry",
-    "category": "Tablescapes",
-    "slug": "table-artistry"
-  },
-  {
-    "src": "/gallery/table-artistry/table-artistry-02.jpeg",
-    "width": 1348,
-    "height": 898,
-    "alt": "Bespoke Table Artistry - Lady Victoria Designs",
-    "collection": "Bespoke Table Artistry",
-    "category": "Tablescapes",
-    "slug": "table-artistry"
-  },
-  {
-    "src": "/gallery/table-artistry/table-artistry-03.jpeg",
-    "width": 1066,
-    "height": 1600,
-    "alt": "Bespoke Table Artistry - Lady Victoria Designs",
-    "collection": "Bespoke Table Artistry",
-    "category": "Tablescapes",
-    "slug": "table-artistry"
-  },
-  {
-    "src": "/gallery/table-artistry/table-artistry-04.jpeg",
-    "width": 1000,
-    "height": 1500,
-    "alt": "Bespoke Table Artistry - Lady Victoria Designs",
-    "collection": "Bespoke Table Artistry",
-    "category": "Tablescapes",
-    "slug": "table-artistry"
-  },
-  {
-    "src": "/gallery/table-artistry/table-artistry-05.jpeg",
-    "width": 1066,
-    "height": 1600,
-    "alt": "Bespoke Table Artistry - Lady Victoria Designs",
-    "collection": "Bespoke Table Artistry",
-    "category": "Tablescapes",
-    "slug": "table-artistry"
-  },
-  {
-    "src": "/gallery/table-artistry/table-artistry-06.jpeg",
-    "width": 1000,
-    "height": 1500,
-    "alt": "Bespoke Table Artistry - Lady Victoria Designs",
-    "collection": "Bespoke Table Artistry",
-    "category": "Tablescapes",
-    "slug": "table-artistry"
-  },
-  {
-    "src": "/gallery/table-artistry/table-artistry-07.jpeg",
-    "width": 1000,
-    "height": 1500,
-    "alt": "Bespoke Table Artistry - Lady Victoria Designs",
-    "collection": "Bespoke Table Artistry",
-    "category": "Tablescapes",
-    "slug": "table-artistry"
-  },
-  {
-    "src": "/gallery/table-artistry/table-artistry-08.jpeg",
-    "width": 898,
-    "height": 1348,
-    "alt": "Bespoke Table Artistry - Lady Victoria Designs",
-    "collection": "Bespoke Table Artistry",
-    "category": "Tablescapes",
-    "slug": "table-artistry"
-  },
-  {
-    "src": "/gallery/table-artistry/table-artistry-09.jpeg",
-    "width": 1066,
-    "height": 1600,
-    "alt": "Bespoke Table Artistry - Lady Victoria Designs",
-    "collection": "Bespoke Table Artistry",
-    "category": "Tablescapes",
-    "slug": "table-artistry"
-  },
-  {
-    "src": "/gallery/table-artistry/table-artistry-10.jpeg",
-    "width": 1066,
-    "height": 1600,
-    "alt": "Bespoke Table Artistry - Lady Victoria Designs",
-    "collection": "Bespoke Table Artistry",
-    "category": "Tablescapes",
-    "slug": "table-artistry"
-  },
-  {
     "src": "/gallery/two-tone-luxe/two-tone-luxe-01.jpeg",
     "width": 1000,
     "height": 1500,
@@ -2251,15 +2188,6 @@ export const galleryImages: GalleryImage[] = [
     "slug": "two-tone-luxe"
   },
   {
-    "src": "/gallery/two-tone-luxe/two-tone-luxe-10.jpeg",
-    "width": 1600,
-    "height": 1067,
-    "alt": "Two-Tone Luxe Palette - Lady Victoria Designs",
-    "collection": "Two-Tone Luxe Palette",
-    "category": "Tablescapes",
-    "slug": "two-tone-luxe"
-  },
-  {
     "src": "/gallery/two-tone-luxe/two-tone-luxe-11.jpeg",
     "width": 1067,
     "height": 1600,
@@ -2288,15 +2216,6 @@ export const galleryImages: GalleryImage[] = [
   },
   {
     "src": "/gallery/two-tone-luxe/two-tone-luxe-14.jpeg",
-    "width": 1600,
-    "height": 1067,
-    "alt": "Two-Tone Luxe Palette - Lady Victoria Designs",
-    "collection": "Two-Tone Luxe Palette",
-    "category": "Tablescapes",
-    "slug": "two-tone-luxe"
-  },
-  {
-    "src": "/gallery/two-tone-luxe/two-tone-luxe-15.jpeg",
     "width": 1600,
     "height": 1067,
     "alt": "Two-Tone Luxe Palette - Lady Victoria Designs",
