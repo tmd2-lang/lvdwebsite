@@ -115,7 +115,7 @@ export default function AboutClient() {
         <div className="about-floating-hero w-full h-[45vh] sm:h-[55vh] md:h-[70vh] relative overflow-hidden rounded-sm border border-ink/10 shadow-2xl">
           <div className="about-floating-hero-inner absolute inset-[-15%] w-[130%] h-[130%]">
             <Image 
-              src="/gallery/curated-installations/curated-installations-01.jpeg" 
+              src="/about/about-hero.jpg" 
               alt="Curated Floral Masterpiece - Lady Victoria Designs" 
               fill 
               sizes="(max-width: 1200px) 100vw, 1200px"
