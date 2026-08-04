@@ -225,7 +225,7 @@ export default function AboutClient() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           <div className="about-gallery-item aspect-[4/5] relative overflow-hidden bg-ecru rounded-sm border border-ink/10 group">
             <Image
-              src="/gallery/curated-installations/1000451218.jpg"
+              src="/about/craft-01.jpg"
               alt="Artisanal Celebration Detail"
               fill
               sizes="(max-width: 767px) 100vw, 33vw"
