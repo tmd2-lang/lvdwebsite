@@ -148,19 +148,14 @@ export default function ServicesPage() {
     <main ref={containerRef} className="w-full bg-ivory text-ink flex flex-col relative">
       
       {/* HERO SECTION */}
-      <section className="w-full min-h-[90vh] md:min-h-[85vh] flex flex-col justify-end px-6 md:px-12 pb-16 md:pb-24 pt-32 md:pt-48 border-b border-ink/20">
-        <div className="max-w-[1440px] w-full mx-auto flex flex-col">
-          <div className="flex items-center gap-3 mb-6">
-            <span className="w-2.5 h-2.5 rounded-full bg-gold" />
-            <span className="font-body text-xs md:text-sm uppercase tracking-[0.2em] text-ink/70">SERVICES &amp; CAPABILITIES</span>
-          </div>
-          <h1 className="font-display text-[clamp(2.5rem,7vw,6.5rem)] text-ink leading-[1.05] tracking-tight max-w-5xl mb-8">
-            Spatial Design, Artful Florals &amp; Masterful Production.
-          </h1>
-          <p className="font-body text-lg md:text-xl text-ink/75 max-w-2xl leading-relaxed">
-            From historic private estates to grand ballrooms, we design cohesive celebration environments where every visual element is developed in concert.
-          </p>
-        </div>
+      <section className="w-full min-h-[70vh] flex flex-col justify-center items-center text-center px-6 md:px-12 py-32 md:py-48 border-b border-ink/20">
+        <div className="text-xs uppercase tracking-[0.2em] text-gold mb-6 font-body">SERVICES &amp; CAPABILITIES</div>
+        <h1 className="font-display text-[clamp(2.5rem,6vw,6.5rem)] text-ink max-w-5xl mx-auto leading-tight mb-8">
+          Architects of the <span className="italic text-gold">Extraordinary</span>
+        </h1>
+        <p className="font-body text-ink/70 max-w-2xl mx-auto leading-relaxed text-sm md:text-base">
+          Lady Victoria Designs is a full-service event design and production company. We specialize in transforming raw spaces into highly curated, immersive environments for the most discerning clientele.
+        </p>
       </section>
 
       {/* FLOATING HERO IMAGE */}
