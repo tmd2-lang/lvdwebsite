@@ -12,11 +12,12 @@ export default function SignatureWork() {
   const trackRef = useRef<HTMLDivElement>(null);
 
   const images = [
-    { id: 1, src: "/gallery/curated-installations/6203022671217922801.jpg", title: "Curated Floral Installation" },
-    { id: 2, src: "/gallery/amber-kendall/amber-kendall-30.jpeg", title: "Meridian House, DC" },
-    { id: 3, src: "/gallery/two-tone-luxe/two-tone-luxe-09.jpeg", title: "Private Country Estate" },
-    { id: 4, src: "/gallery/estate-florals/estate-florals-11.jpeg", title: "Sculptural Botanical Design" },
-    { id: 5, src: "/gallery/r-and-j/r-and-j-04.jpeg", title: "Grand Architectural Arch" },
+    { id: 1, src: "/work/aniedi-ekemini-471.jpg", title: "Aniedi & Ekemini Wedding" },
+    { id: 2, src: "/work/536A6290_websize.jpg", title: "Bespoke Floral Installation" },
+    { id: 3, src: "/work/jenny-jordan-04.jpg", title: "Jenny & Jordan Celebration" },
+    { id: 4, src: "/work/karla-copy.jpg", title: "Curated Tablescape Artistry" },
+    { id: 5, src: "/work/lvd-purple-6.jpg", title: "Royal Purple Grandeur" },
+    { id: 6, src: "/work/eiserike-wedding-0477.jpg", title: "Eiserike Wedding Celebration" },
   ];
 
   useEffect(() => {
