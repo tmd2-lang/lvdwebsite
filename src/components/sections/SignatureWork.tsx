@@ -33,11 +33,10 @@ export default function SignatureWork() {
         const lastChild = track.lastElementChild as HTMLElement;
         if (!lastChild) return 0;
         // The distance we need to shift the track left plus generous end buffer
-        // so the final image fully glides across and settles before unpinning.
+        // so the 6th image fully glides across and centers/settles comfortably before unpinning.
         const rightEdge = lastChild.offsetLeft + lastChild.offsetWidth;
-        const paddingRight = 48;
-        const endBuffer = window.innerWidth * 0.15;
-        return -(rightEdge + paddingRight + endBuffer - window.innerWidth);
+        const endBuffer = window.innerWidth * 0.25;
+        return -(rightEdge + endBuffer - window.innerWidth);
       };
 
       const tl = gsap.to(track, {
@@ -47,8 +46,8 @@ export default function SignatureWork() {
           trigger: containerRef.current,
           pin: true,
           start: "top top",
-          end: () => `+=${Math.abs(getScrollDistance()) * 1.15}`,
-          scrub: 1,
+          end: () => `+=${Math.abs(getScrollDistance()) * 1.35}`,
+          scrub: 1.2,
           invalidateOnRefresh: true,
         }
       });
