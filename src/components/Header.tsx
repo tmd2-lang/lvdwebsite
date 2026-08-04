@@ -180,6 +180,7 @@ export default function Header() {
             { name: "About", path: "/about" },
             { name: "Services", path: "/services" },
             { name: "Gallery", path: "/gallery" },
+            { name: "Kind Words", path: "/testimonials" },
             { name: "Quiz", path: "/quiz" },
             { name: "Inquire", path: "/inquire" }
           ].map((link, i) => (

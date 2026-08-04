@@ -1,18 +1,12 @@
 import type { Metadata } from "next";
-import Testimonials from "@/components/sections/Testimonials";
-import Contact from "@/components/sections/Contact";
+import TestimonialsClient from "./TestimonialsClient";
 
 export const metadata: Metadata = {
-  title: "Client Testimonials",
-  description: "Read what clients say about working with Lady Victoria Designs on weddings and luxury celebrations.",
+  title: "Client Testimonials & Kind Words | Lady Victoria Designs",
+  description: "Read 5-star verified reviews from couples and clients who partnered with Lady Victoria Designs for bespoke floral artistry and luxury event production.",
   alternates: { canonical: "/testimonials" },
 };
 
 export default function TestimonialsPage() {
-  return (
-    <main className="w-full min-h-screen bg-ink text-ivory flex flex-col pt-24">
-      <Testimonials />
-      <Contact />
-    </main>
-  );
+  return <TestimonialsClient />;
 }
