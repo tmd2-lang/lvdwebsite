@@ -60,7 +60,7 @@ export default function MeetIrene() {
                 alt="Irene Portrait"
                 fill
                 sizes="(max-width: 1023px) 42vw, 600px"
-                className="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                className="w-full h-full object-cover grayscale opacity-90 group-hover:scale-105 transition-all duration-700"
               />
             </div>
           </div>

@@ -137,7 +137,7 @@ export default function AboutClient() {
               src="/Irene.avif" 
               alt="Irene - Creative Director of Lady Victoria Designs" 
               fill 
-              className="object-cover object-center grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+              className="object-cover object-center grayscale group-hover:scale-105 transition-all duration-700"
               priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

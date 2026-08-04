@@ -40,11 +40,11 @@ export default function ParallaxDivider() {
         className="absolute top-[-10%] left-0 w-full h-[120%] will-change-transform"
       >
         <Image
-          src="/hero/7077359122696507779.jpg"
+          src="/gallery/aniedi-ekemini-546.jpg"
           alt="Luxury Wedding Design - Lady Victoria Designs"
           fill
           sizes="100vw"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-center"
         />
         {/* Subtle vignette/overlay to blend beautifully out of the black Narrative section */}
         <div className="absolute inset-0 bg-gradient-to-b from-ink via-transparent to-transparent opacity-80" />
