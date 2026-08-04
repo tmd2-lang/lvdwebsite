@@ -31,9 +31,19 @@ export default function QuizClient() {
   const [step, setStep] = useState<"intro" | number | "results">("intro");
   const [score, setScore] = useState(0);
   const [scoreHistory, setScoreHistory] = useState<number[]>([]);
+  const [guestPoints, setGuestPoints] = useState<number | null>(null);
+  const [guestHistory, setGuestHistory] = useState<(number | null)[]>([]);
   const [isCalculating, setIsCalculating] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Form state
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    date: "",
+  });
 
   // Scroll to top on step change
   useEffect(() => {
@@ -117,6 +127,13 @@ export default function QuizClient() {
 
   const handleSelection = (points: number) => {
     setScoreHistory((prev) => [...prev, score]);
+    setGuestHistory((prev) => [...prev, guestPoints]);
+    
+    // If answering the first question (guests)
+    if (step === 0) {
+      setGuestPoints(points);
+    }
+    
     const newScore = score + points;
     setScore(newScore);
 
@@ -137,20 +154,36 @@ export default function QuizClient() {
         setStep("intro");
         setScore(0);
         setScoreHistory([]);
+        setGuestPoints(null);
+        setGuestHistory([]);
       } else {
         setStep(step - 1);
         const prevScore = scoreHistory[scoreHistory.length - 1] ?? 0;
         setScore(prevScore);
         setScoreHistory((prev) => prev.slice(0, -1));
+        
+        const prevGuest = guestHistory[guestHistory.length - 1] ?? null;
+        setGuestPoints(prevGuest);
+        setGuestHistory((prev) => prev.slice(0, -1));
       }
     }
   };
 
   const calculateResult = () => {
+    // Special Intimate Tier if guests < 50 and overall scope is intimate
+    if (guestPoints === 5 && score <= 55) {
+      return {
+        range: "$4,000 – $10,000",
+        tier: "Intimate Celebrations & Micro-Weddings",
+        badge: "SPECIAL INTIMATE TIER (< 50 GUESTS)",
+        message: "Tailored specifically for intimate weddings and celebrations with under 50 guests. We curate focused floral artistry, personal florals, and refined sweetheart details to create an unforgettable, elevated atmosphere.",
+      };
+    }
     if (score <= 45) {
       return {
         range: "$8,000 – $15,000",
         tier: "The Essentials",
+        badge: "TIER THREE",
         message: "Your vision is beautifully focused. With cohesive florals and thoughtful details, Irene and our design team will bring your celebration to life with elegance and intention.",
       };
     }
@@ -158,12 +191,14 @@ export default function QuizClient() {
       return {
         range: "$20,000 – $35,000",
         tier: "Design + Florals",
+        badge: "TIER TWO",
         message: "Your celebration calls for custom floral artistry. Expect lush arrangements, curated specialty rentals, and an elevated atmosphere tailored to your aesthetic.",
       };
     }
     return {
       range: "Starting at $55,000",
       tier: "The Full Production",
+      badge: "TIER ONE · SIGNATURE",
       message: "An uncompromising, fully immersive transformation. Irene and our lead production team will orchestrate bespoke installations, custom lighting, staging, and comprehensive day-of execution.",
     };
   };
@@ -312,8 +347,8 @@ export default function QuizClient() {
             <div className="w-full bg-white/90 rounded-sm p-8 md:p-16 shadow-lg border border-ink/10 text-center relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1.5 bg-gold"></div>
 
-              <div className="text-gold font-body text-xs uppercase tracking-[0.25em] mb-4">
-                YOUR ESTIMATED INVESTMENT
+              <div className="text-gold font-body text-xs uppercase tracking-[0.25em] mb-4 font-bold">
+                {currentResult.badge || "YOUR ESTIMATED INVESTMENT"}
               </div>
 
               <div className="font-display text-4xl sm:text-5xl md:text-7xl text-ink mb-4">
@@ -377,7 +412,7 @@ export default function QuizClient() {
                 <CheckCircle2 className="w-12 h-12 text-gold mx-auto mb-4" />
                 <h3 className="font-display text-3xl text-ink mb-3">Consultation Requested</h3>
                 <p className="font-body text-sm text-ink/75 leading-relaxed">
-                  Thank you! Irene and our team will review your estimated tier ({currentResult.tier}) and reach out within 24–48 hours to schedule your design consultation.
+                  Thank you, {formData.name || "friend"}! Irene and our team will review your estimated tier ({currentResult.tier}) for {formData.date ? new Date(formData.date + "T00:00:00").toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" }) : "your date"} and reach out within 24–48 hours to schedule your design consultation.
                 </p>
               </div>
             ) : (
@@ -394,51 +429,60 @@ export default function QuizClient() {
 
                 <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="name" className="font-body text-[10px] uppercase tracking-widest text-ink/70">Name</label>
+                    <label htmlFor="name" className="font-body text-[10px] uppercase tracking-widest text-ink/70">Name *</label>
                     <input
                       type="text"
                       id="name"
                       required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="w-full bg-white border border-ink/20 text-ink px-4 py-3 text-sm focus:outline-none focus:border-gold font-body"
                       placeholder="Jane Doe"
                     />
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="email" className="font-body text-[10px] uppercase tracking-widest text-ink/70">Email Address</label>
+                    <label htmlFor="email" className="font-body text-[10px] uppercase tracking-widest text-ink/70">Email Address *</label>
                     <input
                       type="email"
                       id="email"
                       required
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       className="w-full bg-white border border-ink/20 text-ink px-4 py-3 text-sm focus:outline-none focus:border-gold font-body"
                       placeholder="jane@example.com"
                     />
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="phone" className="font-body text-[10px] uppercase tracking-widest text-ink/70">Phone Number</label>
+                    <label htmlFor="phone" className="font-body text-[10px] uppercase tracking-widest text-ink/70">Phone Number *</label>
                     <input
                       type="tel"
                       id="phone"
                       required
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="w-full bg-white border border-ink/20 text-ink px-4 py-3 text-sm focus:outline-none focus:border-gold font-body"
                       placeholder="(202) 555-0199"
                     />
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="date" className="font-body text-[10px] uppercase tracking-widest text-ink/70">Event Date (Optional)</label>
+                    <label htmlFor="date" className="font-body text-[10px] uppercase tracking-widest text-ink/70">Event Date *</label>
                     <input
-                      type="text"
+                      type="date"
                       id="date"
+                      required
+                      min={new Date().toISOString().split("T")[0]}
+                      value={formData.date}
+                      onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                       className="w-full bg-white border border-ink/20 text-ink px-4 py-3 text-sm focus:outline-none focus:border-gold font-body"
-                      placeholder="MM/DD/YYYY"
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full mt-3 bg-ink text-ivory py-4 font-body text-xs uppercase tracking-[0.2em] hover:bg-gold hover:text-ink transition-colors duration-300 cursor-pointer"
+                    className="w-full mt-3 bg-ink text-ivory py-4 font-body text-xs uppercase tracking-[0.2em] hover:bg-gold hover:text-ink transition-colors duration-300 cursor-pointer shadow-md font-semibold"
                   >
                     Request Consultation
                   </button>

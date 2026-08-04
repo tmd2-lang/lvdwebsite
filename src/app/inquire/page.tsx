@@ -101,7 +101,7 @@ export default function InquirePage() {
             <h2 className="font-display text-[clamp(1.9rem,8vw,3rem)] lg:text-6xl leading-[1.08] mb-2 max-w-[12ch] lg:max-w-[14ch]">
               &ldquo;Every detail from the flowers<span className="hidden lg:inline"><br /></span>{" "}to the lighting was perfect.&rdquo;
             </h2>
-            <p className="font-body text-xs uppercase tracking-widest text-ivory/70 mt-4">NICOLE • WEDDINGWIRE</p>
+            <p className="font-body text-xs uppercase tracking-widest text-ivory/70 mt-4">NICOLE • ★★★★★ GOOGLE REVIEW</p>
           </div>
         </div>
       )}
@@ -179,10 +179,12 @@ export default function InquirePage() {
                 {/* Event Date */}
                 <div className="flex flex-col gap-2 relative group">
                   <label className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 group-focus-within:text-gold transition-colors font-semibold">
-                    Event Date (Optional)
+                    Event Date *
                   </label>
                   <input 
                     type="date" 
+                    required
+                    min={new Date().toISOString().split("T")[0]}
                     value={formData.date}
                     onChange={(e) => setFormData({...formData, date: e.target.value})}
                     className="w-full bg-transparent border-b border-ink/20 pb-3 font-body text-lg text-ink outline-none focus:border-gold transition-colors text-ink/80 focus:text-ink"
@@ -241,7 +243,7 @@ export default function InquirePage() {
                 <Magnetic>
                   <button 
                     onClick={nextStep}
-                    disabled={!formData.guestCount}
+                    disabled={!formData.guestCount || !formData.date}
                     className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-50 flex items-center gap-3 rounded-full"
                   >
                     Continue <span className="text-sm">→</span>
