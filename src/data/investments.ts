@@ -30,7 +30,7 @@ export const INVESTMENT_TIERS: InvestmentTierData[] = [
     tagline: "Walk in. Fall in love. Remember forever.",
     desc: "For couples who want a breathtaking, fully immersive wedding environment. Irene and our lead production team take complete ownership of your spatial story—unifying design, florals, custom fabrication, and seamless day-of execution.",
     idealFor: "Grand ballroom transformations, custom tented estates, historic mansions, and multi-day celebrations requiring high-touch production management.",
-    image: "/investments/the-essentials.jpg",
+    image: "/investments/full-production-grand.jpg",
     deliverables: [
       {
         bold: "High-Level Creative Direction",
@@ -70,7 +70,7 @@ export const INVESTMENT_TIERS: InvestmentTierData[] = [
     tagline: "Elevated design, thoughtfully layered.",
     desc: "For couples seeking a lush, layered aesthetic with custom floral artistry and curated styling that elevates every guest touchpoint.",
     idealFor: "Couples with established venues looking to transform their ceremony and reception with tailored floral artistry, custom tabletop styling, and curated accent rentals.",
-    image: "/gallery/curated-installations/6203022671217922801.jpg",
+    image: "/investments/design-florals-stage.jpg",
     deliverables: [
       {
         bold: "Curated Design Direction",
