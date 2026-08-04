@@ -52,7 +52,7 @@ const designFor = [
     id: "weddings",
     title: "Weddings",
     description: "From ceremony to last dance, we design each chapter as part of one story.",
-    image: "/services/weddings.jpg"
+    image: "/gallery/editorial-wedding-archive/editorial-wedding-archive-27.jpg"
   },
   {
     id: "corporate",
