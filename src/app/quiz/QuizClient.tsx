@@ -28,7 +28,7 @@ const CheckCircle2 = ({ className = "w-4 h-4" }: { className?: string }) => (
 );
 
 export default function QuizClient() {
-  const [step, setStep] = useState<number | "results">(0);
+  const [step, setStep] = useState<"intro" | number | "results">("intro");
   const [score, setScore] = useState(0);
   const [scoreHistory, setScoreHistory] = useState<number[]>([]);
   const [isCalculating, setIsCalculating] = useState(false);
@@ -45,8 +45,8 @@ export default function QuizClient() {
       id: "guests",
       question: "How many guests are you expecting?",
       options: [
-        { label: "Under 75 guests (Intimate)", points: 5 },
-        { label: "75–125 guests", points: 10 },
+        { label: "Under 50 guests (Intimate / Micro-Wedding)", points: 5 },
+        { label: "50–125 guests", points: 10 },
         { label: "125–200 guests", points: 18 },
         { label: "200–300 guests", points: 25 },
         { label: "300+ guests (Grand Celebration)", points: 35 },
@@ -57,9 +57,9 @@ export default function QuizClient() {
       question: "Tell us about your venue.",
       options: [
         { label: "Outdoor garden, private estate, or vineyard", points: 5 },
-        { label: "Historic mansion or boutique museum", points: 8 },
-        { label: "Luxury hotel ballroom", points: 12 },
-        { label: "Industrial loft, warehouse, or modern space", points: 15 },
+        { label: "Historic mansion or boutique museum (e.g. Meridian House)", points: 8 },
+        { label: "Luxury hotel ballroom (e.g. The Willard, Waldorf)", points: 12 },
+        { label: "Industrial loft, warehouse, or modern gallery space", points: 15 },
         { label: "Custom tent or raw blank canvas property", points: 18 },
       ],
     },
@@ -132,11 +132,17 @@ export default function QuizClient() {
   };
 
   const handleBack = () => {
-    if (typeof step === "number" && step > 0) {
-      setStep((prev) => (typeof prev === "number" ? prev - 1 : 0));
-      const prevScore = scoreHistory[scoreHistory.length - 1] ?? 0;
-      setScore(prevScore);
-      setScoreHistory((prev) => prev.slice(0, -1));
+    if (typeof step === "number") {
+      if (step === 0) {
+        setStep("intro");
+        setScore(0);
+        setScoreHistory([]);
+      } else {
+        setStep(step - 1);
+        const prevScore = scoreHistory[scoreHistory.length - 1] ?? 0;
+        setScore(prevScore);
+        setScoreHistory((prev) => prev.slice(0, -1));
+      }
     }
   };
 
@@ -144,20 +150,20 @@ export default function QuizClient() {
     if (score <= 45) {
       return {
         range: "$8,000 – $15,000",
-        tier: "Tier Three · The Essentials",
+        tier: "The Essentials",
         message: "Your vision is beautifully focused. With cohesive florals and thoughtful details, Irene and our design team will bring your celebration to life with elegance and intention.",
       };
     }
     if (score <= 90) {
       return {
-        range: "$20,000 – $30,000",
-        tier: "Tier Two · Design + Custom Florals",
+        range: "$20,000 – $35,000",
+        tier: "Design + Florals",
         message: "Your celebration calls for custom floral artistry. Expect lush arrangements, curated specialty rentals, and an elevated atmosphere tailored to your aesthetic.",
       };
     }
     return {
       range: "Starting at $55,000",
-      tier: "Tier One · Signature Full Production",
+      tier: "The Full Production",
       message: "An uncompromising, fully immersive transformation. Irene and our lead production team will orchestrate bespoke installations, custom lighting, staging, and comprehensive day-of execution.",
     };
   };
@@ -188,6 +194,62 @@ export default function QuizClient() {
       <main className="flex-1 flex flex-col items-center justify-center px-6">
         <div className="w-full max-w-3xl mx-auto flex flex-col justify-center min-h-[480px]">
           
+          {/* INTRO / WELCOME SCREEN */}
+          {step === "intro" && (
+            <div className="w-full bg-white/80 border border-ink/10 p-8 sm:p-12 md:p-16 shadow-md rounded-sm backdrop-blur-sm text-center animate-fade-in">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold/10 border border-gold/30 mb-6">
+                <span className="w-2 h-2 rounded-full bg-gold" />
+                <span className="font-body text-[10px] sm:text-xs uppercase tracking-[0.25em] text-gold font-semibold">
+                  Investment Estimator &amp; Guide
+                </span>
+              </div>
+
+              <h1 className="font-display text-3xl sm:text-4xl md:text-5xl text-ink leading-tight mb-6">
+                Discover Your Bespoke <br />
+                <span className="italic text-gold font-normal">Celebration Investment Tier</span>
+              </h1>
+
+              <p className="font-body text-sm sm:text-base text-ink/75 max-w-xl mx-auto leading-relaxed mb-10">
+                Answer 7 brief questions regarding your venue style, guest count, and floral ambitions to receive an instant, tailored investment range and scope breakdown.
+              </p>
+
+              {/* Trust Badges */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl mx-auto mb-10 pb-10 border-b border-ink/10">
+                <div className="flex flex-col items-center">
+                  <span className="font-display text-lg text-ink mb-1">⏱ ~60 Seconds</span>
+                  <span className="font-body text-[11px] text-ink/60">Quick &amp; Interactive</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <span className="font-display text-lg text-ink mb-1">✦ DC, MD &amp; VA</span>
+                  <span className="font-body text-[11px] text-ink/60">Tailored to Local Venues</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <span className="font-display text-lg text-ink mb-1">🔒 Confidential</span>
+                  <span className="font-body text-[11px] text-ink/60">No Obligation</span>
+                </div>
+              </div>
+
+              {/* Start CTA */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button
+                  onClick={() => setStep(0)}
+                  className="w-full sm:w-auto px-10 py-5 bg-ink text-ivory font-body text-xs uppercase tracking-[0.2em] font-semibold hover:bg-gold hover:text-ink transition-all duration-300 rounded-full shadow-lg hover:scale-105 cursor-pointer flex items-center justify-center gap-3"
+                >
+                  <span>Begin Investment Guide</span>
+                  <span className="text-sm">→</span>
+                </button>
+              </div>
+
+              {/* Direct Inquire Link */}
+              <p className="font-body text-xs text-ink/50 mt-8">
+                Already know your exact date and budget?{" "}
+                <Link href="/inquire" className="text-ink underline hover:text-gold transition-colors font-medium">
+                  Inquire directly with Irene →
+                </Link>
+              </p>
+            </div>
+          )}
+
           {/* QUESTION SCREENS */}
           {typeof step === "number" && (
             <div className="w-full bg-white/70 border border-ink/10 p-8 md:p-14 shadow-sm rounded-sm backdrop-blur-sm">
@@ -225,14 +287,12 @@ export default function QuizClient() {
               </div>
 
               {/* Back button */}
-              {step > 0 && (
-                <button
-                  onClick={handleBack}
-                  className="text-ink/50 hover:text-gold transition-colors font-body text-xs tracking-[0.2em] uppercase flex items-center gap-2 mt-8 cursor-pointer"
-                >
-                  <ArrowLeft className="w-4 h-4" /> Previous Question
-                </button>
-              )}
+              <button
+                onClick={handleBack}
+                className="text-ink/50 hover:text-gold transition-colors font-body text-xs tracking-[0.2em] uppercase flex items-center gap-2 mt-8 cursor-pointer"
+              >
+                <ArrowLeft className="w-4 h-4" /> {step === 0 ? "Back to Intro" : "Previous Question"}
+              </button>
             </div>
           )}
 
