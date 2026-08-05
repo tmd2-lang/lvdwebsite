@@ -15,7 +15,7 @@ export default function SignatureWork() {
     { id: 1, src: "/work/aniedi-ekemini-471.jpg", title: "Aniedi & Ekemini Wedding" },
     { id: 2, src: "/work/536A6290_websize.jpg", title: "Bespoke Floral Installation" },
     { id: 3, src: "/work/jenny-jordan-04.jpg", title: "Jenny & Jordan Celebration" },
-    { id: 4, src: "/work/karla-copy.jpg", title: "Curated Tablescape Artistry" },
+    { id: 4, src: "/work/nac-9098.jpg", title: "Sculptural Celebration Artistry" },
     { id: 5, src: "/work/lvd-purple-6.jpg", title: "Royal Purple Grandeur" },
     { id: 6, src: "/work/eiserike-wedding-0477.jpg", title: "Eiserike Wedding Celebration" },
   ];
