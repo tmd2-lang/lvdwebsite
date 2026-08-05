@@ -1,22 +1,81 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { media } from "@/lib/media-slots";
+import { INVESTMENT_TIERS } from "@/data/investments";
+
+const portfolioImages = [
+  {
+    src: media["home.work.1"],
+    title: "Aniedi & Ekemini",
+    detail: "Reception Design",
+  },
+  {
+    src: media["home.work.2"],
+    title: "Bespoke Floral Installation",
+    detail: "Floral Artistry",
+  },
+  {
+    src: media["home.work.3"],
+    title: "Jenny & Jordan",
+    detail: "Wedding Design",
+  },
+  {
+    src: media["home.work.4"],
+    title: "Sculptural Celebration",
+    detail: "Ceremony Design",
+  },
+  {
+    src: media["home.work.5"],
+    title: "Royal Purple Grandeur",
+    detail: "Reception Design",
+  },
+  {
+    src: media["home.work.6"],
+    title: "Eiserike Wedding",
+    detail: "Floral Design",
+  },
+];
+
+const reserveInvestmentRanges = {
+  production: "$55,000+",
+  "design-florals": "$20,000–$35,000",
+  essentials: "$8,000–$15,000",
+} as const;
+
+const reserveInvestmentSummaries = {
+  production:
+    "Complete creative direction, floral artistry, custom fabrication, rentals, installation, and production management.",
+  "design-florals":
+    "Cohesive aesthetic direction, bespoke ceremony and reception florals, styling, and select rentals.",
+  essentials:
+    "Considered personal flowers, ceremony and reception florals, and styling for intimate celebrations.",
+} as const;
 
 export default function ReservePage() {
+  const portfolioRailRef = useRef<HTMLDivElement>(null);
   const [formData, setFormData] = useState({
     names: "",
     email: "",
     phone: "",
     date: "",
+    dateUndecided: false,
     venue: "",
-    budget: "$20,000 – $50,000",
+    guestCount: "",
+    budget: "",
     notes: "",
   });
 
+  const [formStep, setFormStep] = useState<1 | 2>(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const canContinue =
+    (formData.date.trim().length > 0 || formData.dateUndecided) &&
+    formData.guestCount.length > 0 &&
+    formData.budget.length > 0;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,32 +93,27 @@ export default function ReservePage() {
     }
   };
 
+  const continueToContact = () => {
+    if (!canContinue) return;
+    setFormStep(2);
+    window.requestAnimationFrame(scrollToForm);
+  };
+
+  const scrollPortfolio = (direction: -1 | 1) => {
+    const rail = portfolioRailRef.current;
+    if (!rail) return;
+
+    rail.scrollBy({
+      left: direction * rail.clientWidth * 0.78,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <main className="w-full min-h-screen bg-ivory text-ink flex flex-col items-center justify-start overflow-x-clip">
       
-      {/* 1. MINIMALIST LUXURY TOP BAR (Zero-distraction navigation) */}
-      <header className="w-full border-b border-ink/10 bg-ivory/95 backdrop-blur-md sticky top-0 z-50 py-4 px-6 md:px-12 flex items-center justify-between">
-        <Link href="/" className="flex flex-col group">
-          <span className="font-display tracking-[0.15em] text-lg sm:text-xl md:text-2xl text-ink uppercase">
-            Lady Victoria <span className="italic text-gold font-normal">Designs</span>
-          </span>
-          <span className="font-body text-[9px] uppercase tracking-[0.3em] text-gold/80 -mt-1 hidden sm:block">
-            WASHINGTON D.C. · FLORAL & EVENT DESIGN
-          </span>
-        </Link>
-
-        <div className="flex items-center gap-4 sm:gap-6">
-          <button
-            onClick={scrollToForm}
-            className="px-5 py-2.5 sm:px-7 sm:py-3 bg-ink text-ivory rounded-full font-body text-[10px] sm:text-xs uppercase tracking-[0.2em] font-semibold transition-all duration-300 hover:bg-gold hover:text-ink shadow-md"
-          >
-            Reserve Your Date
-          </button>
-        </div>
-      </header>
-
-      {/* 2. HERO SECTION */}
-      <section className="relative w-full min-h-[calc(100svh-81px)] overflow-hidden bg-ink text-ivory">
+      {/* 1. FULL-SCREEN HERO */}
+      <section className="relative w-full min-h-[100svh] overflow-hidden bg-ink text-ivory">
         <Image
           src="/reserve/reserve-hero.jpeg"
           alt="A refined wedding reception designed with white florals, greenery, candlelight, and gold accents"
@@ -70,8 +124,24 @@ export default function ReservePage() {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-ink/62 via-ink/22 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/48 via-transparent to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-ink/40 to-transparent" />
 
-        <div className="relative z-10 flex min-h-[calc(100svh-81px)] w-full items-end px-6 pb-14 pt-20 sm:px-10 md:px-12 md:pb-16">
+        <header className="absolute inset-x-0 top-0 z-20 flex justify-center px-6 py-7 sm:py-8">
+          <Link
+            href="/"
+            aria-label="Lady Victoria Designs home"
+            className="flex flex-col items-center text-center text-ivory transition-colors duration-300 hover:text-gold"
+          >
+            <span className="font-display text-lg uppercase tracking-[0.2em] sm:text-xl md:text-2xl">
+              Lady Victoria <span className="italic font-normal">Designs</span>
+            </span>
+            <span className="mt-0.5 hidden font-body text-[8px] uppercase tracking-[0.34em] text-ivory/75 sm:block">
+              Washington D.C. · Floral &amp; Event Design
+            </span>
+          </Link>
+        </header>
+
+        <div className="relative z-10 flex min-h-[100svh] w-full items-end px-6 pb-14 pt-28 sm:px-10 md:px-12 md:pb-16">
           <div className="max-w-2xl">
             <h1 className="font-display text-[clamp(3.25rem,6vw,6.5rem)] leading-[0.92] tracking-tight text-ivory">
               Wedding design, <span className="italic">reimagined.</span>
@@ -101,7 +171,7 @@ export default function ReservePage() {
       </section>
 
       {/* 3. EDITORIAL STATEMENT */}
-      <section className="w-full bg-ivory px-6 py-16 text-ink sm:py-20 md:px-12 md:py-24">
+      <section className="w-full bg-ivory px-6 pb-12 pt-16 text-ink sm:pt-20 md:px-12 md:pb-16 md:pt-24">
         <div className="mx-auto grid max-w-[1440px] gap-8 md:grid-cols-[180px_1fr] md:items-start md:gap-12">
           <p className="pt-2 font-body text-[10px] font-semibold uppercase tracking-[0.28em] text-ink/65">
             The Art of the Occasion
@@ -117,92 +187,167 @@ export default function ReservePage() {
             toast.
           </p>
         </div>
-      </section>
 
-      {/* 4. VENUE CREDIBILITY STRIP */}
-      <section className="w-full bg-ecru/60 border-y border-ink/10 py-10 px-6 md:px-12 text-center">
-        <p className="font-body text-[10px] sm:text-xs uppercase tracking-[0.25em] text-gold font-semibold mb-6">
-          TRUSTED AT PREMIER DC &amp; VIRGINIA DESTINATIONS
-        </p>
-        <div className="max-w-5xl mx-auto flex flex-wrap items-center justify-center gap-x-8 sm:gap-x-12 gap-y-4 font-display text-sm sm:text-base md:text-lg text-ink/70">
-          <span>Meridian House</span>
-          <span className="text-gold/40">✦</span>
-          <span>Larz Anderson House</span>
-          <span className="text-gold/40">✦</span>
-          <span>The LINE DC</span>
-          <span className="text-gold/40">✦</span>
-          <span>Salamander Resort &amp; Spa</span>
-          <span className="text-gold/40">✦</span>
-          <span>Congressional Country Club</span>
-          <span className="text-gold/40">✦</span>
-          <span>Private Estates</span>
+        <div className="mx-auto mt-14 max-w-[1440px] md:mt-20">
+          <div className="mb-6 flex items-end justify-between gap-6 md:mb-8">
+            <h2 className="font-body text-[10px] font-semibold uppercase tracking-[0.26em] text-ink/60">
+              Selected Celebrations
+            </h2>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => scrollPortfolio(-1)}
+                aria-label="View previous portfolio images"
+                className="flex h-11 w-11 items-center justify-center border border-ink/20 font-body text-lg text-ink transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-ivory"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollPortfolio(1)}
+                aria-label="View next portfolio images"
+                className="flex h-11 w-11 items-center justify-center border border-ink/20 font-body text-lg text-ink transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-ivory"
+              >
+                →
+              </button>
+            </div>
+          </div>
+
+          <div
+            ref={portfolioRailRef}
+            className="flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-4"
+          >
+            {portfolioImages.map((image) => (
+              <article
+                key={image.src}
+                className="min-w-0 shrink-0 basis-[82vw] snap-start sm:basis-[54vw] md:basis-[38vw] lg:basis-[30vw]"
+              >
+                <div className="relative aspect-[4/5] overflow-hidden bg-ecru">
+                  <Image
+                    src={image.src}
+                    alt={`${image.title} by Lady Victoria Designs`}
+                    fill
+                    sizes="(max-width: 639px) 82vw, (max-width: 767px) 54vw, (max-width: 1023px) 38vw, 30vw"
+                    className="object-cover transition-transform duration-700 hover:scale-[1.02]"
+                  />
+                </div>
+                <div className="flex items-baseline justify-between gap-4 py-4">
+                  <h3 className="font-body text-xs uppercase tracking-[0.08em] text-ink sm:text-sm">
+                    {image.title}
+                  </h3>
+                  <p className="shrink-0 font-body text-[9px] uppercase tracking-[0.16em] text-ink/50 sm:text-[10px]">
+                    {image.detail}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* 5. INVESTMENT TRANSPARENCY TIERS */}
-      <section className="w-full max-w-[1440px] mx-auto px-6 md:px-12 py-20 md:py-28">
-        <div className="flex flex-col items-center text-center mb-16">
-          <span className="font-body text-[10px] sm:text-xs uppercase tracking-[0.25em] text-gold font-semibold mb-3">
-            INVESTMENT TRANSPARENCY
-          </span>
-          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-ink mb-4">
-            Tailored Levels of <span className="italic text-gold">Production</span>
-          </h2>
-          <p className="font-body text-sm sm:text-base text-ink/70 max-w-2xl leading-relaxed">
-            Every celebration is individually priced based on your guest count, architectural scale, and custom floral requirements.
+      {/* 4. STICKY EDITORIAL IMAGE */}
+      <section
+        aria-label="A celebration should feel like no one else's"
+        className="relative h-[180svh] w-full bg-ink md:h-[200svh]"
+      >
+        <Image
+          src="/reserve/nac-9090.jpg"
+          alt="A transformed reception room with sculptural florals, candlelit tables, and an illuminated ceiling installation"
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-ink/55 via-ink/14 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-transparent to-ink/10" />
+
+        <div className="pointer-events-none absolute inset-x-0 bottom-[28svh] top-[5svh] z-10">
+          <div
+            data-sticky-copy
+            className="sticky top-[12svh] px-6 sm:px-10 md:top-[14svh] md:px-12"
+          >
+            <p className="max-w-5xl font-display text-[clamp(2.9rem,6vw,7rem)] leading-[0.94] tracking-tight text-ivory">
+              A celebration should feel like{" "}
+              <span className="italic">no one else&apos;s.</span>
+            </p>
+          </div>
+        </div>
+
+        <div className="pointer-events-none absolute inset-x-0 -bottom-[5svh] top-[16svh] z-10 flex">
+          <p
+            aria-hidden="true"
+            data-sticky-mark
+            className="sticky bottom-[-5svh] mt-auto w-full px-6 font-display text-[clamp(9rem,25vw,28rem)] leading-[0.7] tracking-[-0.09em] text-ivory sm:px-10 md:px-12"
+          >
+            LVD
           </p>
         </div>
+      </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          
-          {/* Card 1 */}
-          <div className="bg-ivory border border-ink/10 rounded-xl p-8 flex flex-col justify-between shadow-sm hover:shadow-xl transition-all duration-300 hover:border-gold/50">
-            <div>
-              <span className="font-body text-[10px] uppercase tracking-widest text-gold font-semibold block mb-2">COLLECTION I</span>
-              <h3 className="font-display text-2xl text-ink mb-3">The Essentials</h3>
-              <p className="font-body text-sm text-ink/70 leading-relaxed mb-6">
-                Curated floral arrangements, personal bouquets, and tabletop accents for intimate celebrations.
+      {/* 5. WAYS TO WORK TOGETHER */}
+      <section className="w-full bg-ivory text-ink">
+        <div className="mx-auto max-w-[1440px] px-6 py-20 md:px-12 md:py-32">
+          <header className="grid gap-8 pb-14 md:grid-cols-[220px_1fr] md:gap-12 md:pb-20">
+            <p className="pt-2 font-body text-[10px] font-semibold uppercase tracking-[0.28em] text-gold sm:text-xs">
+              Ways to Work Together
+            </p>
+
+            <div className="max-w-5xl">
+              <h2 className="font-display text-[clamp(2.9rem,6vw,6.75rem)] leading-[0.94] tracking-tight">
+                Designed around{" "}
+                <span className="italic text-gold">your celebration.</span>
+              </h2>
+              <p className="mt-7 max-w-2xl font-body text-sm leading-relaxed text-ink/68 sm:text-base md:text-lg">
+                Every celebration is custom. These ranges offer a starting
+                point based on your venue, guest count, floral scope, and
+                production needs.
               </p>
             </div>
-            <div className="pt-6 border-t border-ink/10">
-              <span className="font-body text-xs uppercase tracking-widest text-ink/50 block mb-1">Starting At</span>
-              <span className="font-display text-2xl sm:text-3xl text-ink font-semibold">$8,000</span>
-            </div>
+          </header>
+
+          <div className="border-t border-ink/25">
+            {INVESTMENT_TIERS.map((tier) => (
+              <article
+                key={tier.id}
+                className="group grid gap-5 border-b border-ink/20 py-9 transition-colors duration-300 hover:bg-ecru/40 md:grid-cols-[72px_minmax(220px,0.9fr)_minmax(300px,1.25fr)_auto] md:items-center md:gap-8 md:px-4 md:py-12"
+              >
+                <p className="font-body text-[10px] uppercase tracking-[0.22em] text-ink/45">
+                  {tier.tierNumber}
+                </p>
+
+                <h3 className="font-display text-3xl leading-none transition-colors duration-300 group-hover:text-gold md:text-4xl lg:text-5xl">
+                  {tier.name}
+                </h3>
+
+                <p className="max-w-xl font-body text-sm leading-relaxed text-ink/65 md:text-base">
+                  {reserveInvestmentSummaries[tier.id]}
+                </p>
+
+                <div className="md:min-w-52 md:text-right">
+                  <p className="mb-2 font-body text-[9px] uppercase tracking-[0.2em] text-ink/45 sm:text-[10px]">
+                    Investment Range
+                  </p>
+                  <p className="font-display text-2xl leading-none text-ink md:text-3xl">
+                    {reserveInvestmentRanges[tier.id]}
+                  </p>
+                </div>
+              </article>
+            ))}
           </div>
 
-          {/* Card 2 (Featured) */}
-          <div className="bg-ink text-ivory rounded-xl p-8 flex flex-col justify-between shadow-2xl relative border border-gold/40 md:-translate-y-3">
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gold text-ink font-body text-[9px] uppercase tracking-widest font-bold">
-              MOST POPULAR
-            </div>
-            <div>
-              <span className="font-body text-[10px] uppercase tracking-widest text-gold font-semibold block mb-2">COLLECTION II</span>
-              <h3 className="font-display text-2xl text-ivory mb-3">Design + Florals</h3>
-              <p className="font-body text-sm text-ivory/70 leading-relaxed mb-6">
-                Bespoke floral styling, ceremony focal installations, and foundational aesthetic direction.
-              </p>
-            </div>
-            <div className="pt-6 border-t border-ivory/10">
-              <span className="font-body text-xs uppercase tracking-widest text-ivory/50 block mb-1">Starting At</span>
-              <span className="font-display text-2xl sm:text-3xl text-gold font-semibold">$20,000</span>
-            </div>
+          <div className="flex flex-col items-start justify-between gap-7 pt-8 sm:flex-row sm:items-center md:px-4 md:pt-10">
+            <p className="max-w-2xl font-body text-xs leading-relaxed text-ink/50 sm:text-sm">
+              Final proposals are tailored to the venue, guest count, season,
+              and custom production elements selected for your celebration.
+            </p>
+            <button
+              type="button"
+              onClick={scrollToForm}
+              className="shrink-0 border-b border-ink/45 pb-1 font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-ink transition-colors duration-300 hover:border-gold hover:text-gold sm:text-[11px]"
+            >
+              Discuss Your Celebration
+            </button>
           </div>
-
-          {/* Card 3 */}
-          <div className="bg-ivory border border-ink/10 rounded-xl p-8 flex flex-col justify-between shadow-sm hover:shadow-xl transition-all duration-300 hover:border-gold/50">
-            <div>
-              <span className="font-body text-[10px] uppercase tracking-widest text-gold font-semibold block mb-2">COLLECTION III</span>
-              <h3 className="font-display text-2xl text-ink mb-3">The Full Production</h3>
-              <p className="font-body text-sm text-ink/70 leading-relaxed mb-6">
-                Comprehensive venue transformation, custom fabrication, overhead ceiling canopies, and full day-of management.
-              </p>
-            </div>
-            <div className="pt-6 border-t border-ink/10">
-              <span className="font-body text-xs uppercase tracking-widest text-ink/50 block mb-1">Starting At</span>
-              <span className="font-display text-2xl sm:text-3xl text-ink font-semibold">$55,000</span>
-            </div>
-          </div>
-
         </div>
       </section>
 
@@ -239,165 +384,290 @@ export default function ReservePage() {
         </div>
       </section>
 
-      {/* 7. EMBEDDED DIRECT CONSULTATION FORM */}
-      <section id="reserve-form" className="w-full max-w-[1100px] mx-auto px-6 md:px-12 py-20 md:py-28 scroll-mt-20">
-        <div className="bg-ecru/40 border border-ink/10 rounded-2xl p-8 sm:p-12 md:p-16 shadow-xl">
-          
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="font-body text-[10px] sm:text-xs uppercase tracking-[0.25em] text-gold font-semibold mb-3 block">
-              PRIVATE CONSULTATION
-            </span>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-ink mb-4">
-              Check Date <span className="italic text-gold">Availability</span>
-            </h2>
-            <p className="font-body text-sm sm:text-base text-ink/70 leading-relaxed">
-              Share your details below. Irene will review your venue and aesthetic requirements and respond within 24 to 48 hours.
+      {/* 7. TWO-STEP DATE AVAILABILITY FORM */}
+      <section
+        id="reserve-form"
+        className="w-full bg-ivory px-6 py-20 scroll-mt-10 md:px-12 md:py-28"
+      >
+        <div className="mx-auto max-w-[920px]">
+          <div className="mb-12 grid gap-7 border-b border-ink/15 pb-10 md:grid-cols-[180px_1fr] md:gap-12 md:pb-12">
+            <p className="pt-2 font-body text-[10px] font-semibold uppercase tracking-[0.28em] text-gold">
+              Your Date
             </p>
+            <div>
+              <h2 className="font-display text-[clamp(2.8rem,5.5vw,5.6rem)] leading-[0.95] tracking-tight text-ink">
+                Let&rsquo;s see if your date is <span className="italic">available.</span>
+              </h2>
+              <p className="mt-5 max-w-2xl font-body text-sm leading-relaxed text-ink/65 sm:text-base">
+                Share a few details and Irene will personally follow up within one to two business days.
+              </p>
+            </div>
           </div>
 
           {isSubmitted ? (
-            <div className="bg-ivory border border-gold/40 p-10 sm:p-14 rounded-xl text-center shadow-lg animate-fade-in">
-              <span className="w-12 h-12 rounded-full bg-gold/10 text-gold text-2xl flex items-center justify-center mx-auto mb-6">✓</span>
-              <h3 className="font-display text-3xl text-ink mb-4">Inquiry Received</h3>
-              <p className="font-body text-base text-ink/75 max-w-lg mx-auto leading-relaxed mb-8">
-                Thank you! Irene and our design team will review your date and reach out to schedule your private design consultation.
+            <div className="animate-fade-in border-b border-ink/15 pb-14 pt-3 text-center sm:pb-20 sm:pt-8">
+              <span className="mx-auto mb-7 flex h-12 w-12 items-center justify-center rounded-full border border-gold/50 font-display text-xl text-gold">
+                ✓
+              </span>
+              <p className="mb-3 font-body text-[10px] font-semibold uppercase tracking-[0.26em] text-gold">
+                Date Request Received
+              </p>
+              <h3 className="font-display text-4xl text-ink sm:text-5xl">
+                Thank you. <span className="italic">We&rsquo;ll be in touch.</span>
+              </h3>
+              <p className="mx-auto mb-9 mt-5 max-w-xl font-body text-sm leading-relaxed text-ink/65 sm:text-base">
+                Irene will review your celebration details and reply with availability and next steps within one to two business days.
               </p>
               <Link
                 href="/gallery"
-                className="inline-flex items-center gap-2 px-8 py-3.5 bg-ink text-ivory rounded-full font-body text-xs uppercase tracking-widest hover:bg-gold hover:text-ink transition-colors"
+                className="inline-flex items-center gap-3 border-b border-ink/45 pb-1 font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-ink transition-colors hover:border-gold hover:text-gold sm:text-[11px]"
               >
-                <span>Browse Our Gallery</span>
-                <span>→</span>
+                Browse Our Gallery <span aria-hidden="true">→</span>
               </Link>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-8">
-              
-              {/* Row 1: Names & Email */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="flex flex-col">
-                  <label className="font-body text-xs uppercase tracking-widest text-ink/70 font-semibold mb-2">
-                    Couple / Client Name(s) *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g., Victoria & Alexander"
-                    value={formData.names}
-                    onChange={(e) => setFormData({ ...formData, names: e.target.value })}
-                    className="w-full bg-ivory border border-ink/15 rounded-md px-4 py-3.5 text-sm text-ink focus:outline-none focus:border-gold transition-colors"
-                  />
-                </div>
-
-                <div className="flex flex-col">
-                  <label className="font-body text-xs uppercase tracking-widest text-ink/70 font-semibold mb-2">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    placeholder="e.g., victoria@example.com"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full bg-ivory border border-ink/15 rounded-md px-4 py-3.5 text-sm text-ink focus:outline-none focus:border-gold transition-colors"
-                  />
-                </div>
-              </div>
-
-              {/* Row 2: Phone, Date, Venue */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div className="flex flex-col">
-                  <label className="font-body text-xs uppercase tracking-widest text-ink/70 font-semibold mb-2">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    placeholder="(202) 555-0199"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full bg-ivory border border-ink/15 rounded-md px-4 py-3.5 text-sm text-ink focus:outline-none focus:border-gold transition-colors"
-                  />
-                </div>
-
-                <div className="flex flex-col">
-                  <label className="font-body text-xs uppercase tracking-widest text-ink/70 font-semibold mb-2">
-                    Wedding / Event Date *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g., October 2026 / TBD"
-                    value={formData.date}
-                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full bg-ivory border border-ink/15 rounded-md px-4 py-3.5 text-sm text-ink focus:outline-none focus:border-gold transition-colors"
-                  />
-                </div>
-
-                <div className="flex flex-col">
-                  <label className="font-body text-xs uppercase tracking-widest text-ink/70 font-semibold mb-2">
-                    Venue / City *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g., Meridian House, DC"
-                    value={formData.venue}
-                    onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
-                    className="w-full bg-ivory border border-ink/15 rounded-md px-4 py-3.5 text-sm text-ink focus:outline-none focus:border-gold transition-colors"
-                  />
-                </div>
-              </div>
-
-              {/* Row 3: Estimated Investment Budget */}
-              <div className="flex flex-col">
-                <label className="font-body text-xs uppercase tracking-widest text-ink/70 font-semibold mb-2">
-                  Anticipated Floral &amp; Production Investment
-                </label>
-                <select
-                  value={formData.budget}
-                  onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                  className="w-full bg-ivory border border-ink/15 rounded-md px-4 py-3.5 text-sm text-ink focus:outline-none focus:border-gold transition-colors"
-                >
-                  <option value="$8,000 – $15,000">$8,000 – $15,000 (The Essentials)</option>
-                  <option value="$15,000 – $35,000">$15,000 – $35,000 (Design + Florals)</option>
-                  <option value="$35,000 – $55,000">$35,000 – $55,000 (Elevated Production)</option>
-                  <option value="$55,000+">$55,000+ (The Full Production)</option>
-                  <option value="Undecided">Undecided / Flexible</option>
-                </select>
-              </div>
-
-              {/* Row 4: Notes / Vision */}
-              <div className="flex flex-col">
-                <label className="font-body text-xs uppercase tracking-widest text-ink/70 font-semibold mb-2">
-                  Tell Us About Your Vision
-                </label>
-                <textarea
-                  rows={4}
-                  placeholder="Share your color palette, floral inspirations, scale of installations, or any questions for Irene..."
-                  value={formData.notes}
-                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  className="w-full bg-ivory border border-ink/15 rounded-md px-4 py-3.5 text-sm text-ink focus:outline-none focus:border-gold transition-colors"
-                />
-              </div>
-
-              {/* Submit Button */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4">
-                <p className="font-body text-xs text-ink/50">
-                  🔒 Strictly confidential. Never shared with third parties.
+            <form onSubmit={handleSubmit}>
+              <div className="mb-10 flex items-center gap-5" aria-label={`Step ${formStep} of 2`}>
+                <p className="shrink-0 font-body text-[10px] font-semibold uppercase tracking-[0.22em] text-ink/55">
+                  Step {formStep} of 2
                 </p>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full sm:w-auto px-10 py-4.5 bg-ink text-ivory rounded-full font-body text-xs uppercase tracking-[0.2em] font-semibold transition-all duration-300 hover:bg-gold hover:text-ink shadow-lg disabled:opacity-50"
-                >
-                  {isSubmitting ? "Submitting Inquiry..." : "Submit Consultation Request"}
-                </button>
+                <div className="h-px flex-1 bg-ink/15">
+                  <div
+                    className="h-px bg-gold transition-[width] duration-500"
+                    style={{ width: formStep === 1 ? "50%" : "100%" }}
+                  />
+                </div>
               </div>
 
+              {formStep === 1 ? (
+                <div className="space-y-11 animate-fade-in">
+                  <fieldset>
+                    <legend className="mb-5 font-display text-2xl text-ink sm:text-3xl">
+                      When are you celebrating?
+                    </legend>
+                    <input
+                      type="text"
+                      aria-label="Wedding or event date"
+                      placeholder="October 2027, or a date if you have one"
+                      value={formData.date}
+                      disabled={formData.dateUndecided}
+                      onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                      className="w-full border-0 border-b border-ink/25 bg-transparent px-0 py-4 font-body text-base text-ink outline-none transition-colors placeholder:text-ink/35 focus:border-gold disabled:cursor-not-allowed disabled:opacity-40"
+                    />
+                    <label className="mt-4 flex w-fit cursor-pointer items-center gap-3 font-body text-xs text-ink/60">
+                      <input
+                        type="checkbox"
+                        checked={formData.dateUndecided}
+                        onChange={(e) =>
+                          setFormData({ ...formData, dateUndecided: e.target.checked })
+                        }
+                        className="h-4 w-4 accent-[var(--color-gold)]"
+                      />
+                      We&rsquo;re still deciding
+                    </label>
+                  </fieldset>
+
+                  <div>
+                    <label
+                      htmlFor="reserve-venue"
+                      className="mb-2 block font-display text-2xl text-ink sm:text-3xl"
+                    >
+                      Where will it take place? <span className="font-body text-[10px] uppercase tracking-[0.18em] text-ink/40">Optional</span>
+                    </label>
+                    <input
+                      id="reserve-venue"
+                      type="text"
+                      placeholder="Venue or city"
+                      value={formData.venue}
+                      onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
+                      className="w-full border-0 border-b border-ink/25 bg-transparent px-0 py-4 font-body text-base text-ink outline-none transition-colors placeholder:text-ink/35 focus:border-gold"
+                    />
+                  </div>
+
+                  <fieldset>
+                    <legend className="mb-5 font-display text-2xl text-ink sm:text-3xl">
+                      About how many guests?
+                    </legend>
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                      {["Under 50", "50–125", "125–200", "200+"].map((option) => (
+                        <label
+                          key={option}
+                          className={`flex min-h-14 cursor-pointer items-center justify-center border px-3 text-center font-body text-xs transition-colors sm:text-sm ${
+                            formData.guestCount === option
+                              ? "border-ink bg-ink text-ivory"
+                              : "border-ink/20 text-ink hover:border-gold hover:text-gold"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="guestCount"
+                            value={option}
+                            checked={formData.guestCount === option}
+                            onChange={(e) => setFormData({ ...formData, guestCount: e.target.value })}
+                            className="sr-only"
+                          />
+                          {option}
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
+
+                  <fieldset>
+                    <legend className="mb-2 font-display text-2xl text-ink sm:text-3xl">
+                      What investment feels most aligned?
+                    </legend>
+                    <p className="mb-5 font-body text-xs leading-relaxed text-ink/50">
+                      An estimate is perfectly fine. Final proposals are tailored to your celebration.
+                    </p>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {[
+                        ["$8,000–$15,000", "The Essentials"],
+                        ["$20,000–$35,000", "Design + Florals"],
+                        ["$55,000+", "The Full Production"],
+                        ["Not sure yet", "I’d like Irene’s guidance"],
+                      ].map(([value, detail]) => (
+                        <label
+                          key={value}
+                          className={`flex min-h-20 cursor-pointer items-center justify-between gap-4 border px-5 py-4 transition-colors ${
+                            formData.budget === value
+                              ? "border-ink bg-ink text-ivory"
+                              : "border-ink/20 text-ink hover:border-gold"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="budget"
+                            value={value}
+                            checked={formData.budget === value}
+                            onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
+                            className="sr-only"
+                          />
+                          <span className="font-display text-xl sm:text-2xl">{value}</span>
+                          <span
+                            className={`max-w-28 text-right font-body text-[9px] uppercase tracking-[0.14em] ${
+                              formData.budget === value ? "text-ivory/55" : "text-ink/40"
+                            }`}
+                          >
+                            {detail}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
+
+                  <div className="flex flex-col items-start justify-between gap-5 border-t border-ink/15 pt-7 sm:flex-row sm:items-center">
+                    <p className="font-body text-xs text-ink/45">
+                      Takes about one minute. No pressure&mdash;just availability and next steps.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={continueToContact}
+                      disabled={!canContinue}
+                      className="w-full bg-ink px-9 py-4 font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-ivory transition-colors hover:bg-gold hover:text-ink disabled:cursor-not-allowed disabled:opacity-30 sm:w-auto sm:text-[11px]"
+                    >
+                      Continue <span aria-hidden="true">→</span>
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-9 animate-fade-in">
+                  <div>
+                    <h3 className="font-display text-3xl text-ink sm:text-4xl">
+                      Where should we follow up?
+                    </h3>
+                    <p className="mt-3 font-body text-sm leading-relaxed text-ink/55">
+                      Just the essentials. Your phone number and vision notes are optional.
+                    </p>
+                  </div>
+
+                  <div className="grid gap-8 sm:grid-cols-2">
+                    <div>
+                      <label htmlFor="reserve-names" className="mb-2 block font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-ink/60">
+                        Your Name(s) <span aria-hidden="true">*</span>
+                      </label>
+                      <input
+                        id="reserve-names"
+                        type="text"
+                        autoComplete="name"
+                        required
+                        placeholder="Victoria & Alexander"
+                        value={formData.names}
+                        onChange={(e) => setFormData({ ...formData, names: e.target.value })}
+                        className="w-full border-0 border-b border-ink/25 bg-transparent px-0 py-4 font-body text-base text-ink outline-none transition-colors placeholder:text-ink/35 focus:border-gold"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="reserve-email" className="mb-2 block font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-ink/60">
+                        Email Address <span aria-hidden="true">*</span>
+                      </label>
+                      <input
+                        id="reserve-email"
+                        type="email"
+                        autoComplete="email"
+                        required
+                        placeholder="victoria@example.com"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        className="w-full border-0 border-b border-ink/25 bg-transparent px-0 py-4 font-body text-base text-ink outline-none transition-colors placeholder:text-ink/35 focus:border-gold"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="reserve-phone" className="mb-2 block font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-ink/60">
+                      Phone Number <span className="font-normal text-ink/35">Optional</span>
+                    </label>
+                    <input
+                      id="reserve-phone"
+                      type="tel"
+                      inputMode="tel"
+                      autoComplete="tel"
+                      placeholder="(202) 555-0199"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      className="w-full border-0 border-b border-ink/25 bg-transparent px-0 py-4 font-body text-base text-ink outline-none transition-colors placeholder:text-ink/35 focus:border-gold"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="reserve-notes" className="mb-2 block font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-ink/60">
+                      Anything you&rsquo;d like Irene to know? <span className="font-normal text-ink/35">Optional</span>
+                    </label>
+                    <textarea
+                      id="reserve-notes"
+                      rows={3}
+                      placeholder="A few words about the feeling, setting, or vision you have in mind."
+                      value={formData.notes}
+                      onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                      className="w-full resize-y border-0 border-b border-ink/25 bg-transparent px-0 py-4 font-body text-base leading-relaxed text-ink outline-none transition-colors placeholder:text-ink/35 focus:border-gold"
+                    />
+                  </div>
+
+                  <div className="flex flex-col-reverse items-stretch justify-between gap-5 border-t border-ink/15 pt-7 sm:flex-row sm:items-center">
+                    <button
+                      type="button"
+                      onClick={() => setFormStep(1)}
+                      className="font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-ink/50 transition-colors hover:text-gold sm:text-left"
+                    >
+                      <span aria-hidden="true">←</span> Back
+                    </button>
+                    <div className="flex flex-col items-stretch gap-3 sm:items-end">
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="bg-ink px-9 py-4 font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-ivory transition-colors hover:bg-gold hover:text-ink disabled:cursor-wait disabled:opacity-50 sm:text-[11px]"
+                      >
+                        {isSubmitting ? "Checking Your Date..." : "Check My Date"}
+                      </button>
+                      <p className="text-center font-body text-[10px] text-ink/40 sm:text-right">
+                        Your details stay private and are never shared.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </form>
           )}
-
         </div>
       </section>
 

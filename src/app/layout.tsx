@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bodoni_Moda, Inter } from "next/font/google";
+import { Bodoni_Moda, Inter, Pinyon_Script } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import Cursor from "@/components/Cursor";
@@ -15,6 +15,13 @@ const bodoni = Bodoni_Moda({
 
 const inter = Inter({
   variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const pinyon = Pinyon_Script({
+  weight: "400",
+  variable: "--font-pinyon",
   subsets: ["latin"],
   display: "swap",
 });
@@ -63,7 +70,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${bodoni.variable} ${inter.variable} antialiased selection:bg-gold/30 selection:text-ink`}>
+    <html lang="en" className={`${bodoni.variable} ${inter.variable} ${pinyon.variable} antialiased selection:bg-gold/30 selection:text-ink`}>
       <body className="font-body bg-ivory text-ink selection:bg-gold/30 min-h-screen">
         <Cursor />
         <Header />

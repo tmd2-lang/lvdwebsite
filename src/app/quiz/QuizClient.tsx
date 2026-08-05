@@ -392,13 +392,17 @@ export default function QuizClient() {
 
       {/* LEAD CAPTURE MODAL (Original UI preserved) */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-y-auto" data-lenis-prevent>
           <div
-            className="absolute inset-0 bg-ink/70 backdrop-blur-sm"
+            className="fixed inset-0 bg-ink/70 backdrop-blur-sm"
             onClick={() => !isSubmitted && setIsModalOpen(false)}
+            data-lenis-prevent
           />
 
-          <div className="relative w-full max-w-lg bg-ivory rounded-sm p-8 md:p-12 shadow-2xl border border-ink/20 z-10">
+          <div 
+            className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto overscroll-contain bg-ivory rounded-sm p-8 md:p-12 shadow-2xl border border-ink/20 z-10 my-auto"
+            data-lenis-prevent
+          >
             {!isSubmitted && (
               <button
                 onClick={() => setIsModalOpen(false)}

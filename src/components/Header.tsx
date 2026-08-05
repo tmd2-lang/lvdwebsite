@@ -13,6 +13,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+  const hideGlobalHeader = pathname === "/reserve";
 
   // Pages with split photo / white backgrounds where mix-blend causes contrast issues
   const isLightPage = pathname === "/inquire" || pathname === "/quiz";
@@ -103,6 +104,8 @@ export default function Header() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isMenuOpen]);
 
+  if (hideGlobalHeader) return null;
+
   const getHeaderStyle = () => {
     if (isMenuOpen) {
       return "bg-transparent mix-blend-difference text-ivory";
@@ -171,7 +174,8 @@ export default function Header() {
         ref={menuRef}
         aria-hidden={!isMenuOpen}
         inert={!isMenuOpen}
-        className="fixed inset-0 w-full min-h-[100dvh] bg-ink text-ivory z-[35] flex flex-col justify-center px-6 md:px-24 overflow-y-auto"
+        data-lenis-prevent
+        className="fixed inset-0 w-full min-h-[100dvh] bg-ink text-ivory z-[35] flex flex-col justify-center px-6 md:px-24 overflow-y-auto overscroll-contain"
         style={{ transform: "translateY(-100%)", visibility: "hidden", pointerEvents: isMenuOpen ? "auto" : "none" }}
       >
         <div className="flex flex-col gap-4">

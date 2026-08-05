@@ -19,9 +19,9 @@ export default function CurtsyStatement() {
       const timeline = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 88%",
-          end: "top 32%",
-          scrub: 0.35,
+          start: "top 55%",
+          end: "center 45%",
+          scrub: 0.8,
           invalidateOnRefresh: true,
         },
       });

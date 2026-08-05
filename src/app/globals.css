@@ -8,6 +8,7 @@
   --color-rose-smoke: #C9B6B2;
   --font-display: var(--font-bodoni);
   --font-body: var(--font-inter);
+  --font-script: var(--font-pinyon);
 }
 
 html {

@@ -44,12 +44,13 @@ export default function InvestmentModal({
     INVESTMENT_TIERS.find((t) => t.id === activeTierId) || INVESTMENT_TIERS[0];
 
   return (
-    <div className="fixed inset-0 z-[100] flex justify-end">
+    <div className="fixed inset-0 z-[100] flex justify-end" data-lenis-prevent>
       {/* Dark Ambient Backdrop */}
       <div
         className="fixed inset-0 bg-ink/80 backdrop-blur-sm transition-opacity duration-500 animate-fade-in"
         onClick={onClose}
         aria-hidden="true"
+        data-lenis-prevent
       />
 
       {/* Full-Height Luxury Atelier Drawer */}
@@ -58,6 +59,7 @@ export default function InvestmentModal({
         aria-modal="true"
         aria-labelledby="tier-modal-title"
         className="relative w-full lg:w-[85vw] xl:w-[75vw] max-w-[1280px] h-full bg-ivory text-ink shadow-2xl z-10 flex flex-col lg:flex-row overflow-hidden animate-in slide-in-from-right duration-500 ease-out border-l border-ink/15"
+        data-lenis-prevent
       >
         {/* LEFT COLUMN (Desktop): Visual Editorial Showcase */}
         <div className="hidden lg:flex lg:w-5/12 relative bg-ink flex-col justify-between p-12 overflow-hidden">
@@ -147,7 +149,10 @@ export default function InvestmentModal({
           </div>
 
           {/* Main Scrollable Content */}
-          <div className="flex-1 overflow-y-auto px-6 md:px-12 py-8 sm:py-10 space-y-10">
+          <div 
+            className="flex-1 overflow-y-auto overscroll-contain px-6 md:px-12 py-8 sm:py-10 space-y-10 scroll-smooth [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-ink/20 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent"
+            data-lenis-prevent
+          >
             
             {/* Tier Identity Header (Mobile/Tablet + Context) */}
             <div className="space-y-4">

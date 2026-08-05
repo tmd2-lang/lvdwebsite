@@ -422,17 +422,19 @@ export default function TestimonialsClient() {
       {/* ============================================================ */}
       {modalStory && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-10 bg-ink/70 backdrop-blur-md animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-10 bg-ink/75 backdrop-blur-md animate-in fade-in duration-200 overflow-y-auto"
           onClick={() => setModalStory(null)}
+          data-lenis-prevent
         >
           <div 
-            className="relative w-full max-w-4xl max-h-[90vh] bg-ivory text-ink border border-ink/20 shadow-2xl overflow-hidden flex flex-col md:flex-row animate-in zoom-in-95 duration-300"
+            className="relative w-full max-w-4xl bg-ivory text-ink border border-ink/20 shadow-2xl overflow-hidden flex flex-col md:flex-row animate-in zoom-in-95 duration-300 max-h-[90vh] md:h-[82vh] my-auto"
             onClick={(e) => e.stopPropagation()}
+            data-lenis-prevent
           >
             {/* Close Button */}
             <button
               onClick={() => setModalStory(null)}
-              className="absolute top-4 right-4 z-20 w-10 h-10 bg-ivory/90 hover:bg-gold text-ink border border-ink/15 flex items-center justify-center transition-colors cursor-pointer"
+              className="absolute top-4 right-4 z-30 w-10 h-10 bg-ivory/90 hover:bg-gold text-ink border border-ink/15 flex items-center justify-center transition-colors cursor-pointer shadow-xs"
               aria-label="Close dialog"
             >
               <CloseIcon className="w-5 h-5" />
@@ -440,7 +442,7 @@ export default function TestimonialsClient() {
 
             {/* Left Visual Column (If image exists) */}
             {modalStory.image && (
-              <div className="relative w-full md:w-5/12 h-64 md:h-auto min-h-[280px] bg-ink/10 shrink-0 border-b md:border-b-0 md:border-r border-ink/10">
+              <div className="relative w-full md:w-5/12 h-56 sm:h-72 md:h-full shrink-0 border-b md:border-b-0 md:border-r border-ink/10 bg-ink/10">
                 <Image
                   src={modalStory.image}
                   alt={modalStory.name}
@@ -448,8 +450,8 @@ export default function TestimonialsClient() {
                   sizes="(max-width: 768px) 100vw, 40vw"
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-ink/30" />
-                <div className="absolute bottom-4 left-4 right-4 text-ivory">
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-ink/30 pointer-events-none" />
+                <div className="absolute bottom-4 left-4 right-4 text-ivory pointer-events-none">
                   <span className="font-body text-[9px] uppercase tracking-[0.25em] text-gold block mb-1">
                     {modalStory.service || "Production Gallery"}
                   </span>
@@ -460,11 +462,14 @@ export default function TestimonialsClient() {
               </div>
             )}
 
-            {/* Right Letter Column */}
-            <div className="flex-1 p-8 sm:p-10 md:p-12 overflow-y-auto max-h-[85vh] flex flex-col justify-between">
+            {/* Right Letter Column (Fully Scrollable with data-lenis-prevent) */}
+            <div 
+              className="flex-1 p-6 sm:p-8 md:p-10 lg:p-12 overflow-y-auto overscroll-contain flex flex-col justify-between scroll-smooth [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-ink/20 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent"
+              data-lenis-prevent
+            >
               <div>
                 {/* Header Meta */}
-                <div className="flex items-center justify-between pb-4 mb-6 border-b border-ink/10">
+                <div className="flex items-center justify-between pb-4 mb-6 border-b border-ink/10 pr-8">
                   <div className="flex items-center gap-2">
                     <div className="w-5 h-5 rounded-full bg-white border border-ink/10 flex items-center justify-center">
                       <GoogleLogo className="w-3 h-3" />
@@ -479,7 +484,7 @@ export default function TestimonialsClient() {
                 </div>
 
                 {/* Highlight Pull-Quote */}
-                <h3 className="font-display italic text-2xl sm:text-3xl text-ink leading-snug mb-6 text-balance">
+                <h3 className="font-display italic text-xl sm:text-2xl md:text-3xl text-ink leading-snug mb-6 text-balance">
                   &ldquo;{modalStory.highlight}&rdquo;
                 </h3>
 
@@ -505,12 +510,12 @@ export default function TestimonialsClient() {
               </div>
 
               {/* Modal Bottom Actions */}
-              <div className="pt-6 border-t border-ink/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="pt-6 mt-6 border-t border-ink/10 flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
                 <a
                   href="https://www.google.com/search?q=Lady+Victoria+Designs+Reviews"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-ink/70 hover:text-ink font-body text-[10px] uppercase tracking-[0.2em] font-medium transition-colors"
+                  className="inline-flex items-center gap-2 text-ink/70 hover:text-ink font-body text-[10px] uppercase tracking-[0.2em] font-medium transition-colors cursor-pointer"
                 >
                   <span>View On Google Reviews</span>
                   <ExternalLinkIcon className="w-3.5 h-3.5" />
@@ -519,7 +524,7 @@ export default function TestimonialsClient() {
                 <Link
                   href="/inquire"
                   onClick={() => setModalStory(null)}
-                  className="w-full sm:w-auto px-6 py-3 bg-ink text-ivory hover:bg-gold hover:text-ink text-center font-body text-[10px] uppercase tracking-[0.25em] font-medium transition-colors"
+                  className="w-full sm:w-auto px-6 py-3 bg-ink text-ivory hover:bg-gold hover:text-ink text-center font-body text-[10px] uppercase tracking-[0.25em] font-medium transition-colors cursor-pointer"
                 >
                   Inquire For Your Celebration →
                 </Link>
