@@ -65,8 +65,8 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="w-full max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-[9px] font-body text-ivory/40 uppercase tracking-[0.2em] text-center md:text-left">
         <p>© 2026 Lady Victoria Designs</p>
-        <p>Washington, DC & Beyond</p>
-        <p>Designed by Antigravity</p>
+        <p>Washington, DC &amp; Beyond</p>
+        <p>All Rights Reserved</p>
       </div>
 
     </footer>
