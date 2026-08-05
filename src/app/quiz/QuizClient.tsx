@@ -229,14 +229,15 @@ export default function QuizClient() {
       <main className="flex-1 flex flex-col items-center justify-center px-6">
         <div className="w-full max-w-3xl mx-auto flex flex-col justify-center min-h-[480px]">
           
-          {/* INTRO / WELCOME SCREEN */}
+          {/* INTRO / COVER SCREEN (Upgraded without vibecoded emojis) */}
           {step === "intro" && (
             <div className="w-full bg-white/80 border border-ink/10 p-8 sm:p-12 md:p-16 shadow-md rounded-sm backdrop-blur-sm text-center animate-fade-in">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold/10 border border-gold/30 mb-6">
-                <span className="w-2 h-2 rounded-full bg-gold" />
+              <div className="flex items-center justify-center gap-3 mb-6">
+                <span className="h-px w-6 bg-gold/40" />
                 <span className="font-body text-[10px] sm:text-xs uppercase tracking-[0.25em] text-gold font-semibold">
-                  Investment Estimator &amp; Guide
+                  Investment &amp; Scope Guide
                 </span>
+                <span className="h-px w-6 bg-gold/40" />
               </div>
 
               <h1 className="font-display text-3xl sm:text-4xl md:text-5xl text-ink leading-tight mb-6">
@@ -248,19 +249,19 @@ export default function QuizClient() {
                 Answer 7 brief questions regarding your venue style, guest count, and floral ambitions to receive an instant, tailored investment range and scope breakdown.
               </p>
 
-              {/* Trust Badges */}
+              {/* Clean Specs Grid (No Emojis) */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl mx-auto mb-10 pb-10 border-b border-ink/10">
                 <div className="flex flex-col items-center">
-                  <span className="font-display text-lg text-ink mb-1">⏱ ~60 Seconds</span>
+                  <span className="font-display text-lg text-ink mb-1">~2 Minutes</span>
                   <span className="font-body text-[11px] text-ink/60">Quick &amp; Interactive</span>
                 </div>
                 <div className="flex flex-col items-center">
-                  <span className="font-display text-lg text-ink mb-1">✦ DC, MD &amp; VA</span>
+                  <span className="font-display text-lg text-ink mb-1">DC, MD &amp; VA</span>
                   <span className="font-body text-[11px] text-ink/60">Tailored to Local Venues</span>
                 </div>
                 <div className="flex flex-col items-center">
-                  <span className="font-display text-lg text-ink mb-1">🔒 Confidential</span>
-                  <span className="font-body text-[11px] text-ink/60">No Obligation</span>
+                  <span className="font-display text-lg text-ink mb-1">Instant Results</span>
+                  <span className="font-body text-[11px] text-ink/60">No Waiting Required</span>
                 </div>
               </div>
 
@@ -285,7 +286,7 @@ export default function QuizClient() {
             </div>
           )}
 
-          {/* QUESTION SCREENS */}
+          {/* QUESTION SCREENS (Original UI preserved) */}
           {typeof step === "number" && (
             <div className="w-full bg-white/70 border border-ink/10 p-8 md:p-14 shadow-sm rounded-sm backdrop-blur-sm">
               {/* Progress Bar */}
@@ -331,7 +332,7 @@ export default function QuizClient() {
             </div>
           )}
 
-          {/* CALCULATING STATE */}
+          {/* CALCULATING STATE (Original UI preserved) */}
           {step === "results" && isCalculating && (
             <div className="flex flex-col items-center justify-center text-center gap-6 py-20 bg-white/70 border border-ink/10 p-12 rounded-sm shadow-sm">
               <div className="w-12 h-12 border-2 border-gold/30 border-t-gold rounded-full animate-spin"></div>
@@ -342,7 +343,7 @@ export default function QuizClient() {
             </div>
           )}
 
-          {/* RESULTS SCREEN */}
+          {/* RESULTS SCREEN (Original UI preserved) */}
           {step === "results" && !isCalculating && (
             <div className="w-full bg-white/90 rounded-sm p-8 md:p-16 shadow-lg border border-ink/10 text-center relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1.5 bg-gold"></div>
@@ -389,7 +390,7 @@ export default function QuizClient() {
         </div>
       </main>
 
-      {/* LEAD CAPTURE MODAL */}
+      {/* LEAD CAPTURE MODAL (Original UI preserved) */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div

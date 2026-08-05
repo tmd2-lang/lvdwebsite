@@ -45,7 +45,7 @@ export default function ReservePage() {
             Lady Victoria <span className="italic text-gold font-normal">Designs</span>
           </span>
           <span className="font-body text-[9px] uppercase tracking-[0.3em] text-gold/80 -mt-1 hidden sm:block">
-            WASHINGTON D.C. · ATELIER
+            WASHINGTON D.C. · FLORAL & EVENT DESIGN
           </span>
         </Link>
 
@@ -78,7 +78,7 @@ export default function ReservePage() {
 
         {/* Subtitle */}
         <p className="font-body text-base sm:text-lg md:text-xl text-ink/75 max-w-3xl leading-relaxed mb-12 font-light">
-          From the historic grandeur of Meridian House to private Virginia country estates, Irene and our atelier curate immersive sensory atmospheres, sculptural installations, and white-glove day-of execution.
+          From the historic grandeur of Meridian House to private Virginia country estates, Irene and our team curate immersive sensory atmospheres, sculptural installations, and white-glove day-of execution.
         </p>
 
         {/* Action Buttons */}
@@ -170,7 +170,7 @@ export default function ReservePage() {
       {/* 4. VENUE CREDIBILITY STRIP */}
       <section className="w-full bg-ecru/60 border-y border-ink/10 py-10 px-6 md:px-12 text-center">
         <p className="font-body text-[10px] sm:text-xs uppercase tracking-[0.25em] text-gold font-semibold mb-6">
-          PROUDLY COMMISSIONED AT PREMIER DC &amp; VIRGINIA DESTINATIONS
+          TRUSTED AT PREMIER DC &amp; VIRGINIA DESTINATIONS
         </p>
         <div className="max-w-5xl mx-auto flex flex-wrap items-center justify-center gap-x-8 sm:gap-x-12 gap-y-4 font-display text-sm sm:text-base md:text-lg text-ink/70">
           <span>Meridian House</span>
@@ -308,7 +308,7 @@ export default function ReservePage() {
               <span className="w-12 h-12 rounded-full bg-gold/10 text-gold text-2xl flex items-center justify-center mx-auto mb-6">✓</span>
               <h3 className="font-display text-3xl text-ink mb-4">Inquiry Received</h3>
               <p className="font-body text-base text-ink/75 max-w-lg mx-auto leading-relaxed mb-8">
-                Thank you! Irene and our design atelier will review your date and reach out to schedule your private design consultation.
+                Thank you! Irene and our design team will review your date and reach out to schedule your private design consultation.
               </p>
               <Link
                 href="/gallery"
@@ -449,17 +449,17 @@ export default function ReservePage() {
         </div>
       </section>
 
-      {/* 8. ATELIER GUARANTEE */}
+      {/* 8. STUDIO PROMISE */}
       <section className="w-full max-w-4xl mx-auto px-6 mb-24 text-center">
         <div className="flex items-center justify-center gap-4 mb-4">
           <div className="w-12 h-px bg-gold/40" />
           <span className="font-body text-[10px] uppercase tracking-[0.3em] text-gold font-semibold">
-            THE ATELIER PROMISE
+            OUR COMMITMENT
           </span>
           <div className="w-12 h-px bg-gold/40" />
         </div>
         <p className="font-body text-sm sm:text-base text-ink/70 leading-relaxed italic max-w-2xl mx-auto">
-          &ldquo;To ensure uncompromising artistry, bespoke floral sourcing, and white-glove day-of presence, our atelier accepts a strictly limited number of full-scale commissions each season.&rdquo;
+          &ldquo;To protect the artistry and dedicated attention behind every celebration, our studio accepts a limited number of full-scale productions each season.&rdquo;
         </p>
       </section>
 

@@ -130,7 +130,7 @@ export default function InquirePage() {
                   <button
                     type="button"
                     key={type.id}
-                    onClick={() => setFormData({...formData, celebrationType: type.title})}
+                    onClick={() => setFormData((prev) => ({ ...prev, celebrationType: type.title }))}
                     aria-pressed={formData.celebrationType === type.title}
                     className={`relative border p-6 text-left cursor-pointer transition-all duration-300 rounded-sm flex flex-col justify-between ${
                       formData.celebrationType === type.title 
@@ -187,7 +187,7 @@ export default function InquirePage() {
                     required
                     min={new Date().toISOString().split("T")[0]}
                     value={formData.date}
-                    onChange={(e) => setFormData({...formData, date: e.target.value})}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, date: e.target.value }))}
                     className="w-full bg-transparent border-b border-ink/20 pb-3 font-body text-lg text-ink outline-none focus:border-gold transition-colors text-ink/80 focus:text-ink"
                   />
                 </div>
@@ -200,7 +200,7 @@ export default function InquirePage() {
                   <input 
                     type="text" 
                     value={formData.venue}
-                    onChange={(e) => setFormData({...formData, venue: e.target.value})}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, venue: e.target.value }))}
                     className="w-full bg-transparent border-b border-ink/20 pb-3 font-display text-2xl text-ink outline-none focus:border-gold transition-colors placeholder:text-ink/20"
                     placeholder="e.g. Meridian House, Washington, D.C."
                   />
@@ -221,7 +221,11 @@ export default function InquirePage() {
                       <button
                         type="button"
                         key={count}
-                        onClick={() => setFormData({...formData, guestCount: count})}
+                        onClick={() => setFormData((prev) => ({
+                          ...prev,
+                          guestCount: count,
+                          investment: prev.guestCount === count ? prev.investment : ""
+                        }))}
                         className={`p-4 border text-left text-xs font-body transition-all rounded-sm flex items-center justify-between ${
                           formData.guestCount === count
                             ? 'border-ink bg-ink text-ivory shadow-sm'
@@ -334,7 +338,7 @@ export default function InquirePage() {
                   <textarea 
                     rows={3}
                     value={formData.vision}
-                    onChange={(e) => setFormData({...formData, vision: e.target.value})}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, vision: e.target.value }))}
                     className="w-full bg-ink/5 border border-ink/10 p-4 font-body text-base text-ink outline-none focus:border-gold focus:bg-transparent transition-colors placeholder:text-ink/30 resize-none rounded-sm"
                     placeholder="Candlelit, sculptural, romantic, filled with movement..."
                   />
@@ -370,7 +374,7 @@ export default function InquirePage() {
                       <button
                         type="button"
                         key={item.tier}
-                        onClick={() => setFormData({...formData, investment: item.tier})}
+                        onClick={() => setFormData((prev) => ({ ...prev, investment: item.tier }))}
                         aria-pressed={formData.investment === item.tier}
                         className={`p-4 rounded-sm border text-left transition-all flex items-center justify-between ${
                           formData.investment === item.tier 
@@ -435,7 +439,7 @@ export default function InquirePage() {
                       required
                       placeholder="e.g. Nicole & Alexander"
                       value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
                       className="w-full bg-transparent border-b border-ink/20 pb-3 font-display text-xl text-ink outline-none focus:border-gold transition-colors"
                     />
                   </div>
@@ -447,7 +451,7 @@ export default function InquirePage() {
                       type="email" 
                       required
                       value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
                       className="w-full bg-transparent border-b border-ink/20 pb-3 font-body text-lg text-ink outline-none focus:border-gold transition-colors placeholder:text-ink/20"
                       placeholder="you@example.com"
                     />
@@ -463,7 +467,7 @@ export default function InquirePage() {
                       type="tel" 
                       required
                       value={formData.phone}
-                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
                       className="w-full bg-transparent border-b border-ink/20 pb-3 font-body text-lg text-ink outline-none focus:border-gold transition-colors placeholder:text-ink/20"
                       placeholder="(202) 555-0123"
                     />
@@ -476,7 +480,7 @@ export default function InquirePage() {
                     <select 
                       id="inquiry-source"
                       value={formData.source}
-                      onChange={(e) => setFormData({...formData, source: e.target.value})}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, source: e.target.value }))}
                       className="w-full bg-transparent border-b border-ink/20 pb-3 font-body text-sm text-ink outline-none focus:border-gold transition-colors cursor-pointer"
                     >
                       <option value="" disabled>Select one...</option>
@@ -506,7 +510,7 @@ export default function InquirePage() {
                   </Magnetic>
                 </div>
                 <p className="font-body text-[9px] text-ink/50 text-right mt-[-10px]">
-                  🔒 Your details remain strictly confidential with Irene and our atelier.
+                  🔒 Your details remain strictly confidential with Irene and our team.
                 </p>
 
               </form>
@@ -521,7 +525,7 @@ export default function InquirePage() {
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold/10 border border-gold/30 mb-6">
                 <span className="w-2 h-2 rounded-full bg-gold animate-ping" />
                 <span className="font-body text-[10px] uppercase tracking-[0.25em] text-gold font-semibold">
-                  Inquiry Successfully Received
+                  Your Inquiry Is In
                 </span>
               </div>
 
@@ -530,7 +534,7 @@ export default function InquirePage() {
               </h1>
 
               <p className="font-body text-base md:text-lg text-ink/75 max-w-2xl mx-auto leading-relaxed mb-10">
-                Your celebration details have been delivered directly to Irene’s atelier. We will review your date and venue and reach out within 24 to 48 hours.
+                Your celebration details have been sent to Irene and our team. We will review your date and venue and reach out within 24 to 48 hours.
               </p>
 
               {/* Direct Booking Card with Calendly Embed */}

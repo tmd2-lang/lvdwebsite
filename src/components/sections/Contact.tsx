@@ -40,7 +40,7 @@ export default function Contact() {
 
           {/* Subtitle */}
           <p className="font-body text-ivory/80 text-sm md:text-base max-w-xl mx-auto mb-10 leading-relaxed font-light">
-            Now accepting private commissions and grand celebrations worldwide.
+            Now accepting a limited number of weddings and celebrations worldwide.
           </p>
 
           {/* Magnetic Action Button */}

@@ -80,7 +80,7 @@ export default function InvestmentModal({
               LADY VICTORIA DESIGNS
             </span>
             <div className="font-display italic text-2xl text-ivory/90">
-              Scope &amp; Investment Atelier
+              Scope &amp; Investment Guide
             </div>
           </div>
 
