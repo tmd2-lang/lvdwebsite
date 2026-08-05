@@ -1,8 +1,7 @@
 "use client";
 
 import ConceptSwitcher from "@/components/ConceptSwitcher";
-import Credibility from "@/components/sections/Credibility";
-import Narrative from "@/components/sections/Narrative";
+import SweepingCurtsy from "@/components/parked/SweepingCurtsy";
 import ParallaxDivider from "@/components/sections/ParallaxDivider";
 import SignatureWork from "@/components/sections/SignatureWork";
 import Services from "@/components/sections/Services";
@@ -17,9 +16,8 @@ export default function ConceptBPage() {
 
       {/* MasterpieceVideo is parked in components/parked for possible reuse. */}
 
-      {/* DIRECT FLOW INTO CREDIBILITY & NARRATIVE */}
-      <Credibility />
-      <Narrative />
+      {/* DIRECT FLOW INTO THE EDITORIAL STORY */}
+      <SweepingCurtsy />
       <ParallaxDivider />
       <SignatureWork />
       <Services />

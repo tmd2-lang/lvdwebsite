@@ -3,9 +3,8 @@ import { media } from "@/lib/media-slots";
 
 export default function MeetIrene() {
   return (
-    <section className="w-full bg-ivory py-20 md:py-36 relative overflow-hidden border-t border-ink/10">
+    <section className="relative w-full overflow-hidden border-t border-ink/10 bg-ivory py-20 md:py-36">
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
-        
         {/* Mobile Layout (< md) */}
         <div className="flex flex-col md:hidden">
           <div className="mb-8">

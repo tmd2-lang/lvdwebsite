@@ -7,49 +7,54 @@ import { media } from "@/lib/media-slots";
 
 export default function ParallaxDivider() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLImageElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    
-    // Smooth GSAP Parallax Effect
-    // As the user scrolls past the container, the image moves at a different speed
-    gsap.fromTo(imageRef.current, 
-      { yPercent: -15 },
-      {
-        yPercent: 15, 
-        ease: "none",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-        }
-      }
-    );
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        imageRef.current,
+        { yPercent: -8 },
+        {
+          yPercent: 8,
+          ease: "none",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        },
+      );
+    }, containerRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (
-    // We keep z-0 here so that SignatureWork (z-20) can slide over it!
-    <section ref={containerRef} className="w-full h-[70vh] md:h-[90vh] overflow-hidden relative z-0 bg-ink">
-      {/* 
-        We make the wrapper taller than the container (h-[120%]) 
-        and shift it up so the image has room to move down without exposing empty space.
-      */}
-      <div 
+    <div
+      ref={containerRef}
+      role="img"
+      aria-label="Lady Victoria Designs celebration detail"
+      className="relative h-[70vh] w-full overflow-hidden bg-ink md:h-[90vh]"
+    >
+      <div
         ref={imageRef}
-        className="absolute top-[-10%] left-0 w-full h-[120%] will-change-transform"
+        className="absolute inset-x-0 top-[-15%] h-[130%] will-change-transform"
       >
         <Image
           src={media["home.parallax"]}
-          alt="Luxury Wedding Design - Lady Victoria Designs"
+          alt="Luxury wedding reception designed by Lady Victoria Designs"
           fill
           sizes="100vw"
-          className="w-full h-full object-cover object-center"
+          className="h-full w-full object-cover object-center"
         />
-        {/* Subtle vignette/overlay to blend beautifully out of the black Narrative section */}
-        <div className="absolute inset-0 bg-gradient-to-b from-ink via-transparent to-transparent opacity-80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-ink/20 via-transparent to-ink/15" />
       </div>
-    </section>
+    </div>
   );
 }

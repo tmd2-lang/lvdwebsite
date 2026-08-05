@@ -15,7 +15,7 @@ export default function Services() {
   };
 
   return (
-    <section className="w-full bg-ivory py-24 md:py-48 px-6 md:px-12" id="services">
+    <section className="w-full bg-ivory px-6 py-24 md:px-12 md:py-48" id="services">
       <div className="max-w-[1440px] mx-auto flex flex-col">
         <div className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-gold mb-4 text-center">INVESTMENTS & SCOPE</div>
         <h2 className="font-display text-[clamp(2.5rem,5vw,5rem)] text-ink mb-4 text-center">Investments</h2>
@@ -248,4 +248,3 @@ export default function Services() {
     </section>
   );
 }
-

@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Contact from "@/components/sections/Contact";
 import Image from "next/image";
-import InvestmentModal from "@/components/sections/InvestmentModal";
-import { INVESTMENT_TIERS } from "@/data/investments";
+import Investments from "@/components/sections/Services";
 import { media } from "@/lib/media-slots";
 
 const services = [
@@ -77,14 +76,6 @@ const designFor = [
 
 export default function ServicesPage() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [activeInvestmentIndex, setActiveInvestmentIndex] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalTierId, setModalTierId] = useState<string | null>(null);
-
-  const openModalForTier = (tierId: string) => {
-    setModalTierId(tierId);
-    setIsModalOpen(true);
-  };
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -268,149 +259,10 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* NEW SECTION: INVESTMENTS */}
-      <section className="w-full bg-ivory py-20 md:py-32 lg:py-40 px-6 md:px-12 border-b border-ink/20">
-        <div className="max-w-[1440px] mx-auto flex flex-col">
-          <div className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-gold mb-4 text-center">INVESTMENTS</div>
-          <h2 className="font-display text-[clamp(2.5rem,5vw,5rem)] text-ink mb-4 text-center">Investments</h2>
-          <p className="font-body text-ink/70 text-sm md:text-base text-center max-w-xl mx-auto mb-16">
-            Every event is tailored to its venue, guest count, and design scope. Click any tier below to explore its comprehensive deliverables and scope.
-          </p>
-          
-          <div className="flex flex-col md:flex-row w-full h-[70vh] gap-4 md:gap-4">
-            {INVESTMENT_TIERS.map((tier, idx) => {
-              const isActive = activeInvestmentIndex === idx;
-              
-              return (
-                <div
-                  key={tier.id}
-                  onMouseEnter={() => setActiveInvestmentIndex(idx)}
-                  onFocus={() => setActiveInvestmentIndex(idx)}
-                  onClick={() => {
-                    if (isActive) {
-                      openModalForTier(tier.id);
-                    } else {
-                      setActiveInvestmentIndex(idx);
-                    }
-                  }}
-                  className={`relative flex flex-col justify-end overflow-hidden group cursor-pointer transition-[flex-grow,width] duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] rounded-sm ${
-                    isActive ? "flex-[3_3_0%] md:w-[60%]" : "flex-[1_1_0%] md:w-[20%]"
-                  }`}
-                >
-                  <Image
-                    src={tier.image} 
-                    fill
-                    sizes={isActive ? "(max-width: 767px) 100vw, 60vw" : "(max-width: 767px) 100vw, 20vw"}
-                    className={`absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out ${
-                      isActive ? "scale-100" : "scale-110"
-                    }`}
-                    alt={tier.name}
-                  />
-                  
-                  <div className={`absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/30 to-transparent transition-opacity duration-700 ${
-                    isActive ? "opacity-100" : "opacity-50 group-hover:opacity-70"
-                  }`} />
-
-                  <div className="relative z-10 w-full h-full">
-                    
-                    {/* Collapsed State Content */}
-                    <div className={`absolute inset-0 flex flex-col items-center justify-end pb-4 md:pb-12 transition-opacity duration-500 delay-100 ${
-                      isActive ? "opacity-0 pointer-events-none" : "opacity-100"
-                    }`}>
-                      {/* Subtle dark gradient scrim for bottom third */}
-                      <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-ink/90 to-transparent pointer-events-none -z-10" />
-                      
-                      <h3 className="font-display text-3xl xl:text-4xl text-ivory whitespace-nowrap hidden md:block -rotate-90 origin-center absolute bottom-1/2 translate-y-1/2">
-                        {tier.name}
-                      </h3>
-                      <h3 className="font-display text-2xl md:text-3xl text-ivory block md:hidden mb-1 md:mb-6 px-6 text-center">
-                        {tier.name}
-                      </h3>
-                      <div className="font-body text-[8px] uppercase tracking-widest text-gold hidden md:block mt-auto text-center px-4 w-full">
-                        {tier.price}
-                      </div>
-                    </div>
-
-                    {/* Expanded State Content */}
-                    <div className={`absolute inset-0 p-6 md:p-12 flex flex-col justify-end transition-all duration-700 ease-out ${
-                      isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8 pointer-events-none"
-                    }`}>
-                      <div className="flex items-center gap-3 mb-2">
-                        <span className="font-body text-[10px] uppercase tracking-[0.25em] text-gold font-bold">
-                          {tier.tierLabel}
-                        </span>
-                      </div>
-                      <h3 className="font-display text-4xl md:text-5xl lg:text-6xl mb-3 text-ivory">
-                        {tier.name}
-                      </h3>
-                      <p className="font-display italic text-base md:text-lg text-gold/90 mb-6">
-                        &ldquo;{tier.tagline}&rdquo;
-                      </p>
-
-                      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-t border-ivory/30 pt-6">
-                        <p className="font-body text-sm md:text-base leading-[1.6] max-w-[40ch] text-ivory/90">
-                          {tier.desc}
-                        </p>
-                        
-                        <div className="flex flex-col items-start md:items-end gap-3 shrink-0">
-                          <span className="font-body text-xs uppercase tracking-[0.2em] text-gold whitespace-nowrap font-medium">
-                            {tier.price}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              openModalForTier(tier.id);
-                            }}
-                            className="px-5 py-2.5 rounded-full bg-ivory/15 hover:bg-gold hover:text-ink text-ivory backdrop-blur-sm border border-ivory/30 font-body text-[11px] uppercase tracking-[0.18em] transition-all duration-300 flex items-center gap-2 cursor-pointer shadow-sm"
-                          >
-                            <span>Explore Full Scope</span>
-                            <span className="text-xs">↗</span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* QUIZ INTERACTIVE CALLOUT BANNER */}
-          <div className="w-full mt-12 md:mt-16 bg-ecru/80 border border-ink/10 p-8 md:p-12 rounded-sm flex flex-col md:flex-row items-center justify-between gap-8 shadow-xs">
-            <div className="flex flex-col text-center md:text-left">
-              <span className="font-body text-[10px] md:text-xs uppercase tracking-[0.25em] text-gold font-semibold mb-2">
-                SCOPE ESTIMATOR
-              </span>
-              <h4 className="font-display text-2xl md:text-3xl text-ink mb-2">
-                Which level of service fits your plans?
-              </h4>
-              <p className="font-body text-sm md:text-base text-ink/75 max-w-xl">
-                Share seven details about your celebration to see which starting point most closely matches your scope.
-              </p>
-            </div>
-            <a
-              href="/quiz"
-              className="shrink-0 bg-ink text-ivory px-8 py-4 font-body text-xs uppercase tracking-[0.2em] hover:bg-gold hover:text-ink transition-colors duration-300 shadow-sm"
-            >
-              Estimate Your Scope →
-            </a>
-          </div>
-
-        </div>
-      </section>
+      <Investments />
 
       {/* FINAL CTA SECTION */}
       <Contact />
-
-      {/* INVESTMENT MODAL POPUP */}
-      <InvestmentModal
-        isOpen={isModalOpen}
-        activeTierId={modalTierId}
-        onClose={() => setIsModalOpen(false)}
-        onSelectTier={(tierId) => setModalTierId(tierId)}
-      />
 
     </main>
   );

@@ -3,8 +3,7 @@
 import Link from "next/link";
 import Magnetic from "@/components/Magnetic";
 import ConceptSwitcher from "@/components/ConceptSwitcher";
-import Credibility from "@/components/sections/Credibility";
-import Narrative from "@/components/sections/Narrative";
+import SweepingCurtsy from "@/components/parked/SweepingCurtsy";
 import ParallaxDivider from "@/components/sections/ParallaxDivider";
 import SignatureWork from "@/components/sections/SignatureWork";
 import Services from "@/components/sections/Services";
@@ -103,8 +102,7 @@ export default function ConceptAPage() {
       </section>
 
       {/* DIRECT FLOW INTO REST OF SITE */}
-      <Credibility />
-      <Narrative />
+      <SweepingCurtsy />
       <ParallaxDivider />
       <SignatureWork />
       <Services />

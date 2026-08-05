@@ -4,7 +4,10 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-export default function Narrative() {
+// Parked from the live homepage for now.
+// Restore by importing this component and rendering it where the editorial
+// "A Sweeping Curtsy" story should appear.
+export default function SweepingCurtsy() {
   const sectionRef = useRef<HTMLElement>(null);
   const titleLeftRef = useRef<HTMLSpanElement>(null);
   const titleRightRef = useRef<HTMLSpanElement>(null);

@@ -1,3 +1,5 @@
+// Parked from the live site for now.
+// Restore this component when the homepage needs a compact proof-point strip.
 export default function Credibility() {
   return (
     <section className="relative z-10 w-full border-y border-gold/30 bg-ivory py-4 px-6 md:px-12">
