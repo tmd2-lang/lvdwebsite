@@ -481,6 +481,7 @@ export default function InquirePage() {
                     >
                       <option value="" disabled>Select one...</option>
                       <option value="instagram">Instagram</option>
+                      <option value="facebook">Facebook</option>
                       <option value="pinterest">Pinterest</option>
                       <option value="planner-referral">Planner or Venue Referral</option>
                       <option value="word-of-mouth">Word of Mouth / Friend</option>
