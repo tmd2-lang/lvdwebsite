@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Magnetic from "@/components/Magnetic";
 
 export default function ReservePage() {
   const [formData, setFormData] = useState({
@@ -60,110 +59,63 @@ export default function ReservePage() {
       </header>
 
       {/* 2. HERO SECTION */}
-      <section className="w-full max-w-[1440px] mx-auto px-6 md:px-12 pt-12 md:pt-20 pb-16 md:pb-24 flex flex-col items-center text-center">
-        
-        {/* Availability Badge */}
-        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-gold/10 border border-gold/30 mb-8 animate-fade-in">
-          <span className="w-2 h-2 rounded-full bg-gold animate-ping" />
-          <span className="font-body text-[10px] sm:text-xs uppercase tracking-[0.25em] text-gold font-semibold">
-            Now Booking · 2026 &amp; 2027 Wedding Seasons
-          </span>
+      <section className="relative w-full min-h-[calc(100svh-81px)] overflow-hidden bg-ink text-ivory">
+        <Image
+          src="/reserve/reserve-hero.jpeg"
+          alt="A refined wedding reception designed with white florals, greenery, candlelight, and gold accents"
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-ink/62 via-ink/22 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/48 via-transparent to-transparent" />
+
+        <div className="relative z-10 flex min-h-[calc(100svh-81px)] w-full items-end px-6 pb-14 pt-20 sm:px-10 md:px-12 md:pb-16">
+          <div className="max-w-2xl">
+            <h1 className="font-display text-[clamp(3.25rem,6vw,6.5rem)] leading-[0.92] tracking-tight text-ivory">
+              Wedding design, <span className="italic">reimagined.</span>
+            </h1>
+
+            <p className="mt-5 max-w-xl font-body text-base leading-relaxed text-ivory/88 sm:text-lg">
+              Florals, atmosphere, and artful direction for celebrations with a point of view.
+            </p>
+
+            <div className="mt-8 flex flex-wrap items-center gap-x-10 gap-y-4">
+              <button
+                onClick={scrollToForm}
+                className="border-b border-ivory/70 pb-1 font-body text-[11px] font-semibold uppercase tracking-[0.2em] text-ivory transition-colors duration-300 hover:border-gold hover:text-gold"
+              >
+                Inquire About Your Date
+              </button>
+
+              <Link
+                href="/quiz"
+                className="border-b border-ivory/45 pb-1 font-body text-[11px] font-semibold uppercase tracking-[0.2em] text-ivory/85 transition-colors duration-300 hover:border-gold hover:text-gold"
+              >
+                Estimate Your Investment
+              </Link>
+            </div>
+          </div>
         </div>
+      </section>
 
-        {/* Headline */}
-        <h1 className="font-display text-[clamp(2.5rem,6.5vw,5.5rem)] text-ink leading-[1.04] tracking-tight max-w-5xl mb-8">
-          Bespoke Floral Architecture &amp; <br className="hidden sm:inline" />
-          <span className="italic text-gold">Luxury Event Production</span>
-        </h1>
+      {/* 3. EDITORIAL STATEMENT */}
+      <section className="w-full bg-ivory px-6 py-16 text-ink sm:py-20 md:px-12 md:py-24">
+        <div className="mx-auto grid max-w-[1440px] gap-8 md:grid-cols-[180px_1fr] md:items-start md:gap-12">
+          <p className="pt-2 font-body text-[10px] font-semibold uppercase tracking-[0.28em] text-ink/65">
+            The Art of the Occasion
+          </p>
 
-        {/* Subtitle */}
-        <p className="font-body text-base sm:text-lg md:text-xl text-ink/75 max-w-3xl leading-relaxed mb-12 font-light">
-          From the historic grandeur of Meridian House to private Virginia country estates, Irene and our team curate immersive sensory atmospheres, sculptural installations, and white-glove day-of execution.
-        </p>
-
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-16 w-full sm:w-auto">
-          <Magnetic>
-            <button
-              onClick={scrollToForm}
-              className="w-full sm:w-auto px-10 py-5 bg-ink text-ivory rounded-full font-body text-xs sm:text-sm uppercase tracking-[0.2em] font-semibold transition-all duration-300 hover:bg-gold hover:text-ink shadow-xl hover:scale-105"
-            >
-              Inquire for Your Date
-            </button>
-          </Magnetic>
-
-          <Link
-            href="/quiz"
-            className="w-full sm:w-auto px-8 py-5 border border-ink/20 text-ink rounded-full font-body text-xs sm:text-sm uppercase tracking-[0.2em] font-medium transition-all duration-300 hover:bg-ink/5 hover:border-ink flex items-center justify-center gap-2"
-          >
-            <span>Estimate Your Investment</span>
-            <span className="text-gold">→</span>
-          </Link>
-        </div>
-
-        {/* 3. FOUR-IMAGE EDITORIAL SHOWCASE */}
-        <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 md:gap-6 max-w-[1360px] mx-auto">
-          
-          <div className="group relative aspect-[3/4] overflow-hidden rounded-sm bg-ecru border border-ink/10 shadow-lg">
-            <Image
-              src="/gallery/r-and-j/r-and-j-04.jpeg"
-              alt="Grand Ceremony Floral Arch"
-              fill
-              sizes="(max-width: 767px) 50vw, 25vw"
-              className="object-cover group-hover:scale-105 transition-transform duration-700"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="absolute bottom-3 left-3 right-3 text-left text-ivory opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <p className="font-display italic text-sm sm:text-base">Ceremony Architecture</p>
-            </div>
-          </div>
-
-          <div className="group relative aspect-[3/4] overflow-hidden rounded-sm bg-ecru border border-ink/10 shadow-lg">
-            <Image
-              src="/investments/full-production.jpg"
-              alt="Lavender & Violet Ballroom Production"
-              fill
-              sizes="(max-width: 767px) 50vw, 25vw"
-              className="object-cover group-hover:scale-105 transition-transform duration-700"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="absolute bottom-3 left-3 right-3 text-left text-ivory opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <p className="font-display italic text-sm sm:text-base">Full Ballroom Canopy</p>
-            </div>
-          </div>
-
-          <div className="group relative aspect-[3/4] overflow-hidden rounded-sm bg-ecru border border-ink/10 shadow-lg">
-            <Image
-              src="/gallery/amber-kendall/amber-kendall-30.jpeg"
-              alt="Meridian House Tablescape"
-              fill
-              sizes="(max-width: 767px) 50vw, 25vw"
-              className="object-cover group-hover:scale-105 transition-transform duration-700"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="absolute bottom-3 left-3 right-3 text-left text-ivory opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <p className="font-display italic text-sm sm:text-base">Meridian House Tablescape</p>
-            </div>
-          </div>
-
-          <div className="group relative aspect-[3/4] overflow-hidden rounded-sm bg-ecru border border-ink/10 shadow-lg">
-            <Image
-              src="/gallery/curated-installations/curated-installations-01.jpeg"
-              alt="Sculptural Botanical Artistry"
-              fill
-              sizes="(max-width: 767px) 50vw, 25vw"
-              className="object-cover group-hover:scale-105 transition-transform duration-700"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="absolute bottom-3 left-3 right-3 text-left text-ivory opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <p className="font-display italic text-sm sm:text-base">Fine Art Installations</p>
-            </div>
-          </div>
-
+          <p className="font-display text-[clamp(2.15rem,4.25vw,4.9rem)] leading-[1.04] tracking-tight text-ink">
+            Lady Victoria Designs creates weddings that feel{" "}
+            <span className="italic">deeply personal</span>, beautifully
+            composed, and impossible to forget. Led by Irene, our work brings
+            floral design, atmosphere, styling, and event direction into{" "}
+            <span className="italic">one considered vision</span>, so every
+            detail feels intentional from the first impression to the final
+            toast.
+          </p>
         </div>
       </section>
 

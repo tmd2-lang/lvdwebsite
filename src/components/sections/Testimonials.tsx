@@ -10,35 +10,35 @@ gsap.registerPlugin(ScrollTrigger);
 
 const testimonials = [
   {
-    quote: "Working with Irene for my wedding was the best decision that we made! From day one, the level of professionalism, design recommendations, and dedication were unmatched. Day of, words cannot describe, everything was beautiful beyond my imagination.",
-    author: "LATISHA · ★★★★★ GOOGLE REVIEW",
+    quote: "I asked for heaven, you gave me paradise and this is coming from a colleague decorator. You created magic. My facial expression for the room reveal is exactly what I felt.",
+    author: "EVENTS BY BRI · VERIFIED GOOGLE REVIEW",
     align: "left",
   },
   {
-    quote: "From the moment I met Irene, I knew there was no one else I would rather work with. She was very professional and attentive to all our needs. She took our loose ideas and Pinterest boards and completely exceeded our expectations.",
-    author: "SCOTT · ★★★★★ GOOGLE REVIEW",
+    quote: "Walking into our reception space honestly felt surreal. She took every vision, feeling, and dream I had in my heart and transformed it into something even more beautiful than I imagined.",
+    author: "NATHAN & ASHLEY · VERIFIED GOOGLE REVIEW",
     align: "right",
   },
   {
-    quote: "Lady Victoria Designs made our wedding day look absolutely stunning. Irene made the entire planning process stress-free. 10/10 would highly recommend if you care about quality and want the absolute best in the business.",
-    author: "NICOLE & ERIC · ★★★★★ GOOGLE REVIEW",
+    quote: "Lady Victoria didn’t just decorate our venue… she made us feel like royalty. Every detail was intentional, elegant, and overflowing with grace.",
+    author: "GERSH FRANCOIS · VERIFIED GOOGLE REVIEW",
     align: "left",
   },
   {
-    quote: "Irene was an absolute joy to work with. She was professional and kind throughout the entire process, and I was so impressed with her ability to remain joyful and poised even through stressful times.",
-    author: "NAWA · ★★★★★ GOOGLE REVIEW",
+    quote: "From day 1, the level of professionalism and dedication were unmatched. Day of, words cannot describe, everything was beautiful beyond my imagination.",
+    author: "LATISHA BLYDEN · VERIFIED GOOGLE REVIEW",
     align: "right",
   },
   {
-    quote: "Delighted with the work from Lady Victoria Designs. The attention to detail on every element was thoughtfully executed, elegant, and seamlessly integrated with the overall luxury atmosphere of our wedding.",
-    author: "DEAN · ★★★★★ GOOGLE REVIEW",
+    quote: "The fresh flowers she chose were of such high quality that they remained vibrant throughout the entire event — a true reflection of her commitment to excellence.",
+    author: "DEAN & NICOLE GAWUM · VERIFIED GOOGLE REVIEW",
     align: "left",
   },
   {
-    quote: "Irene is an absolute gem. She was incredibly responsive and supportive throughout our planning. She went above and beyond to bring our dream floral vision to life and transform our venue into a breathtaking reality.",
-    author: "VERIFIED CLIENT · ★★★★★ GOOGLE REVIEW",
+    quote: "She went above and beyond for our wedding and honestly these pictures don’t even do the decor justice. At this point you’ve become our family decorator.",
+    author: "NADINE ALOMEGOUN · VERIFIED GOOGLE REVIEW",
     align: "right",
-  }
+  },
 ];
 
 export default function Testimonials() {
@@ -83,21 +83,21 @@ export default function Testimonials() {
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,theme(colors.ink/40)_20%,transparent_60%)]" />
         
-        {/* Google Reviews Trust Pill */}
+        {/* Google Reviews Citation Pill */}
         <Link
           href="/testimonials"
-          className="relative z-20 inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-ivory transition-all mb-6 pointer-events-auto group cursor-pointer shadow-lg"
+          className="relative z-20 inline-flex items-center gap-2.5 px-4 py-2 border border-white/20 bg-white/10 hover:bg-white/20 backdrop-blur-md text-ivory transition-all mb-6 pointer-events-auto group cursor-pointer shadow-lg"
         >
           <span className="flex text-gold text-xs tracking-wider">★★★★★</span>
           <span className="font-body text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-ivory font-semibold">
-            5.0 Google Rating · 100% 5-Star Reviews
+            5.0 Google Rating · 50+ Verified Reviews
           </span>
           <span className="text-xs text-gold group-hover:translate-x-0.5 transition-transform">→</span>
         </Link>
         
         <div className="relative z-20 font-body text-xs uppercase tracking-[0.2em] text-gold mb-4 text-center flex items-center gap-4">
            <span className="w-8 h-px bg-gold/50"></span>
-           KIND WORDS
+           CLIENT WORDS &amp; GRATITUDE
            <span className="w-8 h-px bg-gold/50"></span>
         </div>
         
@@ -106,7 +106,7 @@ export default function Testimonials() {
         </h2>
         
         <p className="relative z-20 text-ivory/80 font-body text-center max-w-md text-sm md:text-base leading-relaxed mb-8 drop-shadow-md">
-          With years of trusted craftsmanship, clients return to Lady Victoria Designs for celebrations that mark life’s most meaningful moments.
+          With years of trusted craftsmanship, couples and families return to Lady Victoria Designs for celebrations that mark life’s most meaningful moments.
         </p>
 
         <div className="relative z-30 flex flex-col sm:flex-row items-center gap-3.5 pointer-events-auto">
@@ -117,7 +117,7 @@ export default function Testimonials() {
             href="/testimonials"
             className="font-body text-xs uppercase tracking-[0.2em] text-ivory/90 hover:text-ivory border border-ivory/30 hover:border-ivory px-6 py-3.5 transition-colors backdrop-blur-sm flex items-center gap-2 cursor-pointer"
           >
-            <span>Read All Reviews</span>
+            <span>Read All 50+ Reviews</span>
             <span className="text-gold">→</span>
           </Link>
         </div>
@@ -133,17 +133,10 @@ export default function Testimonials() {
                 key={idx}
                 className={`w-full flex px-6 md:px-12 ${isLeft ? "justify-start md:pr-[10%]" : "justify-end md:pl-[10%]"}`}
               >
-                {/* Dark Mode Frosted Glass Cards */}
-                <div className="pointer-events-auto flex flex-col items-center text-center max-w-[40ch] p-8 md:p-12 backdrop-blur-xl bg-ink/50 border border-ivory/15 shadow-2xl rounded-sm hover:scale-[1.02] transition-transform duration-500">
-                  <div className="flex items-center gap-1.5 mb-5">
-                    <span className="w-5 h-5 rounded-full bg-white flex items-center justify-center text-ink text-[11px] font-bold shadow-xs">
-                      G
-                    </span>
-                    <div className="flex gap-0.5">
-                      {[1,2,3,4,5].map(star => (
-                         <span key={star} className="text-gold text-sm md:text-base drop-shadow-lg">★</span>
-                      ))}
-                    </div>
+                {/* Editorial Glass Cards */}
+                <div className="pointer-events-auto flex flex-col items-center text-center max-w-[42ch] p-8 md:p-12 backdrop-blur-xl bg-ink/60 border border-ivory/15 shadow-2xl hover:border-gold/30 transition-all duration-500">
+                  <div className="flex items-center gap-1.5 mb-5 text-gold">
+                    <span className="text-sm tracking-widest">★★★★★</span>
                   </div>
                   <p className="font-display italic text-xl md:text-2xl leading-[1.4] text-ivory mb-6 drop-shadow-md">
                     “{t.quote}”
