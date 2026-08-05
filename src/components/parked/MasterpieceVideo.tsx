@@ -4,7 +4,14 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-export default function Hero() {
+/**
+ * Parked homepage concept.
+ *
+ * This component is intentionally not rendered. To restore it, import it in
+ * src/app/page.tsx and place <MasterpieceVideo /> between <CollapsingHero />
+ * and <Credibility />.
+ */
+export default function MasterpieceVideo() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLElement>(null);
   const videoWrapperRef = useRef<HTMLDivElement>(null);

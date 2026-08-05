@@ -1,6 +1,6 @@
 import Preloader from "@/components/sections/Preloader";
 import CollapsingHero from "@/components/sections/CollapsingHero";
-import Hero from "@/components/sections/Hero";
+import MasterpieceStatement from "@/components/sections/MasterpieceStatement";
 import Credibility from "@/components/sections/Credibility";
 import Narrative from "@/components/sections/Narrative";
 import ParallaxDivider from "@/components/sections/ParallaxDivider";
@@ -15,7 +15,7 @@ export default function Home() {
     <main className="w-full min-h-screen overflow-x-hidden block">
       <Preloader />
       <CollapsingHero />
-      <Hero />
+      <MasterpieceStatement />
       <Credibility />
       <Narrative />
       <ParallaxDivider />
