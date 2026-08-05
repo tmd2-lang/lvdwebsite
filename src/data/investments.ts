@@ -1,3 +1,5 @@
+import { media } from "@/lib/media-slots";
+
 export interface DeliverableItem {
   bold: string;
   text: string;
@@ -30,7 +32,7 @@ export const INVESTMENT_TIERS: InvestmentTierData[] = [
     tagline: "Walk in. Fall in love. Remember forever.",
     desc: "For couples who want a breathtaking, fully immersive wedding environment. Irene and our lead production team take complete ownership of your spatial story—unifying design, florals, custom fabrication, and seamless day-of execution.",
     idealFor: "Grand ballroom transformations, custom tented estates, historic mansions, and multi-day celebrations requiring high-touch production management.",
-    image: "/investments/full-production-grand.jpg",
+    image: media["investments.production"],
     deliverables: [
       {
         bold: "High-Level Creative Direction",
@@ -70,7 +72,7 @@ export const INVESTMENT_TIERS: InvestmentTierData[] = [
     tagline: "Elevated design, thoughtfully layered.",
     desc: "For couples seeking a lush, layered aesthetic with custom floral artistry and curated styling that elevates every guest touchpoint.",
     idealFor: "Couples with established venues looking to transform their ceremony and reception with tailored floral artistry, custom tabletop styling, and curated accent rentals.",
-    image: "/investments/design-florals-stage.jpg",
+    image: media["investments.design-florals"],
     deliverables: [
       {
         bold: "Curated Design Direction",
@@ -110,7 +112,7 @@ export const INVESTMENT_TIERS: InvestmentTierData[] = [
     tagline: "Where your vision begins to bloom.",
     desc: "Perfect for couples who want beautifully cohesive florals and considered styling for intimate weddings and celebrations without managing multiple vendors.",
     idealFor: "Intimate gatherings, boutique venues, micro-weddings, and private estate dinners with refined floral focus.",
-    image: "/investments/design-and-florals.jpeg",
+    image: media["investments.essentials"],
     deliverables: [
       {
         bold: "Personal Florals",

@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
+import { media } from "@/lib/media-slots";
 
 export default function ParallaxDivider() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -40,7 +41,7 @@ export default function ParallaxDivider() {
         className="absolute top-[-10%] left-0 w-full h-[120%] will-change-transform"
       >
         <Image
-          src="/gallery/aniedi-ekemini-546.jpg"
+          src={media["home.parallax"]}
           alt="Luxury Wedding Design - Lady Victoria Designs"
           fill
           sizes="100vw"

@@ -6,18 +6,19 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import Link from "next/link";
 import Image from "next/image";
+import { media } from "@/lib/media-slots";
 
 export default function SignatureWork() {
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
   const images = [
-    { id: 1, src: "/work/aniedi-ekemini-471.jpg", title: "Aniedi & Ekemini Wedding" },
-    { id: 2, src: "/work/536A6290_websize.jpg", title: "Bespoke Floral Installation" },
-    { id: 3, src: "/work/jenny-jordan-04.jpg", title: "Jenny & Jordan Celebration" },
-    { id: 4, src: "/work/nac-9098.jpg", title: "Sculptural Celebration Artistry" },
-    { id: 5, src: "/work/lvd-purple-6.jpg", title: "Royal Purple Grandeur" },
-    { id: 6, src: "/work/eiserike-wedding-0477.jpg", title: "Eiserike Wedding Celebration" },
+    { id: 1, src: media["home.work.1"], title: "Aniedi & Ekemini Wedding" },
+    { id: 2, src: media["home.work.2"], title: "Bespoke Floral Installation" },
+    { id: 3, src: media["home.work.3"], title: "Jenny & Jordan Celebration" },
+    { id: 4, src: media["home.work.4"], title: "Sculptural Celebration Artistry" },
+    { id: 5, src: media["home.work.5"], title: "Royal Purple Grandeur" },
+    { id: 6, src: media["home.work.6"], title: "Eiserike Wedding Celebration" },
   ];
 
   useEffect(() => {

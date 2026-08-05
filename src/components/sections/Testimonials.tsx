@@ -4,6 +4,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Link from "next/link";
+import { media } from "@/lib/media-slots";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -65,7 +66,7 @@ export default function Testimonials() {
       {/* Parallax Background Image */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <Image
-          src="/gallery/purple-grandeur/purple-grandeur-02.jpg"
+          src={media["home.testimonials"]}
           alt="Wedding Ambiance"
           fill
           sizes="100vw"

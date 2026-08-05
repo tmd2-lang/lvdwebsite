@@ -5,6 +5,7 @@ import Link from "next/link";
 import gsap from "gsap";
 import Magnetic from "@/components/Magnetic";
 import Image from "next/image";
+import { media } from "@/lib/media-slots";
 
 type FormData = {
   celebrationType: string;
@@ -87,7 +88,7 @@ export default function InquirePage() {
       {step !== 6 && (
         <div className="w-full lg:w-1/2 h-[40vh] lg:h-screen lg:sticky lg:top-0 relative overflow-hidden z-10">
           <Image
-            src="/gallery/amber-kendall/amber-kendall-23.jpeg"
+            src={media["inquire.hero"]}
             alt="Lady Victoria Designs Event Planning"
             fill
             sizes="(max-width: 1023px) 100vw, 50vw"
@@ -590,4 +591,3 @@ export default function InquirePage() {
     </main>
   );
 }
-

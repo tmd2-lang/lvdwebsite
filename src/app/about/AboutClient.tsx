@@ -5,6 +5,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Contact from "@/components/sections/Contact";
+import { media } from "@/lib/media-slots";
 
 export default function AboutClient() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -115,7 +116,7 @@ export default function AboutClient() {
         <div className="about-floating-hero w-full h-[45vh] sm:h-[55vh] md:h-[70vh] relative overflow-hidden rounded-sm border border-ink/10 shadow-2xl">
           <div className="about-floating-hero-inner absolute inset-[-15%] w-[130%] h-[130%]">
             <Image 
-              src="/about/about-hero.jpg" 
+              src={media["about.hero"]}
               alt="Curated Floral Masterpiece - Lady Victoria Designs" 
               fill 
               sizes="(max-width: 1200px) 100vw, 1200px"
@@ -134,7 +135,7 @@ export default function AboutClient() {
           {/* Left Column: Portrait */}
           <div className="lg:col-span-5 relative aspect-[3/4] bg-ecru border border-ink/10 overflow-hidden shadow-xl group rounded-sm">
             <Image 
-              src="/Irene.avif" 
+              src={media["about.founder"]}
               alt="Irene - Creative Director of Lady Victoria Designs" 
               fill 
               className="object-cover object-center grayscale group-hover:scale-105 transition-all duration-700"
@@ -225,7 +226,7 @@ export default function AboutClient() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           <div className="about-gallery-item aspect-[4/5] relative overflow-hidden bg-ecru rounded-sm border border-ink/10 group">
             <Image
-              src="/about/craft-01.jpg"
+              src={media["about.craft.1"]}
               alt="Artisanal Celebration Detail"
               fill
               sizes="(max-width: 767px) 100vw, 33vw"
@@ -234,7 +235,7 @@ export default function AboutClient() {
           </div>
           <div className="about-gallery-item aspect-[4/5] relative overflow-hidden bg-ecru rounded-sm border border-ink/10 group md:-translate-y-6">
             <Image
-              src="/gallery/curated-installations/7696255556127739026.jpg"
+              src={media["about.craft.2"]}
               alt="Grand Architectural Floral Installation"
               fill
               sizes="(max-width: 767px) 100vw, 33vw"
@@ -243,7 +244,7 @@ export default function AboutClient() {
           </div>
           <div className="about-gallery-item aspect-[4/5] relative overflow-hidden bg-ecru rounded-sm border border-ink/10 group">
             <Image
-              src="/gallery/purple-grandeur/purple-grandeur-04.jpg"
+              src={media["about.craft.3"]}
               alt="Curated Floral Masterpiece"
               fill
               sizes="(max-width: 767px) 100vw, 33vw"

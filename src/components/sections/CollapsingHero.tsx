@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
+import { media } from "@/lib/media-slots";
 
 export default function CollapsingHero() {
   useEffect(() => {
@@ -48,10 +49,10 @@ export default function CollapsingHero() {
   }, []);
 
   const heroImages = [
-    "/gallery/white-green-botanicals/white-green-botanicals-08.jpeg",
-    "/gallery/amber-kendall/amber-kendall-01.jpeg",
-    "/hero/3042192127745071772.jpg",
-    "/hero/TFR54093_websize.jpg"
+    media["home.hero.1"],
+    media["home.hero.2"],
+    media["home.hero.3"],
+    media["home.hero.4"]
   ];
 
   return (

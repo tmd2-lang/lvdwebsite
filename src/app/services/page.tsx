@@ -7,6 +7,7 @@ import Contact from "@/components/sections/Contact";
 import Image from "next/image";
 import InvestmentModal from "@/components/sections/InvestmentModal";
 import { INVESTMENT_TIERS } from "@/data/investments";
+import { media } from "@/lib/media-slots";
 
 const services = [
   {
@@ -16,7 +17,7 @@ const services = [
     description: "One vision, carried all the way through. We lead the design and production of your celebration, from floor plans, staging, lighting, and custom fabrication to florals, tablescapes, and the final room reveal. Every element is developed together, then managed by one team from load-in through the last dance.",
     scope: "Design & Production",
     includes: "Creative Direction, Logistics, Installation",
-    image: "/services/full-production.jpg"
+    image: media["services.capability.1"]
   },
   {
     id: "floral",
@@ -25,7 +26,7 @@ const services = [
     description: "Flowers set the emotional tone of a room. We design each floral story around your setting, palette, and sense of occasion, from sculptural ceremony pieces and suspended installations to layered centerpieces and personal flowers.\n\nWe also create sympathy arrangements, seasonal bouquets, and custom floral gifts with the same considered approach.",
     scope: "Floral Design",
     includes: "Installations, Centerpieces, Gifting",
-    image: "/gallery/white-green-botanicals/white-green-botanicals-01.jpeg"
+    image: media["services.capability.2"]
   },
   {
     id: "event-production",
@@ -34,7 +35,7 @@ const services = [
     description: "Beautiful events rely on technical work guests never see. Our production team handles stage and dance-floor treatments, draping, rigging, and lighting design, then coordinates installation and strike. With one crew overseeing the room, what was imagined is what your guests experience.",
     scope: "Technical",
     includes: "Stages, Drapery, Lighting",
-    image: "/services/staging-and-lighting.jpg"
+    image: media["services.capability.3"]
   },
   {
     id: "decor",
@@ -43,7 +44,7 @@ const services = [
     description: "Décor gives a room its rhythm: where guests gather, what they touch, and how each view feels. We curate furniture, linens, tabletop pieces, and finishing details to support the larger design instead of competing with it. Available as part of a full-service design experience or for select à la carte needs.",
     scope: "Curation",
     includes: "Furniture, Linens, Tabletop",
-    image: "/gallery/amber-kendall/amber-kendall-23.jpeg"
+    image: media["services.capability.4"]
   }
 ];
 
@@ -52,25 +53,25 @@ const designFor = [
     id: "weddings",
     title: "Weddings",
     description: "From ceremony to last dance, we design each chapter as part of one story.",
-    image: "/gallery/editorial-wedding-archive/editorial-wedding-archive-27.jpg"
+    image: media["services.occasion.1"]
   },
   {
     id: "corporate",
     title: "Corporate",
     description: "Galas, brand events, and leadership gatherings shaped around the identity and purpose of the organization hosting them.",
-    image: "/gallery/amber-kendall/amber-kendall-05.jpeg"
+    image: media["services.occasion.2"]
   },
   {
     id: "private",
     title: "Private Celebrations",
     description: "Milestone birthdays, anniversaries, and intimate dinners designed to feel personal, generous, and worth remembering.",
-    image: "/gallery/two-tone-luxe/two-tone-luxe-08.jpeg"
+    image: media["services.occasion.3"]
   },
   {
     id: "gifting",
     title: "Floral Gifting",
     description: "Sympathy flowers, seasonal bouquets, and one-of-a-kind arrangements for moments that deserve more than something off the shelf.",
-    image: "/gallery/editorial-wedding-archive/editorial-wedding-archive-16.jpg"
+    image: media["services.occasion.4"]
   }
 ];
 
@@ -162,7 +163,7 @@ export default function ServicesPage() {
       <section className="w-full px-6 md:px-12 py-12 md:py-20 border-b border-ink/20 flex justify-center bg-ivory">
         <div className="max-w-[1440px] w-full h-[50vh] md:h-[70vh] overflow-hidden relative floating-hero-image">
           <Image
-            src="/services/services-hero.jpg"
+            src={media["services.hero"]}
             alt="Luxury celebration design and floral artistry by Lady Victoria Designs"
             fill
             sizes="100vw"

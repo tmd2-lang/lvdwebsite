@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { media } from "@/lib/media-slots";
 
 export default function MeetIrene() {
   return (
@@ -16,7 +17,7 @@ export default function MeetIrene() {
 
           <div className="w-full aspect-[4/5] relative bg-ecru overflow-hidden mb-8 border border-ink/10 shadow-md">
             <Image
-              src="/Irene.avif"
+              src={media["home.founder"]}
               alt="Irene - Creative Director"
               fill
               sizes="100vw"
@@ -56,7 +57,7 @@ export default function MeetIrene() {
           <div className="md:col-span-5 relative h-[600px] lg:h-[680px]">
             <div className="w-full h-full bg-ecru border border-ink/10 relative overflow-hidden group shadow-xl">
               <Image
-                src="/Irene.avif"
+                src={media["home.founder"]}
                 alt="Irene Portrait"
                 fill
                 sizes="(max-width: 1023px) 42vw, 600px"

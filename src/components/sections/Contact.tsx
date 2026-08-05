@@ -3,6 +3,7 @@ import React from "react";
 import Link from "next/link";
 import Magnetic from "@/components/Magnetic";
 import Image from "next/image";
+import { media } from "@/lib/media-slots";
 
 export default function Contact() {
   return (
@@ -12,7 +13,7 @@ export default function Contact() {
         {/* Background Floral Image with Cinematic Overlay */}
         <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
           <Image
-            src="/gallery/white-green-botanicals/white-green-botanicals-01.jpeg"
+            src={media["global.contact"]}
             alt="Lady Victoria Designs Floral Artistry"
             fill
             sizes="(max-width: 1535px) 100vw, 1440px"
