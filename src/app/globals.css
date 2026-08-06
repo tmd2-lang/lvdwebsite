@@ -70,6 +70,59 @@ body {
   }
 }
 
+/* Reserve landing hero: one calm, editorial entrance on page load. */
+.reserve-hero__image {
+  animation: reserve-hero-image-in 1400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.reserve-hero__wordmark,
+.reserve-hero__headline,
+.reserve-hero__copy,
+.reserve-hero__cta {
+  opacity: 0;
+  animation: reserve-hero-content-in 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.reserve-hero__wordmark {
+  animation-delay: 220ms;
+}
+
+.reserve-hero__headline {
+  animation-delay: 420ms;
+}
+
+.reserve-hero__copy {
+  animation-delay: 570ms;
+}
+
+.reserve-hero__cta {
+  animation-delay: 700ms;
+}
+
+@keyframes reserve-hero-image-in {
+  from {
+    opacity: 0.45;
+    transform: scale(1.055);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes reserve-hero-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* The Reserve form enters as a full-bleed curtain without intercepting scroll. */
 .reserve-takeover {
   clip-path: inset(12% 0 0 0);
@@ -92,8 +145,15 @@ body {
 
   .site-preloader,
   .site-preloader__label,
-  .site-preloader__line {
+  .site-preloader__line,
+  .reserve-hero__image,
+  .reserve-hero__wordmark,
+  .reserve-hero__headline,
+  .reserve-hero__copy,
+  .reserve-hero__cta {
     animation: none;
+    opacity: 1;
+    transform: none;
   }
 
   .reserve-takeover {

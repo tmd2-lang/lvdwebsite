@@ -54,6 +54,41 @@ const reserveInvestmentSummaries = {
     "Considered personal flowers, ceremony and reception florals, and styling for intimate celebrations.",
 } as const;
 
+const memoryCards = [
+  {
+    id: "handled",
+    number: "01",
+    front: "Everything felt handled before we even had to ask.",
+    back: "From the first conversation to the final candle being lit, Irene made the process feel thoughtful, calm, and completely taken care of.",
+    author: "Nicole",
+    detail: "WeddingWire Verified Bride",
+  },
+  {
+    id: "personal",
+    number: "02",
+    front: "It felt like us, just more beautiful than we knew how to imagine.",
+    back: "Irene took our loose ideas and Pinterest boards and turned them into a celebration with a point of view, warmth, and real artistry.",
+    author: "Amber & Kendall",
+    detail: "Meridian House Celebration",
+  },
+  {
+    id: "room",
+    number: "03",
+    front: "People are still talking about the room.",
+    back: "The florals, the tables, the ceremony moment, the way everything worked together. It looked designed, not decorated.",
+    author: "M & J",
+    detail: "Washington D.C. Wedding",
+  },
+  {
+    id: "presence",
+    number: "04",
+    front: "We were able to actually be present.",
+    back: "On the wedding day, we were not worried about the details. We trusted the team completely, and that changed everything.",
+    author: "C & R",
+    detail: "Private Estate Celebration",
+  },
+];
+
 export default function ReservePage() {
   const portfolioRailRef = useRef<HTMLDivElement>(null);
   const reserveFormRef = useRef<HTMLElement>(null);
@@ -70,9 +105,11 @@ export default function ReservePage() {
   });
 
   const [formStep, setFormStep] = useState<1 | 2 | 3 | 4>(1);
+  const [activeMemoryCard, setActiveMemoryCard] = useState<string | null>(null);
   const [isTakeoverVisible, setIsTakeoverVisible] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
 
   const canAdvance =
     formStep === 1
@@ -99,6 +136,22 @@ export default function ReservePage() {
     observer.observe(section);
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    if (!isCalendlyOpen) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsCalendlyOpen(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [isCalendlyOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -149,14 +202,14 @@ export default function ReservePage() {
           alt="A refined wedding reception designed with white florals, greenery, candlelight, and gold accents"
           fill
           sizes="100vw"
-          className="object-cover object-center"
+          className="reserve-hero__image object-cover object-center"
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-r from-ink/62 via-ink/22 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/48 via-transparent to-transparent" />
         <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-ink/40 to-transparent" />
 
-        <header className="absolute inset-x-0 top-0 z-20 flex justify-center px-6 py-7 sm:py-8">
+        <header className="reserve-hero__wordmark absolute inset-x-0 top-0 z-20 flex justify-center px-6 py-7 sm:py-8">
           <Link
             href="/"
             aria-label="Lady Victoria Designs home"
@@ -173,28 +226,21 @@ export default function ReservePage() {
 
         <div className="relative z-10 flex min-h-[100svh] w-full items-end px-6 pb-14 pt-28 sm:px-10 md:px-12 md:pb-16">
           <div className="max-w-2xl">
-            <h1 className="font-display text-[clamp(3.25rem,6vw,6.5rem)] leading-[0.92] tracking-tight text-ivory">
+            <h1 className="reserve-hero__headline font-display text-[clamp(3.25rem,6vw,6.5rem)] leading-[0.92] tracking-tight text-ivory">
               Wedding design, <span className="italic">reimagined.</span>
             </h1>
 
-            <p className="mt-5 max-w-xl font-body text-base leading-relaxed text-ivory/88 sm:text-lg">
+            <p className="reserve-hero__copy mt-5 max-w-xl font-body text-base leading-relaxed text-ivory/88 sm:text-lg">
               Florals, atmosphere, and artful direction for celebrations with a point of view.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-x-10 gap-y-4">
+            <div className="reserve-hero__cta mt-8 flex flex-wrap items-center gap-x-10 gap-y-4">
               <button
                 onClick={scrollToForm}
                 className="border-b border-ivory/70 pb-1 font-body text-[11px] font-semibold uppercase tracking-[0.2em] text-ivory transition-colors duration-300 hover:border-gold hover:text-gold"
               >
                 Inquire About Your Date
               </button>
-
-              <Link
-                href="/quiz"
-                className="border-b border-ivory/45 pb-1 font-body text-[11px] font-semibold uppercase tracking-[0.2em] text-ivory/85 transition-colors duration-300 hover:border-gold hover:text-gold"
-              >
-                Estimate Your Investment
-              </Link>
             </div>
           </div>
         </div>
@@ -207,15 +253,18 @@ export default function ReservePage() {
             The Art of the Occasion
           </p>
 
-          <p className="font-display text-[clamp(2.15rem,4.25vw,4.9rem)] leading-[1.04] tracking-tight text-ink">
-            Lady Victoria Designs creates weddings that feel{" "}
-            <span className="italic">deeply personal</span>, beautifully
-            composed, and impossible to forget. Led by Irene, our work brings
-            floral design, atmosphere, styling, and event direction into{" "}
-            <span className="italic">one considered vision</span>, so every
-            detail feels intentional from the first impression to the final
-            toast.
-          </p>
+          <div>
+            <p className="font-display text-[clamp(2.15rem,4.25vw,4.9rem)] leading-[1.04] tracking-tight text-ink">
+              Lady Victoria Designs creates weddings that feel{" "}
+              <span className="italic">deeply personal</span>, beautifully
+              composed, and impossible to forget.
+            </p>
+            <p className="mt-8 max-w-3xl border-t border-ink/20 pt-6 font-body text-sm leading-relaxed text-ink/65 sm:text-base md:mt-10 md:pt-8 md:text-lg">
+              Led by Irene, our work brings floral design, atmosphere, styling,
+              and event direction into one considered vision—so every detail
+              feels intentional from the first impression to the final toast.
+            </p>
+          </div>
         </div>
 
         <div className="mx-auto mt-14 max-w-[1440px] md:mt-20">
@@ -303,11 +352,10 @@ export default function ReservePage() {
           </div>
         </div>
 
-        <div className="pointer-events-none absolute inset-x-0 -bottom-[5svh] top-[16svh] z-10 flex">
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 overflow-hidden px-6 sm:px-10 md:px-12">
           <p
             aria-hidden="true"
-            data-sticky-mark
-            className="sticky bottom-[-5svh] mt-auto w-full px-6 font-display text-[clamp(9rem,25vw,28rem)] leading-[0.7] tracking-[-0.09em] text-ivory sm:px-10 md:px-12"
+            className="translate-y-[0.08em] font-display text-[clamp(8rem,22vw,23rem)] leading-[0.72] tracking-[-0.09em] text-ivory"
           >
             LVD
           </p>
@@ -382,35 +430,80 @@ export default function ReservePage() {
       </section>
 
       {/* 6. SOCIAL PROOF & BRIDE REVIEWS */}
-      <section className="sticky top-0 z-0 flex min-h-[100vh] w-full items-center bg-ink px-6 py-20 text-ivory md:px-12 md:py-24">
-        <div className="mx-auto flex w-full max-w-5xl flex-col items-center text-center">
-          
-          <span className="font-body text-[10px] sm:text-xs uppercase tracking-[0.25em] text-gold font-semibold mb-6">
-            WHAT OUR COUPLES SAY
-          </span>
+      <section className="sticky top-0 z-0 flex min-h-[100vh] w-full items-center bg-ink px-6 py-14 text-ivory md:px-12 lg:py-10 xl:py-16">
+        <div className="mx-auto flex w-full max-w-[1440px] flex-col">
+          <div className="mb-9 grid gap-7 md:mb-10 md:grid-cols-[220px_1fr] md:gap-12 xl:mb-14">
+            <p className="pt-2 font-body text-[10px] font-semibold uppercase tracking-[0.28em] text-gold sm:text-xs">
+              What They Remember Most
+            </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 text-left">
-            <div className="bg-ivory/[0.04] border border-ivory/10 p-8 rounded-xl flex flex-col justify-between">
-              <p className="font-display italic text-lg sm:text-xl text-ivory/90 leading-relaxed mb-6">
-                &ldquo;Working with Irene for my wedding was the best decision we made! From day one, the level of professionalism and design recommendations was unmatched. On the day of, everything was beautiful beyond our imagination.&rdquo;
+            <div>
+              <h2 className="max-w-5xl font-display text-[clamp(2.8rem,4.8vw,5.5rem)] leading-[0.92] text-ivory">
+                The feeling that stayed after the <span className="italic text-gold">last candle burned.</span>
+              </h2>
+              <p className="mt-5 max-w-2xl font-body text-sm leading-relaxed text-ivory/60 sm:text-base">
+                A few notes from celebrations where the details mattered, the timing mattered, and the room needed to feel entirely their own.
               </p>
-              <div>
-                <p className="font-body text-xs uppercase tracking-widest text-gold font-semibold">Nicole</p>
-                <p className="font-body text-[11px] text-ivory/50">WeddingWire Verified Bride</p>
-              </div>
-            </div>
-
-            <div className="bg-ivory/[0.04] border border-ivory/10 p-8 rounded-xl flex flex-col justify-between">
-              <p className="font-display italic text-lg sm:text-xl text-ivory/90 leading-relaxed mb-6">
-                &ldquo;Irene took our loose ideas and Pinterest boards and completely exceeded our expectations. She was poised, kind, and brought true artistry to every floral piece.&rdquo;
-              </p>
-              <div>
-                <p className="font-body text-xs uppercase tracking-widest text-gold font-semibold">Amber &amp; Kendall</p>
-                <p className="font-body text-[11px] text-ivory/50">Meridian House Celebration</p>
-              </div>
             </div>
           </div>
 
+          <div className="grid auto-cols-[minmax(17rem,1fr)] grid-flow-col gap-4 overflow-x-auto pb-4 md:auto-cols-[minmax(21rem,1fr)] lg:grid-flow-row lg:grid-cols-4 lg:overflow-visible">
+            {memoryCards.map((card) => {
+              const isActive = activeMemoryCard === card.id;
+
+              return (
+                <button
+                  key={card.id}
+                  type="button"
+                  aria-pressed={isActive}
+                  onClick={() => setActiveMemoryCard(isActive ? null : card.id)}
+                  className="group h-[23rem] min-w-0 snap-start [perspective:1400px] focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-4 focus-visible:ring-offset-ink md:h-[25rem] lg:h-[22rem] xl:h-[24rem]"
+                >
+                  <span
+                    className={`relative block h-full w-full transition-transform duration-500 [transform-style:preserve-3d] ${
+                      isActive ? "[transform:rotateY(180deg)]" : ""
+                    }`}
+                  >
+                    <span className="absolute inset-0 flex h-full flex-col justify-between rounded-[6px] border border-ivory/10 bg-ivory p-6 text-left text-ink shadow-2xl shadow-black/15 [backface-visibility:hidden] transition-colors duration-300 group-hover:border-gold/60 md:p-7 xl:p-8">
+                      <span className="flex items-center justify-between">
+                        <span className="font-body text-[10px] font-semibold uppercase tracking-[0.22em] text-gold">
+                          Memory {card.number}
+                        </span>
+                        <span className="font-body text-[10px] uppercase tracking-[0.18em] text-ink/30">
+                          Read Note
+                        </span>
+                      </span>
+
+                      <span className="block font-display text-[clamp(1.75rem,1.85vw,2.45rem)] leading-[1.04] text-ink">
+                        &ldquo;{card.front}&rdquo;
+                      </span>
+
+                      <span>
+                        <span className="block font-display text-2xl italic text-ink">
+                          {card.author}
+                        </span>
+                        <span className="mt-2 block font-body text-[10px] uppercase tracking-[0.18em] text-ink/42">
+                          {card.detail}
+                        </span>
+                      </span>
+                    </span>
+
+                    <span className="absolute inset-0 flex h-full flex-col justify-between rounded-[6px] border border-gold/45 bg-ecru p-6 text-left text-ink [backface-visibility:hidden] [transform:rotateY(180deg)] md:p-7 xl:p-8">
+                      <span className="font-body text-[10px] font-semibold uppercase tracking-[0.22em] text-gold">
+                        Full Note
+                      </span>
+                      <span className="block font-display text-[clamp(1.45rem,1.6vw,2.1rem)] leading-[1.1] text-ink">
+                        &ldquo;{card.back}&rdquo;
+                      </span>
+                      <span className="font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-ink/45">
+                        Tap to return
+                      </span>
+                    </span>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -443,26 +536,52 @@ export default function ReservePage() {
           </div>
 
           {isSubmitted ? (
-            <div className="flex flex-1 animate-fade-in items-center justify-center py-16 text-center">
-              <div className="max-w-3xl">
-                <span className="mx-auto mb-8 flex h-14 w-14 items-center justify-center rounded-full border border-gold/50 font-display text-2xl text-gold">
-                  ✓
-                </span>
-                <p className="mb-4 font-body text-[10px] font-semibold uppercase tracking-[0.28em] text-gold">
-                  Date Request Received
-                </p>
-                <h2 className="font-display text-[clamp(3.5rem,7vw,7rem)] leading-[0.92] text-ink">
-                  Thank you. <span className="italic">We&rsquo;ll be in touch.</span>
+            <div className="flex flex-1 animate-fade-in items-center justify-center py-10 text-center lg:py-6">
+              <div className="w-full max-w-4xl">
+                <div className="mb-7 inline-flex items-center gap-3 rounded-full border border-gold/35 bg-gold/8 px-5 py-2.5">
+                  <span className="h-2 w-2 rounded-full bg-gold" />
+                  <p className="font-body text-[9px] font-semibold uppercase tracking-[0.26em] text-gold sm:text-[10px]">
+                    Your Inquiry Is In
+                  </p>
+                </div>
+
+                <h2 className="font-display text-[clamp(3.4rem,6.5vw,7rem)] leading-[0.9] text-ink">
+                  Thank you{formData.names.trim() ? `, ${formData.names.trim().split(" ")[0]}` : ""}.
+                  <span className="block italic">Your date is with us.</span>
                 </h2>
-                <p className="mx-auto mb-10 mt-7 max-w-xl font-body text-sm leading-relaxed text-ink/60 sm:text-base">
-                  Irene will review your celebration details and reply with availability and next steps within one to two business days.
+                <p className="mx-auto mt-7 max-w-2xl font-body text-sm leading-relaxed text-ink/62 sm:text-base md:text-lg">
+                  Irene and the team will review your date, venue, and vision and
+                  reply within one to two business days. If you&rsquo;re ready,
+                  you can choose a consultation time now.
                 </p>
-                <Link
-                  href="/gallery"
-                  className="inline-flex items-center gap-3 border-b border-ink/45 pb-1 font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-ink transition-colors hover:border-gold hover:text-gold sm:text-[11px]"
-                >
-                  Browse Our Gallery <span aria-hidden="true">→</span>
-                </Link>
+
+                <div className="mx-auto mt-9 flex max-w-2xl flex-col items-stretch justify-center gap-3 sm:flex-row">
+                  <button
+                    type="button"
+                    aria-haspopup="dialog"
+                    onClick={() => setIsCalendlyOpen(true)}
+                    className="bg-ink px-8 py-4 font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-ivory transition-colors hover:bg-gold hover:text-ink sm:text-[11px]"
+                  >
+                    Schedule a Consultation
+                  </button>
+                  <Link
+                    href="/gallery"
+                    className="border border-ink/20 px-8 py-4 font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-ink transition-colors hover:border-ink sm:text-[11px]"
+                  >
+                    Explore Our Work
+                  </Link>
+                </div>
+
+                <p className="mt-7 font-body text-xs leading-relaxed text-ink/45">
+                  Still shaping the scope?{" "}
+                  <Link
+                    href="/quiz"
+                    className="border-b border-ink/35 pb-0.5 text-ink transition-colors hover:border-gold hover:text-gold"
+                  >
+                    Take the investment quiz
+                  </Link>
+                  .
+                </p>
               </div>
             </div>
           ) : (
@@ -739,6 +858,54 @@ export default function ReservePage() {
           )}
         </div>
       </section>
+
+      {isCalendlyOpen && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/80 p-3 backdrop-blur-sm sm:p-6"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="reserve-calendar-title"
+          onMouseDown={(event) => {
+            if (event.currentTarget === event.target) setIsCalendlyOpen(false);
+          }}
+        >
+          <div className="relative flex h-[min(88dvh,850px)] w-full max-w-5xl flex-col overflow-hidden bg-ivory shadow-2xl">
+            <div className="flex items-center justify-between gap-6 border-b border-ink/15 px-5 py-4 sm:px-7">
+              <div>
+                <p className="mb-1 font-body text-[9px] font-semibold uppercase tracking-[0.24em] text-gold">
+                  Next Step
+                </p>
+                <h2 id="reserve-calendar-title" className="font-display text-2xl text-ink sm:text-3xl">
+                  Choose a time with Irene
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsCalendlyOpen(false)}
+                aria-label="Close scheduling calendar"
+                className="flex h-11 w-11 shrink-0 items-center justify-center border border-ink/20 font-body text-xl text-ink transition-colors hover:border-ink hover:bg-ink hover:text-ivory"
+              >
+                ×
+              </button>
+            </div>
+            <iframe
+              src="https://calendly.com/ladyvictoriadesigns"
+              title="Schedule a consultation with Irene"
+              className="min-h-0 flex-1 border-0 bg-white"
+            />
+            <div className="border-t border-ink/15 px-5 py-3 text-center sm:px-7">
+              <a
+                href="https://calendly.com/ladyvictoriadesigns"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-body text-[9px] font-semibold uppercase tracking-[0.2em] text-ink/55 transition-colors hover:text-gold"
+              >
+                Open calendar in a new tab ↗
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
     </main>
   );
