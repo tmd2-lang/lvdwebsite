@@ -27,67 +27,44 @@ export default function MasterpieceStatement() {
       const line2Words = line2Ref.current?.querySelectorAll(".flash-word");
       const paraWords = paragraphRef.current?.querySelectorAll(".para-word");
 
-      // Initial un-triggered hidden state
-      gsap.set(eyebrowRef.current, { opacity: 0, y: 15 });
-      if (line1Words) gsap.set(line1Words, { opacity: 0, y: 24, filter: "brightness(2) blur(6px)" });
-      if (line2Words) gsap.set(line2Words, { opacity: 0, y: 24, filter: "brightness(2.2) blur(8px)" });
-      if (paraWords) gsap.set(paraWords, { opacity: 0, y: 16, filter: "brightness(1.5)" });
-
-      // Master scroll-triggered timeline — plays ONCE and never reanimates on scroll
+      // Scroll-scrubbed timeline — animates dynamically as the user scrolls into the section
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 75%",
-          once: true, // Only triggers once on first visit; does not re-trigger on scroll
-          toggleActions: "play none none none",
+          start: "top 55%",
+          end: "center 45%",
+          scrub: 0.8,
+          invalidateOnRefresh: true,
         },
       });
 
       // 1. Eyebrow reveals
-      tl.to(eyebrowRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.5,
-        ease: "power2.out",
-      })
-      // 2. Line 1 "Your wedding isn’t an event." words flash in
-      .to(
+      tl.fromTo(
+        eyebrowRef.current,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, ease: "none" },
+        0
+      )
+      // 2. Line 1 "Your wedding isn’t an event." words stagger in on scroll
+      .fromTo(
         line1Words || [],
-        {
-          opacity: 1,
-          y: 0,
-          filter: "brightness(1) blur(0px)",
-          duration: 0.6,
-          stagger: 0.08,
-          ease: "power3.out",
-        },
-        "-=0.2"
+        { opacity: 0, y: 36 },
+        { opacity: 1, y: 0, stagger: 0.05, ease: "none" },
+        0.08
       )
-      // 3. Line 2 "It’s a masterpiece." flashes in with gold glow
-      .to(
+      // 3. Line 2 "It’s a masterpiece." words stagger in with gold radiance
+      .fromTo(
         line2Words || [],
-        {
-          opacity: 1,
-          y: 0,
-          filter: "brightness(1) blur(0px)",
-          duration: 0.7,
-          stagger: 0.1,
-          ease: "power2.out",
-        },
-        "-=0.1"
+        { opacity: 0, y: 36 },
+        { opacity: 1, y: 0, stagger: 0.08, ease: "none" },
+        0.25
       )
-      // 4. Bottom paragraph flashes in
-      .to(
+      // 4. Bottom paragraph words cascade in
+      .fromTo(
         paraWords || [],
-        {
-          opacity: 1,
-          y: 0,
-          filter: "brightness(1)",
-          duration: 0.5,
-          stagger: 0.025,
-          ease: "power2.out",
-        },
-        "-=0.3"
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, stagger: 0.02, ease: "none" },
+        0.42
       );
     }, sectionRef);
 
