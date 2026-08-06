@@ -261,13 +261,13 @@ export default function ReservePage() {
             The Art of the Occasion
           </p>
 
-          <div>
+          <div className="space-y-6 md:space-y-8">
             <p className="font-display text-[clamp(2.15rem,4.25vw,4.9rem)] leading-[1.04] tracking-tight text-ink">
               Lady Victoria Designs creates weddings that feel{" "}
               <span className="italic">deeply personal</span>, beautifully
               composed, and impossible to forget.
             </p>
-            <p className="mt-8 max-w-3xl border-t border-ink/20 pt-6 font-body text-sm leading-relaxed text-ink/65 sm:text-base md:mt-10 md:pt-8 md:text-lg">
+            <p className="font-display text-[clamp(2.15rem,4.25vw,4.9rem)] leading-[1.04] tracking-tight text-ink">
               Led by Irene, our work brings floral design, atmosphere, styling,
               and event direction into one considered vision—so every detail
               feels intentional from the first impression to the final toast.
@@ -449,9 +449,6 @@ export default function ReservePage() {
               <h2 className="max-w-5xl font-display text-[clamp(2.8rem,4.8vw,5.5rem)] leading-[0.92] text-ivory">
                 The feeling that stayed after the <span className="italic text-gold">last candle burned.</span>
               </h2>
-              <p className="mt-5 max-w-2xl font-body text-sm leading-relaxed text-ivory/60 sm:text-base">
-                A few notes from celebrations where the details mattered, the timing mattered, and the room needed to feel entirely their own.
-              </p>
             </div>
           </div>
 
