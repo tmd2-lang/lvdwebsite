@@ -1,6 +1,14 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const pathname = usePathname();
+  if (pathname === "/reserve" || pathname === "/consultation") {
+    return null;
+  }
+
   return (
     <footer className="w-full bg-ink text-ivory pt-24 pb-8 px-6 md:px-12 flex flex-col justify-between overflow-hidden">
       

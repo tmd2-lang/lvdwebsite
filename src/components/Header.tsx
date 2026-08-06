@@ -13,7 +13,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
-  const hideGlobalHeader = pathname === "/reserve";
+  const hideGlobalHeader = pathname === "/reserve" || pathname === "/consultation";
 
   // Pages with split photo / white backgrounds where mix-blend causes contrast issues
   const isLightPage = pathname === "/inquire" || pathname === "/quiz";

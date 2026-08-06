@@ -70,6 +70,21 @@ body {
   }
 }
 
+/* The Reserve form enters as a full-bleed curtain without intercepting scroll. */
+.reserve-takeover {
+  clip-path: inset(12% 0 0 0);
+  transform: translateY(4rem);
+  transform-origin: center bottom;
+  transition:
+    clip-path 720ms cubic-bezier(0.76, 0, 0.24, 1),
+    transform 720ms cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.reserve-takeover.is-visible {
+  clip-path: inset(0 0 0 0);
+  transform: translateY(0);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .site-preloader {
     display: none;
@@ -79,6 +94,12 @@ body {
   .site-preloader__label,
   .site-preloader__line {
     animation: none;
+  }
+
+  .reserve-takeover {
+    animation: none;
+    clip-path: none;
+    transform: none;
   }
 }
 
