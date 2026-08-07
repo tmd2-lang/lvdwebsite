@@ -1,728 +1,680 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import gsap from "gsap";
+import Magnetic from "@/components/Magnetic";
+import Image from "next/image";
 import { media } from "@/lib/media-slots";
 
-interface ConsultationFormState {
-  dateType: "exact" | "flexible" | "";
-  exactDate: string;
-  flexibleSeason: string;
+type FormData = {
+  celebrationType: string;
+  date: string;
   venue: string;
   guestCount: string;
-  scopeTier: string;
+  services: string[];
+  vision: string;
+  investment: string;
   name: string;
-  partnerName: string;
   email: string;
   phone: string;
-  visionNotes: string;
-}
-
-const INITIAL_FORM: ConsultationFormState = {
-  dateType: "",
-  exactDate: "",
-  flexibleSeason: "",
-  venue: "",
-  guestCount: "",
-  scopeTier: "",
-  name: "",
-  partnerName: "",
-  email: "",
-  phone: "",
-  visionNotes: "",
+  source: string;
 };
 
-const SCOPE_OPTIONS = [
-  {
-    id: "production",
-    label: "Full Spatial & Floral Production",
-    price: "From $35,000+",
-    tagline: "Total Room Transformation & Artistry",
-    desc: "Complete creative direction, ceiling installations, bespoke ceremony arches, luxury floral design, custom fabrication, and turnkey production.",
-  },
-  {
-    id: "design-florals",
-    label: "Floral Artistry & Styling",
-    price: "From $15,000 – $35,000",
-    tagline: "Signature Floral Statements",
-    desc: "Elevated ceremony statements, reception centerpieces, personal florals, tablescape styling, and select rental curations.",
-  },
-  {
-    id: "essentials",
-    label: "The Essentials",
-    price: "From $8,000 – $15,000",
-    tagline: "Intimate & Focused Artistry",
-    desc: "Considered personal flowers, ceremony focal point, and reception floral styling for intimate celebrations.",
-  },
-];
-
 export default function ConsultationClient() {
-  const [step, setStep] = useState<number>(0);
-  const [formData, setFormData] = useState<ConsultationFormState>(INITIAL_FORM);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-  const formTopRef = useRef<HTMLDivElement>(null);
+  const [step, setStep] = useState(1);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to top of card on step change
-  useEffect(() => {
-    setErrorMsg("");
-    if (formTopRef.current) {
-      formTopRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, [step]);
-
-  // Keyboard navigation: Enter to advance
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Enter" && !e.shiftKey && step > 0 && step < 4) {
-        if ((e.target as HTMLElement)?.tagName === "TEXTAREA") return;
-        e.preventDefault();
-        handleNextStep();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+  const [formData, setFormData] = useState<FormData>({
+    celebrationType: "",
+    date: "",
+    venue: "",
+    guestCount: "",
+    services: [],
+    vision: "",
+    investment: "",
+    name: "",
+    email: "",
+    phone: "",
+    source: "",
   });
 
-  const handleNextStep = () => {
-    setErrorMsg("");
+  // Handle GSAP animation between steps
+  useEffect(() => {
+    if (!containerRef.current) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    if (step === 1) {
-      if (!formData.exactDate && !formData.flexibleSeason) {
-        setErrorMsg("Please select your date or a target season to continue.");
-        return;
-      }
-      setStep(2);
-    } else if (step === 2) {
-      if (!formData.venue.trim()) {
-        setErrorMsg("Please share your venue name or city.");
-        return;
-      }
-      setStep(3);
-    } else if (step === 3) {
-      if (!formData.scopeTier) {
-        setErrorMsg("Please select your anticipated scope tier.");
-        return;
-      }
-      setStep(4);
-    }
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        ".step-content",
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }
+      );
+    }, containerRef);
+    return () => ctx.revert();
+  }, [step]);
+
+  const nextStep = () => {
+    if (step < 5) setStep(step + 1);
   };
 
-  const handlePrevStep = () => {
-    setErrorMsg("");
-    if (step > 0) setStep(step - 1);
+  const prevStep = () => {
+    if (step > 1) setStep(step - 1);
   };
 
-  const handleFormSubmit = async (e: React.FormEvent) => {
+  const handleServiceToggle = (service: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      services: prev.services.includes(service)
+        ? prev.services.filter((s) => s !== service)
+        : [...prev.services, service],
+    }));
+  };
+
+  const submitForm = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim()) {
-      setErrorMsg("Please provide your name, email, and phone number.");
-      return;
-    }
-
-    setIsSubmitting(true);
-    // Simulate submission delay
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    setIsSubmitting(false);
-    setStep(5); // Confirmation with Calendly
+    console.log("Consultation Form Submitted:", formData);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setStep(6);
   };
 
-  const progressPercentage = step === 0 ? 0 : Math.round((step / 4) * 100);
+  const isIntimateGuestCount = formData.guestCount === "Under 50 Guests";
 
   return (
-    <div className="min-h-screen bg-ivory text-ink flex flex-col justify-between selection:bg-gold/30 selection:text-ink font-body">
+    <main className="w-full min-h-screen bg-ivory text-ink flex flex-col lg:flex-row relative overflow-x-clip font-body">
       
-      {/* 1. MINIMAL FOCUSED AD HEADER (Zero Distraction Leaks) */}
-      <header className="w-full border-b border-ink/10 bg-ivory/90 backdrop-blur-md sticky top-0 z-30 px-6 py-4 transition-all">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <Link
-            href="/"
-            className="font-display italic text-xl sm:text-2xl text-ink tracking-tight hover:text-gold transition-colors"
-          >
-            Lady Victoria Designs
-          </Link>
+      {/* LEFT SIDE: Sticky Editorial Image with Welcoming Social Proof for Ad Traffic */}
+      {step !== 6 && (
+        <div className="w-full lg:w-1/2 h-[42vh] lg:h-screen lg:sticky lg:top-0 relative overflow-hidden z-10">
+          <Image
+            src={media["inquire.hero"]}
+            alt="Lady Victoria Designs Luxury Wedding Production"
+            fill
+            sizes="(max-width: 1023px) 100vw, 50vw"
+            fetchPriority="high"
+            className="w-full h-full object-cover scale-[1.03]"
+          />
+          <div className="absolute inset-0 bg-ink/25" />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/35 to-transparent" />
+          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-ink/50 to-transparent" />
 
-          {/* Social Proof Trust Pill */}
-          <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-medium text-ink/70 bg-ink/5 px-3 py-1.5 border border-ink/10">
-            <span className="text-gold font-bold">★★★★★ 5.0</span>
-            <span className="hidden sm:inline">· 54 Verified Reviews</span>
+          {/* Top Brand Header */}
+          <div className="absolute top-6 left-6 right-6 lg:top-10 lg:left-12 lg:right-12 flex items-center justify-between text-ivory">
+            <Link
+              href="/"
+              className="font-display italic text-lg sm:text-xl lg:text-2xl text-ivory tracking-tight hover:text-gold transition-colors"
+            >
+              Lady Victoria Designs
+            </Link>
+            <span className="font-body text-[8px] sm:text-[9px] uppercase tracking-[0.28em] text-ivory/70 hidden sm:inline-block">
+              Washington D.C. · MD · VA · Destinations
+            </span>
+          </div>
+
+          {/* Left Column Content: Welcome Headline on Top + Testimonial below */}
+          <div className="absolute bottom-6 left-6 right-6 sm:left-8 sm:right-8 lg:bottom-12 lg:left-12 lg:right-12 text-ivory min-w-0 flex flex-col justify-end gap-6">
+            
+            {/* Primary Welcome & Manifesto (Top) */}
+            <div>
+              <p className="font-body text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.28em] text-gold mb-3">
+                Welcome to Lady Victoria Designs
+              </p>
+              
+              <h2 className="font-display text-[clamp(2.1rem,3.6vw,3.25rem)] leading-[1.02] tracking-tight text-ivory mb-3 max-w-xl">
+                Let’s create something <span className="italic text-gold">unforgettable.</span>
+              </h2>
+
+              <p className="font-body text-xs sm:text-sm text-ivory/80 leading-relaxed max-w-lg font-light">
+                Led by Irene, our studio brings floral design, atmosphere, and full-scale spatial production into one seamless vision—accepting a limited number of celebrations each season to ensure undivided creative focus for every couple.
+              </p>
+            </div>
+
+            {/* Testimonial & Social Proof (Bottom) */}
+            <div className="pt-5 border-t border-ivory/15 flex flex-col gap-2">
+              <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-gold font-semibold">
+                <span>★★★★★ 5.0</span>
+                <span className="text-ivory/40">·</span>
+                <span className="text-ivory/80">54 Verified Reviews</span>
+              </div>
+              <p className="font-display italic text-sm sm:text-base text-ivory/90 leading-snug">
+                &ldquo;Every detail from the flowers to the lighting was completely unforgettable.&rdquo;
+              </p>
+              <span className="font-body text-[10px] uppercase tracking-widest text-ivory/50">
+                — Nicole · Meridian House, Washington D.C.
+              </span>
+            </div>
+
           </div>
         </div>
+      )}
 
-        {/* Progress Bar (Visible during questions) */}
-        {step > 0 && step <= 4 && (
-          <div className="w-full max-w-5xl mx-auto mt-3">
-            <div className="flex items-center justify-between text-[9px] uppercase tracking-[0.25em] text-ink/50 mb-1.5 font-medium">
-              <span>
-                {step === 1 && "Step 01 of 04 · Celebration Date"}
-                {step === 2 && "Step 02 of 04 · Venue & Setting"}
-                {step === 3 && "Step 03 of 04 · Design Scope"}
-                {step === 4 && "Step 04 of 04 · Contact Details"}
-              </span>
-              <span className="text-gold font-semibold">{progressPercentage}% Complete</span>
-            </div>
-            <div className="w-full h-[2px] bg-ink/10 relative overflow-hidden">
-              <div
-                className="absolute top-0 left-0 h-full bg-gold transition-all duration-500 ease-out"
-                style={{ width: `${progressPercentage}%` }}
-              />
-            </div>
-          </div>
-        )}
-      </header>
-
-      {/* 2. MAIN INTERACTIVE CARD CONTAINER */}
-      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 md:p-10 my-auto">
-        <div
-          ref={formTopRef}
-          className="w-full max-w-3xl bg-white border border-ink/15 shadow-xl p-6 sm:p-10 md:p-14 relative overflow-hidden"
-        >
-
-          {/* ============================================================ */}
-          {/* STEP 0: THE WELCOME SCREEN                                  */}
-          {/* ============================================================ */}
-          {step === 0 && (
-            <div className="space-y-8 animate-in fade-in duration-300">
-              {/* Eyebrow */}
-              <div className="flex items-center gap-3">
-                <span className="font-body text-[10px] uppercase tracking-[0.3em] text-gold font-semibold">
-                  PRIVATE CONSULTATION INQUIRY
+      {/* RIGHT SIDE (OR FULL SCREEN ON CONFIRMATION): The Form */}
+      <div className={`w-full ${step === 6 ? "lg:w-full max-w-[1100px] mx-auto" : "lg:w-1/2"} flex justify-center items-center pt-16 sm:pt-20 lg:pt-24 pb-16 px-6 sm:px-10 lg:px-16 z-20 min-h-[60vh]`}>
+        <div ref={containerRef} className={`w-full ${step === 6 ? "max-w-[960px]" : "max-w-[580px]"} relative`}>
+          
+          {/* Progress & Intro Bar for Steps 1 - 5 */}
+          {step < 6 && (
+            <div className="mb-8 sm:mb-10">
+              <div className="flex items-center justify-between gap-4 pb-2.5 text-ink/50 border-b border-ink/10">
+                <span className="font-body text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.24em] text-gold">
+                  Date Availability &amp; Consultation
                 </span>
-                <span className="h-px flex-1 bg-ink/10" />
-              </div>
-
-              {/* Headline */}
-              <div className="space-y-3">
-                <h1 className="font-display text-3xl sm:text-4xl md:text-5xl text-ink leading-[1.15] tracking-tight">
-                  Check Date Availability &amp; Request a Consultation
-                </h1>
-                <p className="font-body text-sm sm:text-base text-ink/75 font-light leading-relaxed max-w-2xl">
-                  We accept a curated number of celebrations each season to maintain our uncompromising standard of artistry. Complete this 60-second check to review our studio calendar with Irene.
-                </p>
-              </div>
-
-              {/* Visual + Social Proof Highlight */}
-              <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 p-5 bg-ivory border border-ink/10 items-center">
-                <div className="sm:col-span-4 relative h-36 sm:h-full min-h-[140px] overflow-hidden">
-                  <Image
-                    src={media["inquire.hero"]}
-                    alt="Lady Victoria Designs Wedding Production"
-                    fill
-                    sizes="(max-width: 640px) 100vw, 30vw"
-                    className="object-cover"
-                  />
-                </div>
-                <div className="sm:col-span-8 space-y-2">
-                  <div className="flex items-center gap-1 text-gold text-xs">
-                    ★★★★★ <span className="text-ink/60 font-body text-[10px] uppercase tracking-wider ml-1">Verified Client Letter</span>
-                  </div>
-                  <p className="font-display italic text-sm sm:text-base text-ink/90 leading-snug">
-                    &ldquo;Irene completely understood our aesthetic from our very first call. Walking into our ballroom took our breath away.&rdquo;
-                  </p>
-                  <span className="font-body text-[10px] uppercase tracking-widest text-ink/50 block">
-                    — Ashley &amp; Brandon · Meridian House, DC
-                  </span>
-                </div>
-              </div>
-
-              {/* Action Button */}
-              <div className="pt-2 flex flex-col sm:flex-row items-center gap-4">
-                <button
-                  type="button"
-                  onClick={() => setStep(1)}
-                  className="w-full sm:w-auto px-10 py-4.5 bg-ink text-ivory hover:bg-gold hover:text-ink font-body text-[11px] uppercase tracking-[0.25em] font-semibold transition-all duration-300 shadow-md cursor-pointer flex items-center justify-center gap-3"
-                >
-                  <span>Begin Availability Check</span>
-                  <span className="text-gold font-normal">→</span>
-                </button>
-                <span className="font-body text-[11px] text-ink/50">
-                  Takes less than 60 seconds · No spam
+                <span className="font-body text-[10px] font-semibold tracking-[0.2em] text-ink/60">
+                  0{step} / 05
                 </span>
+              </div>
+              <div className="h-[2px] w-full bg-ink/10 mt-[-1px]" role="progressbar" aria-valuenow={step} aria-valuemin={1} aria-valuemax={5}>
+                <div
+                  className="h-full bg-gold transition-[width] duration-500 ease-out"
+                  style={{ width: `${(step / 5) * 100}%` }}
+                />
               </div>
             </div>
           )}
 
-          {/* ============================================================ */}
-          {/* STEP 1: THE DATE                                            */}
-          {/* ============================================================ */}
+          {/* STEP 1: Celebration Type */}
           {step === 1 && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
-              <div>
-                <span className="font-body text-[10px] uppercase tracking-[0.3em] text-gold font-bold block mb-2">
-                  QUESTION 01
-                </span>
-                <h2 className="font-display text-2xl sm:text-3xl md:text-4xl text-ink mb-2">
-                  When is your wedding or celebration?
-                </h2>
-                <p className="font-body text-xs sm:text-sm text-ink/60 font-light">
-                  If you have a confirmed date, select it below. Otherwise, pick your target season.
+            <div className="step-content">
+              <div className="mb-8 sm:mb-10">
+                <span className="text-gold font-display text-lg mb-2 block">01</span>
+                <h1 className="font-display text-3xl sm:text-4xl md:text-5xl text-ink mb-3 leading-tight">
+                  What are we celebrating?
+                </h1>
+                <p className="font-body text-xs sm:text-sm text-ink/70 leading-relaxed">
+                  Let’s see if your date is available with Irene. Choose the closest fit for your event to get started.
                 </p>
               </div>
 
-              {/* Exact Date Option */}
-              <div className="space-y-2">
-                <label className="font-body text-[11px] uppercase tracking-widest text-ink/70 font-semibold block">
-                  Exact Date (If Confirmed)
-                </label>
-                <input
-                  type="date"
-                  value={formData.exactDate}
-                  onChange={(e) => {
-                    setFormData({
-                      ...formData,
-                      exactDate: e.target.value,
-                      flexibleSeason: "",
-                      dateType: "exact",
-                    });
-                  }}
-                  className="w-full bg-ivory border border-ink/20 px-4 py-3.5 text-ink font-body text-sm focus:outline-none focus:border-gold transition-colors"
-                />
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="h-px bg-ink/10 flex-1" />
-                <span className="font-body text-[10px] uppercase tracking-widest text-ink/40">OR SELECT TARGET SEASON</span>
-                <div className="h-px bg-ink/10 flex-1" />
-              </div>
-
-              {/* Flexible Season Chips */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-10">
                 {[
-                  "Spring 2025",
-                  "Summer 2025",
-                  "Fall 2025",
-                  "Winter 2025",
-                  "Spring 2026",
-                  "Summer 2026",
-                  "Fall 2026",
-                  "2027",
-                ].map((season) => {
-                  const isSelected = formData.flexibleSeason === season;
-                  return (
-                    <button
-                      key={season}
-                      type="button"
-                      onClick={() => {
-                        setFormData({
-                          ...formData,
-                          flexibleSeason: season,
-                          exactDate: "",
-                          dateType: "flexible",
-                        });
-                      }}
-                      className={`p-3.5 text-center border font-body text-xs transition-all duration-200 cursor-pointer ${
-                        isSelected
-                          ? "border-gold bg-gold/10 text-ink font-semibold ring-1 ring-gold"
-                          : "border-ink/15 bg-white text-ink/80 hover:border-ink/40"
-                      }`}
-                    >
-                      {season}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {errorMsg && (
-                <p className="text-red-700 text-xs font-body italic animate-shake">
-                  {errorMsg}
-                </p>
-              )}
-
-              {/* Navigation Controls */}
-              <div className="pt-6 border-t border-ink/10 flex items-center justify-between gap-4">
-                <button
-                  type="button"
-                  onClick={handlePrevStep}
-                  className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 hover:text-ink cursor-pointer"
-                >
-                  ← Back
-                </button>
-                <button
-                  type="button"
-                  onClick={handleNextStep}
-                  className="px-8 py-3.5 bg-ink text-ivory hover:bg-gold hover:text-ink font-body text-[10px] uppercase tracking-[0.25em] font-semibold transition-all cursor-pointer flex items-center gap-2"
-                >
-                  <span>Continue</span>
-                  <span>→</span>
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* ============================================================ */}
-          {/* STEP 2: THE VENUE & GUEST COUNT                              */}
-          {/* ============================================================ */}
-          {step === 2 && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
-              <div>
-                <span className="font-body text-[10px] uppercase tracking-[0.3em] text-gold font-bold block mb-2">
-                  QUESTION 02
-                </span>
-                <h2 className="font-display text-2xl sm:text-3xl md:text-4xl text-ink mb-2">
-                  Where is the celebration taking place?
-                </h2>
-                <p className="font-body text-xs sm:text-sm text-ink/60 font-light">
-                  Share your venue name, estate, or target city in Washington DC, MD, VA, or destination.
-                </p>
-              </div>
-
-              {/* Clean Venue Input */}
-              <div className="space-y-3">
-                <label className="font-body text-[11px] uppercase tracking-widest text-ink/70 font-semibold block">
-                  Venue Name or City / Region *
-                </label>
-                <input
-                  type="text"
-                  placeholder={
-                    formData.venue === "Still Scouting / Venue Undecided"
-                      ? "Venue Undecided (Washington DC / MD / VA / Destination)"
-                      : "e.g., Meridian House, DC or Salamander Resort, VA"
-                  }
-                  value={
-                    formData.venue === "Still Scouting / Venue Undecided"
-                      ? ""
-                      : formData.venue
-                  }
-                  disabled={formData.venue === "Still Scouting / Venue Undecided"}
-                  onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
-                  className="w-full bg-ivory border border-ink/20 px-4 py-3.5 text-ink font-body text-sm focus:outline-none focus:border-gold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  autoFocus
-                />
-
-                {/* Undecided / Still Scouting Venue Option */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setFormData({
-                      ...formData,
-                      venue:
-                        formData.venue === "Still Scouting / Venue Undecided"
-                          ? ""
-                          : "Still Scouting / Venue Undecided",
-                    });
-                  }}
-                  className={`font-body text-xs flex items-center gap-2.5 cursor-pointer transition-colors py-1 ${
-                    formData.venue === "Still Scouting / Venue Undecided"
-                      ? "text-ink font-semibold"
-                      : "text-ink/60 hover:text-ink"
-                  }`}
-                >
-                  <span
-                    className={`w-4 h-4 rounded-xs border flex items-center justify-center text-[10px] transition-all ${
-                      formData.venue === "Still Scouting / Venue Undecided"
-                        ? "border-gold bg-gold text-ink font-bold"
-                        : "border-ink/30 bg-white"
+                  { id: "wedding", title: "Wedding", desc: "Ceremony & reception production" },
+                  { id: "private", title: "Private celebration", desc: "Milestone, dinner, or social event" },
+                  { id: "corporate", title: "Corporate / Gala", desc: "Brand gala, dinner, or fundraiser" },
+                  { id: "other", title: "Something else", desc: "Tell us what you have in mind" },
+                ].map((type) => (
+                  <button
+                    type="button"
+                    key={type.id}
+                    onClick={() => setFormData((prev) => ({ ...prev, celebrationType: type.title }))}
+                    aria-pressed={formData.celebrationType === type.title}
+                    className={`relative border p-5 text-left cursor-pointer transition-all duration-300 rounded-sm flex flex-col justify-between ${
+                      formData.celebrationType === type.title
+                        ? "border-ink bg-ink/5 shadow-xs"
+                        : "border-ink/20 hover:border-ink/50 bg-white/50"
                     }`}
                   >
-                    {formData.venue === "Still Scouting / Venue Undecided" && "✓"}
-                  </span>
-                  <span>We are still scouting venues / Venue undecided</span>
-                </button>
-              </div>
-
-              {/* Estimated Guest Count */}
-              <div className="space-y-2 pt-2">
-                <label className="font-body text-[11px] uppercase tracking-widest text-ink/70 font-semibold block">
-                  Anticipated Guest Count (Optional)
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                  {["Under 75", "75 – 150", "150 – 250", "250+ Guests"].map((count) => {
-                    const isSelected = formData.guestCount === count;
-                    return (
-                      <button
-                        key={count}
-                        type="button"
-                        onClick={() => setFormData({ ...formData, guestCount: count })}
-                        className={`p-2.5 text-center border font-body text-xs transition-all duration-200 cursor-pointer ${
-                          isSelected
-                            ? "border-gold bg-gold/15 text-ink font-semibold"
-                            : "border-ink/15 bg-white text-ink/70 hover:border-ink/40"
-                        }`}
-                      >
-                        {count}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {errorMsg && (
-                <p className="text-red-700 text-xs font-body italic animate-shake">
-                  {errorMsg}
-                </p>
-              )}
-
-              {/* Navigation Controls */}
-              <div className="pt-6 border-t border-ink/10 flex items-center justify-between gap-4">
-                <button
-                  type="button"
-                  onClick={handlePrevStep}
-                  className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 hover:text-ink cursor-pointer"
-                >
-                  ← Back
-                </button>
-                <button
-                  type="button"
-                  onClick={handleNextStep}
-                  className="px-8 py-3.5 bg-ink text-ivory hover:bg-gold hover:text-ink font-body text-[10px] uppercase tracking-[0.25em] font-semibold transition-all cursor-pointer flex items-center gap-2"
-                >
-                  <span>Continue</span>
-                  <span>→</span>
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* ============================================================ */}
-          {/* STEP 3: SCOPE & LEVEL OF ARTISTRY                           */}
-          {/* ============================================================ */}
-          {step === 3 && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
-              <div>
-                <span className="font-body text-[10px] uppercase tracking-[0.3em] text-gold font-bold block mb-2">
-                  QUESTION 03
-                </span>
-                <h2 className="font-display text-2xl sm:text-3xl md:text-4xl text-ink mb-2">
-                  What level of design are you imagining?
-                </h2>
-                <p className="font-body text-xs sm:text-sm text-ink/60 font-light">
-                  Every celebration is customized. Select the tier that best matches your vision.
-                </p>
-              </div>
-
-              {/* Scope Option Cards (3 distinct luxury tiers) */}
-              <div className="space-y-3.5">
-                {SCOPE_OPTIONS.map((option) => {
-                  const isSelected = formData.scopeTier === option.label;
-                  return (
+                    <div className="pr-7 mb-1">
+                      <h3 className="font-display text-lg sm:text-xl text-ink mb-1">{type.title}</h3>
+                      <p className="font-body text-xs text-ink/60 leading-relaxed">{type.desc}</p>
+                    </div>
                     <div
-                      key={option.id}
-                      onClick={() => setFormData({ ...formData, scopeTier: option.label })}
-                      className={`p-5 border transition-all duration-200 cursor-pointer ${
-                        isSelected
-                          ? "border-gold bg-gold/10 ring-1 ring-gold shadow-xs"
-                          : "border-ink/15 bg-white hover:border-ink/40"
+                      className={`absolute top-4 right-4 w-4 h-4 rounded-full border flex items-center justify-center transition-all ${
+                        formData.celebrationType === type.title ? "border-gold bg-gold/10" : "border-ink/25"
                       }`}
                     >
-                      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 mb-1.5">
-                        <h3 className="font-display text-lg sm:text-xl text-ink font-semibold">
-                          {option.label}
-                        </h3>
-                        <span className="font-display italic text-sm text-gold font-medium">
-                          {option.price}
-                        </span>
-                      </div>
-                      <p className="font-body text-xs text-ink/75 font-light leading-relaxed">
-                        {option.desc}
-                      </p>
+                      {formData.celebrationType === type.title && (
+                        <div className="w-2 h-2 bg-gold rounded-full" />
+                      )}
                     </div>
-                  );
-                })}
+                  </button>
+                ))}
               </div>
 
-              {errorMsg && (
-                <p className="text-red-700 text-xs font-body italic animate-shake">
-                  {errorMsg}
-                </p>
-              )}
-
-              {/* Navigation Controls */}
-              <div className="pt-6 border-t border-ink/10 flex items-center justify-between gap-4">
-                <button
-                  type="button"
-                  onClick={handlePrevStep}
-                  className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 hover:text-ink cursor-pointer"
-                >
-                  ← Back
-                </button>
-                <button
-                  type="button"
-                  onClick={handleNextStep}
-                  className="px-8 py-3.5 bg-ink text-ivory hover:bg-gold hover:text-ink font-body text-[10px] uppercase tracking-[0.25em] font-semibold transition-all cursor-pointer flex items-center gap-2"
-                >
-                  <span>Continue</span>
-                  <span>→</span>
-                </button>
+              <div className="flex justify-end">
+                <Magnetic>
+                  <button
+                    onClick={nextStep}
+                    disabled={!formData.celebrationType}
+                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-9 py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-40 disabled:hover:bg-ink disabled:hover:text-ivory flex items-center gap-3 rounded-full cursor-pointer"
+                  >
+                    Continue <span className="text-sm">→</span>
+                  </button>
+                </Magnetic>
               </div>
             </div>
           )}
 
-          {/* ============================================================ */}
-          {/* STEP 4: CONTACT DETAILS                                     */}
-          {/* ============================================================ */}
-          {step === 4 && (
-            <form onSubmit={handleFormSubmit} className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
-              <div>
-                <span className="font-body text-[10px] uppercase tracking-[0.3em] text-gold font-bold block mb-2">
-                  FINAL STEP
-                </span>
-                <h2 className="font-display text-2xl sm:text-3xl md:text-4xl text-ink mb-2">
-                  Who is Irene speaking with?
+          {/* STEP 2: Date, Venue & Guest Count */}
+          {step === 2 && (
+            <div className="step-content">
+              <div className="mb-8 sm:mb-10">
+                <span className="text-gold font-display text-lg mb-2 block">02</span>
+                <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-ink mb-3 leading-tight">
+                  Where, when, &amp; how many?
                 </h2>
-                <p className="font-body text-xs sm:text-sm text-ink/60 font-light">
-                  Please provide your contact details to verify studio availability and schedule your private consultation session.
+                <p className="font-body text-xs sm:text-sm text-ink/70">
+                  Estimates are completely fine if your venue or date are still coming together.
                 </p>
               </div>
 
-              {/* Name Fields */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label htmlFor="client-name" className="font-body text-[10px] uppercase tracking-widest text-ink/70 font-semibold block">
-                    Your Full Name *
+              <div className="flex flex-col gap-7 mb-10">
+                {/* Event Date */}
+                <div className="flex flex-col gap-1.5 relative group">
+                  <label className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 group-focus-within:text-gold transition-colors font-semibold">
+                    Target Event Date *
                   </label>
                   <input
-                    id="client-name"
+                    type="date"
+                    required
+                    min={new Date().toISOString().split("T")[0]}
+                    value={formData.date}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, date: e.target.value }))}
+                    className="w-full bg-transparent border-b border-ink/20 pb-2.5 font-body text-base sm:text-lg text-ink outline-none focus:border-gold transition-colors text-ink/85 focus:text-ink"
+                  />
+                </div>
+
+                {/* Venue / Location */}
+                <div className="flex flex-col gap-1.5 relative group">
+                  <label className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 group-focus-within:text-gold transition-colors font-semibold">
+                    Venue, Estate, or Target City
+                  </label>
+                  <input
                     type="text"
-                    required
-                    placeholder="Jane Doe"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full bg-ivory border border-ink/20 px-4 py-3.5 text-ink font-body text-sm focus:outline-none focus:border-gold"
+                    value={formData.venue}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, venue: e.target.value }))}
+                    className="w-full bg-transparent border-b border-ink/20 pb-2.5 font-display text-xl sm:text-2xl text-ink outline-none focus:border-gold transition-colors placeholder:text-ink/25"
+                    placeholder="e.g. Meridian House, DC or Undecided"
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label htmlFor="partner-name" className="font-body text-[10px] uppercase tracking-widest text-ink/70 font-semibold block">
-                    Partner&rsquo;s Name (Optional)
+                {/* Guest Count Selector */}
+                <div className="flex flex-col gap-2.5 pt-1">
+                  <label className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 font-semibold">
+                    Estimated Guest Count *
                   </label>
-                  <input
-                    id="partner-name"
-                    type="text"
-                    placeholder="John Smith"
-                    value={formData.partnerName}
-                    onChange={(e) => setFormData({ ...formData, partnerName: e.target.value })}
-                    className="w-full bg-ivory border border-ink/20 px-4 py-3.5 text-ink font-body text-sm focus:outline-none focus:border-gold"
-                  />
+                  <div className="grid grid-cols-2 gap-2.5">
+                    {["Under 50 Guests", "50 – 125 Guests", "125 – 200 Guests", "200+ Guests"].map((count) => (
+                      <button
+                        type="button"
+                        key={count}
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            guestCount: count,
+                            investment: prev.guestCount === count ? prev.investment : "",
+                          }))
+                        }
+                        className={`p-3.5 border text-left text-xs font-body transition-all rounded-sm flex items-center justify-between cursor-pointer ${
+                          formData.guestCount === count
+                            ? "border-ink bg-ink text-ivory shadow-xs"
+                            : "border-ink/20 hover:border-ink/50 text-ink bg-white/40"
+                        }`}
+                      >
+                        <span className="font-medium">{count}</span>
+                        {formData.guestCount === count && <span className="text-gold text-xs font-bold">✓</span>}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              {/* Contact Info */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label htmlFor="client-email" className="font-body text-[10px] uppercase tracking-widest text-ink/70 font-semibold block">
-                    Email Address *
-                  </label>
-                  <input
-                    id="client-email"
-                    type="email"
-                    required
-                    placeholder="jane@example.com"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full bg-ivory border border-ink/20 px-4 py-3.5 text-ink font-body text-sm focus:outline-none focus:border-gold"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label htmlFor="client-phone" className="font-body text-[10px] uppercase tracking-widest text-ink/70 font-semibold block">
-                    Phone Number (for SMS &amp; Call Confirmation) *
-                  </label>
-                  <input
-                    id="client-phone"
-                    type="tel"
-                    required
-                    placeholder="(202) 555-0199"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full bg-ivory border border-ink/20 px-4 py-3.5 text-ink font-body text-sm focus:outline-none focus:border-gold"
-                  />
-                </div>
-              </div>
-
-              {/* Notes */}
-              <div className="space-y-1.5">
-                <label htmlFor="client-notes" className="font-body text-[10px] uppercase tracking-widest text-ink/70 font-semibold block">
-                  Any specific notes or questions for Irene? (Optional)
-                </label>
-                <textarea
-                  id="client-notes"
-                  rows={3}
-                  placeholder="Tell us about color palettes, floral installations, or any questions you have."
-                  value={formData.visionNotes}
-                  onChange={(e) => setFormData({ ...formData, visionNotes: e.target.value })}
-                  className="w-full bg-ivory border border-ink/20 px-4 py-3.5 text-ink font-body text-sm focus:outline-none focus:border-gold"
-                />
-              </div>
-
-              {errorMsg && (
-                <p className="text-red-700 text-xs font-body italic animate-shake">
-                  {errorMsg}
-                </p>
-              )}
-
-              {/* Submit Button */}
-              <div className="pt-6 border-t border-ink/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex justify-between items-center">
                 <button
-                  type="button"
-                  onClick={handlePrevStep}
-                  className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 hover:text-ink cursor-pointer"
+                  onClick={prevStep}
+                  className="font-body text-xs uppercase tracking-widest text-ink/50 hover:text-ink transition-colors flex items-center gap-2 cursor-pointer"
                 >
-                  ← Back
+                  <span>←</span> Back
                 </button>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full sm:w-auto px-10 py-4.5 bg-ink text-ivory hover:bg-gold hover:text-ink font-body text-[11px] uppercase tracking-[0.25em] font-semibold transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                  {isSubmitting ? (
-                    <span>Verifying Availability...</span>
-                  ) : (
-                    <>
-                      <span>Submit &amp; Schedule Session</span>
-                      <span className="text-gold">→</span>
-                    </>
-                  )}
-                </button>
+                <Magnetic>
+                  <button
+                    onClick={nextStep}
+                    disabled={!formData.guestCount || !formData.date}
+                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-9 py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-40 flex items-center gap-3 rounded-full cursor-pointer"
+                  >
+                    Continue <span className="text-sm">→</span>
+                  </button>
+                </Magnetic>
               </div>
-            </form>
+            </div>
           )}
 
-          {/* ============================================================ */}
-          {/* STEP 5: CONFIRMATION & EMBEDDED CALENDLY SCHEDULER           */}
-          {/* ============================================================ */}
-          {step === 5 && (
-            <div className="text-center py-4 sm:py-6 space-y-8 animate-in zoom-in-95 duration-400">
-              <div className="w-14 h-14 mx-auto rounded-full bg-gold/15 border border-gold/40 flex items-center justify-center text-gold text-2xl">
-                ✓
-              </div>
-
-              <div className="space-y-2">
-                <span className="font-body text-[10px] uppercase tracking-[0.3em] text-gold font-bold block">
-                  INQUIRY RECEIVED
-                </span>
-                <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-ink leading-tight">
-                  Thank You, {formData.name.split(" ")[0] || "Friend"}
+          {/* STEP 3: Services */}
+          {step === 3 && (
+            <div className="step-content">
+              <div className="mb-8 sm:mb-10">
+                <span className="text-gold font-display text-lg mb-2 block">03</span>
+                <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-ink mb-3 leading-tight">
+                  How can we help?
                 </h2>
-                <p className="font-body text-sm sm:text-base text-ink/75 max-w-xl mx-auto font-light leading-relaxed pt-2">
-                  Your celebration details have been received for{" "}
-                  <strong className="text-ink font-semibold">
-                    {formData.exactDate || formData.flexibleSeason || "your celebration"}
-                  </strong>{" "}
-                  at{" "}
-                  <strong className="text-ink font-semibold">
-                    {formData.venue || "your venue"}
-                  </strong>.
+                <p className="font-body text-xs sm:text-sm text-ink/70">
+                  Select the services you are exploring for your celebration.
                 </p>
               </div>
 
-              {/* CALENDLY EMBED CARD */}
-              <div className="w-full bg-ivory border border-ink/15 p-4 sm:p-8 text-center space-y-4">
-                <div className="space-y-1">
-                  <span className="font-body text-[10px] uppercase tracking-[0.25em] text-gold font-bold block">
-                    FAST-TRACK YOUR CONSULTATION
-                  </span>
-                  <h3 className="font-display text-2xl sm:text-3xl text-ink">
-                    Select Your Consultation Time Below
-                  </h3>
-                  <p className="font-body text-xs sm:text-sm text-ink/70 max-w-md mx-auto font-light leading-relaxed">
-                    Pick a 20-minute slot on Irene&rsquo;s calendar to discuss your floral and spatial vision:
-                  </p>
+              <div className="flex flex-col gap-3 mb-10">
+                {[
+                  "Full event design & production",
+                  "Floral design & installations",
+                  "Décor, rentals & styling",
+                  "I'm not sure yet",
+                ].map((service) => (
+                  <label
+                    key={service}
+                    className={`border p-4.5 cursor-pointer transition-all duration-300 flex justify-between items-center rounded-sm ${
+                      formData.services.includes(service)
+                        ? "border-ink bg-ink/5 shadow-xs"
+                        : "border-ink/20 hover:border-ink/50 bg-white/40"
+                    }`}
+                  >
+                    <span className="font-display text-lg sm:text-xl text-ink">{service}</span>
+                    <input
+                      type="checkbox"
+                      className="hidden"
+                      checked={formData.services.includes(service)}
+                      onChange={() => handleServiceToggle(service)}
+                    />
+                    <div
+                      className={`w-5 h-5 rounded-sm border flex items-center justify-center transition-all ${
+                        formData.services.includes(service) ? "border-ink bg-ink" : "border-ink/30"
+                      }`}
+                    >
+                      {formData.services.includes(service) && (
+                        <svg className="w-3 h-3 text-ivory" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </div>
+                  </label>
+                ))}
+              </div>
+
+              <div className="flex justify-between items-center">
+                <button
+                  onClick={prevStep}
+                  className="font-body text-xs uppercase tracking-widest text-ink/50 hover:text-ink transition-colors flex items-center gap-2 cursor-pointer"
+                >
+                  <span>←</span> Back
+                </button>
+                <Magnetic>
+                  <button
+                    onClick={nextStep}
+                    disabled={formData.services.length === 0}
+                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-9 py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-40 flex items-center gap-3 rounded-full cursor-pointer"
+                  >
+                    Continue <span className="text-sm">→</span>
+                  </button>
+                </Magnetic>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 4: Vision & Dynamic Investment */}
+          {step === 4 && (
+            <div className="step-content">
+              <div className="mb-8 sm:mb-10">
+                <span className="text-gold font-display text-lg mb-2 block">04</span>
+                <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-ink mb-3 leading-tight">
+                  What do you want the room to remember?
+                </h2>
+                <p className="font-body text-xs sm:text-sm text-ink/70">
+                  A few words are enough. We will shape the design details together.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-8 mb-10">
+                {/* Vision Textarea */}
+                <div className="flex flex-col gap-1.5 relative group">
+                  <label className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 group-focus-within:text-gold transition-colors font-semibold">
+                    The feeling, colors, or details (Optional)
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={formData.vision}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, vision: e.target.value }))}
+                    className="w-full bg-ink/5 border border-ink/10 p-3.5 font-body text-sm sm:text-base text-ink outline-none focus:border-gold focus:bg-transparent transition-colors placeholder:text-ink/30 resize-none rounded-sm"
+                    placeholder="Candlelit, sculptural, romantic, filled with movement..."
+                  />
                 </div>
 
-                {/* Live Calendly Iframe */}
+                {/* Investment Budget Selector */}
+                <div className="flex flex-col gap-2.5">
+                  <div className="flex items-center justify-between">
+                    <label className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 font-semibold">
+                      Anticipated Floral &amp; Production Investment *
+                    </label>
+                    {isIntimateGuestCount && (
+                      <span className="font-body text-[9px] uppercase tracking-widest text-gold font-semibold bg-gold/10 px-2.5 py-0.5 rounded-full">
+                        Intimate Pricing Unlocked
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    {(isIntimateGuestCount
+                      ? [
+                          {
+                            tier: "$4,000 – $10,000",
+                            label: "Intimate Gathering / Micro-Celebration",
+                            sub: "Designed specifically for celebrations under 50 guests",
+                          },
+                          {
+                            tier: "$10,000 – $20,000",
+                            label: "Elevated Intimate Styling",
+                            sub: "Bespoke ceremony arch + full tablescape installations",
+                          },
+                          {
+                            tier: "$20,000+",
+                            label: "Full Production Micro-Experience",
+                            sub: "High-touch immersive transformation",
+                          },
+                        ]
+                      : [
+                          {
+                            tier: "$8,000 – $15,000",
+                            label: "The Essentials",
+                            sub: "Signature floral styling for intimate focal points",
+                          },
+                          {
+                            tier: "$20,000 – $35,000",
+                            label: "Design + Florals",
+                            sub: "Bespoke floral architecture & complete aesthetic direction",
+                          },
+                          {
+                            tier: "$35,000 – $55,000",
+                            label: "Elevated Production",
+                            sub: "Grand floral arches, focal installations & ambient styling",
+                          },
+                          {
+                            tier: "$55,000+",
+                            label: "The Full Production",
+                            sub: "Comprehensive custom fabrication & white-glove execution",
+                          },
+                        ]
+                    ).map((item) => (
+                      <button
+                        type="button"
+                        key={item.tier}
+                        onClick={() => setFormData((prev) => ({ ...prev, investment: item.tier }))}
+                        aria-pressed={formData.investment === item.tier}
+                        className={`p-3.5 rounded-sm border text-left transition-all flex items-center justify-between cursor-pointer ${
+                          formData.investment === item.tier
+                            ? "border-ink bg-ink text-ivory shadow-xs"
+                            : "border-ink/20 text-ink hover:border-ink/60 bg-white/40"
+                        }`}
+                      >
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span
+                              className={`font-display text-base sm:text-lg ${
+                                formData.investment === item.tier ? "text-gold" : "text-ink font-semibold"
+                              }`}
+                            >
+                              {item.tier}
+                            </span>
+                            <span className="font-body text-xs opacity-75">· {item.label}</span>
+                          </div>
+                          <p
+                            className={`font-body text-[11px] mt-0.5 ${
+                              formData.investment === item.tier ? "text-ivory/70" : "text-ink/55"
+                            }`}
+                          >
+                            {item.sub}
+                          </p>
+                        </div>
+                        {formData.investment === item.tier && <span className="text-gold font-bold">✓</span>}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <button
+                  onClick={prevStep}
+                  className="font-body text-xs uppercase tracking-widest text-ink/50 hover:text-ink transition-colors flex items-center gap-2 cursor-pointer"
+                >
+                  <span>←</span> Back
+                </button>
+                <Magnetic>
+                  <button
+                    onClick={nextStep}
+                    disabled={!formData.investment}
+                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-9 py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-40 flex items-center gap-3 rounded-full cursor-pointer"
+                  >
+                    Continue <span className="text-sm">→</span>
+                  </button>
+                </Magnetic>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 5: Contact Details */}
+          {step === 5 && (
+            <div className="step-content">
+              <div className="mb-8 sm:mb-10">
+                <span className="text-gold font-display text-lg mb-2 block">05</span>
+                <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-ink mb-3 leading-tight">
+                  Where should we send your consultation details?
+                </h2>
+                <p className="font-body text-xs sm:text-sm text-ink/70">
+                  Irene will review your celebration vision and open her private booking calendar next.
+                </p>
+              </div>
+
+              <form onSubmit={submitForm} className="flex flex-col gap-6 mb-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="flex flex-col gap-1.5 relative group">
+                    <label className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 group-focus-within:text-gold transition-colors font-semibold">
+                      Your Name(s) *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Nicole & Alexander"
+                      value={formData.name}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+                      className="w-full bg-transparent border-b border-ink/20 pb-2.5 font-display text-xl text-ink outline-none focus:border-gold transition-colors"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5 relative group">
+                    <label className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 group-focus-within:text-gold transition-colors font-semibold">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={formData.email}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
+                      className="w-full bg-transparent border-b border-ink/20 pb-2.5 font-body text-base sm:text-lg text-ink outline-none focus:border-gold transition-colors placeholder:text-ink/25"
+                      placeholder="you@example.com"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="flex flex-col gap-1.5 relative group">
+                    <label className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 group-focus-within:text-gold transition-colors font-semibold">
+                      Phone Number *
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      value={formData.phone}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
+                      className="w-full bg-transparent border-b border-ink/20 pb-2.5 font-body text-base sm:text-lg text-ink outline-none focus:border-gold transition-colors placeholder:text-ink/25"
+                      placeholder="(202) 555-0123"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5 relative group">
+                    <label htmlFor="consultation-source" className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 group-focus-within:text-gold transition-colors font-semibold">
+                      How did you find us?
+                    </label>
+                    <select
+                      id="consultation-source"
+                      value={formData.source}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, source: e.target.value }))}
+                      className="w-full bg-transparent border-b border-ink/20 pb-2.5 font-body text-sm text-ink outline-none focus:border-gold transition-colors cursor-pointer"
+                    >
+                      <option value="" disabled>Select one...</option>
+                      <option value="instagram-ad">Instagram Ad</option>
+                      <option value="facebook-ad">Facebook Ad</option>
+                      <option value="google-ad">Google Search</option>
+                      <option value="planner-referral">Planner or Venue Referral</option>
+                      <option value="word-of-mouth">Word of Mouth / Friend</option>
+                      <option value="weddingwire-theknot">WeddingWire / The Knot</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center mt-3">
+                  <button
+                    type="button"
+                    onClick={prevStep}
+                    className="font-body text-xs uppercase tracking-widest text-ink/50 hover:text-ink transition-colors flex items-center gap-2 cursor-pointer"
+                  >
+                    <span>←</span> Back
+                  </button>
+                  <Magnetic>
+                    <button
+                      type="submit"
+                      className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-9 py-4 hover:bg-gold hover:text-ink transition-colors flex items-center gap-3 rounded-full shadow-lg cursor-pointer"
+                    >
+                      Verify Date &amp; Schedule Session <span className="text-sm">↗</span>
+                    </button>
+                  </Magnetic>
+                </div>
+                <p className="font-body text-[9px] text-ink/50 text-right mt-[-6px]">
+                  🔒 Your details remain strictly confidential with Irene and our studio.
+                </p>
+              </form>
+            </div>
+          )}
+
+          {/* STEP 6: Full-Screen Confirmation & Direct Calendly Booking */}
+          {step === 6 && (
+            <div aria-live="polite" className="step-content flex flex-col items-center justify-center text-center w-full py-6 animate-fade-in">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold/10 border border-gold/30 mb-5">
+                <span className="w-2 h-2 rounded-full bg-gold animate-ping" />
+                <span className="font-body text-[10px] uppercase tracking-[0.25em] text-gold font-semibold">
+                  Date Check Received
+                </span>
+              </div>
+
+              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl text-ink mb-3 leading-tight">
+                Thank you, {formData.name.split(" ")[0] || "Friend"}.
+              </h1>
+
+              <p className="font-body text-sm sm:text-base md:text-lg text-ink/75 max-w-2xl mx-auto leading-relaxed mb-8">
+                Your celebration details have been received. We accept a limited number of events each season, and we would love to connect with you.
+              </p>
+
+              {/* Direct Booking Card with Calendly Embed */}
+              <div className="w-full bg-ecru/50 border border-ink/10 rounded-2xl p-5 sm:p-8 md:p-10 shadow-xl mb-10 text-center">
+                <span className="font-body text-[10px] uppercase tracking-[0.25em] text-gold font-semibold block mb-2">
+                  FAST-TRACK YOUR CONSULTATION
+                </span>
+                <h2 className="font-display text-2xl sm:text-3xl text-ink mb-2">
+                  Select Your Private Design Session Time
+                </h2>
+                <p className="font-body text-xs sm:text-sm text-ink/70 max-w-xl mx-auto mb-6 leading-relaxed">
+                  Reserve a 20-minute design consultation directly on Irene’s private calendar below:
+                </p>
+
+                {/* Embedded Calendly Scheduler */}
                 <div 
-                  className="w-full rounded-sm overflow-hidden border border-ink/15 bg-white min-h-[620px] relative shadow-xs"
+                  className="w-full rounded-xl overflow-hidden shadow-inner border border-ink/10 bg-ivory min-h-[620px] relative"
                   data-lenis-prevent
                 >
                   <iframe
@@ -734,8 +686,8 @@ export default function ConsultationClient() {
                 </div>
 
                 {/* Direct Link Fallback */}
-                <div className="pt-2 flex items-center justify-center gap-2">
-                  <span className="font-body text-xs text-ink/60">Prefer opening calendar in a full window?</span>
+                <div className="mt-5 flex items-center justify-center gap-2">
+                  <span className="font-body text-xs text-ink/60">Prefer opening in a new tab?</span>
                   <a
                     href="https://calendly.com/ladyvictoriadesigns"
                     target="_blank"
@@ -748,39 +700,25 @@ export default function ConsultationClient() {
               </div>
 
               {/* Secondary Navigation */}
-              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
                 <Link
                   href="/gallery"
-                  className="w-full sm:w-auto px-8 py-3.5 bg-ink text-ivory hover:bg-gold hover:text-ink font-body text-[10px] uppercase tracking-[0.2em] font-medium transition-colors"
+                  className="w-full sm:w-auto bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-8 py-4 hover:bg-gold hover:text-ink transition-colors rounded-full"
                 >
                   Explore Recent Celebrations
                 </Link>
                 <Link
-                  href="/testimonials"
-                  className="w-full sm:w-auto px-8 py-3.5 bg-transparent border border-ink/20 text-ink hover:bg-ink hover:text-ivory font-body text-[10px] uppercase tracking-[0.2em] transition-colors"
+                  href="/"
+                  className="w-full sm:w-auto border border-ink/20 text-ink font-body text-[10px] uppercase tracking-[0.2em] px-8 py-4 hover:border-ink transition-colors rounded-full"
                 >
-                  Read 54 Client Letters
+                  Return to Home
                 </Link>
               </div>
             </div>
           )}
 
         </div>
-      </main>
-
-      {/* 3. MINIMAL FOOTER */}
-      <footer className="w-full border-t border-ink/10 py-6 px-6 text-center text-ink/40 font-body text-[11px]">
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p>© {new Date().getFullYear()} Lady Victoria Designs. All rights reserved.</p>
-          <p className="flex items-center gap-2">
-            <span>Direct studio inquiries:</span>
-            <a href="mailto:info@ladyvictoriadesigns.com" className="text-ink/70 hover:text-gold underline">
-              info@ladyvictoriadesigns.com
-            </a>
-          </p>
-        </div>
-      </footer>
-
-    </div>
+      </div>
+    </main>
   );
 }
