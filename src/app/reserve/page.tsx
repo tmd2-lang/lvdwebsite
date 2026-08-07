@@ -153,15 +153,6 @@ export default function ReservePage() {
   const nextStep = () => {
     if (step < 5) {
       setStep((prev) => prev + 1);
-      setTimeout(() => {
-        const el = document.getElementById("reserve-form");
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top < 0 || rect.top > 250) {
-            el.scrollIntoView({ behavior: "smooth" });
-          }
-        }
-      }, 50);
     }
   };
 
@@ -245,9 +236,14 @@ export default function ReservePage() {
             <div className="reserve-hero__cta mt-8 flex flex-wrap items-center gap-x-10 gap-y-4">
               <button
                 onClick={scrollToForm}
-                className="border-b border-ivory/70 pb-1 font-body text-[11px] font-semibold uppercase tracking-[0.2em] text-ivory transition-colors duration-300 hover:border-gold hover:text-gold cursor-pointer"
+                type="button"
+                aria-controls="reserve-form"
+                className="group inline-flex items-center gap-3 border border-ivory/80 bg-ivory px-5 py-3.5 font-body text-[11px] font-semibold uppercase tracking-[0.18em] text-ink shadow-[0_12px_32px_rgba(0,0,0,0.14)] transition-colors duration-300 hover:border-gold hover:bg-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ink cursor-pointer"
               >
                 Inquire About Your Date
+                <span aria-hidden="true" className="text-sm transition-transform duration-300 group-hover:translate-x-1">
+                  ↗
+                </span>
               </button>
             </div>
           </div>

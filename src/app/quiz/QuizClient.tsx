@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 
 const ArrowLeft = ({ className = "w-4 h-4" }: { className?: string }) => (
@@ -44,11 +44,6 @@ export default function QuizClient() {
     phone: "",
     date: "",
   });
-
-  // Scroll to top on step change
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [step]);
 
   const questions = [
     {
