@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import InvestmentModal from "./InvestmentModal";
 import { INVESTMENT_TIERS } from "@/data/investments";
@@ -8,10 +8,15 @@ export default function Services() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTierId, setModalTierId] = useState<string | null>(null);
+  const mobileTierRailRef = useRef<HTMLDivElement>(null);
 
   const openModalForTier = (tierId: string) => {
     setModalTierId(tierId);
     setIsModalOpen(true);
+  };
+
+  const scrollMobileTiers = () => {
+    mobileTierRailRef.current?.scrollBy({ left: 180, behavior: "smooth" });
   };
 
   return (
@@ -123,24 +128,34 @@ export default function Services() {
         {/* MOBILE VIEW: Expansive Editorial Card with Tier Switcher */}
         <div className="flex md:hidden flex-col w-full">
           {/* Mobile Tier Selector Tabs */}
-          <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-none snap-x">
-            {INVESTMENT_TIERS.map((tier, idx) => {
-              const isActive = activeIndex === idx;
-              return (
-                <button
-                  key={tier.id}
-                  type="button"
-                  onClick={() => setActiveIndex(idx)}
-                  className={`snap-start shrink-0 px-4 py-2.5 rounded-full font-body text-[11px] uppercase tracking-[0.15em] transition-all duration-300 ${
-                    isActive 
-                      ? "bg-ink text-ivory shadow-md font-semibold border border-ink" 
-                      : "bg-ecru/80 text-ink/70 hover:text-ink border border-ink/10"
-                  }`}
-                >
-                  {tier.name}
-                </button>
-              );
-            })}
+          <div className="relative -mx-1">
+            <div ref={mobileTierRailRef} className="flex gap-2 overflow-x-auto pb-4 pl-1 pr-12 scrollbar-none snap-x">
+              {INVESTMENT_TIERS.map((tier, idx) => {
+                const isActive = activeIndex === idx;
+                return (
+                  <button
+                    key={tier.id}
+                    type="button"
+                    onClick={() => setActiveIndex(idx)}
+                    className={`snap-start shrink-0 px-4 py-2.5 rounded-full font-body text-[11px] uppercase tracking-[0.15em] transition-all duration-300 ${
+                      isActive
+                        ? "bg-ink text-ivory shadow-md font-semibold border border-ink"
+                        : "bg-ecru/80 text-ink/70 hover:text-ink border border-ink/10"
+                    }`}
+                  >
+                    {tier.name}
+                  </button>
+                );
+              })}
+            </div>
+            <button
+              type="button"
+              onClick={scrollMobileTiers}
+              aria-label="See more investment tiers"
+              className="absolute right-0 top-0 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-gold/50 bg-ivory text-lg leading-none text-gold shadow-sm transition-colors hover:bg-gold hover:text-ink"
+            >
+              <span aria-hidden="true">→</span>
+            </button>
           </div>
 
           {/* Expansive Active Tier Showcase Card */}
