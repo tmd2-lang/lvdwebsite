@@ -6,6 +6,7 @@ import gsap from "gsap";
 import Magnetic from "@/components/Magnetic";
 import Image from "next/image";
 import { media } from "@/lib/media-slots";
+import { submitLead } from "@/lib/lead-submit";
 
 type FormData = {
   celebrationType: string;
@@ -38,6 +39,8 @@ export default function ConsultationClient() {
     phone: "",
     source: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   // Handle GSAP animation between steps
   useEffect(() => {
@@ -71,11 +74,34 @@ export default function ConsultationClient() {
     }));
   };
 
-  const submitForm = (e: React.FormEvent) => {
+  const submitForm = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Consultation Form Submitted:", formData);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    setStep(6);
+    setSubmitError("");
+    setIsSubmitting(true);
+
+    try {
+      await submitLead({
+        source: "consultation",
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        celebrationType: formData.celebrationType,
+        date: formData.date,
+        venue: formData.venue,
+        guestCount: formData.guestCount,
+        services: formData.services,
+        vision: formData.vision,
+        investment: formData.investment,
+        referralSource: formData.source,
+        payload: formData,
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setStep(6);
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : "Could not submit your inquiry. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const isIntimateGuestCount = formData.guestCount === "Under 50 Guests";
@@ -618,6 +644,12 @@ export default function ConsultationClient() {
                   </div>
                 </div>
 
+                {submitError && (
+                  <p className="font-body text-xs text-red-700 bg-red-50 border border-red-100 px-4 py-3" role="alert">
+                    {submitError}
+                  </p>
+                )}
+
                 <div className="flex justify-between items-center mt-3">
                   <button
                     type="button"
@@ -629,9 +661,10 @@ export default function ConsultationClient() {
                   <Magnetic>
                     <button
                       type="submit"
-                      className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-9 py-4 hover:bg-gold hover:text-ink transition-colors flex items-center gap-3 rounded-full shadow-lg cursor-pointer"
+                      disabled={isSubmitting}
+                      className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-9 py-4 hover:bg-gold hover:text-ink transition-colors flex items-center gap-3 rounded-full shadow-lg cursor-pointer disabled:opacity-60 disabled:cursor-wait"
                     >
-                      Verify Date &amp; Schedule Session <span className="text-sm">↗</span>
+                      {isSubmitting ? "Submitting..." : "Verify Date & Schedule Session"} <span className="text-sm">↗</span>
                     </button>
                   </Magnetic>
                 </div>

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { submitLead } from "@/lib/lead-submit";
 
 const ArrowLeft = ({ className = "w-4 h-4" }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -36,6 +37,8 @@ export default function QuizClient() {
   const [isCalculating, setIsCalculating] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   // Form state
   const [formData, setFormData] = useState({
@@ -198,12 +201,33 @@ export default function QuizClient() {
     };
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => {
-      setIsModalOpen(false);
-    }, 3500);
+    setSubmitError("");
+    setIsSubmitting(true);
+
+    try {
+      const result = calculateResult();
+      await submitLead({
+        source: "style_quiz",
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        date: formData.date,
+        investment: result.range,
+        quizScore: score,
+        quizResultTier: result.tier,
+        payload: { formData, score, guestPoints, result },
+      });
+      setIsSubmitted(true);
+      setTimeout(() => {
+        setIsModalOpen(false);
+      }, 3500);
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : "Could not submit your inquiry. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const currentResult = calculateResult();
@@ -480,11 +504,18 @@ export default function QuizClient() {
                     />
                   </div>
 
+                  {submitError && (
+                    <p className="font-body text-xs text-red-700 bg-red-50 border border-red-100 px-4 py-3" role="alert">
+                      {submitError}
+                    </p>
+                  )}
+
                   <button
                     type="submit"
-                    className="w-full mt-3 bg-ink text-ivory py-4 font-body text-xs uppercase tracking-[0.2em] hover:bg-gold hover:text-ink transition-colors duration-300 cursor-pointer shadow-md font-semibold"
+                    disabled={isSubmitting}
+                    className="w-full mt-3 bg-ink text-ivory py-4 font-body text-xs uppercase tracking-[0.2em] hover:bg-gold hover:text-ink transition-colors duration-300 cursor-pointer shadow-md font-semibold disabled:opacity-60 disabled:cursor-wait"
                   >
-                    Request Consultation
+                    {isSubmitting ? "Submitting..." : "Request Consultation"}
                   </button>
                 </form>
               </>
