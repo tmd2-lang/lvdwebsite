@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Bodoni_Moda, Inter, Pinyon_Script } from "next/font/google";
 import "./globals.css";
-import SmoothScroll from "@/components/SmoothScroll";
-import Cursor from "@/components/Cursor";
-import Header from "@/components/Header";
-import Footer from "@/components/sections/Footer";
+import SiteShell from "@/components/SiteShell";
 
 const bodoni = Bodoni_Moda({
   variable: "--font-bodoni",
@@ -36,6 +33,15 @@ export const metadata: Metadata = {
     "Full-service luxury wedding design, floral artistry, décor, and event production in Washington, DC and beyond.",
   applicationName: "Lady Victoria Designs",
   creator: "Lady Victoria Designs",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon.svg", sizes: "32x32", type: "image/svg+xml" },
+    ],
+    apple: [
+      { url: "/icon.svg", sizes: "180x180", type: "image/svg+xml" },
+    ],
+  },
   alternates: {
     canonical: "/",
   },
@@ -72,12 +78,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${bodoni.variable} ${inter.variable} ${pinyon.variable} antialiased selection:bg-gold/30 selection:text-ink`}>
       <body className="font-body bg-ivory text-ink selection:bg-gold/30 min-h-screen">
-        <Cursor />
-        <Header />
-        <SmoothScroll>
-          {children}
-          <Footer />
-        </SmoothScroll>
+        <SiteShell>{children}</SiteShell>
       </body>
     </html>
   );
