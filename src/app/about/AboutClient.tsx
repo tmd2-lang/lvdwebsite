@@ -135,16 +135,16 @@ export default function AboutClient() {
           {/* Left Column: Portrait */}
           <div className="lg:col-span-5 relative aspect-[3/4] bg-ecru border border-ink/10 overflow-hidden shadow-xl group rounded-sm">
             <Image 
-              src={media["about.founder"]}
-              alt="Jenny & Jordan — Designed & Produced by Lady Victoria Designs" 
+              src={media["home.founder"]}
+              alt="Irene, Creative Director of Lady Victoria Designs"
               fill 
               sizes="(max-width: 1024px) 100vw, 40vw"
-              className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+              className="w-full h-full object-cover object-center grayscale group-hover:scale-105 transition-transform duration-700"
               priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="absolute bottom-6 left-6 text-ivory opacity-0 group-hover:opacity-100 transition-opacity duration-500 font-body text-xs uppercase tracking-widest">
-              Jenny & Jordan · Grand Ballroom Production
+              Irene · Creative Director
             </div>
           </div>
 
