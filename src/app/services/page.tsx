@@ -140,7 +140,7 @@ export default function ServicesPage() {
     <main ref={containerRef} className="w-full bg-ivory text-ink flex flex-col relative">
       
       {/* HERO SECTION */}
-      <section className="w-full min-h-[70vh] flex flex-col justify-center items-center text-center px-6 md:px-12 py-32 md:py-48 border-b border-ink/20">
+      <section className="w-full min-h-[55vh] md:min-h-[70vh] flex flex-col justify-center items-center text-center px-6 md:px-12 py-20 md:py-48 border-b border-ink/20">
         <div className="text-xs uppercase tracking-[0.2em] text-gold mb-6 font-body">SERVICES &amp; CAPABILITIES</div>
         <h1 className="font-display text-[clamp(2.5rem,6vw,6.5rem)] text-ink max-w-5xl mx-auto leading-tight mb-8">
           Architects of the <span className="italic text-gold">Extraordinary</span>

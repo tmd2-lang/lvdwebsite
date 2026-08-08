@@ -175,7 +175,7 @@ export default function ConsultationClient() {
       )}
 
       {/* RIGHT SIDE (OR FULL SCREEN ON CONFIRMATION): The Form */}
-      <div className={`w-full ${step === 6 ? "lg:w-full max-w-[1100px] mx-auto" : "lg:w-1/2"} flex justify-center items-center pt-16 sm:pt-20 lg:pt-24 pb-16 px-6 sm:px-10 lg:px-16 z-20 min-h-[60vh]`}>
+      <div className={`w-full ${step === 6 ? "lg:w-full max-w-[1100px] mx-auto" : "lg:w-1/2"} flex justify-center items-center pt-10 sm:pt-20 lg:pt-24 pb-16 px-6 sm:px-10 lg:px-16 z-20 min-h-[60vh]`}>
         <div ref={containerRef} className={`w-full ${step === 6 ? "max-w-[960px]" : "max-w-[580px]"} relative`}>
           
           {/* Progress & Intro Bar for Steps 1 - 5 */}
@@ -677,7 +677,7 @@ export default function ConsultationClient() {
 
           {/* STEP 6: Full-Screen Confirmation & Direct Calendly Booking */}
           {step === 6 && (
-            <div aria-live="polite" className="step-content flex flex-col items-center justify-center text-center w-full py-6 animate-fade-in">
+            <div aria-live="polite" className="step-content flex flex-col items-center justify-center text-center w-full py-4 sm:py-6 animate-fade-in">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold/10 border border-gold/30 mb-5">
                 <span className="w-2 h-2 rounded-full bg-gold animate-ping" />
                 <span className="font-body text-[10px] uppercase tracking-[0.25em] text-gold font-semibold">
