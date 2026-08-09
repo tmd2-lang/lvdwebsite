@@ -56,30 +56,9 @@ export default function CollapsingHero() {
   ];
 
   return (
-    <div className="w-full flex flex-col relative">
-      {/* The Static Logo Header */}
-      <div className="w-full h-[32vh] sm:h-[40vh] md:h-[45vh] bg-ivory z-30 flex flex-col items-center justify-center relative border-b border-ink/10 px-4">
-        <h1 className="w-full max-w-full min-w-0 font-display text-[clamp(1.85rem,7vw,7.5vw)] leading-[0.9] text-ink tracking-tighter flex flex-wrap sm:flex-nowrap items-center justify-center gap-x-2 sm:gap-x-0 text-center">
-          <span>LADY</span>
-          <span className="italic sm:ml-[1.5vw] sm:mr-[1.5vw] font-normal tracking-normal text-[clamp(1.85rem,7vw,7.5vw)]">
-            Victoria
-          </span>
-          <span className="basis-full sm:basis-auto mt-2 sm:mt-0">DESIGNS</span>
-        </h1>
-        
-        {/* Utility text anchored to bottom */}
-        <div className="w-full h-full absolute inset-0 pointer-events-none">
-          <div className="absolute bottom-6 left-6 md:left-12 font-body text-[10px] md:text-[11px] uppercase tracking-[0.2em] text-ink max-w-[20ch]">
-            Luxury Wedding Design
-          </div>
-          <div className="absolute bottom-6 right-6 md:right-12 font-body text-[10px] md:text-[11px] uppercase tracking-[0.2em] text-ink text-right max-w-[12ch] sm:max-w-[20ch]">
-            Washington, DC & <br/> Beyond
-          </div>
-        </div>
-      </div>
-
+    <section className="relative w-full min-h-[100svh] bg-ink z-10 overflow-hidden flex flex-col justify-end pb-12 sm:pb-16 px-6 sm:px-10 md:px-12">
       {/* The Hero Imagery (Slideshow) */}
-      <section className="relative w-full h-[88vh] sm:min-h-[850px] bg-ecru z-10 overflow-hidden">
+      <div className="absolute inset-0 w-full h-full z-0">
         {heroImages.map((src, i) => (
           <div key={i} className="hero-slide absolute inset-0 w-full h-full z-0">
             <Image
@@ -92,7 +71,29 @@ export default function CollapsingHero() {
             />
           </div>
         ))}
-      </section>
-    </div>
+      </div>
+
+      {/* Gradients to match the reserve page */}
+      <div className="absolute inset-0 bg-gradient-to-r from-ink/62 via-ink/22 to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink/48 via-transparent to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-ink/40 to-transparent z-10 pointer-events-none" />
+
+      {/* Bottom Left Typography */}
+      <div className="relative z-20 w-full max-w-5xl flex flex-col items-start justify-end pointer-events-none gap-4">
+        <h1 className="w-full max-w-full min-w-0 font-display text-[clamp(2.75rem,5vw,5.5rem)] leading-[0.9] text-ivory tracking-tighter flex flex-col sm:flex-row items-start justify-start gap-y-2 sm:gap-y-0 sm:gap-x-4">
+          <span>LADY</span>
+          <span className="italic font-normal tracking-normal text-[clamp(2.75rem,5vw,5.5rem)]">
+            Victoria
+          </span>
+          <span>DESIGNS</span>
+        </h1>
+
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 font-body text-[10px] md:text-[11px] uppercase tracking-[0.2em] text-ivory/90 mt-2 sm:mt-0">
+          <span>Luxury Wedding Design</span>
+          <span className="hidden sm:block w-[1px] h-3 bg-ivory/40 self-center"></span>
+          <span>Washington, DC & Beyond</span>
+        </div>
+      </div>
+    </section>
   );
 }
