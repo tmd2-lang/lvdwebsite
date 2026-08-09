@@ -21,6 +21,7 @@ type LeadRequest = {
   referralSource?: unknown;
   quizScore?: unknown;
   quizResultTier?: unknown;
+  attachments?: unknown;
   payload?: unknown;
 };
 
@@ -99,7 +100,7 @@ export async function POST(request: Request) {
       referral_source: optionalString(body.referralSource),
       quiz_score: numericValue(body.quizScore),
       quiz_result_tier: optionalString(body.quizResultTier),
-      payload: plainPayload(body.payload),
+      payload: { ...plainPayload(body.payload), attachments: stringArray(body.attachments) },
       user_agent: optionalString(request.headers.get("user-agent")),
       referrer: optionalString(request.headers.get("referer")),
       ip_hash: ipHash(request, serviceRoleKey),
@@ -151,8 +152,12 @@ export async function POST(request: Request) {
           },
         });
 
+        const attachmentsList = (lead.payload as any)?.attachments?.length 
+          ? `\nVision & Inspiration Images:\n${(lead.payload as any).attachments.map((url: string, i: number) => `${i + 1}. ${url}`).join('\n')}` 
+          : "";
+
         const emailText = `
-Hey, you have a new lead.
+New Inquiry Received from ${name}
 
 Contact Details:
 Name: ${name}
@@ -173,6 +178,7 @@ ${lead.quiz_score !== null ? `Style Quiz Score: ${lead.quiz_score}` : ""}
 
 Vision & Notes:
 ${lead.vision || "No additional notes provided."}
+${attachmentsList}
         `.trim();
 
         const emailResult = await transporter.sendMail({

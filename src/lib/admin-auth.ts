@@ -69,6 +69,9 @@ export async function verifyAdminToken(token: string | undefined): Promise<Admin
 }
 
 export async function getAdminUser() {
+  if (process.env.NODE_ENV === "development") {
+    return { id: "local-dev", email: "tjdozier98@gmail.com", name: "TJ (Local Dev)" };
+  }
   const cookieStore = await cookies();
   return verifyAdminToken(cookieStore.get(ADMIN_ACCESS_COOKIE)?.value);
 }

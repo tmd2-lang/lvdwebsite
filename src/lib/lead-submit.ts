@@ -16,6 +16,7 @@ export type LeadSubmission = {
   referralSource?: string;
   quizScore?: number;
   quizResultTier?: string;
+  attachments?: string[];
   payload?: Record<string, unknown>;
 };
 

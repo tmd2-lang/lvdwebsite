@@ -152,7 +152,7 @@ export default function InquiriesDashboard({ initialLeads, user }: { initialLead
   }
 
   return (
-    <main className={styles.app} data-lenis-prevent>
+    <main className={styles.app}>
       <aside className={styles.sidebar}>
         <div>
           <p className={styles.monogram}>LVD</p>
@@ -182,12 +182,6 @@ export default function InquiriesDashboard({ initialLeads, user }: { initialLead
           <div className={styles.today}><span>Today</span><b>{new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric" }).format(new Date())}</b></div>
         </div>
 
-        <div className={styles.summary}>
-          <article><span className={styles.newDot} /><div><b>{counts.new}</b><p>New inquiries</p></div></article>
-          <article><span className={styles.reachedDot} /><div><b>{counts.contacted}</b><p>Reached out</p></div></article>
-          <article><span className={styles.bookedDot} /><div><b>{counts.booked}</b><p>Booked celebrations</p></div></article>
-        </div>
-
         <div className={styles.contentGrid}>
           <section className={styles.listPanel} aria-label="Inquiry list">
             <div className={styles.listToolbar}>
@@ -195,14 +189,6 @@ export default function InquiriesDashboard({ initialLeads, user }: { initialLead
                 <span aria-hidden="true">⌕</span>
                 <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search a name, venue, or date" aria-label="Search inquiries" />
               </label>
-              <div className={styles.filters}>
-                {FILTERS.map((item) => (
-                  <button key={item.value} type="button" className={filter === item.value ? styles.filterActive : ""} onClick={() => setFilter(item.value)}>
-                    {item.label}
-                    {item.value === "new" && counts.new > 0 && <span>{counts.new}</span>}
-                  </button>
-                ))}
-              </div>
             </div>
 
             <div className={styles.leadList}>
@@ -214,13 +200,11 @@ export default function InquiriesDashboard({ initialLeads, user }: { initialLead
                 </div>
               ) : visibleLeads.map((lead) => (
                 <button type="button" key={lead.id} className={`${styles.leadCard} ${selected?.id === lead.id ? styles.leadCardActive : ""}`} onClick={() => chooseLead(lead.id)}>
-                  <span className={styles.avatar}>{initials(lead.name)}</span>
+                  {lead.status === "new" && <span className={styles.newIndicator} />}
                   <span className={styles.cardMain}>
-                    <span className={styles.cardTitle}><b>{lead.name || "New inquiry"}</b><time>{shortDate(lead.created_at)}</time></span>
-                    <span className={styles.cardEvent}>{lead.celebration_type || "Celebration"} · {readableDate(lead.event_date, lead.date_undecided)}</span>
-                    <span className={styles.cardMeta}>{lead.venue || "Venue not shared"}<i>•</i>{lead.investment || "Investment not shared"}</span>
+                    <span className={styles.cardTitle}><b>{lead.name || "New inquiry"}</b></span>
+                    <span className={styles.cardEvent}>{readableDate(lead.event_date, lead.date_undecided)}</span>
                   </span>
-                  <span className={`${styles.statusPill} ${styles[`status_${lead.status}`]}`}>{STATUS_LABELS[lead.status]}</span>
                 </button>
               ))}
             </div>
@@ -235,12 +219,6 @@ export default function InquiriesDashboard({ initialLeads, user }: { initialLead
                     <span className={styles.avatarLarge}>{initials(selected.name)}</span>
                     <div><p>{SOURCE_LABELS[selected.source] || "Website inquiry"}</p><h2>{selected.name || "New inquiry"}</h2><span>Received {submittedAt(selected.created_at)}</span></div>
                   </div>
-                  <label className={styles.statusSelect}>
-                    <span>Status</span>
-                    <select value={selected.status} onChange={(event) => void changeStatus(event.target.value as LeadStatus)} disabled={savingStatus}>
-                      {Object.entries(STATUS_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-                    </select>
-                  </label>
                 </div>
 
                 {(message || error) && <p className={error ? styles.toastError : styles.toast} role="status">{error || message}</p>}
@@ -252,15 +230,11 @@ export default function InquiriesDashboard({ initialLeads, user }: { initialLead
                   </section>
 
                   <section className={styles.detailSection}>
-                    <h3>Celebration details</h3>
-                    <dl className={styles.detailsGrid}>
-                      <div><dt>Celebration</dt><dd>{selected.celebration_type || "Not shared"}</dd></div>
-                      <div><dt>Date</dt><dd>{readableDate(selected.event_date, selected.date_undecided)}</dd></div>
-                      <div><dt>Venue</dt><dd>{selected.venue || "Not shared"}</dd></div>
-                      <div><dt>Guest count</dt><dd>{selected.guest_count || "Not shared"}</dd></div>
-                      <div><dt>Investment</dt><dd>{selected.investment || "Not shared"}</dd></div>
-                      <div><dt>How they found you</dt><dd>{selected.referral_source || "Not shared"}</dd></div>
-                    </dl>
+                    <p className={styles.editorialText}>
+                      <b>{selected.name || "This client"}</b> is inquiring about a <b>{selected.celebration_type?.toLowerCase() || "celebration"}</b> for <b>{selected.guest_count || "an undecided number of"} guests</b>. 
+                      They are hoping to celebrate on <b>{readableDate(selected.event_date, selected.date_undecided)}</b> at <b>{selected.venue || "a venue they haven't chosen yet"}</b>.
+                      {selected.investment && <span> Their anticipated investment is <b>{selected.investment}</b>.</span>}
+                    </p>
                   </section>
 
                   {selected.services.length > 0 && (
@@ -273,7 +247,7 @@ export default function InquiriesDashboard({ initialLeads, user }: { initialLead
                   {selected.vision && (
                     <section className={styles.detailSection}>
                       <h3>Their vision</h3>
-                      <blockquote>“{selected.vision}”</blockquote>
+                      <blockquote className={styles.visionQuote}>“{selected.vision}”</blockquote>
                     </section>
                   )}
 
@@ -291,6 +265,18 @@ export default function InquiriesDashboard({ initialLeads, user }: { initialLead
                         </article>
                       ))}
                     </div>
+                  </section>
+
+                  <section className={styles.organizeActions}>
+                    {selected.status === "new" && (
+                       <button type="button" onClick={() => void changeStatus("contacted")} disabled={savingStatus}>Mark as Contacted</button>
+                    )}
+                    {selected.status !== "booked" && (
+                       <button type="button" onClick={() => void changeStatus("booked")} disabled={savingStatus}>Mark as Booked</button>
+                    )}
+                    {selected.status !== "archived" && (
+                       <button type="button" onClick={() => void changeStatus("archived")} className={styles.archiveButton} disabled={savingStatus}>Archive Inquiry</button>
+                    )}
                   </section>
                 </div>
               </>

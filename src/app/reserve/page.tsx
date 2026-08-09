@@ -128,6 +128,7 @@ export default function ReservePage() {
     phone: "",
     source: "",
   });
+  const [attachments, setAttachments] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
@@ -178,6 +179,22 @@ export default function ReservePage() {
     setIsSubmitting(true);
 
     try {
+      const uploadedUrls: string[] = [];
+      
+      if (attachments.length > 0) {
+        for (const file of attachments) {
+          const form = new FormData();
+          form.append("file", file);
+          const uploadRes = await fetch("/api/leads/upload", {
+            method: "POST",
+            body: form,
+          });
+          const uploadData = await uploadRes.json();
+          if (!uploadRes.ok) throw new Error(uploadData.error || "Failed to upload image.");
+          if (uploadData.url) uploadedUrls.push(uploadData.url);
+        }
+      }
+
       await submitLead({
         source: "reserve",
         name: formData.name,
@@ -192,6 +209,7 @@ export default function ReservePage() {
         vision: formData.vision,
         investment: formData.investment,
         referralSource: formData.source,
+        attachments: uploadedUrls,
         payload: formData,
       });
       setStep(6);
@@ -813,6 +831,46 @@ export default function ReservePage() {
                     className="w-full bg-ink/5 border border-ink/10 p-4 font-body text-base text-ink outline-none focus:border-gold focus:bg-transparent transition-colors placeholder:text-ink/30 resize-none rounded-sm"
                     placeholder="Candlelit, sculptural, romantic, filled with movement..."
                   />
+                </div>
+
+                {/* File Upload / Inspiration Images */}
+                <div className="flex flex-col gap-3">
+                  <label className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 font-semibold">
+                    Inspiration Images (Optional)
+                  </label>
+                  <label className="border border-dashed border-ink/20 hover:border-gold transition-colors rounded-sm p-6 flex flex-col items-center justify-center cursor-pointer bg-ink/5 text-center">
+                    <span className="font-body text-xs text-ink/60 mb-2">Tap to select or take photos</span>
+                    <span className="font-body text-[9px] uppercase tracking-widest text-ink/40">JPEG, PNG, HEIC up to 15MB</span>
+                    <input 
+                      type="file" 
+                      multiple 
+                      accept="image/*, image/heic"
+                      className="hidden"
+                      onChange={(e) => {
+                        if (e.target.files) {
+                          const newFiles = Array.from(e.target.files);
+                          setAttachments(prev => [...prev, ...newFiles].slice(0, 5));
+                        }
+                      }}
+                    />
+                  </label>
+                  
+                  {attachments.length > 0 && (
+                    <div className="flex flex-col gap-2 mt-2">
+                      {attachments.map((file, i) => (
+                        <div key={i} className="flex items-center justify-between bg-ink text-ivory px-4 py-2 rounded-sm text-xs font-body">
+                          <span className="truncate max-w-[200px]">{file.name}</span>
+                          <button 
+                            type="button" 
+                            onClick={() => setAttachments(prev => prev.filter((_, idx) => idx !== i))}
+                            className="text-ivory/60 hover:text-ivory uppercase tracking-widest text-[9px] cursor-pointer"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Investment Budget Selector (Dynamic based on Guest Count) */}
