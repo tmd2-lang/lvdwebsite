@@ -31,5 +31,5 @@ export async function submitLead(submission: LeadSubmission) {
     throw new Error(typeof result.error === "string" ? result.error : "Could not submit your inquiry.");
   }
 
-  return result as { leadId: string };
+  return result as { leadId: string; notificationSent: boolean };
 }

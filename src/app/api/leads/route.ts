@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -125,21 +125,34 @@ export async function POST(request: Request) {
 
     const leadId = Array.isArray(result) && result[0]?.id ? String(result[0].id) : "";
 
-    // ------------------------------------------------------------------
-    // SEND BASIC EMAIL NOTIFICATION TO IRENE VIA RESEND
-    // ------------------------------------------------------------------
-    if (process.env.RESEND_API_KEY) {
-      try {
-        const resend = new Resend(process.env.RESEND_API_KEY);
-        const notificationEmailStr = process.env.NOTIFICATION_EMAIL || "hello@ladyvictoriadesigns.com";
-        const senderEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev"; // onboarding@resend.dev is the default sandbox sender
-        
-        // Support multiple comma-separated emails
-        const notificationEmails = notificationEmailStr.split(",").map(e => e.trim()).filter(Boolean);
+    const gmailUser = process.env.GMAIL_USER?.trim();
+    const gmailAppPassword = process.env.GMAIL_APP_PASSWORD?.replace(/\s/g, "");
+    const notificationEmails = (process.env.NOTIFICATION_EMAIL || "")
+      .split(",")
+      .map((emailAddress) => emailAddress.trim())
+      .filter(Boolean);
+    let notificationSent = false;
 
-        // Format a clean, basic text email
+    if (!gmailUser || !gmailAppPassword || notificationEmails.length === 0) {
+      console.error("Lead notification email is not configured.", {
+        hasGmailUser: Boolean(gmailUser),
+        hasGmailAppPassword: Boolean(gmailAppPassword),
+        recipientCount: notificationEmails.length,
+      });
+    } else {
+      try {
+        const transporter = nodemailer.createTransport({
+          host: "smtp.gmail.com",
+          port: 465,
+          secure: true,
+          auth: {
+            user: gmailUser,
+            pass: gmailAppPassword,
+          },
+        });
+
         const emailText = `
-New Inquiry Received from ${name}
+Hey, you have a new lead.
 
 Contact Details:
 Name: ${name}
@@ -147,32 +160,51 @@ Email: ${email}
 Phone: ${phone}
 
 Event Details:
-Date: ${lead.event_date || "Undecided"}
+Inquiry Type: ${lead.source}
+Celebration Type: ${lead.celebration_type || "Not specified"}
+Date: ${lead.date_undecided ? "Undecided" : lead.event_date || "Not specified"}
 Venue: ${lead.venue || "Not specified"}
-Investment Tier: ${lead.investment || "Not specified"}
 Guest Count: ${lead.guest_count || "Not specified"}
+Services: ${lead.services.length > 0 ? lead.services.join(", ") : "Not specified"}
+Investment Tier: ${lead.investment || "Not specified"}
 Referral Source: ${lead.referral_source || "Not specified"}
+${lead.quiz_result_tier ? `Style Quiz Result: ${lead.quiz_result_tier}` : ""}
+${lead.quiz_score !== null ? `Style Quiz Score: ${lead.quiz_score}` : ""}
 
 Vision & Notes:
 ${lead.vision || "No additional notes provided."}
-
-View full details in your Supabase admin dashboard.
         `.trim();
 
-        await resend.emails.send({
-          from: \`Lady Victoria Designs <\${senderEmail}>\`,
+        const emailResult = await transporter.sendMail({
+          from: `Lady Victoria Designs Website <${gmailUser}>`,
           to: notificationEmails,
-          subject: \`New Inquiry: \${name}\`,
+          replyTo: email,
+          subject: `New Website Lead: ${name.replace(/[\r\n]+/g, " ")}`,
           text: emailText,
         });
-        console.log(\`Notification email sent successfully to \${notificationEmails.join(', ')}\`);
+
+        const acceptedCount = emailResult.accepted.length;
+        notificationSent = acceptedCount === notificationEmails.length;
+
+        if (!notificationSent) {
+          console.error("Gmail did not accept every lead notification recipient.", {
+            acceptedCount,
+            rejectedCount: emailResult.rejected.length,
+          });
+        } else {
+          console.log("Lead notification email accepted by Gmail.", {
+            messageId: emailResult.messageId,
+            recipientCount: acceptedCount,
+          });
+        }
       } catch (emailError) {
-        // We log the error but don't fail the request since the lead was saved successfully to the database
-        console.error("Failed to send Resend email notification:", emailError);
+        console.error("Failed to send Gmail lead notification:", emailError);
       }
     }
 
-    return Response.json({ leadId });
+    // The lead remains successfully submitted even if notification delivery fails.
+    // Exposing this boolean makes direct API tests and production logs unambiguous.
+    return Response.json({ leadId, notificationSent });
   } catch (error) {
     console.error("Lead submission failed:", error);
     return Response.json({ error: "Could not submit your inquiry. Please try again." }, { status: 400 });
