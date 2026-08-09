@@ -131,8 +131,11 @@ export async function POST(request: Request) {
     if (process.env.RESEND_API_KEY) {
       try {
         const resend = new Resend(process.env.RESEND_API_KEY);
-        const notificationEmail = process.env.NOTIFICATION_EMAIL || "hello@ladyvictoriadesigns.com";
+        const notificationEmailStr = process.env.NOTIFICATION_EMAIL || "hello@ladyvictoriadesigns.com";
         const senderEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev"; // onboarding@resend.dev is the default sandbox sender
+        
+        // Support multiple comma-separated emails
+        const notificationEmails = notificationEmailStr.split(",").map(e => e.trim()).filter(Boolean);
 
         // Format a clean, basic text email
         const emailText = `
@@ -158,11 +161,11 @@ View full details in your Supabase admin dashboard.
 
         await resend.emails.send({
           from: \`Lady Victoria Designs <\${senderEmail}>\`,
-          to: notificationEmail,
+          to: notificationEmails,
           subject: \`New Inquiry: \${name}\`,
           text: emailText,
         });
-        console.log(\`Notification email sent successfully to \${notificationEmail}\`);
+        console.log(\`Notification email sent successfully to \${notificationEmails.join(', ')}\`);
       } catch (emailError) {
         // We log the error but don't fail the request since the lead was saved successfully to the database
         console.error("Failed to send Resend email notification:", emailError);
