@@ -84,5 +84,5 @@ export async function hasAdminRefreshToken() {
 export function safeAdminReturnPath(value: string | null) {
   return value && value.startsWith("/admin") && !value.startsWith("//")
     ? value
-    : "/admin/inquiries";
+    : "/admin";
 }

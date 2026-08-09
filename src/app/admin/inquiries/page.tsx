@@ -5,7 +5,11 @@ import InquiriesDashboard from "./InquiriesDashboard";
 
 export const dynamic = "force-dynamic";
 
-export default async function InquiriesPage() {
+export default async function InquiriesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ lead?: string | string[] }>;
+}) {
   const user = await getAdminUser();
   if (!user) {
     if (await hasAdminRefreshToken()) {
@@ -15,5 +19,9 @@ export default async function InquiriesPage() {
   }
 
   const leads = await getAdminLeads();
-  return <InquiriesDashboard initialLeads={leads} user={user} />;
+  const leadParam = (await searchParams).lead;
+  const requestedLeadId = typeof leadParam === "string" ? leadParam : "";
+  const initialSelectedId = leads.some((lead) => lead.id === requestedLeadId) ? requestedLeadId : undefined;
+
+  return <InquiriesDashboard initialLeads={leads} user={user} initialSelectedId={initialSelectedId} />;
 }

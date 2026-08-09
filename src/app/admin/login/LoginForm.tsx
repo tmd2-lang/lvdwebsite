@@ -23,7 +23,7 @@ export default function LoginForm() {
       });
       const result = await response.json() as { error?: string };
       if (!response.ok) throw new Error(result.error || "We couldn’t sign you in.");
-      router.replace("/admin/inquiries");
+      router.replace("/admin");
       router.refresh();
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "We couldn’t sign you in.");

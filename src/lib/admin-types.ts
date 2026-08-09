@@ -38,6 +38,7 @@ export type AdminLead = {
   referral_source: string | null;
   quiz_score: number | null;
   quiz_result_tier: string | null;
+  attachments: string[];
   notes: LeadNote[];
 };
 

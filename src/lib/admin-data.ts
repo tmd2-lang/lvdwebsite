@@ -1,5 +1,9 @@
 import type { AdminLead, LeadNote, LeadStatus } from "@/lib/admin-types";
 
+type StoredAdminLead = Omit<AdminLead, "attachments" | "notes"> & {
+  payload: unknown;
+};
+
 function databaseConfig() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -26,12 +30,39 @@ async function responseJson<T>(response: Response): Promise<T> {
   return payload as T;
 }
 
+function attachmentUrls(payload: unknown, supabaseUrl: string) {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) return [];
+  const attachments = (payload as { attachments?: unknown }).attachments;
+  if (!Array.isArray(attachments)) return [];
+
+  let storageOrigin = "";
+  try {
+    storageOrigin = new URL(supabaseUrl).origin;
+  } catch {
+    return [];
+  }
+
+  const validAttachments = attachments
+    .filter((value): value is string => typeof value === "string")
+    .filter((value) => {
+      try {
+        const url = new URL(value);
+        return url.origin === storageOrigin
+          && url.pathname.startsWith("/storage/v1/object/public/inquiry_attachments/");
+      } catch {
+        return false;
+      }
+    });
+
+  return [...new Set(validAttachments)].slice(0, 5);
+}
+
 export async function getAdminLeads(): Promise<AdminLead[]> {
   const { url } = databaseConfig();
   const leadFields = [
     "id", "created_at", "updated_at", "source", "status", "name", "email", "phone",
     "celebration_type", "event_date", "date_undecided", "venue", "guest_count", "services",
-    "vision", "investment", "referral_source", "quiz_score", "quiz_result_tier",
+    "vision", "investment", "referral_source", "quiz_score", "quiz_result_tier", "payload",
   ].join(",");
 
   const [leadsResponse, notesResponse] = await Promise.all([
@@ -45,7 +76,7 @@ export async function getAdminLeads(): Promise<AdminLead[]> {
     }),
   ]);
 
-  const leads = await responseJson<Omit<AdminLead, "notes">[]>(leadsResponse);
+  const leads = await responseJson<StoredAdminLead[]>(leadsResponse);
   const notes = await responseJson<LeadNote[]>(notesResponse);
   const notesByLead = new Map<string, LeadNote[]>();
 
@@ -55,9 +86,10 @@ export async function getAdminLeads(): Promise<AdminLead[]> {
     notesByLead.set(note.lead_id, current);
   });
 
-  return leads.map((lead) => ({
+  return leads.map(({ payload, ...lead }) => ({
     ...lead,
     services: Array.isArray(lead.services) ? lead.services : [],
+    attachments: attachmentUrls(payload, url),
     notes: notesByLead.get(lead.id) || [],
   }));
 }

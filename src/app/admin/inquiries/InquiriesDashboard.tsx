@@ -1,6 +1,7 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, MouseEvent, useMemo, useState } from "react";
+import Image from "next/image";
 import type { AdminLead, AdminUser, LeadNote, LeadStatus } from "@/lib/admin-types";
 import styles from "./inquiries.module.css";
 
@@ -13,16 +14,6 @@ const STATUS_LABELS: Record<LeadStatus, string> = {
   archived: "Archived",
   spam: "Not a Fit",
 };
-
-const FILTERS: Array<{ label: string; value: "all" | LeadStatus }> = [
-  { label: "All", value: "all" },
-  { label: "New", value: "new" },
-  { label: "Reviewing", value: "reviewing" },
-  { label: "Reached Out", value: "contacted" },
-  { label: "Good Fit", value: "qualified" },
-  { label: "Booked", value: "booked" },
-  { label: "Archived", value: "archived" },
-];
 
 const SOURCE_LABELS: Record<string, string> = {
   inquire: "Inquiry form",
@@ -39,10 +30,6 @@ function readableDate(value: string | null, undecided = false) {
   return new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" }).format(new Date(`${value}T00:00:00Z`));
 }
 
-function shortDate(value: string) {
-  return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(new Date(value));
-}
-
 function submittedAt(value: string) {
   return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }).format(new Date(value));
 }
@@ -50,6 +37,37 @@ function submittedAt(value: string) {
 function initials(name: string | null) {
   const parts = (name || "New inquiry").trim().split(/\s+/).slice(0, 2);
   return parts.map((part) => part[0]?.toUpperCase()).join("");
+}
+
+function gmailComposeUrl(email: string, name: string | null) {
+  const firstName = name?.trim().split(/\s+/)[0] || "there";
+  const params = new URLSearchParams({
+    view: "cm",
+    fs: "1",
+    to: email,
+    su: `Your Lady Victoria Designs inquiry, ${firstName}`,
+  });
+  return `https://mail.google.com/mail/?${params.toString()}`;
+}
+
+function openGmailPopup(event: MouseEvent<HTMLAnchorElement>, url: string) {
+  if (window.matchMedia("(max-width: 760px)").matches) return;
+
+  const width = Math.min(760, window.screen.availWidth - 48);
+  const height = Math.min(720, window.screen.availHeight - 64);
+  const left = Math.max(24, Math.round(window.screenX + (window.outerWidth - width) / 2));
+  const top = Math.max(24, Math.round(window.screenY + (window.outerHeight - height) / 2));
+  const popup = window.open(
+    url,
+    "lvd-gmail-compose",
+    `popup=yes,width=${width},height=${height},left=${left},top=${top},scrollbars=yes,resizable=yes`,
+  );
+
+  if (popup) {
+    event.preventDefault();
+    popup.opener = null;
+    popup.focus();
+  }
 }
 
 async function responseJson<T>(response: Response): Promise<T> {
@@ -62,32 +80,33 @@ async function responseJson<T>(response: Response): Promise<T> {
   return payload;
 }
 
-export default function InquiriesDashboard({ initialLeads, user }: { initialLeads: AdminLead[]; user: AdminUser }) {
+export default function InquiriesDashboard({
+  initialLeads,
+  user,
+  initialSelectedId,
+}: {
+  initialLeads: AdminLead[];
+  user: AdminUser;
+  initialSelectedId?: string;
+}) {
   const [leads, setLeads] = useState(initialLeads);
-  const [selectedId, setSelectedId] = useState(initialLeads[0]?.id || "");
-  const [filter, setFilter] = useState<"all" | LeadStatus>("all");
+  const [selectedId, setSelectedId] = useState(initialSelectedId || initialLeads[0]?.id || "");
   const [search, setSearch] = useState("");
-  const [mobileDetailOpen, setMobileDetailOpen] = useState(false);
+  const [mobileDetailOpen, setMobileDetailOpen] = useState(Boolean(initialSelectedId));
   const [savingStatus, setSavingStatus] = useState(false);
   const [savingNote, setSavingNote] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
   const selected = leads.find((lead) => lead.id === selectedId) || leads[0] || null;
-  const counts = useMemo(() => ({
-    new: leads.filter((lead) => lead.status === "new").length,
-    contacted: leads.filter((lead) => lead.status === "contacted").length,
-    booked: leads.filter((lead) => lead.status === "booked").length,
-  }), [leads]);
-
+  const selectedGmailUrl = selected?.email ? gmailComposeUrl(selected.email, selected.name) : "";
   const visibleLeads = useMemo(() => {
     const query = search.trim().toLowerCase();
     return leads.filter((lead) => {
-      const matchesFilter = filter === "all" || lead.status === filter;
       const haystack = [lead.name, lead.email, lead.venue, lead.celebration_type, lead.event_date].filter(Boolean).join(" ").toLowerCase();
-      return matchesFilter && (!query || haystack.includes(query));
+      return !query || haystack.includes(query);
     });
-  }, [filter, leads, search]);
+  }, [leads, search]);
 
   function chooseLead(id: string) {
     setSelectedId(id);
@@ -159,7 +178,8 @@ export default function InquiriesDashboard({ initialLeads, user }: { initialLead
           <p className={styles.studioName}>Lady Victoria<br />Designs</p>
         </div>
         <nav aria-label="Studio navigation">
-          <a className={styles.navActive} href="/admin/inquiries"><span>Inquiries</span><b>{leads.length}</b></a>
+          <a href="/admin">Home</a>
+          <a className={styles.navActive} href="/admin/inquiries"><span>Inquiries</span><b>{leads.filter((lead) => lead.status === "new").length}</b></a>
         </nav>
         <div className={styles.account}>
           <p>{user.name}</p>
@@ -169,8 +189,8 @@ export default function InquiriesDashboard({ initialLeads, user }: { initialLead
 
       <section className={styles.workspace}>
         <header className={styles.mobileHeader}>
-          <div><b>LVD</b><span>Studio</span></div>
-          <button type="button" onClick={signOut}>Sign out</button>
+          <a href="/admin"><b>LVD</b><span>Studio</span></a>
+          <nav aria-label="Mobile studio navigation"><a href="/admin">Home</a><a href="/admin/inquiries" aria-current="page">Inquiries</a></nav>
         </header>
 
         <div className={styles.topbar}>
@@ -225,7 +245,16 @@ export default function InquiriesDashboard({ initialLeads, user }: { initialLead
 
                 <div className={styles.detailScroll}>
                   <section className={styles.contactActions}>
-                    {selected.email && <a href={`mailto:${selected.email}`}>Email {selected.name?.split(" ")[0] || "client"}</a>}
+                    {selected.email && (
+                      <a
+                        href={selectedGmailUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={(event) => openGmailPopup(event, selectedGmailUrl)}
+                      >
+                        Email {selected.name?.split(" ")[0] || "client"} in Gmail
+                      </a>
+                    )}
                     {selected.phone && <a href={`tel:${selected.phone.replace(/[^+\d]/g, "")}`}>Call</a>}
                   </section>
 
@@ -248,6 +277,36 @@ export default function InquiriesDashboard({ initialLeads, user }: { initialLead
                     <section className={styles.detailSection}>
                       <h3>Their vision</h3>
                       <blockquote className={styles.visionQuote}>“{selected.vision}”</blockquote>
+                    </section>
+                  )}
+
+                  {selected.attachments.length > 0 && (
+                    <section className={styles.detailSection}>
+                      <div className={styles.inspirationHeading}>
+                        <h3>Inspiration images</h3>
+                        <span>{selected.attachments.length} uploaded</span>
+                      </div>
+                      <div className={styles.inspirationGrid}>
+                        {selected.attachments.map((url, index) => (
+                          <a
+                            className={styles.inspirationImage}
+                            href={url}
+                            key={url}
+                            target="_blank"
+                            rel="noreferrer"
+                            aria-label={`Open inspiration image ${index + 1} from ${selected.name || "this inquiry"} full size`}
+                          >
+                            <Image
+                              src={url}
+                              alt={`Inspiration image ${index + 1} from ${selected.name || "this inquiry"}`}
+                              fill
+                              sizes="(max-width: 760px) 44vw, 240px"
+                              unoptimized
+                            />
+                            <span>View full size <i aria-hidden="true">↗</i></span>
+                          </a>
+                        ))}
+                      </div>
                     </section>
                   )}
 
