@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-
+import { Resend } from "resend";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -124,6 +124,51 @@ export async function POST(request: Request) {
     }
 
     const leadId = Array.isArray(result) && result[0]?.id ? String(result[0].id) : "";
+
+    // ------------------------------------------------------------------
+    // SEND BASIC EMAIL NOTIFICATION TO IRENE VIA RESEND
+    // ------------------------------------------------------------------
+    if (process.env.RESEND_API_KEY) {
+      try {
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        const notificationEmail = process.env.NOTIFICATION_EMAIL || "hello@ladyvictoriadesigns.com";
+        const senderEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev"; // onboarding@resend.dev is the default sandbox sender
+
+        // Format a clean, basic text email
+        const emailText = `
+New Inquiry Received from ${name}
+
+Contact Details:
+Name: ${name}
+Email: ${email}
+Phone: ${phone}
+
+Event Details:
+Date: ${lead.event_date || "Undecided"}
+Venue: ${lead.venue || "Not specified"}
+Investment Tier: ${lead.investment || "Not specified"}
+Guest Count: ${lead.guest_count || "Not specified"}
+Referral Source: ${lead.referral_source || "Not specified"}
+
+Vision & Notes:
+${lead.vision || "No additional notes provided."}
+
+View full details in your Supabase admin dashboard.
+        `.trim();
+
+        await resend.emails.send({
+          from: \`Lady Victoria Designs <\${senderEmail}>\`,
+          to: notificationEmail,
+          subject: \`New Inquiry: \${name}\`,
+          text: emailText,
+        });
+        console.log(\`Notification email sent successfully to \${notificationEmail}\`);
+      } catch (emailError) {
+        // We log the error but don't fail the request since the lead was saved successfully to the database
+        console.error("Failed to send Resend email notification:", emailError);
+      }
+    }
+
     return Response.json({ leadId });
   } catch (error) {
     console.error("Lead submission failed:", error);
