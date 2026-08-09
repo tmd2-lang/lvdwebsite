@@ -34,6 +34,14 @@ function submittedAt(value: string) {
   return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }).format(new Date(value));
 }
 
+function displayPhone(value: string) {
+  const digits = value.replace(/\D/g, "");
+  const localNumber = digits.length === 11 && digits.startsWith("1") ? digits.slice(1) : digits;
+
+  if (localNumber.length !== 10) return value;
+  return `(${localNumber.slice(0, 3)}) ${localNumber.slice(3, 6)}-${localNumber.slice(6)}`;
+}
+
 function initials(name: string | null) {
   const parts = (name || "New inquiry").trim().split(/\s+/).slice(0, 2);
   return parts.map((part) => part[0]?.toUpperCase()).join("");
@@ -244,6 +252,33 @@ export default function InquiriesDashboard({
                 {(message || error) && <p className={error ? styles.toastError : styles.toast} role="status">{error || message}</p>}
 
                 <div className={styles.detailScroll}>
+                  {(selected.email || selected.phone) && (
+                    <section className={styles.contactBlock} aria-label="Contact information">
+                      <p>Contact</p>
+                      <div className={styles.contactDetails}>
+                        {selected.email && (
+                          <div>
+                            <span>Email</span>
+                            <a
+                              href={selectedGmailUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              onClick={(event) => openGmailPopup(event, selectedGmailUrl)}
+                            >
+                              {selected.email}
+                            </a>
+                          </div>
+                        )}
+                        {selected.phone && (
+                          <div>
+                            <span>Phone</span>
+                            <a href={`tel:${selected.phone.replace(/[^+\d]/g, "")}`}>{displayPhone(selected.phone)}</a>
+                          </div>
+                        )}
+                      </div>
+                    </section>
+                  )}
+
                   <section className={styles.contactActions}>
                     {selected.email && (
                       <a

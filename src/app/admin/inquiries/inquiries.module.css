@@ -66,6 +66,13 @@
 .toast { background: #e4eee5; color: #466246; }
 .toastError { background: #f3dfd6; color: #8c4935; }
 .detailScroll { min-height: 0; padding: 1.2rem 1.3rem 2rem; }
+.contactBlock { display: grid; gap: 0.65rem; margin-bottom: 0.65rem; border: 1px solid #e1d9cd; border-radius: 4px; background: #faf8f4; padding: 0.85rem 1rem; }
+.contactBlock > p { color: #9a7a42; font-size: 0.53rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+.contactDetails { display: grid; gap: 0.55rem; }
+.contactDetails > div { min-width: 0; display: grid; grid-template-columns: 3.4rem minmax(0, 1fr); align-items: baseline; gap: 0.65rem; }
+.contactDetails span { color: #8b8379; font-size: 0.58rem; }
+.contactDetails a { min-width: 0; color: #2e2923; font-size: 0.72rem; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; text-decoration-color: #c4ae83; text-underline-offset: 3px; }
+.contactDetails a:hover { color: #8a6a33; }
 .contactActions { display: grid; grid-template-columns: 1fr auto; gap: 0.55rem; margin-bottom: 1.35rem; }
 .contactActions a { border-radius: 3px; padding: 0.72rem 1rem; background: #1b1814; color: #fffdfa; font-size: 0.64rem; font-weight: 600; text-align: center; text-decoration: none; }
 .contactActions a + a { min-width: 76px; border: 1px solid #d8d0c3; background: transparent; color: #1b1814; }
