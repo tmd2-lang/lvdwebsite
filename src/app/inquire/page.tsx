@@ -43,9 +43,25 @@ export default function InquirePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
+  const isInitialMount = useRef(true);
+
   // Handle GSAP animation between steps
   useEffect(() => {
     if (!containerRef.current) return;
+
+    // Scroll to top of form on step change so mobile users see the question
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+    } else if (step < 6) {
+      if (window.innerWidth < 1024) {
+        // Offset by a small amount so the step number is clearly visible
+        const y = containerRef.current.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
