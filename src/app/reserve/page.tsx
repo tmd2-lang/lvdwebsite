@@ -595,21 +595,34 @@ export default function ReservePage() {
           </div>
         </div>
       </section>
-          {/* Bottom Secondary Navigation for reserve-v2 */}
+          {/* CTA Section for reserve-v2 */}
           {isReserveV2 && step === 6 && (
-            <section className="w-full bg-ink px-6 pb-20 pt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link 
-                href="/gallery" 
-                className="w-full sm:w-auto bg-ivory text-ink font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-8 sm:py-4 hover:bg-gold hover:text-ink transition-colors rounded-full text-center"
-              >
-                Explore Our Work
-              </Link>
-              <Link 
-                href="/" 
-                className="w-full sm:w-auto border border-ivory/20 text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-8 sm:py-4 hover:border-ivory transition-colors rounded-full text-center"
-              >
-                Return to Home
-              </Link>
+            <section className="w-full bg-ivory text-ink px-6 py-24 sm:py-32 flex flex-col items-center justify-center text-center">
+              <span className="font-body text-xs uppercase tracking-widest text-gold font-semibold mb-6">Your Journey Continues</span>
+              <h2 className="font-display text-4xl sm:text-5xl md:text-6xl max-w-3xl mb-8 leading-tight">
+                Return to the main experience.
+              </h2>
+              <p className="font-body text-ink/70 max-w-xl mb-12 leading-relaxed">
+                While our team reviews your inquiry, we invite you to immerse yourself further in our design philosophy and view our expanded portfolio of luxury events.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
+                <Magnetic>
+                  <Link 
+                    href="/gallery" 
+                    className="w-full sm:w-auto bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-8 py-4 hover:bg-gold hover:text-ink transition-colors rounded-full text-center inline-block"
+                  >
+                    Explore Portfolio
+                  </Link>
+                </Magnetic>
+                <Magnetic>
+                  <Link 
+                    href="/" 
+                    className="w-full sm:w-auto border border-ink/20 text-ink font-body text-[10px] uppercase tracking-[0.2em] px-8 py-4 hover:border-ink transition-colors rounded-full text-center inline-block"
+                  >
+                    Return to Home
+                  </Link>
+                </Magnetic>
+              </div>
             </section>
           )}
         </div>
