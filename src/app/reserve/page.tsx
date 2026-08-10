@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import Magnetic from "@/components/Magnetic";
 import { media } from "@/lib/media-slots";
@@ -108,11 +109,15 @@ type FormData = {
 };
 
 export default function ReservePage() {
+  const pathname = usePathname();
+  const isReserveV2 = pathname === "/reserve-v2";
   const portfolioRailRef = useRef<HTMLDivElement>(null);
+  const formSectionRef = useRef<HTMLElement>(null);
   const formContainerRef = useRef<HTMLDivElement>(null);
 
   const [step, setStep] = useState(1);
   const [activeMemoryCard, setActiveMemoryCard] = useState<string | null>(null);
+  const [isFormTakeoverVisible, setIsFormTakeoverVisible] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
     celebrationType: "",
@@ -132,9 +137,20 @@ export default function ReservePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
+  const isInitialMount = useRef(true);
+
   // Handle GSAP animation between steps
   useEffect(() => {
     if (!formContainerRef.current) return;
+
+    // Scroll to top of form on step change so mobile users see the question
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+    } else if (step < 6) {
+      const y = formContainerRef.current.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
@@ -146,6 +162,27 @@ export default function ReservePage() {
     }, formContainerRef);
     return () => ctx.revert();
   }, [step]);
+
+  useEffect(() => {
+    const formSection = formSectionRef.current;
+    if (!isReserveV2 || !formSection) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsFormTakeoverVisible(true);
+          observer.disconnect();
+        }
+      },
+      {
+        threshold: 0.02,
+        rootMargin: "0px 0px -8% 0px",
+      }
+    );
+
+    observer.observe(formSection);
+    return () => observer.disconnect();
+  }, [isReserveV2]);
 
   const scrollToForm = () => {
     const el = document.getElementById("reserve-form");
@@ -240,7 +277,11 @@ export default function ReservePage() {
     <main className="w-full min-h-screen bg-ivory text-ink flex flex-col items-center justify-start overflow-x-clip">
       
       {/* 1. FULL-SCREEN HERO */}
-      <section className="relative w-full min-h-[100svh] overflow-hidden bg-ink text-ivory">
+      <section
+        className={`${
+          isReserveV2 ? "sticky top-0 order-1" : "relative"
+        } w-full min-h-[100svh] overflow-hidden bg-ink text-ivory`}
+      >
         <Image
           src="/reserve/reserve-hero.jpeg"
           alt="A refined wedding reception designed with white florals, greenery, candlelight, and gold accents"
@@ -295,8 +336,10 @@ export default function ReservePage() {
         </div>
       </section>
 
-      {/* 2. EDITORIAL STATEMENT & GALLERY RAIL */}
-      <section className="w-full bg-ivory px-6 pb-12 pt-16 text-ink sm:pt-20 md:px-12 md:pb-16 md:pt-24">
+      {!isReserveV2 && (
+        <>
+          {/* 2. EDITORIAL STATEMENT & GALLERY RAIL */}
+          <section className="w-full bg-ivory px-6 pb-12 pt-16 text-ink sm:pt-20 md:px-12 md:pb-16 md:pt-24">
         <div className="mx-auto grid max-w-[1440px] gap-8 md:grid-cols-[180px_1fr] md:items-start md:gap-12">
           <p className="pt-2 font-body text-[10px] font-semibold uppercase tracking-[0.28em] text-ink/65">
             The Art of the Occasion
@@ -548,11 +591,20 @@ export default function ReservePage() {
           </div>
         </div>
       </section>
+        </>
+      )}
 
       {/* 6. FULL INQUIRY & RESERVATION FORM (NON-SPLIT SCREEN) */}
       <section
+        ref={formSectionRef}
         id="reserve-form"
-        className="w-full bg-ivory text-ink py-20 sm:py-24 md:py-32 px-6 sm:px-10 md:px-12 flex flex-col items-center justify-center relative z-20 border-t border-ink/10"
+        className={`w-full bg-ivory text-ink py-20 sm:py-24 md:py-32 px-6 sm:px-10 md:px-12 flex flex-col items-center justify-center relative z-20 border-t border-ink/10 ${
+          isReserveV2
+            ? `reserve-takeover order-2 min-h-[100svh] shadow-[0_-2rem_5rem_rgba(20,18,15,0.28)] ${
+                isFormTakeoverVisible ? "is-visible" : ""
+              }`
+            : ""
+        }`}
       >
         {/* Editorial Section Header (visible during inquiry steps) */}
         {step < 6 && (
@@ -636,7 +688,7 @@ export default function ReservePage() {
                   <button 
                     onClick={nextStep}
                     disabled={!formData.celebrationType}
-                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-50 disabled:hover:bg-ink disabled:hover:text-ivory flex items-center gap-3 rounded-full cursor-pointer"
+                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-10 sm:py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-50 disabled:hover:bg-ink disabled:hover:text-ivory flex items-center gap-3 rounded-full cursor-pointer"
                   >
                     Continue <span className="text-sm">→</span>
                   </button>
@@ -738,7 +790,7 @@ export default function ReservePage() {
                   <button 
                     onClick={nextStep}
                     disabled={!formData.guestCount || (!formData.date && !formData.dateUndecided)}
-                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-50 flex items-center gap-3 rounded-full cursor-pointer"
+                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-10 sm:py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-50 flex items-center gap-3 rounded-full cursor-pointer"
                   >
                     Continue <span className="text-sm">→</span>
                   </button>
@@ -799,7 +851,7 @@ export default function ReservePage() {
                   <button 
                     onClick={nextStep}
                     disabled={formData.services.length === 0}
-                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-50 flex items-center gap-3 rounded-full cursor-pointer"
+                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-10 sm:py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-50 flex items-center gap-3 rounded-full cursor-pointer"
                   >
                     Continue <span className="text-sm">→</span>
                   </button>
@@ -938,7 +990,7 @@ export default function ReservePage() {
                   <button 
                     onClick={nextStep}
                     disabled={!formData.investment}
-                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-50 flex items-center gap-3 rounded-full cursor-pointer"
+                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-10 sm:py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-50 flex items-center gap-3 rounded-full cursor-pointer"
                   >
                     Continue <span className="text-sm">→</span>
                   </button>
@@ -1039,14 +1091,14 @@ export default function ReservePage() {
                     <button 
                       type="submit"
                       disabled={isSubmitting}
-                      className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 hover:bg-gold hover:text-ink transition-colors flex items-center gap-3 rounded-full shadow-lg cursor-pointer disabled:opacity-60 disabled:cursor-wait"
+                      className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-10 sm:py-4 hover:bg-gold hover:text-ink transition-colors flex items-center gap-3 rounded-full shadow-lg cursor-pointer disabled:opacity-60 disabled:cursor-wait"
                     >
                       {isSubmitting ? "Submitting..." : "Submit Consultation Request"} <span className="text-sm">↗</span>
                     </button>
                   </Magnetic>
                 </div>
                 <p className="font-body text-[9px] text-ink/50 text-right mt-[-10px]">
-                  🔒 Your details remain strictly confidential with Irene and our team.
+                  Your details remain strictly confidential with Irene and our team.
                 </p>
 
               </form>
@@ -1112,13 +1164,13 @@ export default function ReservePage() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
                 <Link 
                   href="/gallery" 
-                  className="w-full sm:w-auto bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-8 py-4 hover:bg-gold hover:text-ink transition-colors rounded-full text-center"
+                  className="w-full sm:w-auto bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-8 sm:py-4 hover:bg-gold hover:text-ink transition-colors rounded-full text-center"
                 >
                   Explore Our Work
                 </Link>
                 <Link 
                   href="/" 
-                  className="w-full sm:w-auto border border-ink/20 text-ink font-body text-[10px] uppercase tracking-[0.2em] px-8 py-4 hover:border-ink transition-colors rounded-full text-center"
+                  className="w-full sm:w-auto border border-ink/20 text-ink font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-8 sm:py-4 hover:border-ink transition-colors rounded-full text-center"
                 >
                   Return to Home
                 </Link>
