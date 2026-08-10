@@ -119,3 +119,18 @@ export async function addLeadNote(id: string, body: string, authorName: string) 
   if (!rows[0]) throw new Error("That note could not be saved.");
   return rows[0];
 }
+
+export async function deleteLead(id: string) {
+  const { url } = databaseConfig();
+  const response = await fetch(`${url}/rest/v1/leads?id=eq.${encodeURIComponent(id)}`, {
+    method: "DELETE",
+    headers: databaseHeaders(),
+    cache: "no-store",
+  });
+  if (!response.ok) {
+    const errorText = await response.text().catch(() => "");
+    console.error("Failed to delete lead:", errorText);
+    throw new Error("Could not delete the inquiry right now.");
+  }
+}
+

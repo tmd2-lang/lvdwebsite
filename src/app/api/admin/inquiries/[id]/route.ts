@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAdminUser } from "@/lib/admin-auth";
-import { addLeadNote, updateLeadStatus } from "@/lib/admin-data";
+import { addLeadNote, updateLeadStatus, deleteLead } from "@/lib/admin-data";
 import { LEAD_STATUSES, type LeadStatus } from "@/lib/admin-types";
 
 export const runtime = "nodejs";
@@ -44,3 +44,17 @@ export async function POST(request: Request, context: RouteContext) {
     return NextResponse.json({ error: error instanceof Error ? error.message : "Could not save that note." }, { status: 400 });
   }
 }
+
+export async function DELETE(request: Request, context: RouteContext) {
+  const user = await authorizedUser();
+  if (!user) return NextResponse.json({ error: "Your sign-in has expired." }, { status: 401 });
+
+  try {
+    const { id } = await context.params;
+    await deleteLead(id);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Could not delete that inquiry." }, { status: 400 });
+  }
+}
+

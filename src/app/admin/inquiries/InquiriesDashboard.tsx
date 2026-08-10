@@ -148,6 +148,27 @@ export default function InquiriesDashboard({
     }
   }
 
+  async function deleteInquiry() {
+    if (!selected) return;
+    if (!confirm("Are you sure you want to permanently delete this inquiry? This cannot be undone.")) return;
+    
+    setSavingStatus(true);
+    setError("");
+    try {
+      await responseJson(await fetch(`/api/admin/inquiries/${selected.id}`, {
+        method: "DELETE",
+      }));
+      setLeads((current) => current.filter((lead) => lead.id !== selected.id));
+      setSelectedId("");
+      setMobileDetailOpen(false);
+      announce("Inquiry deleted.");
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "That inquiry could not be deleted.");
+    } finally {
+      setSavingStatus(false);
+    }
+  }
+
   async function saveNote(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!selected) return;
@@ -371,6 +392,7 @@ export default function InquiriesDashboard({
                     {selected.status !== "archived" && (
                        <button type="button" onClick={() => void changeStatus("archived")} className={styles.archiveButton} disabled={savingStatus}>Archive Inquiry</button>
                     )}
+                    <button type="button" onClick={() => void deleteInquiry()} className={styles.deleteButton} disabled={savingStatus} style={{ color: "red", backgroundColor: "transparent", border: "1px solid red", marginLeft: "auto" }}>Delete</button>
                   </section>
                 </div>
               </>

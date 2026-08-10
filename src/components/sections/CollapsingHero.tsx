@@ -66,7 +66,9 @@ export default function CollapsingHero() {
               alt={`Lady Victoria Designs Hero ${i}`} 
               fill
               sizes="100vw"
-              loading={i === 0 ? "eager" : "lazy"}
+              quality={100}
+              priority={i === 0}
+              unoptimized={true}
               className="w-full h-full object-cover scale-[1.15]"
             />
           </div>
