@@ -1,4 +1,4 @@
-import Preloader from "@/components/sections/Preloader";
+
 import CollapsingHero from "@/components/sections/CollapsingHero";
 import MasterpieceStatement from "@/components/sections/MasterpieceStatement";
 import ParallaxDivider from "@/components/sections/ParallaxDivider";
@@ -12,7 +12,7 @@ import Contact from "@/components/sections/Contact";
 export default function Home() {
   return (
     <main className="w-full min-h-screen overflow-x-hidden block">
-      <Preloader />
+
       <CollapsingHero />
       <MasterpieceStatement />
       <SignatureWork />
