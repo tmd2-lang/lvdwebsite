@@ -168,7 +168,7 @@ export default function InquirePage() {
       )}
 
       {/* RIGHT SIDE (OR FULL SCREEN ON CONFIRMATION): The Form */}
-      <div className={`w-full ${step === 6 ? 'lg:w-full max-w-[1200px] mx-auto' : 'lg:w-1/2'} flex justify-center items-center pt-28 lg:pt-32 pb-16 px-6 lg:px-20 z-20 min-h-[60vh]`}>
+      <div className={`w-full ${step === 6 ? 'lg:w-full max-w-[1200px] mx-auto pt-32' : 'lg:w-1/2 pt-12'} flex justify-center lg:items-center lg:pt-32 pb-16 px-6 lg:px-20 z-20 min-h-[60vh]`}>
         <div ref={containerRef} className={`w-full ${step === 6 ? 'max-w-[1000px]' : 'max-w-[600px]'} relative`}>
           
           {/* STEP 1: Celebration Type */}
@@ -626,7 +626,7 @@ export default function InquirePage() {
 
           {/* STEP 6: Full-Screen Confirmation & Direct Calendly Booking */}
           {step === 6 && (
-            <div aria-live="polite" className="step-content flex flex-col items-center justify-center text-center w-full py-8 animate-fade-in">
+            <div aria-live="polite" className="step-content flex flex-col items-center justify-center text-center w-full pb-8 pt-0 animate-fade-in">
               
               {/* Top Thank You Header */}
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold/10 border border-gold/30 mb-6">
