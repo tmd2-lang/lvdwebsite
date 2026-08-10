@@ -260,6 +260,7 @@ export default function InquiriesDashboard({
           </section>
 
           <aside className={styles.detailPanel} data-open={mobileDetailOpen ? "true" : "false"} aria-label="Inquiry details">
+            {(message || error) && <p className={error ? styles.toastError : styles.toast} role="status">{error || message}</p>}
             {selected ? (
               <>
                 <div className={styles.detailHeader}>
@@ -269,8 +270,6 @@ export default function InquiriesDashboard({
                     <div><p>{SOURCE_LABELS[selected.source] || "Website inquiry"}</p><h2>{selected.name || "New inquiry"}</h2><span>Received {submittedAt(selected.created_at)}</span></div>
                   </div>
                 </div>
-
-                {(message || error) && <p className={error ? styles.toastError : styles.toast} role="status">{error || message}</p>}
 
                 <div className={styles.detailScroll}>
                   {(selected.email || selected.phone) && (
