@@ -522,7 +522,7 @@ export default function ReservePage() {
       </section>
 
       {/* 5. SOCIAL PROOF & BRIDE REVIEWS (3D FLIP CARDS) */}
-      <section className="sticky top-0 z-0 flex min-h-[100vh] w-full items-center bg-ink px-6 py-14 text-ivory md:px-12 lg:py-10 xl:py-16">
+      <section className={`${isReserveV2 ? "relative z-0" : "sticky top-0 z-0"} flex min-h-[100vh] w-full items-center bg-ink px-6 py-14 text-ivory md:px-12 lg:py-10 xl:py-16`}>
         <div className="mx-auto flex w-full max-w-[1440px] flex-col">
           <div className="mb-9 grid gap-7 md:mb-10 md:grid-cols-[220px_1fr] md:gap-12 xl:mb-14">
             <p className="pt-2 font-body text-[10px] font-semibold uppercase tracking-[0.28em] text-gold sm:text-xs">
