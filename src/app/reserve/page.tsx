@@ -343,7 +343,7 @@ export default function ReservePage() {
       {(!isReserveV2 || step === 6) && (
         <div className={isReserveV2 ? "w-full flex flex-col order-3 animate-fade-in relative z-30 bg-ivory" : "contents"}>
           {/* 2. EDITORIAL STATEMENT & GALLERY RAIL */}
-          <section className="w-full bg-ivory px-6 pb-12 pt-16 text-ink sm:pt-20 md:px-12 md:pb-16 md:pt-24">
+          <section id="welcome-explore" className="w-full bg-ivory px-6 pb-12 pt-12 text-ink sm:pt-16 md:px-12 md:pb-16 md:pt-20">
         <div className="mx-auto grid max-w-[1440px] gap-8 md:grid-cols-[180px_1fr] md:items-start md:gap-12">
           <p className="pt-2 font-body text-[10px] font-semibold uppercase tracking-[0.28em] text-ink/65">
             The Art of the Occasion
@@ -632,7 +632,9 @@ export default function ReservePage() {
       <section
         ref={formSectionRef}
         id="reserve-form"
-        className={`w-full bg-ivory text-ink py-20 sm:py-24 md:py-32 px-6 sm:px-10 md:px-12 flex flex-col items-center relative z-20 border-t border-ink/10 ${
+        className={`w-full bg-ivory text-ink pt-20 sm:pt-24 md:pt-32 px-6 sm:px-10 md:px-12 flex flex-col items-center relative z-20 border-t border-ink/10 ${
+          isReserveV2 && step === 6 ? "pb-12" : "pb-20 sm:pb-24 md:pb-32"
+        } ${
           isReserveV2
             ? `reserve-takeover order-2 min-h-[100svh] shadow-[0_-2rem_5rem_rgba(20,18,15,0.28)] ${
                 isFormTakeoverVisible ? "is-visible" : ""
@@ -1212,9 +1214,21 @@ export default function ReservePage() {
                 </div>
               )}
               {isReserveV2 && (
-                <p className="mt-8 font-body text-xs uppercase tracking-widest text-ink/40 animate-pulse">
-                  Scroll down to explore our work ↓
-                </p>
+                <div className="mt-12 flex flex-col items-center gap-4">
+                  <button 
+                    onClick={() => {
+                      document.getElementById("welcome-explore")?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    className="group flex flex-col items-center gap-4 text-ink hover:text-gold transition-colors cursor-pointer"
+                  >
+                    <span className="font-body text-[10px] uppercase tracking-[0.25em] font-semibold">
+                      Continue Experience
+                    </span>
+                    <div className="w-12 h-12 rounded-full border border-ink/20 flex items-center justify-center group-hover:border-gold group-hover:bg-gold/5 transition-all animate-bounce">
+                      <span className="text-lg">↓</span>
+                    </div>
+                  </button>
+                </div>
               )}
 
             </div>
