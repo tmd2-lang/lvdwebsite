@@ -198,7 +198,7 @@ export default function Header() {
       {/* ============================================================ */}
       <header 
         ref={headerRef} 
-        className={`fixed top-0 left-0 w-full z-40 px-5 sm:px-6 md:px-12 grid grid-cols-2 md:grid-cols-3 gap-4 items-center pointer-events-none transition-all duration-300 ${getHeaderStyle()}`}
+        className={`fixed top-0 left-0 w-full z-40 px-5 sm:px-6 md:px-12 grid grid-cols-2 md:grid-cols-3 gap-4 items-center pointer-events-none transition-all duration-300 transform-gpu will-change-transform ${getHeaderStyle()}`}
       >
         {/* Left: Brand Logo */}
         <div className="min-w-0 justify-self-start font-display italic text-base sm:text-lg md:text-xl pointer-events-auto cursor-pointer hover:opacity-75 transition-opacity whitespace-nowrap">

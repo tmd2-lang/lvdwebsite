@@ -41,28 +41,28 @@ export default function MasterpieceStatement() {
       // 1. Eyebrow reveals
       tl.fromTo(
         eyebrowRef.current,
-        { opacity: 0, y: 20 },
+        { opacity: 0, y: "100%" },
         { opacity: 1, y: 0, ease: "none" },
         0
       )
       // 2. Line 1 "Your wedding isn’t an event." words stagger in on scroll
       .fromTo(
         line1Words || [],
-        { opacity: 0, y: 36 },
+        { opacity: 0, y: "100%" },
         { opacity: 1, y: 0, stagger: 0.05, ease: "none" },
         0.08
       )
       // 3. Line 2 "It’s a masterpiece." words stagger in with gold radiance
       .fromTo(
         line2Words || [],
-        { opacity: 0, y: 36 },
+        { opacity: 0, y: "100%" },
         { opacity: 1, y: 0, stagger: 0.08, ease: "none" },
         0.25
       )
       // 4. Bottom paragraph words cascade in
       .fromTo(
         paraWords || [],
-        { opacity: 0, y: 20 },
+        { opacity: 0, y: "100%" },
         { opacity: 1, y: 0, stagger: 0.02, ease: "none" },
         0.42
       );
