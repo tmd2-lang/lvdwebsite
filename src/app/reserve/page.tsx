@@ -187,7 +187,8 @@ export default function ReservePage() {
   const scrollToForm = () => {
     const el = document.getElementById("reserve-form");
     if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
+      const y = el.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: y, behavior: "smooth" });
     }
   };
 
@@ -252,7 +253,10 @@ export default function ReservePage() {
       setStep(6);
       setTimeout(() => {
         const el = document.getElementById("reserve-form");
-        if (el) el.scrollIntoView({ behavior: "smooth" });
+        if (el) {
+          const y = el.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({ top: y, behavior: "smooth" });
+        }
       }, 50);
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : "Could not submit your inquiry. Please try again.");
@@ -279,7 +283,7 @@ export default function ReservePage() {
       {/* 1. FULL-SCREEN HERO */}
       <section
         className={`${
-          isReserveV2 ? "sticky top-0 order-1" : "relative"
+          isReserveV2 && step < 6 ? "sticky top-0 order-1" : isReserveV2 ? "relative order-1" : "relative"
         } w-full min-h-[100svh] overflow-hidden bg-ink text-ivory`}
       >
         <Image
@@ -337,7 +341,7 @@ export default function ReservePage() {
       </section>
 
       {(!isReserveV2 || step === 6) && (
-        <div className={isReserveV2 ? "w-full flex flex-col order-3 animate-fade-in" : "contents"}>
+        <div className={isReserveV2 ? "w-full flex flex-col order-3 animate-fade-in relative z-30 bg-ivory" : "contents"}>
           {/* 2. EDITORIAL STATEMENT & GALLERY RAIL */}
           <section className="w-full bg-ivory px-6 pb-12 pt-16 text-ink sm:pt-20 md:px-12 md:pb-16 md:pt-24">
         <div className="mx-auto grid max-w-[1440px] gap-8 md:grid-cols-[180px_1fr] md:items-start md:gap-12">
