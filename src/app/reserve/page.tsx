@@ -632,7 +632,7 @@ export default function ReservePage() {
       <section
         ref={formSectionRef}
         id="reserve-form"
-        className={`w-full bg-ivory text-ink py-20 sm:py-24 md:py-32 px-6 sm:px-10 md:px-12 flex flex-col items-center justify-center relative z-20 border-t border-ink/10 ${
+        className={`w-full bg-ivory text-ink py-20 sm:py-24 md:py-32 px-6 sm:px-10 md:px-12 flex flex-col items-center relative z-20 border-t border-ink/10 ${
           isReserveV2
             ? `reserve-takeover order-2 min-h-[100svh] shadow-[0_-2rem_5rem_rgba(20,18,15,0.28)] ${
                 isFormTakeoverVisible ? "is-visible" : ""
