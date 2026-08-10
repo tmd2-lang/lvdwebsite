@@ -291,6 +291,8 @@ export default function ReservePage() {
           alt="A refined wedding reception designed with white florals, greenery, candlelight, and gold accents"
           fill
           sizes="100vw"
+          quality={100}
+          unoptimized={true}
           className="reserve-hero__image object-cover object-center"
           priority
         />

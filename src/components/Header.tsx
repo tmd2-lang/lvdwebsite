@@ -188,7 +188,7 @@ export default function Header() {
     if (isScrolled) {
       return "bg-ink/85 backdrop-blur-[12px] !mix-blend-normal text-ivory py-4 border-b border-ivory/10 shadow-lg";
     }
-    return "bg-transparent mix-blend-difference text-ivory py-6";
+    return "bg-transparent text-ivory py-6 drop-shadow-md";
   };
 
   return (

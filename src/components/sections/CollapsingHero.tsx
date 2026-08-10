@@ -69,7 +69,7 @@ export default function CollapsingHero() {
               quality={100}
               priority={i === 0}
               unoptimized={true}
-              className="w-full h-full object-cover scale-[1.15]"
+              className="w-full h-full object-cover"
             />
           </div>
         ))}
