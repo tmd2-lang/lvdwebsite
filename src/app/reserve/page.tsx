@@ -336,8 +336,8 @@ export default function ReservePage() {
         </div>
       </section>
 
-      {!isReserveV2 && (
-        <>
+      {(!isReserveV2 || step === 6) && (
+        <div className={isReserveV2 ? "w-full flex flex-col order-3 animate-fade-in" : "contents"}>
           {/* 2. EDITORIAL STATEMENT & GALLERY RAIL */}
           <section className="w-full bg-ivory px-6 pb-12 pt-16 text-ink sm:pt-20 md:px-12 md:pb-16 md:pt-24">
         <div className="mx-auto grid max-w-[1440px] gap-8 md:grid-cols-[180px_1fr] md:items-start md:gap-12">
@@ -591,7 +591,24 @@ export default function ReservePage() {
           </div>
         </div>
       </section>
-        </>
+          {/* Bottom Secondary Navigation for reserve-v2 */}
+          {isReserveV2 && step === 6 && (
+            <section className="w-full bg-ink px-6 pb-20 pt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link 
+                href="/gallery" 
+                className="w-full sm:w-auto bg-ivory text-ink font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-8 sm:py-4 hover:bg-gold hover:text-ink transition-colors rounded-full text-center"
+              >
+                Explore Our Work
+              </Link>
+              <Link 
+                href="/" 
+                className="w-full sm:w-auto border border-ivory/20 text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-8 sm:py-4 hover:border-ivory transition-colors rounded-full text-center"
+              >
+                Return to Home
+              </Link>
+            </section>
+          )}
+        </div>
       )}
 
       {/* 6. FULL INQUIRY & RESERVATION FORM (NON-SPLIT SCREEN) */}
@@ -1160,21 +1177,28 @@ export default function ReservePage() {
                 </div>
               </div>
 
-              {/* Secondary Navigation */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
-                <Link 
-                  href="/gallery" 
-                  className="w-full sm:w-auto bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-8 sm:py-4 hover:bg-gold hover:text-ink transition-colors rounded-full text-center"
-                >
-                  Explore Our Work
-                </Link>
-                <Link 
-                  href="/" 
-                  className="w-full sm:w-auto border border-ink/20 text-ink font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-8 sm:py-4 hover:border-ink transition-colors rounded-full text-center"
-                >
-                  Return to Home
-                </Link>
-              </div>
+              {/* Secondary Navigation (only on standard reserve, since reserve-v2 moves it to the bottom) */}
+              {!isReserveV2 && (
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
+                  <Link 
+                    href="/gallery" 
+                    className="w-full sm:w-auto bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-8 sm:py-4 hover:bg-gold hover:text-ink transition-colors rounded-full text-center"
+                  >
+                    Explore Our Work
+                  </Link>
+                  <Link 
+                    href="/" 
+                    className="w-full sm:w-auto border border-ink/20 text-ink font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-8 sm:py-4 hover:border-ink transition-colors rounded-full text-center"
+                  >
+                    Return to Home
+                  </Link>
+                </div>
+              )}
+              {isReserveV2 && (
+                <p className="mt-8 font-body text-xs uppercase tracking-widest text-ink/40 animate-pulse">
+                  Scroll down to explore our work ↓
+                </p>
+              )}
 
             </div>
           )}
