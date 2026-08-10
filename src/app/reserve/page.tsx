@@ -924,9 +924,9 @@ export default function ReservePage() {
                   <label className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 font-semibold">
                     Inspiration Images (Optional)
                   </label>
-                  <label className="border border-dashed border-ink/20 hover:border-gold transition-colors rounded-sm p-6 flex flex-col items-center justify-center cursor-pointer bg-ink/5 text-center">
-                    <span className="font-body text-xs text-ink/60 mb-2">Tap to select or take photos</span>
-                    <span className="font-body text-[9px] uppercase tracking-widest text-ink/40">JPEG, PNG, HEIC up to 15MB</span>
+                  <label className="border border-ink/20 hover:border-gold hover:text-gold transition-all rounded-full px-6 py-2.5 flex items-center justify-center gap-2 cursor-pointer bg-transparent max-w-max text-ink/60 group">
+                    <span className="text-xl font-light leading-none group-hover:scale-110 transition-transform mb-0.5">+</span>
+                    <span className="font-body text-[10px] uppercase tracking-[0.2em] font-semibold">Upload Photos</span>
                     <input 
                       type="file" 
                       multiple 
