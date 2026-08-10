@@ -1219,13 +1219,13 @@ export default function ReservePage() {
                     onClick={() => {
                       document.getElementById("welcome-explore")?.scrollIntoView({ behavior: "smooth" });
                     }}
-                    className="group flex flex-col items-center gap-4 text-ink hover:text-gold transition-colors cursor-pointer"
+                    className="group flex flex-col items-center gap-4 sm:gap-6 text-ink hover:text-gold transition-colors cursor-pointer"
                   >
-                    <span className="font-body text-[10px] uppercase tracking-[0.25em] font-semibold">
+                    <span className="font-body text-xs sm:text-sm uppercase tracking-[0.25em] font-semibold">
                       Continue Experience
                     </span>
-                    <div className="w-12 h-12 rounded-full border border-ink/20 flex items-center justify-center group-hover:border-gold group-hover:bg-gold/5 transition-all animate-bounce">
-                      <span className="text-lg">↓</span>
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-ink/20 flex items-center justify-center group-hover:border-gold group-hover:bg-gold/5 transition-all animate-bounce">
+                      <span className="text-2xl sm:text-3xl font-light">↓</span>
                     </div>
                   </button>
                 </div>
