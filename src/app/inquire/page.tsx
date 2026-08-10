@@ -217,7 +217,7 @@ export default function InquirePage() {
                   <button 
                     onClick={nextStep}
                     disabled={!formData.celebrationType}
-                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-50 disabled:hover:bg-ink disabled:hover:text-ivory flex items-center gap-3 rounded-full"
+                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-10 sm:py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-50 disabled:hover:bg-ink disabled:hover:text-ivory flex items-center gap-3 rounded-full"
                   >
                     Continue <span className="text-sm">→</span>
                   </button>
@@ -309,7 +309,7 @@ export default function InquirePage() {
                   <button 
                     onClick={nextStep}
                     disabled={!formData.guestCount || !formData.date}
-                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-50 flex items-center gap-3 rounded-full"
+                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-10 sm:py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-50 flex items-center gap-3 rounded-full"
                   >
                     Continue <span className="text-sm">→</span>
                   </button>
@@ -370,7 +370,7 @@ export default function InquirePage() {
                   <button 
                     onClick={nextStep}
                     disabled={formData.services.length === 0}
-                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-50 flex items-center gap-3 rounded-full"
+                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-10 sm:py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-50 flex items-center gap-3 rounded-full"
                   >
                     Continue <span className="text-sm">→</span>
                   </button>
@@ -509,7 +509,7 @@ export default function InquirePage() {
                   <button 
                     onClick={nextStep}
                     disabled={!formData.investment}
-                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-50 flex items-center gap-3 rounded-full"
+                    className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-10 sm:py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-50 flex items-center gap-3 rounded-full"
                   >
                     Continue <span className="text-sm">→</span>
                   </button>
@@ -610,14 +610,14 @@ export default function InquirePage() {
                     <button 
                       type="submit"
                       disabled={isSubmitting}
-                      className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 hover:bg-gold hover:text-ink transition-colors flex items-center gap-3 rounded-full shadow-lg disabled:opacity-60 disabled:cursor-wait"
+                      className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-10 sm:py-4 hover:bg-gold hover:text-ink transition-colors flex items-center gap-3 rounded-full shadow-lg disabled:opacity-60 disabled:cursor-wait"
                     >
                       {isSubmitting ? "Submitting..." : "Submit Consultation Request"} <span className="text-sm">↗</span>
                     </button>
                   </Magnetic>
                 </div>
                 <p className="font-body text-[9px] text-ink/50 text-right mt-[-10px]">
-                  🔒 Your details remain strictly confidential with Irene and our team.
+                  Your details remain strictly confidential with Irene and our team.
                 </p>
 
               </form>
@@ -683,13 +683,13 @@ export default function InquirePage() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
                 <Link 
                   href="/gallery" 
-                  className="w-full sm:w-auto bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-8 py-4 hover:bg-gold hover:text-ink transition-colors rounded-full"
+                  className="w-full sm:w-auto bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-8 sm:py-4 hover:bg-gold hover:text-ink transition-colors rounded-full"
                 >
                   Explore Our Work
                 </Link>
                 <Link 
                   href="/" 
-                  className="w-full sm:w-auto border border-ink/20 text-ink font-body text-[10px] uppercase tracking-[0.2em] px-8 py-4 hover:border-ink transition-colors rounded-full"
+                  className="w-full sm:w-auto border border-ink/20 text-ink font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-8 sm:py-4 hover:border-ink transition-colors rounded-full"
                 >
                   Return to Home
                 </Link>
