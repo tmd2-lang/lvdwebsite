@@ -13,13 +13,15 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
   }
 
+  const isReserveV2 = pathname === "/reserve-v2";
+
   return (
     <>
       <Cursor />
-      <Header />
+      {!isReserveV2 && <Header />}
       <SmoothScroll>
         {children}
-        <Footer />
+        {!isReserveV2 && <Footer />}
       </SmoothScroll>
     </>
   );
