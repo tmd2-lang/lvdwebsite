@@ -13,7 +13,7 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
   }
 
-  const isReserveV2 = pathname === "/reserve-v2";
+  const isReserveV2 = pathname === "/welcome";
 
   return (
     <>

@@ -110,7 +110,7 @@ type FormData = {
 
 export default function ReservePage() {
   const pathname = usePathname();
-  const isReserveV2 = pathname === "/reserve-v2";
+  const isReserveV2 = pathname === "/welcome";
   const portfolioRailRef = useRef<HTMLDivElement>(null);
   const formSectionRef = useRef<HTMLElement>(null);
   const formContainerRef = useRef<HTMLDivElement>(null);
