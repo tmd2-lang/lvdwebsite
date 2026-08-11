@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { submitLead } from "@/lib/lead-submit";
 import { trackMetaLead } from "@/lib/meta-pixel";
+import { useRouter } from "next/navigation";
 
 const ArrowLeft = ({ className = "w-4 h-4" }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -37,9 +38,9 @@ export default function QuizClient() {
   const [guestHistory, setGuestHistory] = useState<(number | null)[]>([]);
   const [isCalculating, setIsCalculating] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const router = useRouter();
 
   // Form state
   const [formData, setFormData] = useState({
@@ -221,10 +222,7 @@ export default function QuizClient() {
         payload: { formData, score, guestPoints, result },
       });
       trackMetaLead("style_quiz");
-      setIsSubmitted(true);
-      setTimeout(() => {
-        setIsModalOpen(false);
-      }, 3500);
+      router.push("/thank-you");
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : "Could not submit your inquiry. Please try again.");
     } finally {
@@ -416,7 +414,7 @@ export default function QuizClient() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-y-auto" data-lenis-prevent>
           <div
             className="fixed inset-0 bg-ink/70 backdrop-blur-sm"
-            onClick={() => !isSubmitted && setIsModalOpen(false)}
+            onClick={() => setIsModalOpen(false)}
             data-lenis-prevent
           />
 
@@ -424,26 +422,14 @@ export default function QuizClient() {
             className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto overscroll-contain bg-ivory rounded-sm p-8 md:p-12 shadow-2xl border border-ink/20 z-10 my-auto"
             data-lenis-prevent
           >
-            {!isSubmitted && (
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="absolute top-6 right-6 text-ink/50 hover:text-ink transition-colors cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            )}
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-6 right-6 text-ink/50 hover:text-ink transition-colors cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
 
-            {isSubmitted ? (
-              <div className="text-center py-6">
-                <CheckCircle2 className="w-12 h-12 text-gold mx-auto mb-4" />
-                <h3 className="font-display text-3xl text-ink mb-3">Consultation Requested</h3>
-                <p className="font-body text-sm text-ink/75 leading-relaxed">
-                  Thank you, {formData.name || "friend"}! Irene and our team will review your estimated tier ({currentResult.tier}) for {formData.date ? new Date(formData.date + "T00:00:00").toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" }) : "your date"} and reach out within 24–48 hours to schedule your design consultation.
-                </p>
-              </div>
-            ) : (
-              <>
-                <div className="text-gold font-body text-[10px] md:text-xs uppercase tracking-[0.25em] mb-2 text-center">
+            <div className="text-gold font-body text-[10px] md:text-xs uppercase tracking-[0.25em] mb-2 text-center mt-4">
                   NEXT STEPS
                 </div>
                 <h3 className="font-display text-3xl md:text-4xl text-ink text-center mb-2">
@@ -520,8 +506,6 @@ export default function QuizClient() {
                     {isSubmitting ? "Submitting..." : "Request Consultation"}
                   </button>
                 </form>
-              </>
-            )}
           </div>
         </div>
       )}

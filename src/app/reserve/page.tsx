@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import gsap from "gsap";
 import Magnetic from "@/components/Magnetic";
 import { media } from "@/lib/media-slots";
@@ -111,6 +111,7 @@ type FormData = {
 
 export default function ReservePage() {
   const pathname = usePathname();
+  const router = useRouter();
   const isReserveV2 = pathname === "/welcome";
   const portfolioRailRef = useRef<HTMLDivElement>(null);
   const formSectionRef = useRef<HTMLElement>(null);
@@ -252,14 +253,7 @@ export default function ReservePage() {
         payload: formData,
       });
       trackMetaLead("reserve");
-      setStep(6);
-      setTimeout(() => {
-        const el = document.getElementById("reserve-form");
-        if (el) {
-          const y = el.getBoundingClientRect().top + window.scrollY;
-          window.scrollTo({ top: y, behavior: "smooth" });
-        }
-      }, 50);
+      router.push("/thank-you");
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : "Could not submit your inquiry. Please try again.");
     } finally {
@@ -344,8 +338,8 @@ export default function ReservePage() {
         </div>
       </section>
 
-      {(!isReserveV2 || step === 6) && (
-        <div className={isReserveV2 ? "w-full flex flex-col order-3 animate-fade-in relative z-30 bg-ivory" : "contents"}>
+      {!isReserveV2 && (
+        <div className="contents">
           {/* 2. EDITORIAL STATEMENT & GALLERY RAIL */}
           <section id="welcome-explore" className="w-full bg-ivory px-6 pb-12 pt-12 text-ink sm:pt-16 md:px-12 md:pb-16 md:pt-20">
         <div className="mx-auto grid max-w-[1440px] gap-8 md:grid-cols-[180px_1fr] md:items-start md:gap-12">
@@ -599,36 +593,6 @@ export default function ReservePage() {
           </div>
         </div>
       </section>
-          {/* CTA Section for reserve-v2 */}
-          {isReserveV2 && step === 6 && (
-            <section className="w-full bg-ivory text-ink px-6 py-24 sm:py-32 flex flex-col items-center justify-center text-center">
-              <span className="font-body text-xs uppercase tracking-widest text-gold font-semibold mb-6">Your Journey Continues</span>
-              <h2 className="font-display text-4xl sm:text-5xl md:text-6xl max-w-3xl mb-8 leading-tight">
-                Return to the main experience.
-              </h2>
-              <p className="font-body text-ink/70 max-w-xl mb-12 leading-relaxed">
-                While our team reviews your inquiry, we invite you to immerse yourself further in our design philosophy and view our expanded portfolio of luxury events.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
-                <Magnetic>
-                  <Link 
-                    href="/gallery" 
-                    className="w-full sm:w-auto bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-8 py-4 hover:bg-gold hover:text-ink transition-colors rounded-full text-center inline-block"
-                  >
-                    Explore Portfolio
-                  </Link>
-                </Magnetic>
-                <Magnetic>
-                  <Link 
-                    href="/" 
-                    className="w-full sm:w-auto border border-ink/20 text-ink font-body text-[10px] uppercase tracking-[0.2em] px-8 py-4 hover:border-ink transition-colors rounded-full text-center inline-block"
-                  >
-                    Return to Home
-                  </Link>
-                </Magnetic>
-              </div>
-            </section>
-          )}
         </div>
       )}
 
@@ -636,9 +600,7 @@ export default function ReservePage() {
       <section
         ref={formSectionRef}
         id="reserve-form"
-        className={`w-full bg-ivory text-ink pt-20 sm:pt-24 md:pt-32 px-6 sm:px-10 md:px-12 flex flex-col items-center relative z-20 border-t border-ink/10 ${
-          isReserveV2 && step === 6 ? "pb-12" : "pb-20 sm:pb-24 md:pb-32"
-        } ${
+        className={`w-full bg-ivory text-ink pt-20 sm:pt-24 md:pt-32 px-6 sm:px-10 md:px-12 flex flex-col items-center relative z-20 border-t border-ink/10 pb-20 sm:pb-24 md:pb-32 ${
           isReserveV2
             ? `reserve-takeover order-2 min-h-[100svh] shadow-[0_-2rem_5rem_rgba(20,18,15,0.28)] ${
                 isFormTakeoverVisible ? "is-visible" : ""
@@ -647,8 +609,11 @@ export default function ReservePage() {
         }`}
       >
         {/* Editorial Section Header (visible during inquiry steps) */}
-        {step < 6 && (
-          <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+        <div ref={formContainerRef} className={`w-full max-w-[660px] relative mx-auto`}>
+          
+          {/* Form Progress Bar (Steps 1 - 5) */}
+          {step < 6 && (
+            <div className="mb-8 sm:mb-10">
             <p className="font-body text-[10px] sm:text-xs font-semibold uppercase tracking-[0.28em] text-gold mb-3 sm:mb-4">
               Reserve Your Date
             </p>
@@ -1142,99 +1107,6 @@ export default function ReservePage() {
                 </p>
 
               </form>
-            </div>
-          )}
-
-          {/* STEP 6: Full Confirmation & Direct Calendly Booking */}
-          {step === 6 && (
-            <div aria-live="polite" className="step-content flex flex-col items-center justify-center text-center w-full py-8 animate-fade-in">
-              
-              {/* Top Thank You Header */}
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold/10 border border-gold/30 mb-6">
-                <span className="w-2 h-2 rounded-full bg-gold animate-ping" />
-                <span className="font-body text-[10px] uppercase tracking-[0.25em] text-gold font-semibold">
-                  Your Inquiry Is In
-                </span>
-              </div>
-
-              <h2 className="font-display text-4xl sm:text-5xl md:text-6xl text-ink mb-4 leading-tight">
-                Thank you, {formData.name.split(' ')[0] || "Friend"}.
-              </h2>
-
-              <p className="font-body text-base md:text-lg text-ink/75 max-w-2xl mx-auto leading-relaxed mb-10">
-                Your celebration details have been sent to Irene and our team. We will review your date and venue and reach out within 24 to 48 hours.
-              </p>
-
-              {/* Direct Booking Card with Calendly Embed */}
-              <div className="w-full bg-ecru/50 border border-ink/10 rounded-2xl p-6 sm:p-10 shadow-xl mb-12 text-center">
-                <span className="font-body text-[10px] uppercase tracking-[0.25em] text-gold font-semibold block mb-2">
-                  FAST-TRACK YOUR CONSULTATION
-                </span>
-                <h3 className="font-display text-2xl sm:text-3xl text-ink mb-3">
-                  Schedule Your Private Design Session Now
-                </h3>
-                <p className="font-body text-xs sm:text-sm text-ink/70 max-w-xl mx-auto mb-8 leading-relaxed">
-                  If you are ready to explore your date and aesthetic vision right away, select a 20-minute consultation slot on Irene’s private calendar below:
-                </p>
-
-                {/* Embedded Calendly Scheduler */}
-                <div className="w-full rounded-xl overflow-hidden shadow-inner border border-ink/10 bg-ivory min-h-[620px] relative">
-                  <iframe
-                    src="https://calendly.com/ladyvictoriadesigns"
-                    title="Schedule Consultation with Irene"
-                    className="w-full h-[650px] border-0"
-                  />
-                </div>
-
-                {/* Direct Link Fallback */}
-                <div className="mt-6 flex items-center justify-center gap-2">
-                  <span className="font-body text-xs text-ink/60">Prefer opening in a new tab?</span>
-                  <a
-                    href="https://calendly.com/ladyvictoriadesigns"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-body text-xs uppercase tracking-widest text-gold font-semibold underline hover:text-ink transition-colors"
-                  >
-                    Open Calendar Full Screen ↗
-                  </a>
-                </div>
-              </div>
-
-              {/* Secondary Navigation (only on standard reserve, since reserve-v2 moves it to the bottom) */}
-              {!isReserveV2 && (
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
-                  <Link 
-                    href="/gallery" 
-                    className="w-full sm:w-auto bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-8 sm:py-4 hover:bg-gold hover:text-ink transition-colors rounded-full text-center"
-                  >
-                    Explore Our Work
-                  </Link>
-                  <Link 
-                    href="/" 
-                    className="w-full sm:w-auto border border-ink/20 text-ink font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-8 sm:py-4 hover:border-ink transition-colors rounded-full text-center"
-                  >
-                    Return to Home
-                  </Link>
-                </div>
-              )}
-              {isReserveV2 && (
-                <div className="mt-12 flex flex-col items-center gap-4">
-                  <button 
-                    onClick={() => {
-                      document.getElementById("welcome-explore")?.scrollIntoView({ behavior: "smooth" });
-                    }}
-                    className="group flex flex-col items-center gap-4 sm:gap-6 text-ink hover:text-gold transition-colors cursor-pointer"
-                  >
-                    <span className="font-body text-xs sm:text-sm uppercase tracking-[0.25em] font-semibold">
-                      Continue Experience
-                    </span>
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-ink/20 flex items-center justify-center group-hover:border-gold group-hover:bg-gold/5 transition-all animate-bounce">
-                      <span className="text-2xl sm:text-3xl font-light">↓</span>
-                    </div>
-                  </button>
-                </div>
-              )}
-
             </div>
           )}
 
