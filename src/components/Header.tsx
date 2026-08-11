@@ -90,7 +90,8 @@ export default function Header() {
     pathname?.startsWith("/quiz") || 
     pathname?.startsWith("/testimonials") ||
     pathname?.startsWith("/about") ||
-    pathname?.startsWith("/services");
+    pathname?.startsWith("/services") ||
+    pathname?.startsWith("/thank-you");
 
   // Update active preview image based on route
   useEffect(() => {
