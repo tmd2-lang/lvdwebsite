@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { submitLead } from "@/lib/lead-submit";
+import { trackMetaLead } from "@/lib/meta-pixel";
 
 const ArrowLeft = ({ className = "w-4 h-4" }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -219,6 +220,7 @@ export default function QuizClient() {
         quizResultTier: result.tier,
         payload: { formData, score, guestPoints, result },
       });
+      trackMetaLead("style_quiz");
       setIsSubmitted(true);
       setTimeout(() => {
         setIsModalOpen(false);

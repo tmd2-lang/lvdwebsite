@@ -3,6 +3,7 @@ import { Bodoni_Moda, Inter, Pinyon_Script } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import SiteShell from "@/components/SiteShell";
+import MetaPixelNavigation from "@/components/MetaPixelNavigation";
 
 const bodoni = Bodoni_Moda({
   variable: "--font-bodoni",
@@ -80,6 +81,7 @@ export default function RootLayout({
     <html lang="en" className={`${bodoni.variable} ${inter.variable} ${pinyon.variable} antialiased selection:bg-gold/30 selection:text-ink`}>
       <body className="font-body bg-ivory text-ink selection:bg-gold/30 min-h-screen">
         <SiteShell>{children}</SiteShell>
+        <MetaPixelNavigation />
         <Script id="meta-pixel" strategy="afterInteractive">
           {`
             !function(f,b,e,v,n,t,s)

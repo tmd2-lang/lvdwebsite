@@ -9,6 +9,7 @@ import Magnetic from "@/components/Magnetic";
 import { media } from "@/lib/media-slots";
 import { INVESTMENT_TIERS } from "@/data/investments";
 import { submitLead } from "@/lib/lead-submit";
+import { trackMetaLead } from "@/lib/meta-pixel";
 
 const portfolioImages = [
   {
@@ -250,6 +251,7 @@ export default function ReservePage() {
         attachments: uploadedUrls,
         payload: formData,
       });
+      trackMetaLead("reserve");
       setStep(6);
       setTimeout(() => {
         const el = document.getElementById("reserve-form");

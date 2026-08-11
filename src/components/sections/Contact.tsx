@@ -46,7 +46,7 @@ export default function Contact() {
           {/* Magnetic Action Button */}
           <Magnetic>
             <Link 
-              href="/inquire" 
+              href="/consultation" 
               className="group/btn relative inline-flex items-center gap-3 px-9 py-4.5 md:px-11 md:py-5 bg-ivory text-ink rounded-full overflow-hidden shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105"
             >
               {/* Background Hover Shimmer */}

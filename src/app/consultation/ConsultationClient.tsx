@@ -7,6 +7,7 @@ import Magnetic from "@/components/Magnetic";
 import Image from "next/image";
 import { media } from "@/lib/media-slots";
 import { submitLead } from "@/lib/lead-submit";
+import { trackMetaLead } from "@/lib/meta-pixel";
 
 type FormData = {
   celebrationType: string;
@@ -113,6 +114,7 @@ export default function ConsultationClient() {
         attachments: uploadedUrls,
         payload: formData,
       });
+      trackMetaLead("consultation");
       window.scrollTo({ top: 0, behavior: "smooth" });
       setStep(6);
     } catch (error) {
