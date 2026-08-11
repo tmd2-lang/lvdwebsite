@@ -85,7 +85,12 @@ export default function Header() {
   const hideGlobalHeader = pathname === "/reserve" || pathname === "/consultation";
 
   // Pages with ivory/white backgrounds where mix-blend causes contrast issues
-  const isLightPage = pathname === "/inquire" || pathname === "/quiz" || pathname === "/testimonials";
+  const isLightPage = 
+    pathname?.startsWith("/inquire") || 
+    pathname?.startsWith("/quiz") || 
+    pathname?.startsWith("/testimonials") ||
+    pathname?.startsWith("/about") ||
+    pathname?.startsWith("/services");
 
   // Update active preview image based on route
   useEffect(() => {
