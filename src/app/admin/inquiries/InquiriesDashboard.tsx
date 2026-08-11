@@ -102,6 +102,8 @@ export default function InquiriesDashboard({
   const [search, setSearch] = useState("");
   const [mobileDetailOpen, setMobileDetailOpen] = useState(Boolean(initialSelectedId));
   const [savingStatus, setSavingStatus] = useState(false);
+  const [selectedLeadIds, setSelectedLeadIds] = useState<string[]>([]);
+  const [deletingSelected, setDeletingSelected] = useState(false);
   const [savingNote, setSavingNote] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -115,6 +117,7 @@ export default function InquiriesDashboard({
       return !query || haystack.includes(query);
     });
   }, [leads, search]);
+  const allVisibleSelected = visibleLeads.length > 0 && visibleLeads.every((lead) => selectedLeadIds.includes(lead.id));
 
   function chooseLead(id: string) {
     setSelectedId(id);
@@ -127,6 +130,51 @@ export default function InquiriesDashboard({
     setError("");
     setMessage(text);
     window.setTimeout(() => setMessage(""), 2600);
+  }
+
+  function toggleLeadSelection(id: string) {
+    setSelectedLeadIds((current) => current.includes(id)
+      ? current.filter((selectedLeadId) => selectedLeadId !== id)
+      : [...current, id]);
+  }
+
+  function toggleVisibleSelection() {
+    if (allVisibleSelected) {
+      const visibleIds = new Set(visibleLeads.map((lead) => lead.id));
+      setSelectedLeadIds((current) => current.filter((id) => !visibleIds.has(id)));
+      return;
+    }
+
+    setSelectedLeadIds((current) => [...new Set([...current, ...visibleLeads.map((lead) => lead.id)])]);
+  }
+
+  async function deleteSelected() {
+    const ids = selectedLeadIds.filter((id) => leads.some((lead) => lead.id === id));
+    if (ids.length === 0) return;
+    const label = ids.length === 1 ? "inquiry" : "inquiries";
+    if (!confirm(`Permanently delete ${ids.length} ${label}? This cannot be undone.`)) return;
+
+    setDeletingSelected(true);
+    setError("");
+    try {
+      await responseJson(await fetch("/api/admin/inquiries/bulk", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids }),
+      }));
+      const remainingLeads = leads.filter((lead) => !ids.includes(lead.id));
+      setLeads(remainingLeads);
+      setSelectedLeadIds([]);
+      if (selectedId && ids.includes(selectedId)) {
+        setSelectedId(remainingLeads[0]?.id || "");
+        setMobileDetailOpen(false);
+      }
+      announce(`${ids.length} ${label} deleted.`);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Those inquiries could not be deleted.");
+    } finally {
+      setDeletingSelected(false);
+    }
   }
 
   async function changeStatus(status: LeadStatus) {
@@ -239,6 +287,14 @@ export default function InquiriesDashboard({
                 <span aria-hidden="true">⌕</span>
                 <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search a name, venue, or date" aria-label="Search inquiries" />
               </label>
+              <div className={styles.selectionBar}>
+                <label className={styles.selectAll}>
+                  <input type="checkbox" checked={allVisibleSelected} onChange={toggleVisibleSelection} aria-label="Select all visible inquiries" />
+                  <span>Select visible</span>
+                </label>
+                {selectedLeadIds.length > 0 && <span className={styles.selectionCount}>{selectedLeadIds.length} selected</span>}
+                {selectedLeadIds.length > 0 && <button type="button" className={styles.bulkDeleteButton} onClick={() => void deleteSelected()} disabled={deletingSelected}>{deletingSelected ? "Deleting…" : "Delete selected"}</button>}
+              </div>
             </div>
 
             <div className={styles.leadList}>
@@ -249,13 +305,18 @@ export default function InquiriesDashboard({
                   <p>Try another view or clear your search.</p>
                 </div>
               ) : visibleLeads.map((lead) => (
-                <button type="button" key={lead.id} className={`${styles.leadCard} ${selected?.id === lead.id ? styles.leadCardActive : ""}`} onClick={() => chooseLead(lead.id)}>
-                  {lead.status === "new" && <span className={styles.newIndicator} />}
-                  <span className={styles.cardMain}>
-                    <span className={styles.cardTitle}><b>{lead.name || "New inquiry"}</b></span>
-                    <span className={styles.cardEvent}>{readableDate(lead.event_date, lead.date_undecided)}</span>
-                  </span>
-                </button>
+                <div className={styles.leadCardRow} key={lead.id}>
+                  <label className={styles.selectLead}>
+                    <input type="checkbox" checked={selectedLeadIds.includes(lead.id)} onChange={() => toggleLeadSelection(lead.id)} aria-label={`Select ${lead.name || "new inquiry"}`} />
+                  </label>
+                  <button type="button" className={`${styles.leadCard} ${selected?.id === lead.id ? styles.leadCardActive : ""}`} onClick={() => chooseLead(lead.id)}>
+                    {lead.status === "new" && <span className={styles.newIndicator} />}
+                    <span className={styles.cardMain}>
+                      <span className={styles.cardTitle}><b>{lead.name || "New inquiry"}</b></span>
+                      <span className={styles.cardEvent}>{readableDate(lead.event_date, lead.date_undecided)}</span>
+                    </span>
+                  </button>
+                </div>
               ))}
             </div>
           </section>

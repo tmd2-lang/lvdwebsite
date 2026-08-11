@@ -134,3 +134,17 @@ export async function deleteLead(id: string) {
   }
 }
 
+export async function deleteLeads(ids: string[]) {
+  if (ids.length === 0) return;
+  const { url } = databaseConfig();
+  const response = await fetch(`${url}/rest/v1/leads?id=in.(${ids.join(",")})`, {
+    method: "DELETE",
+    headers: databaseHeaders(),
+    cache: "no-store",
+  });
+  if (!response.ok) {
+    const errorText = await response.text().catch(() => "");
+    console.error("Failed to delete inquiries:", errorText);
+    throw new Error("Could not delete those inquiries right now.");
+  }
+}
