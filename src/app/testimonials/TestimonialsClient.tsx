@@ -522,7 +522,7 @@ export default function TestimonialsClient() {
                 </a>
 
                 <Link
-                  href="/consultation"
+                  href="/inquire"
                   onClick={() => setModalStory(null)}
                   className="w-full sm:w-auto px-6 py-3 bg-ink text-ivory hover:bg-gold hover:text-ink text-center font-body text-[10px] uppercase tracking-[0.25em] font-medium transition-colors cursor-pointer"
                 >
