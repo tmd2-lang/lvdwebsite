@@ -110,7 +110,7 @@ export default function Testimonials() {
         </p>
 
         <div className="relative z-30 flex flex-col sm:flex-row items-center gap-3.5 pointer-events-auto">
-          <Link href="/consultation" className="font-body text-xs uppercase tracking-[0.2em] text-ink bg-ivory hover:bg-gold px-7 py-3.5 transition-colors shadow-md font-semibold cursor-pointer">
+          <Link href="/inquire" className="font-body text-xs uppercase tracking-[0.2em] text-ink bg-ivory hover:bg-gold px-7 py-3.5 transition-colors shadow-md font-semibold cursor-pointer">
             Book Your Consultation
           </Link>
           <Link

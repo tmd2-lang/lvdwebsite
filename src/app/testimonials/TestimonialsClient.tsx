@@ -394,7 +394,7 @@ export default function TestimonialsClient() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Magnetic>
                 <Link
-                  href="/consultation"
+                  href="/inquire"
                   className="w-full sm:w-auto px-8 py-4 bg-ink text-ivory border border-ink font-body text-[11px] uppercase tracking-[0.25em] font-medium hover:bg-gold hover:text-ink hover:border-gold transition-colors duration-300 shadow-xs"
                 >
                   Request Private Consultation

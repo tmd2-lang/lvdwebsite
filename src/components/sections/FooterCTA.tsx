@@ -21,7 +21,7 @@ export default function FooterCTA() {
             Let’s create something <br/><span className="italic text-gold">unforgettable.</span>
           </h2>
           <Magnetic>
-            <Link href="/consultation" className="font-body text-xs uppercase tracking-[0.2em] text-ivory border-b border-gold pb-1 hover:text-gold transition-colors">
+            <Link href="/inquire" className="font-body text-xs uppercase tracking-[0.2em] text-ivory border-b border-gold pb-1 hover:text-gold transition-colors">
               Book a Consultation
             </Link>
           </Magnetic>
