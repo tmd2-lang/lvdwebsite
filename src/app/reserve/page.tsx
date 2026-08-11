@@ -609,11 +609,8 @@ export default function ReservePage() {
         }`}
       >
         {/* Editorial Section Header (visible during inquiry steps) */}
-        <div ref={formContainerRef} className={`w-full max-w-[660px] relative mx-auto`}>
-          
-          {/* Form Progress Bar (Steps 1 - 5) */}
-          {step < 6 && (
-            <div className="mb-8 sm:mb-10">
+        {step < 6 && (
+          <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
             <p className="font-body text-[10px] sm:text-xs font-semibold uppercase tracking-[0.28em] text-gold mb-3 sm:mb-4">
               Reserve Your Date
             </p>
@@ -626,7 +623,7 @@ export default function ReservePage() {
           </div>
         )}
 
-        <div ref={formContainerRef} className={`w-full ${step === 6 ? "max-w-[1000px]" : "max-w-[660px]"} relative mx-auto`}>
+        <div ref={formContainerRef} className={`w-full max-w-[660px] relative mx-auto`}>
           
           {/* Form Progress Bar (Steps 1 - 5) */}
           {step < 6 && (
