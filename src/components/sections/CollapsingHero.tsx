@@ -39,7 +39,7 @@ export default function CollapsingHero() {
         });
       };
 
-      const interval = setInterval(nextSlide, 10000); // 10 seconds
+      const interval = setInterval(nextSlide, 3000); // 3 seconds
       return () => clearInterval(interval);
     });
 
