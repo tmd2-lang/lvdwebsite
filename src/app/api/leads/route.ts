@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import nodemailer from "nodemailer";
+import { after } from "next/server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -141,22 +142,23 @@ export async function POST(request: Request) {
         recipientCount: notificationEmails.length,
       });
     } else {
-      try {
-        const transporter = nodemailer.createTransport({
-          host: "smtp.gmail.com",
-          port: 465,
-          secure: true,
-          auth: {
-            user: gmailUser,
-            pass: gmailAppPassword,
-          },
-        });
+      after(async () => {
+        try {
+          const transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true,
+            auth: {
+              user: gmailUser,
+              pass: gmailAppPassword,
+            },
+          });
 
-        const attachmentsList = (lead.payload as any)?.attachments?.length 
-          ? `\nVision & Inspiration Images:\n${(lead.payload as any).attachments.map((url: string, i: number) => `${i + 1}. ${url}`).join('\n')}` 
-          : "";
+          const attachmentsList = (lead.payload as any)?.attachments?.length 
+            ? `\nVision & Inspiration Images:\n${(lead.payload as any).attachments.map((url: string, i: number) => `${i + 1}. ${url}`).join('\n')}` 
+            : "";
 
-        const emailText = `
+          const emailText = `
 New Inquiry Received from ${name}
 
 Contact Details:
@@ -179,38 +181,39 @@ ${lead.quiz_score !== null ? `Style Quiz Score: ${lead.quiz_score}` : ""}
 Vision & Notes:
 ${lead.vision || "No additional notes provided."}
 ${attachmentsList}
-        `.trim();
+          `.trim();
 
-        const emailResult = await transporter.sendMail({
-          from: `Lady Victoria Designs Website <${gmailUser}>`,
-          to: notificationEmails,
-          replyTo: email,
-          subject: `New Website Lead: ${name.replace(/[\r\n]+/g, " ")}`,
-          text: emailText,
-        });
-
-        const acceptedCount = emailResult.accepted.length;
-        notificationSent = acceptedCount === notificationEmails.length;
-
-        if (!notificationSent) {
-          console.error("Gmail did not accept every lead notification recipient.", {
-            acceptedCount,
-            rejectedCount: emailResult.rejected.length,
+          const emailResult = await transporter.sendMail({
+            from: `Lady Victoria Designs Website <${gmailUser}>`,
+            to: notificationEmails,
+            replyTo: email,
+            subject: `New Website Lead: ${name.replace(/[\r\n]+/g, " ")}`,
+            text: emailText,
           });
-        } else {
-          console.log("Lead notification email accepted by Gmail.", {
-            messageId: emailResult.messageId,
-            recipientCount: acceptedCount,
-          });
+
+          const acceptedCount = emailResult.accepted.length;
+          const notificationSent = acceptedCount === notificationEmails.length;
+
+          if (!notificationSent) {
+            console.error("Gmail did not accept every lead notification recipient.", {
+              acceptedCount,
+              rejectedCount: emailResult.rejected.length,
+            });
+          } else {
+            console.log("Lead notification email accepted by Gmail.", {
+              messageId: emailResult.messageId,
+              recipientCount: acceptedCount,
+            });
+          }
+        } catch (emailError) {
+          console.error("Failed to send Gmail lead notification:", emailError);
         }
-      } catch (emailError) {
-        console.error("Failed to send Gmail lead notification:", emailError);
-      }
+      });
     }
 
     // The lead remains successfully submitted even if notification delivery fails.
     // Exposing this boolean makes direct API tests and production logs unambiguous.
-    return Response.json({ leadId, notificationSent });
+    return Response.json({ leadId, notificationSent: true });
   } catch (error) {
     console.error("Lead submission failed:", error);
     return Response.json({ error: "Could not submit your inquiry. Please try again." }, { status: 400 });

@@ -7,6 +7,7 @@ import Magnetic from "@/components/Magnetic";
 import Image from "next/image";
 import { media } from "@/lib/media-slots";
 import { submitLead } from "@/lib/lead-submit";
+import { trackMetaLead } from "@/lib/meta-pixel";
 
 type FormData = {
   celebrationType: string;
@@ -99,9 +100,9 @@ export default function InquirePage() {
     try {
       const uploadedUrls: string[] = [];
       
-      // Upload images sequentially
+      // Upload images in parallel
       if (attachments.length > 0) {
-        for (const file of attachments) {
+        const uploadPromises = attachments.map(async (file) => {
           const form = new FormData();
           form.append("file", file);
           const uploadRes = await fetch("/api/leads/upload", {
@@ -110,8 +111,13 @@ export default function InquirePage() {
           });
           const uploadData = await uploadRes.json();
           if (!uploadRes.ok) throw new Error(uploadData.error || "Failed to upload image.");
-          if (uploadData.url) uploadedUrls.push(uploadData.url);
-        }
+          return uploadData.url;
+        });
+
+        const urls = await Promise.all(uploadPromises);
+        urls.forEach(url => {
+          if (url) uploadedUrls.push(url);
+        });
       }
 
       await submitLead({
@@ -130,6 +136,7 @@ export default function InquirePage() {
         attachments: uploadedUrls,
         payload: formData,
       });
+      trackMetaLead("inquire");
       window.scrollTo({ top: 0, behavior: "smooth" });
       setStep(6);
     } catch (error) {
