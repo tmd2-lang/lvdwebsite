@@ -103,6 +103,7 @@ export default function AdminHome({
         <nav aria-label="Studio navigation">
           <Link className={styles.navActive} href="/admin" aria-current="page">Home</Link>
           <Link href="/admin/inquiries"><span>Inquiries</span>{needsAttention.length > 0 && <b>{needsAttention.length}</b>}</Link>
+          <Link href="/admin/profile">Profile</Link>
         </nav>
         <div className={styles.account}>
           <p>{user.name}</p>
@@ -116,6 +117,7 @@ export default function AdminHome({
           <nav aria-label="Mobile studio navigation">
             <Link className={styles.mobileActive} href="/admin">Home</Link>
             <Link href="/admin/inquiries">Inquiries</Link>
+            <Link href="/admin/profile">Profile</Link>
           </nav>
         </header>
 

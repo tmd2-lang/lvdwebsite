@@ -10,7 +10,17 @@ type SupabaseAuthUser = {
   user_metadata?: {
     full_name?: unknown;
     name?: unknown;
+    first_name?: unknown;
+    last_name?: unknown;
+    display_name?: unknown;
+    role?: unknown;
+    avatar_url?: unknown;
   } | null;
+};
+
+type SupabaseAdminUser = SupabaseAuthUser & {
+  id: string;
+  email: string;
 };
 
 function authConfig() {
@@ -38,6 +48,83 @@ export function sessionCookieOptions(maxAge: number) {
   };
 }
 
+function cleanText(value: unknown) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function profileFromUser(user: SupabaseAuthUser, fallbackEmail = "") : AdminUser | null {
+  const id = cleanText(user.id);
+  const email = cleanText(user.email || fallbackEmail).toLowerCase();
+  if (!id || !email) return null;
+
+  const metadata = user.user_metadata || {};
+  const firstName = cleanText(metadata.first_name);
+  const lastName = cleanText(metadata.last_name);
+  const displayName = cleanText(metadata.display_name)
+    || [firstName, lastName].filter(Boolean).join(" ")
+    || cleanText(metadata.full_name)
+    || cleanText(metadata.name)
+    || email.split("@")[0].replace(/[._-]+/g, " ");
+
+  return {
+    id,
+    email,
+    name: displayName,
+    firstName,
+    lastName,
+    displayName,
+    role: cleanText(metadata.role) || "admin",
+    avatarUrl: cleanText(metadata.avatar_url) || null,
+  };
+}
+
+function supabaseAdminConfig() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  return url && serviceRoleKey ? { url, serviceRoleKey } : null;
+}
+
+async function supabaseAdminFetch<T>(path: string, init?: RequestInit): Promise<T | null> {
+  const config = supabaseAdminConfig();
+  if (!config) return null;
+
+  const response = await fetch(`${config.url}${path}`, {
+    ...init,
+    headers: {
+      apikey: config.serviceRoleKey,
+      Authorization: `Bearer ${config.serviceRoleKey}`,
+      "Content-Type": "application/json",
+      ...(init?.headers || {}),
+    },
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    console.error("Supabase admin auth request failed:", await response.text().catch(() => ""));
+    return null;
+  }
+
+  return response.json() as Promise<T>;
+}
+
+async function findSupabaseUserByEmail(email: string) {
+  const payload = await supabaseAdminFetch<{ users?: SupabaseAdminUser[] }>(
+    "/auth/v1/admin/users?page=1&per_page=1000",
+  );
+  return payload?.users?.find((user) => user.email.toLowerCase() === email.toLowerCase()) || null;
+}
+
+async function getSupabaseUserById(id: string) {
+  return supabaseAdminFetch<SupabaseAdminUser>(`/auth/v1/admin/users/${encodeURIComponent(id)}`);
+}
+
+function localAdminEmail() {
+  return (process.env.SUPABASE_ADMIN_EMAILS || "")
+    .split(",")
+    .map((item) => item.trim().toLowerCase())
+    .filter(Boolean)[0] || "tjdozier98@gmail.com";
+}
+
 export async function verifyAdminToken(token: string | undefined): Promise<AdminUser | null> {
   const config = authConfig();
   if (!config || !token) return null;
@@ -53,27 +140,62 @@ export async function verifyAdminToken(token: string | undefined): Promise<Admin
 
     if (!response.ok) return null;
     const user = (await response.json()) as SupabaseAuthUser;
-    const email = typeof user.email === "string" ? user.email.toLowerCase() : "";
-    const id = typeof user.id === "string" ? user.id : "";
-    if (!id || !email || !isApprovedAdmin(email)) return null;
-
-    const metadataName = user.user_metadata?.full_name || user.user_metadata?.name;
-    const name = typeof metadataName === "string" && metadataName.trim()
-      ? metadataName.trim()
-      : email.split("@")[0].replace(/[._-]+/g, " ");
-
-    return { id, email, name };
+    const adminUser = profileFromUser(user);
+    if (!adminUser || !isApprovedAdmin(adminUser.email)) return null;
+    return adminUser;
   } catch {
     return null;
   }
 }
 
 export async function getAdminUser() {
-  if (process.env.NODE_ENV === "development") {
-    return { id: "local-dev", email: "tjdozier98@gmail.com", name: "TJ (Local Dev)" };
-  }
   const cookieStore = await cookies();
-  return verifyAdminToken(cookieStore.get(ADMIN_ACCESS_COOKIE)?.value);
+  const tokenUser = await verifyAdminToken(cookieStore.get(ADMIN_ACCESS_COOKIE)?.value);
+  if (tokenUser) return tokenUser;
+
+  if (process.env.NODE_ENV === "development") {
+    const localUser = await findSupabaseUserByEmail(localAdminEmail());
+    const localAdmin = localUser ? profileFromUser(localUser) : null;
+    if (localAdmin) return localAdmin;
+
+    return {
+      id: "local-dev",
+      email: localAdminEmail(),
+      name: "TJ (Local Dev)",
+      firstName: "TJ",
+      lastName: "",
+      displayName: "TJ (Local Dev)",
+      role: "admin",
+      avatarUrl: null,
+    };
+  }
+
+  return null;
+}
+
+export async function updateAdminProfile(
+  user: AdminUser,
+  profile: { firstName: string; lastName: string; displayName: string; avatarUrl: string | null },
+) {
+  const authUser = user.id === "local-dev"
+    ? await findSupabaseUserByEmail(user.email)
+    : await getSupabaseUserById(user.id);
+  if (!authUser) throw new Error("Your Supabase account could not be found.");
+
+  const metadata = {
+    ...(authUser.user_metadata || {}),
+    first_name: profile.firstName,
+    last_name: profile.lastName,
+    display_name: profile.displayName,
+    avatar_url: profile.avatarUrl || null,
+  };
+  const updatedUser = await supabaseAdminFetch<SupabaseAdminUser>(
+    `/auth/v1/admin/users/${encodeURIComponent(authUser.id)}`,
+    { method: "PUT", body: JSON.stringify({ user_metadata: metadata }) },
+  );
+  const updatedProfile = updatedUser ? profileFromUser(updatedUser) : null;
+  if (!updatedProfile) throw new Error("Your profile could not be saved.");
+  return updatedProfile;
 }
 
 export async function hasAdminRefreshToken() {

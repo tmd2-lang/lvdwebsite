@@ -209,6 +209,7 @@ export default function InquiriesDashboard({
         <nav aria-label="Studio navigation">
           <a href="/admin">Home</a>
           <a className={styles.navActive} href="/admin/inquiries"><span>Inquiries</span><b>{leads.filter((lead) => lead.status === "new").length}</b></a>
+          <a href="/admin/profile">Profile</a>
         </nav>
         <div className={styles.account}>
           <p>{user.name}</p>
@@ -219,7 +220,7 @@ export default function InquiriesDashboard({
       <section className={styles.workspace}>
         <header className={styles.mobileHeader}>
           <a href="/admin"><b>LVD</b><span>Studio</span></a>
-          <nav aria-label="Mobile studio navigation"><a href="/admin">Home</a><a href="/admin/inquiries" aria-current="page">Inquiries</a></nav>
+          <nav aria-label="Mobile studio navigation"><a href="/admin">Home</a><a href="/admin/inquiries" aria-current="page">Inquiries</a><a href="/admin/profile">Profile</a></nav>
         </header>
 
         <div className={styles.topbar}>

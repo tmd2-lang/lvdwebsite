@@ -46,4 +46,9 @@ export type AdminUser = {
   id: string;
   email: string;
   name: string;
+  firstName: string;
+  lastName: string;
+  displayName: string;
+  role: string;
+  avatarUrl: string | null;
 };
