@@ -82,6 +82,27 @@ export default function RootLayout({
       <body className="font-body bg-ivory text-ink selection:bg-gold/30 min-h-screen">
         <SiteShell>{children}</SiteShell>
         <MetaPixelNavigation />
+        <Script
+          id="google-tag"
+          src="https://www.googletagmanager.com/gtag/js?id=AW-11134478295"
+          strategy="afterInteractive"
+        />
+        <Script id="google-tag-config" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            window.gtag = window.gtag || gtag;
+            gtag('js', new Date());
+            gtag('config', 'AW-11134478295');
+          `}
+        </Script>
+        <Script id="pinterest-tag" strategy="afterInteractive">
+          {`
+            !function(e){if(!window.pintrk){window.pintrk=function(){window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var n=window.pintrk;n.queue=[],n.version="3.0";var t=document.createElement("script");t.async=!0,t.src=e;var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js");
+            pintrk('load', '2613901982449');
+            pintrk('page');
+          `}
+        </Script>
         <Script id="meta-pixel" strategy="afterInteractive">
           {`
             !function(f,b,e,v,n,t,s)
@@ -102,6 +123,13 @@ export default function RootLayout({
             width="1"
             style={{ display: "none" }}
             src="https://www.facebook.com/tr?id=1263840655319183&ev=PageView&noscript=1"
+            alt=""
+          />
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
+            src="https://ct.pinterest.com/v3/?event=init&tid=2613901982449&noscript=1"
             alt=""
           />
         </noscript>

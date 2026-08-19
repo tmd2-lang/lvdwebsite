@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import MarketingConversionTracking from "@/components/MarketingConversionTracking";
+import CalendlyEmbed from "@/components/CalendlyEmbed";
 
 export const metadata: Metadata = {
   title: "Thank You",
@@ -9,7 +11,9 @@ export const metadata: Metadata = {
 
 export default function ThankYouPage() {
   return (
-    <main className="w-full min-h-screen bg-ivory text-ink flex flex-col items-center pt-32 pb-24 px-6 md:px-12 relative overflow-hidden font-body">
+    <>
+      <MarketingConversionTracking />
+      <main className="w-full min-h-screen bg-ivory text-ink flex flex-col items-center pt-32 pb-24 px-6 md:px-12 relative overflow-hidden font-body">
       {/* Background Subtle Wash */}
       <div className="absolute inset-0 bg-ink/[0.02] pointer-events-none" />
 
@@ -49,12 +53,7 @@ export default function ThankYouPage() {
             className="w-full rounded-xl overflow-hidden shadow-inner border border-ink/10 bg-ivory min-h-[620px] relative"
             data-lenis-prevent
           >
-            <iframe
-              src="https://calendly.com/ladyvictoriadesigns"
-              title="Schedule Consultation with Irene"
-              className="w-full h-[650px] border-0"
-              data-lenis-prevent
-            />
+            <CalendlyEmbed />
           </div>
 
           {/* Direct Link Fallback */}
@@ -88,6 +87,7 @@ export default function ThankYouPage() {
         </div>
 
       </div>
-    </main>
+      </main>
+    </>
   );
 }
