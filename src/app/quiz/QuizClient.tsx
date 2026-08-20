@@ -182,7 +182,7 @@ export default function QuizClient() {
     if (score <= 45) {
       return {
         range: "$8,000 – $15,000",
-        tier: "The Essentials",
+        tier: "Elegant",
         badge: "TIER THREE",
         message: "Your vision is beautifully focused. With cohesive florals and thoughtful details, Irene and our design team will bring your celebration to life with elegance and intention.",
       };

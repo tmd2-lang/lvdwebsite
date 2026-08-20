@@ -473,7 +473,7 @@ export default function InquirePage() {
                           { tier: "$20,000+", label: "Full Production Micro-Experience", sub: "High-touch immersive transformation" }
                         ]
                       : [
-                          { tier: "$8,000 – $15,000", label: "The Essentials", sub: "Signature floral styling for intimate gatherings" },
+                          { tier: "$8,000 – $15,000", label: "Elegant", sub: "Signature floral styling for intimate gatherings" },
                           { tier: "$20,000 – $35,000", label: "Design + Florals", sub: "Bespoke floral architecture & complete aesthetic direction" },
                           { tier: "$35,000 – $55,000", label: "Elevated Production", sub: "Grand floral arches, focal installations & ambient styling" },
                           { tier: "$55,000+", label: "The Full Production", sub: "Comprehensive custom fabrication & white-glove execution" }

@@ -548,7 +548,7 @@ export default function ConsultationClient() {
                       : [
                           {
                             tier: "$8,000 – $15,000",
-                            label: "The Essentials",
+                            label: "Elegant",
                             sub: "Signature floral styling for intimate focal points",
                           },
                           {
