@@ -107,7 +107,7 @@ export const INVESTMENT_TIERS: InvestmentTierData[] = [
     tierNumber: "03",
     tierLabel: "TIER THREE",
     isSignature: false,
-    name: "The Essentials",
+    name: "Elegant",
     price: "FROM $8,000 – $15,000",
     tagline: "Where your vision begins to bloom.",
     desc: "Perfect for couples who want beautifully cohesive florals and considered styling for intimate weddings and celebrations without managing multiple vendors.",
@@ -140,6 +140,6 @@ export const INVESTMENT_TIERS: InvestmentTierData[] = [
       },
     ],
     subtext: "* Final pricing varies based on guest count and floral selections.",
-    inquireQuery: "The Essentials ($8k-$15k)",
+    inquireQuery: "Elegant ($8k-$15k)",
   },
 ];

@@ -43,7 +43,7 @@ export const MEDIA_SLOTS: MediaSlotDefinition[] = [
   { id: "services.occasion.4", label: "Floral Gifting", group: "Services", note: "What we design for" },
   { id: "investments.production", label: "Full Production", group: "Investments", note: "Used on Home and Services" },
   { id: "investments.design-florals", label: "Design + Florals", group: "Investments", note: "Used on Home and Services" },
-  { id: "investments.essentials", label: "The Essentials", group: "Investments", note: "Used on Home and Services" },
+  { id: "investments.essentials", label: "Elegant", group: "Investments", note: "Used on Home and Services" },
   { id: "inquire.hero", label: "Inquiry image", group: "Inquiry", note: "Sticky image beside the form" }
 ];
 
