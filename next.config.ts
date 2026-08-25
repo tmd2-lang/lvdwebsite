@@ -1,3 +1,4 @@
+import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
 
 const supabaseInquiryImages = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -6,6 +7,7 @@ const supabaseInquiryImages = process.env.NEXT_PUBLIC_SUPABASE_URL
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["127.0.0.1", "192.168.12.183", "10.225.16.51"],
+  pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
   images: {
     remotePatterns: [
       {
@@ -18,4 +20,6 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+const withMDX = createMDX({});
+
+export default withMDX(nextConfig);

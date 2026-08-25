@@ -64,8 +64,17 @@ const MENU_ITEMS = [
     caption: "Interactive Aesthetic Consultation",
   },
   {
-    id: "inquire",
+    id: "journal",
     number: "07",
+    label: "Journal",
+    subtitle: "Planning Notes & Floral Guidance",
+    path: "/journal",
+    image: media["about.craft.1"],
+    caption: "Notes From The Studio",
+  },
+  {
+    id: "inquire",
+    number: "08",
     label: "Inquire",
     subtitle: "Begin Your Bespoke Consultation",
     path: "/inquire",
@@ -89,6 +98,7 @@ export default function Header() {
     pathname?.startsWith("/inquire") || 
     pathname?.startsWith("/quiz") || 
     pathname?.startsWith("/testimonials") ||
+    pathname?.startsWith("/journal") ||
     pathname?.startsWith("/about") ||
     pathname?.startsWith("/services") ||
     pathname?.startsWith("/thank-you");
@@ -216,7 +226,7 @@ export default function Header() {
         {/* Center: 4 Curated Editorial Links */}
         <nav 
           aria-label="Primary Navigation"
-          className="justify-self-center hidden md:flex items-center gap-8 lg:gap-10 font-body text-[10px] uppercase tracking-[0.22em] pointer-events-auto"
+          className="justify-self-center hidden md:flex items-center gap-5 lg:gap-8 xl:gap-10 font-body text-[10px] uppercase tracking-[0.18em] lg:tracking-[0.22em] whitespace-nowrap pointer-events-auto"
         >
           <Link 
             href="/about" 
@@ -241,6 +251,12 @@ export default function Header() {
             className={`hover:text-gold transition-colors ${pathname === "/testimonials" ? "text-gold font-bold" : ""}`}
           >
             Kind Words
+          </Link>
+          <Link 
+            href="/journal" 
+            className={`hover:text-gold transition-colors ${pathname?.startsWith("/journal") ? "text-gold font-bold" : ""}`}
+          >
+            Journal
           </Link>
         </nav>
 

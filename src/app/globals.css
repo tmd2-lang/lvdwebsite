@@ -164,6 +164,15 @@ body {
   }
 }
 
+/* MDX wraps block-level children in <p>. Inside a Journal component that
+   wrapper inherits the global paragraph styling and overrides the component's
+   own typography, so neutralize it. */
+.journal-slot > p {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+
 /* Base utility for Lenis smooth scrolling */
 html.lenis, html.lenis body {
   height: auto;
