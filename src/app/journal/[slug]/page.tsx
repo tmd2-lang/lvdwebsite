@@ -3,7 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Contact from "@/components/sections/Contact";
-import { formatJournalDate, getJournalPost, getJournalPosts } from "@/lib/journal-data";
+import {
+  formatIssueDate,
+  formatJournalDate,
+  getJournalPost,
+  getJournalPosts,
+  issueLabel,
+} from "@/lib/journal-data";
 
 export function generateStaticParams() {
   return getJournalPosts().map((post) => ({ slug: post.slug }));
@@ -61,9 +67,13 @@ export default async function JournalPostPage({
     dateModified: post.updated ?? post.date,
     image: `https://www.ladyvictoriadesigns.com${post.heroImage}`,
     author: {
-      "@type": "Organization",
-      name: "Lady Victoria Designs",
-      url: "https://www.ladyvictoriadesigns.com",
+      "@type": "Person",
+      name: post.author,
+      worksFor: {
+        "@type": "Organization",
+        name: "Lady Victoria Designs",
+        url: "https://www.ladyvictoriadesigns.com",
+      },
     },
     publisher: {
       "@type": "Organization",
@@ -86,30 +96,44 @@ export default async function JournalPostPage({
       />
 
       <main className="w-full bg-ivory pt-32 pb-24 text-ink selection:bg-gold/20 selection:text-ink">
-        <header className="mx-auto mb-12 w-full max-w-3xl px-6 text-center md:mb-16 md:px-0">
-          <div className="mb-6 flex items-center justify-center gap-3">
-            <span className="h-px w-8 bg-gold/50" />
-            <span className="font-body text-[10px] font-medium uppercase tracking-[0.3em] text-gold">
-              {post.category}
-            </span>
-            <span className="h-px w-8 bg-gold/50" />
+        <header className="mx-auto mb-12 w-full max-w-6xl px-6 md:mb-16 md:px-12">
+          <Link
+            href="/journal"
+            className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 transition-colors hover:text-gold"
+          >
+            ← Back
+          </Link>
+
+          <div className="mt-8 flex items-center gap-6 border-t border-ink/15 pt-5 font-body text-[10px] uppercase tracking-[0.22em] text-ink/45 sm:text-[11px]">
+            <span>{issueLabel(post.issueNumber)}</span>
+            <span>{formatIssueDate(post.date)}</span>
+            <span className="text-gold">{post.category}</span>
           </div>
 
-          <h1 className="font-display text-[clamp(2rem,4.5vw,3.5rem)] leading-[1.14] tracking-tight text-ink">
-            {post.title}
-          </h1>
+          <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-[1fr_auto] md:items-end md:gap-12">
+            <h1 className="font-display text-[clamp(2rem,4.8vw,3.75rem)] uppercase leading-[1.08] tracking-tight text-ink">
+              {post.title}
+            </h1>
 
-          <p className="mt-6 font-body text-[10px] uppercase tracking-[0.2em] text-ink/45">
+            <div className="md:border-l md:border-ink/15 md:pl-10">
+              <p className="font-body text-[10px] uppercase tracking-[0.22em] text-ink/45">Author</p>
+              <p className="mt-1 font-display text-xl uppercase tracking-tight text-ink md:text-2xl">
+                {post.author}
+              </p>
+            </div>
+          </div>
+
+          <p className="mt-6 font-body text-[10px] uppercase tracking-[0.2em] text-ink/40">
             <time dateTime={post.date}>{formatJournalDate(post.date)}</time>
             <span className="mx-2 text-gold/50">·</span>
             {post.readingMinutes} min read
+            {post.updated && (
+              <>
+                <span className="mx-2 text-gold/50">·</span>
+                Updated <time dateTime={post.updated}>{formatJournalDate(post.updated)}</time>
+              </>
+            )}
           </p>
-
-          {post.updated && (
-            <p className="mt-2 font-body text-[10px] uppercase tracking-[0.2em] text-ink/35">
-              Updated <time dateTime={post.updated}>{formatJournalDate(post.updated)}</time>
-            </p>
-          )}
         </header>
 
         <div className="mx-auto mb-14 w-full max-w-5xl px-6 md:mb-20 md:px-12">
@@ -150,10 +174,11 @@ export default async function JournalPostPage({
                       className="object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-105"
                     />
                   </div>
-                  <p className="mt-5 font-body text-[10px] uppercase tracking-[0.24em] text-gold">
-                    {entry.category}
-                  </p>
-                  <h3 className="mt-2 font-display text-xl leading-[1.25] tracking-tight text-ink transition-colors group-hover:text-gold">
+                  <div className="mt-5 flex items-center gap-5 font-body text-[10px] uppercase tracking-[0.22em] text-ink/45">
+                    <span>{issueLabel(entry.issueNumber)}</span>
+                    <span>{formatIssueDate(entry.date)}</span>
+                  </div>
+                  <h3 className="mt-2 font-display text-xl uppercase leading-[1.22] tracking-tight text-ink transition-colors group-hover:text-gold">
                     {entry.title}
                   </h3>
                 </Link>

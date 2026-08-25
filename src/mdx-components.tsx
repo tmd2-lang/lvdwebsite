@@ -6,6 +6,8 @@ import {
   GoldRule,
   ImagePair,
   PullQuote,
+  Scenario,
+  Scenarios,
   Timeline,
   TimelineItem,
   Verdict,
@@ -87,6 +89,8 @@ const components: MDXComponents = {
   ImagePair,
   Timeline,
   TimelineItem,
+  Scenarios,
+  Scenario,
   Verdict,
   ConsultationCTA,
 };

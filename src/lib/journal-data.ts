@@ -39,6 +39,10 @@ export type JournalPost = {
   /** ISO date of the last substantive edit. Drives dateModified for search. */
   updated?: string;
   readingMinutes: number;
+  /** Sequential issue number, oldest post is 1. Derived, never stored. */
+  issueNumber: number;
+  /** Byline shown on the article. Defaults to the studio's creative director. */
+  author: string;
   category: JournalCategory;
   /** Path under /public, or a remote pattern allowed in next.config.ts. */
   heroImage: string;
@@ -46,20 +50,60 @@ export type JournalPost = {
   featured: boolean;
 };
 
-type StoredPost = Omit<JournalPost, "readingMinutes">;
+type StoredPost = Omit<JournalPost, "readingMinutes" | "issueNumber" | "author"> & {
+  author?: string;
+};
+
+const DEFAULT_AUTHOR = "Irene";
 
 const POSTS: StoredPost[] = [
+  {
+    slug: "what-is-a-design-led-wedding",
+    title: "What Is a Design-Led Wedding? (And How It Changes Everything You Book)",
+    excerpt:
+      "Two weddings in the same ballroom: one looks like a wedding, the other looks like a dream built on purpose. The difference is not budget — it is that the vision came first and everything else was built to serve it.",
+    date: "2026-08-25",
+    category: "Behind the Design",
+    heroImage: "/gallery/amber-kendall/amber-kendall-29.jpeg",
+    heroAlt:
+      "A sweetheart table with a low white calla lily and rose arrangement by Lady Victoria Designs",
+    featured: true,
+  },
+  {
+    slug: "wedding-tablescape-design",
+    title: "Wedding Tablescape Design: How to Build a Table Guests Don't Want to Leave",
+    excerpt:
+      "Guests decide how they feel about the whole evening the second they see their table. Here is how the layers come together — linen, place setting, metals, florals, and candlelight.",
+    date: "2026-08-25",
+    category: "Floral Design",
+    heroImage: "/gallery/table-artistry/table-artistry-01.jpeg",
+    heroAlt:
+      "A layered wedding tablescape with fine linen, gold chargers, and low florals by Lady Victoria Designs",
+    featured: true,
+  },
+  {
+    slug: "wedding-planner-vs-wedding-designer",
+    title: "Wedding Planner vs. Wedding Designer: Who Does What (and Who You Need)",
+    excerpt:
+      "The industry uses these titles loosely, but the jobs are genuinely different. What each one actually does, where they overlap, and the one question that sorts it out in a single phone call.",
+    date: "2026-08-25",
+    category: "Planning",
+    heroImage: "/work/nac-9098.jpg",
+    heroAlt:
+      "A fully produced ballroom with suspended pampas installations, gold staging, and lounge seating by Lady Victoria Designs",
+    featured: true,
+  },
   {
     slug: "what-full-service-wedding-design-includes",
     title: "What Full-Service Wedding Design Actually Includes",
     excerpt:
       "\"Full-service\" is one of the loosest phrases in the wedding industry. Here is what it means at Lady Victoria Designs — from the first concept sketch through load-in, installation, and the 90-minute room flip.",
-    date: "2025-12-12",
+    date: "2026-06-10",
     updated: "2026-08-25",
     category: "Behind the Design",
-    heroImage: "/work/aniedi-ekemini-471.jpg",
+    heroImage: "/work/eiserike-wedding-0477.jpg",
     heroAlt:
-      "A ballroom with architectural florals, drapery, chandeliers, and full table styling by Lady Victoria Designs",
+      "An outdoor courtyard reception with lavender tablescapes and towering floral centerpieces by Lady Victoria Designs",
     featured: true,
   },
   {
@@ -108,8 +152,17 @@ function readingMinutesFor(slug: string) {
   }
 }
 
-function withReadingTime(post: StoredPost): JournalPost {
-  return { ...post, readingMinutes: readingMinutesFor(post.slug) };
+/**
+ * New posts are prepended to POSTS, so `length - index` holds steady for every
+ * existing entry as the list grows.
+ */
+function withDerived(post: StoredPost, index: number, all: StoredPost[]): JournalPost {
+  return {
+    ...post,
+    author: post.author || DEFAULT_AUTHOR,
+    readingMinutes: readingMinutesFor(post.slug),
+    issueNumber: all.length - index,
+  };
 }
 
 function byNewestFirst(a: JournalPost, b: JournalPost) {
@@ -117,12 +170,12 @@ function byNewestFirst(a: JournalPost, b: JournalPost) {
 }
 
 export function getJournalPosts(): JournalPost[] {
-  return POSTS.map(withReadingTime).sort(byNewestFirst);
+  return POSTS.map(withDerived).sort(byNewestFirst);
 }
 
 export function getJournalPost(slug: string): JournalPost | null {
-  const post = POSTS.find((entry) => entry.slug === slug);
-  return post ? withReadingTime(post) : null;
+  const index = POSTS.findIndex((entry) => entry.slug === slug);
+  return index === -1 ? null : withDerived(POSTS[index], index, POSTS);
 }
 
 export function getFeaturedJournalPosts(limit = 3): JournalPost[] {
@@ -133,6 +186,20 @@ export function getFeaturedJournalPosts(limit = 3): JournalPost[] {
 
 export function getJournalPostsByCategory(category: JournalCategory): JournalPost[] {
   return getJournalPosts().filter((post) => post.category === category);
+}
+
+/** Editorial issue stamp, e.g. "12 · DEC · 25". */
+export function formatIssueDate(date: string): string {
+  const parsed = new Date(`${date}T12:00:00Z`);
+  const day = String(parsed.getUTCDate()).padStart(2, "0");
+  const month = parsed.toLocaleDateString("en-US", { month: "short", timeZone: "UTC" }).toUpperCase();
+  const year = String(parsed.getUTCFullYear()).slice(-2);
+  return `${day} · ${month} · ${year}`;
+}
+
+/** Zero-padded issue label, e.g. "N.003". */
+export function issueLabel(issueNumber: number): string {
+  return `N.${String(issueNumber).padStart(3, "0")}`;
 }
 
 export function formatJournalDate(date: string): string {

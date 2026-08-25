@@ -118,15 +118,36 @@ export function TimelineItem({
   );
 }
 
-export function Verdict({ children }: { children: ReactNode }) {
+export function Verdict({ children, label = "The Verdict" }: { children: ReactNode; label?: string }) {
   return (
     <div className="my-8 border-l-2 border-gold/50 bg-ecru/50 px-6 py-5 md:my-10">
       <p className="font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-gold">
-        The Verdict
+        {label}
       </p>
       <div className="journal-slot mt-2 font-body text-[0.95rem] font-light leading-[1.75] text-ink/80">
         {children}
       </div>
+    </div>
+  );
+}
+
+export function Scenarios({ children }: { children: ReactNode }) {
+  return (
+    <div className="my-12 border-y border-ink/10 py-2 md:my-16">
+      <dl className="divide-y divide-ink/10">{children}</dl>
+    </div>
+  );
+}
+
+export function Scenario({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="grid grid-cols-1 gap-2 py-6 sm:grid-cols-[14rem_1fr] sm:gap-8">
+      <dt className="font-body text-[11px] font-semibold uppercase leading-relaxed tracking-[0.14em] text-gold">
+        {label}
+      </dt>
+      <dd className="journal-slot font-body text-[0.95rem] font-light leading-[1.8] text-ink/75">
+        {children}
+      </dd>
     </div>
   );
 }
