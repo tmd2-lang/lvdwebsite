@@ -9,7 +9,7 @@ import Footer from "@/components/sections/Footer";
 export default function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
-  if (pathname.startsWith("/admin")) {
+  if (pathname.startsWith("/admin") || pathname.startsWith("/portal")) {
     return <>{children}</>;
   }
 
