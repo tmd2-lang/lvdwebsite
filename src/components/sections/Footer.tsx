@@ -58,6 +58,29 @@ export default function Footer() {
           <a href="mailto:hello@ladyvictoriadesigns.com" className="font-body text-sm text-ivory hover:text-gold transition-colors w-fit">
             hello@ladyvictoriadesigns.com
           </a>
+          <a
+            href="tel:+13013120332"
+            className="font-body text-sm text-ivory hover:text-gold transition-colors w-fit"
+            aria-label="Call Lady Victoria Designs at 301-312-0332"
+          >
+            (301) 312-0332
+          </a>
+          <div className="flex flex-wrap gap-2 pt-1">
+            <a
+              href="tel:+13013120332"
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-ivory/25 px-5 font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-ivory transition-colors hover:border-gold hover:bg-gold hover:text-ink"
+              aria-label="Call Lady Victoria Designs"
+            >
+              Call
+            </a>
+            <a
+              href="sms:+13013120332"
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-ivory/25 px-5 font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-ivory transition-colors hover:border-gold hover:bg-gold hover:text-ink"
+              aria-label="Text Lady Victoria Designs"
+            >
+              Text
+            </a>
+          </div>
           <Link href="/inquire" className="font-body text-[10px] uppercase tracking-[0.2em] text-gold hover:text-ivory transition-colors w-fit">
             Begin Your Inquiry →
           </Link>
