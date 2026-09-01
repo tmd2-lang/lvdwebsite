@@ -32,9 +32,15 @@ export default function WelcomeForm() {
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const firstName = String(data.get("firstName") || "").trim();
     const password = String(data.get("password") || "");
     const confirmation = String(data.get("confirmation") || "");
     setError("");
+
+    if (!firstName) {
+      setError("Please tell us what to call you.");
+      return;
+    }
 
     if (!tokens?.access) {
       setError("This link has expired. Ask the studio to send you a new invitation.");
@@ -64,7 +70,10 @@ export default function WelcomeForm() {
           Authorization: `Bearer ${tokens.access}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({
+          password,
+          data: { first_name: firstName, display_name: firstName },
+        }),
       });
       if (!saved.ok) throw new Error("This link has expired. Ask the studio for a new invitation.");
 
@@ -101,6 +110,10 @@ export default function WelcomeForm() {
 
   return (
     <form className={styles.loginForm} onSubmit={(event) => void submit(event)}>
+      <label>
+        What should we call you?
+        <input name="firstName" type="text" autoComplete="given-name" required maxLength={60} disabled={busy} placeholder="Amara" />
+      </label>
       <label>
         Choose a password
         <input name="password" type="password" autoComplete="new-password" required minLength={12} disabled={busy} placeholder="At least 12 characters" />

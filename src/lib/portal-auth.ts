@@ -53,14 +53,13 @@ function profileFromUser(user: SupabaseUser): PortalUser | null {
   const email = text(user.email).toLowerCase();
   if (!id || !email) return null;
 
+  // No name invented from the email address: "madisonaccardi99" is worse than
+  // greeting someone without a name at all. Empty means we simply do not know.
   const metadata = user.user_metadata || {};
-  const firstName = text(metadata.first_name);
-  const displayName = text(metadata.display_name)
-    || text(metadata.full_name)
-    || firstName
-    || email.split("@")[0].replace(/[._+-]+/g, " ");
+  const firstName = text(metadata.first_name) || text(metadata.display_name).split(" ")[0] || "";
+  const displayName = text(metadata.display_name) || text(metadata.full_name) || firstName;
 
-  return { id, email, firstName: firstName || displayName.split(" ")[0], displayName };
+  return { id, email, firstName, displayName };
 }
 
 export async function verifyPortalToken(token: string | undefined): Promise<PortalUser | null> {

@@ -42,7 +42,7 @@ export default async function PortalPage() {
       <section className={styles.realWelcome}>
         <div>
           <p className={styles.eyebrow}>Client planning portal</p>
-          <h1>Welcome, <em>{user.firstName}.</em></h1>
+          <h1>{user.firstName ? <>Welcome, <em>{user.firstName}.</em></> : <>Welcome <em>back.</em></>}</h1>
           <p>{client.display_name} · {formatDate(client.event_date)}{client.venue ? ` · ${client.venue}` : ""}</p>
         </div>
         {countdown !== null && (
