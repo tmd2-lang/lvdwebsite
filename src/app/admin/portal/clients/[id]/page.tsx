@@ -2,6 +2,9 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getAdminUser, hasAdminRefreshToken } from "@/lib/admin-auth";
 import { getClientById, getClientMembers } from "@/lib/client-data";
+import { getInvoicesForClient } from "@/lib/invoice-data";
+import { celebrationTotals, invoiceOutstanding, invoiceTotal, money } from "@/lib/invoice-types";
+import { INVOICE_STATUS_LABELS } from "@/lib/invoice-types";
 import {
   CLIENT_STATUS_LABELS,
   DESIGN_TIER_LABELS,
@@ -31,6 +34,8 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
   if (!client) notFound();
 
   const members = await getClientMembers(client.id);
+  const invoices = await getInvoicesForClient(client.id).catch(() => []);
+  const totals = celebrationTotals(invoices);
 
   return (
     <main className={styles.formShell}>
@@ -53,6 +58,36 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
           <div><dt>Phone</dt><dd>{client.phone || "Not set"}</dd></div>
         </dl>
         {client.notes && <p className={styles.detailNotes}>{client.notes}</p>}
+      </section>
+
+      <section className={styles.detailPanel}>
+        <h2>Invoices</h2>
+        {invoices.length > 0 && (
+          <div className={styles.invoiceTotals}>
+            <div><span>Total</span><strong>{money(totals.total)}</strong></div>
+            <div><span>Paid</span><strong>{money(totals.paid)}</strong></div>
+            <div><span>Remaining</span><strong>{money(totals.remaining)}</strong></div>
+          </div>
+        )}
+        {invoices.length === 0 ? (
+          <p className={styles.detailEmpty}>No invoices yet.</p>
+        ) : (
+          <ul className={styles.invoiceRows}>
+            {invoices.map((invoice) => (
+              <li key={invoice.id}>
+                <div className={styles.invoiceRowName}>
+                  <strong>{invoice.name}</strong>
+                  <small>{invoice.reference}{invoice.phase ? ` · ${invoice.phase}` : ""} · {invoice.invoice_items.length} item{invoice.invoice_items.length === 1 ? "" : "s"}</small>
+                </div>
+                <span className={styles.invoiceRowAmount}>{money(invoiceTotal(invoice))}</span>
+                <span className={`${styles.invoiceRowStatus} ${invoiceOutstanding(invoice) === 0 ? styles.invoiceRowPaid : ""}`}>
+                  {invoiceOutstanding(invoice) === 0 ? "Paid" : INVOICE_STATUS_LABELS[invoice.status]}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+        <Link className={styles.primaryAction} href={`/admin/portal/clients/${client.id}/invoices/new`}>Create an invoice <span aria-hidden="true">→</span></Link>
       </section>
 
       <section className={styles.detailPanel}>

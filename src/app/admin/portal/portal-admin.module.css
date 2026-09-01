@@ -228,3 +228,42 @@
 @media (max-width: 700px) {
   .inviteRow { grid-template-columns: 1fr; }
 }
+
+/* Building an invoice */
+.lineHint { margin-bottom: 1.1rem; color: #8b8479; font-size: 0.7rem; line-height: 1.5; }
+.lineItems { display: grid; gap: 0.7rem; }
+.lineItem { display: grid; grid-template-columns: auto 1fr 130px auto; align-items: center; gap: 0.7rem; }
+.lineNumber { color: #a89f91; font-family: var(--font-bodoni); font-size: 0.95rem; }
+.lineFields { display: grid; gap: 0.4rem; }
+.lineFields input, .lineAmount { min-height: 42px; border: 1px solid #d8d0c3; border-radius: 3px; padding: 0.45rem 0.7rem; background: #fff; font: inherit; font-size: 0.76rem; }
+.lineFields input:focus, .lineAmount:focus { border-color: #a8894e; outline: none; }
+.lineFields input:nth-child(2) { font-size: 0.7rem; color: #6d665c; }
+.lineAmount { text-align: right; }
+.lineRemove { width: 30px; height: 30px; border: 1px solid #e2dbcf; border-radius: 50%; background: #fff; color: #8b8479; font-size: 1rem; line-height: 1; cursor: pointer; }
+.lineRemove:hover:not(:disabled) { border-color: #9c4a37; color: #9c4a37; }
+.lineRemove:disabled { opacity: 0.35; cursor: not-allowed; }
+.lineActions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1.1rem; padding-top: 1.1rem; border-top: 1px solid #ece6dc; }
+.lineActions > button { border: 1px dashed #cfc5b7; border-radius: 3px; padding: 0.6rem 1rem; background: transparent; color: #71582e; font: inherit; font-size: 0.68rem; font-weight: 700; cursor: pointer; }
+.lineActions > button:hover { border-color: #a8894e; }
+.lineTotal { display: flex; align-items: baseline; gap: 0.7rem; }
+.lineTotal span { color: #8b8479; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.lineTotal strong { font-family: var(--font-bodoni); font-size: 1.6rem; font-weight: 500; }
+
+/* Invoices on the client record */
+.invoiceRows { display: grid; gap: 0; margin-bottom: 1.3rem; border: 1px solid #ece6dc; border-radius: 5px; list-style: none; }
+.invoiceRows li { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 1rem; padding: 0.85rem 1rem; }
+.invoiceRows li + li { border-top: 1px solid #ece6dc; }
+.invoiceRowName strong { display: block; font-size: 0.82rem; font-weight: 600; }
+.invoiceRowName small { color: #8b8479; font-size: 0.64rem; }
+.invoiceRowAmount { font-family: var(--font-bodoni); font-size: 1.05rem; }
+.invoiceRowStatus { border: 1px solid #d8d0c3; border-radius: 999px; padding: 0.25rem 0.65rem; color: #6d665c; font-size: 0.54rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; }
+.invoiceRowPaid { border-color: #b6c8b4; background: #eaf0e9; color: #3f553d; }
+.invoiceTotals { display: flex; flex-wrap: wrap; gap: 1.8rem; margin-bottom: 1.3rem; }
+.invoiceTotals div { display: grid; gap: 0.2rem; }
+.invoiceTotals dt, .invoiceTotals span { color: #8b8479; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.invoiceTotals strong { font-family: var(--font-bodoni); font-size: 1.5rem; font-weight: 500; }
+
+@media (max-width: 700px) {
+  .lineItem { grid-template-columns: auto 1fr auto; }
+  .lineAmount { grid-column: 2 / 3; }
+}

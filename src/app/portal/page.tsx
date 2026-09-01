@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
 import { getPortalSession } from "@/lib/portal-auth";
+import { getInvoicesForClient } from "@/lib/invoice-data";
+import { celebrationTotals, invoiceOutstanding, invoiceTotal, money } from "@/lib/invoice-types";
 import {
   DESIGN_TIER_LABELS,
   PLANNING_PACKAGE_LABELS,
@@ -31,6 +33,9 @@ export default async function PortalPage() {
 
   const { user, client } = session;
   const countdown = daysUntil(client.event_date);
+  const invoices = (await getInvoicesForClient(client.id).catch(() => []))
+    .filter((invoice) => invoice.status !== "draft" && invoice.status !== "void");
+  const totals = celebrationTotals(invoices);
 
   return (
     <main className={styles.realPortal}>
@@ -62,14 +67,67 @@ export default async function PortalPage() {
         {client.location && <div className={styles.realVenue}><span>Where</span><strong>{client.venue || "Venue to be confirmed"}</strong><small>{client.location}</small></div>}
       </section>
 
-      <section className={styles.realPending}>
-        <p className={styles.eyebrow}>Coming next</p>
-        <h2>Your invoices, documents, and plan are on their way.</h2>
-        <p>
-          This is your private space. As the studio adds invoices, contracts, and planning
-          materials for {client.display_name}, they will appear here.
-        </p>
-      </section>
+      {invoices.length > 0 ? (
+        <>
+          <section className={styles.realBalance} aria-labelledby="balance-heading">
+            <div>
+              <p className={styles.eyebrow}>Celebration investment</p>
+              <h2 id="balance-heading">{money(totals.remaining)} <span>remaining</span></h2>
+              <div className={styles.realTrack} aria-label={`${totals.total > 0 ? Math.round((totals.paid / totals.total) * 100) : 0} percent paid`}>
+                <span style={{ width: `${totals.total > 0 ? (totals.paid / totals.total) * 100 : 0}%` }} />
+              </div>
+              <div className={styles.realLegend}>
+                <span><b>{money(totals.paid)}</b> paid</span>
+                <span><b>{money(totals.total)}</b> total</span>
+              </div>
+            </div>
+          </section>
+
+          <section className={styles.realInvoices}>
+            <p className={styles.eyebrow}>Your invoices</p>
+            <ul>
+              {invoices.map((invoice) => {
+                const outstanding = invoiceOutstanding(invoice);
+                return (
+                  <li key={invoice.id}>
+                    <div>
+                      <strong>{invoice.name}</strong>
+                      <small>{invoice.reference}{invoice.phase ? ` · ${invoice.phase}` : ""}</small>
+                      <ol className={styles.realItems}>
+                        {invoice.invoice_items.map((item) => (
+                          <li key={item.id} className={item.paid ? styles.realItemPaid : undefined}>
+                            <span>{item.name}</span>
+                            <b>{money(item.amount_cents)}</b>
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                    <div className={styles.realInvoiceMeta}>
+                      <strong>{money(invoiceTotal(invoice))}</strong>
+                      <span className={outstanding === 0 ? styles.realPaidTag : styles.realDueTag}>
+                        {outstanding === 0 ? "Paid in full" : `${money(outstanding)} due`}
+                      </span>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+            <p className={styles.realPayNote}>
+              Paying online is coming shortly. In the meantime the studio will confirm how you would
+              like to settle each invoice.
+            </p>
+          </section>
+        </>
+      ) : (
+        <section className={styles.realPending}>
+          <p className={styles.eyebrow}>Coming next</p>
+          <h2>Your invoices, documents, and plan are on their way.</h2>
+          <p>
+            This is your private space. As the studio adds invoices, contracts, and planning
+            materials for {client.display_name}, they will appear here.
+          </p>
+        </section>
+      )}
     </main>
   );
 }

@@ -876,3 +876,34 @@
 .welcomeExpired { display: grid; gap: 1.2rem; justify-items: start; margin-top: 2rem; border-left: 2px solid #a8894e; padding: 0.9rem 1.1rem; background: #eee8de; }
 .welcomeExpired p { color: #665f56; font-size: 0.7rem; line-height: 1.6; }
 .welcomeSignIn { display: inline-flex; align-items: center; gap: 0.4rem; color: #71582e; font-size: 0.6rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; }
+
+/* Invoices in the real client portal */
+.realBalance { max-width: 1080px; margin: 1.4rem auto 0; padding: clamp(1.6rem, 4vw, 2.4rem); border-radius: 7px; background: #211e1a; color: #fffdf9; }
+.realBalance h2 { margin-top: 0.4rem; font-family: var(--font-bodoni); font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 400; }
+.realBalance h2 span { color: rgba(255, 253, 249, 0.5); font-size: 0.9rem; }
+.realBalance .eyebrow { color: #d3b779; }
+.realTrack { height: 3px; margin-top: 1.3rem; background: rgba(255, 253, 249, 0.16); }
+.realTrack span { display: block; height: 100%; background: #d3b779; }
+.realLegend { display: flex; justify-content: space-between; gap: 1rem; margin-top: 0.7rem; color: rgba(255, 253, 249, 0.55); font-size: 0.62rem; }
+.realLegend b { color: #fffdf9; font-weight: 600; }
+
+.realInvoices { max-width: 1080px; margin: 1.4rem auto 0; padding: clamp(1.5rem, 4vw, 2.2rem); border: 1px solid #ded6c9; border-radius: 7px; background: #fffdfa; }
+.realInvoices > ul { display: grid; gap: 0; margin-top: 1.1rem; list-style: none; }
+.realInvoices > ul > li { display: grid; grid-template-columns: 1fr auto; align-items: start; gap: 1.5rem; padding: 1.2rem 0; }
+.realInvoices > ul > li + li { border-top: 1px solid #ece5da; }
+.realInvoices strong { font-family: var(--font-bodoni); font-size: 1.25rem; font-weight: 500; }
+.realInvoices small { display: block; margin-top: 0.2rem; color: #8b857c; font-size: 0.64rem; }
+.realItems { margin-top: 0.8rem; padding-left: 0; list-style: none; }
+.realItems li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.32rem 0; color: #665f56; font-size: 0.7rem; }
+.realItems li b { color: #1b1814; font-weight: 600; }
+.realItemPaid { color: #9a938a; text-decoration: line-through; }
+.realInvoiceMeta { display: grid; gap: 0.45rem; justify-items: end; text-align: right; }
+.realPaidTag, .realDueTag { border-radius: 999px; padding: 0.25rem 0.6rem; font-size: 0.55rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.realPaidTag { background: #eaf0e9; color: #3f553d; }
+.realDueTag { background: #f6ece4; color: #8a5a2e; }
+.realPayNote { margin-top: 1.3rem; padding-top: 1.1rem; border-top: 1px solid #ece5da; color: #8b857c; font-size: 0.68rem; line-height: 1.55; }
+
+@media (max-width: 620px) {
+  .realInvoices > ul > li { grid-template-columns: 1fr; }
+  .realInvoiceMeta { justify-items: start; text-align: left; }
+}
