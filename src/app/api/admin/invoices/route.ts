@@ -50,6 +50,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Enter the due date as a calendar date." }, { status: 400 });
     }
 
+    const paymentUrl = text(body.paymentUrl);
+    if (paymentUrl && !/^https:\/\/\S+$/.test(paymentUrl)) {
+      return NextResponse.json({ error: "The payment link must start with https://" }, { status: 400 });
+    }
+
     const invoice = await createInvoice({
       clientId: client.id,
       name,
@@ -57,6 +62,7 @@ export async function POST(request: Request) {
       phase: text(body.phase),
       dueOn,
       notes: text(body.notes),
+      paymentUrl,
       items,
     });
 

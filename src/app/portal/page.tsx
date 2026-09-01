@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getPortalSession } from "@/lib/portal-auth";
 import { getInvoicesForClient } from "@/lib/invoice-data";
+import { getDocumentsForClient, readableSize } from "@/lib/document-data";
 import { celebrationTotals, invoiceOutstanding, invoiceTotal, money } from "@/lib/invoice-types";
 import {
   DESIGN_TIER_LABELS,
@@ -36,6 +37,7 @@ export default async function PortalPage() {
   const invoices = (await getInvoicesForClient(client.id).catch(() => []))
     .filter((invoice) => invoice.status !== "draft" && invoice.status !== "void");
   const totals = celebrationTotals(invoices);
+  const documents = await getDocumentsForClient(client.id).catch(() => []);
 
   return (
     <main className={styles.realPortal}>
@@ -107,14 +109,20 @@ export default async function PortalPage() {
                       <span className={outstanding === 0 ? styles.realPaidTag : styles.realDueTag}>
                         {outstanding === 0 ? "Paid in full" : `${money(outstanding)} due`}
                       </span>
+                      {outstanding > 0 && invoice.payment_url && (
+                        <a className={styles.realPayButton} href={invoice.payment_url} target="_blank" rel="noopener noreferrer">
+                          Pay this invoice <span aria-hidden="true">↗</span>
+                        </a>
+                      )}
                     </div>
                   </li>
                 );
               })}
             </ul>
             <p className={styles.realPayNote}>
-              Paying online is coming shortly. In the meantime the studio will confirm how you would
-              like to settle each invoice.
+              {invoices.some((invoice) => invoice.payment_url && invoiceOutstanding(invoice) > 0)
+                ? "Payments are handled securely by the studio’s billing provider. Your card details are never stored on this site."
+                : "The studio will be in touch about how to settle each invoice."}
             </p>
           </section>
         </>
@@ -126,6 +134,24 @@ export default async function PortalPage() {
             This is your private space. As the studio adds invoices, contracts, and planning
             materials for {client.display_name}, they will appear here.
           </p>
+        </section>
+      )}
+      {documents.length > 0 && (
+        <section className={styles.realDocuments}>
+          <p className={styles.eyebrow}>Your documents</p>
+          <ul>
+            {documents.map((document) => (
+              <li key={document.id}>
+                <div>
+                  <strong>{document.name}</strong>
+                  <small>{document.category} · {readableSize(document.size_bytes)}{document.note ? ` · ${document.note}` : ""}</small>
+                </div>
+                <a href={`/api/portal/documents/${document.id}`} target="_blank" rel="noopener noreferrer">
+                  Open <span aria-hidden="true">↓</span>
+                </a>
+              </li>
+            ))}
+          </ul>
         </section>
       )}
     </main>

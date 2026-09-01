@@ -267,3 +267,24 @@
   .lineItem { grid-template-columns: auto 1fr auto; }
   .lineAmount { grid-column: 2 / 3; }
 }
+
+/* Uploading documents */
+.documentRows { display: grid; gap: 0; margin-bottom: 1.3rem; border: 1px solid #ece6dc; border-radius: 5px; list-style: none; }
+.documentRows li { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.8rem 1rem; }
+.documentRows li + li { border-top: 1px solid #ece6dc; }
+.documentRows strong { display: block; font-size: 0.8rem; font-weight: 600; }
+.documentRows small { color: #8b8479; font-size: 0.64rem; }
+.documentRows button { border: 1px solid #e2dbcf; border-radius: 3px; padding: 0.35rem 0.7rem; background: #fff; color: #8b8479; font: inherit; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; }
+.documentRows button:hover { border-color: #9c4a37; color: #9c4a37; }
+.uploadForm { display: grid; gap: 0.9rem; border-top: 1px solid #ece6dc; padding-top: 1.3rem; }
+.uploadRow { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+.uploadRow label { display: grid; gap: 0.35rem; }
+.uploadRow label span { color: #4e4942; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.uploadRow input, .uploadRow select { min-height: 44px; border: 1px solid #d8d0c3; border-radius: 3px; padding: 0.5rem 0.7rem; background: #fff; font: inherit; font-size: 0.76rem; }
+.fileField input { padding: 0.55rem; font-size: 0.7rem; }
+.uploadActions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+.uploadActions p { color: #8b8479; font-size: 0.64rem; }
+.uploadActions button { min-height: 44px; border: 1px solid #201d19; border-radius: 3px; padding: 0 1.2rem; background: #201d19; color: #fbf8f2; font: inherit; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; }
+.uploadActions button:disabled { opacity: 0.6; cursor: progress; }
+
+@media (max-width: 700px) { .uploadRow { grid-template-columns: 1fr; } }

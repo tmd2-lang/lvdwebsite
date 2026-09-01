@@ -55,6 +55,7 @@ export default function NewInvoiceForm({ clientId, clientName }: { clientId: str
           category: data.get("category"),
           phase: data.get("phase"),
           dueOn: data.get("dueOn"),
+          paymentUrl: data.get("paymentUrl"),
           notes: data.get("notes"),
           items: lines.map((line) => ({ name: line.name, detail: line.detail, amount: line.amount })),
         }),
@@ -150,6 +151,12 @@ export default function NewInvoiceForm({ clientId, clientName }: { clientId: str
             <strong>{money(total)}</strong>
           </div>
         </div>
+
+        <label className={styles.fullWidth}>
+          <span>Payment link</span>
+          <input name="paymentUrl" type="url" placeholder="https://… the Wave invoice link" />
+          <small>Create the invoice where you normally bill, then paste its payment link here. The client gets a Pay button that opens it.</small>
+        </label>
 
         <label className={styles.fullWidth}>
           <span>Notes</span>

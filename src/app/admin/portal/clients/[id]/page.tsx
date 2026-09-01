@@ -3,6 +3,8 @@ import { notFound, redirect } from "next/navigation";
 import { getAdminUser, hasAdminRefreshToken } from "@/lib/admin-auth";
 import { getClientById, getClientMembers } from "@/lib/client-data";
 import { getInvoicesForClient } from "@/lib/invoice-data";
+import { getDocumentsForClient } from "@/lib/document-data";
+import DocumentPanel from "./DocumentPanel";
 import { celebrationTotals, invoiceOutstanding, invoiceTotal, money } from "@/lib/invoice-types";
 import { INVOICE_STATUS_LABELS } from "@/lib/invoice-types";
 import {
@@ -36,6 +38,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
   const members = await getClientMembers(client.id);
   const invoices = await getInvoicesForClient(client.id).catch(() => []);
   const totals = celebrationTotals(invoices);
+  const documents = await getDocumentsForClient(client.id).catch(() => []);
 
   return (
     <main className={styles.formShell}>
@@ -89,6 +92,8 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
         )}
         <Link className={styles.primaryAction} href={`/admin/portal/clients/${client.id}/invoices/new`}>Create an invoice <span aria-hidden="true">→</span></Link>
       </section>
+
+      <DocumentPanel clientId={client.id} documents={documents} />
 
       <section className={styles.detailPanel}>
         <h2>Portal access</h2>

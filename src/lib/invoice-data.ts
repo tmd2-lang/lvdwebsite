@@ -70,6 +70,7 @@ export type NewInvoiceInput = {
   dueOn?: string;
   status?: InvoiceStatus;
   notes?: string;
+  paymentUrl?: string;
   items: { name: string; detail?: string; amountCents: number }[];
 };
 
@@ -106,6 +107,7 @@ export async function createInvoice(input: NewInvoiceInput): Promise<Invoice> {
       due_on: input.dueOn || null,
       status: input.status || "sent",
       notes: input.notes?.trim() || null,
+      payment_url: input.paymentUrl?.trim() || null,
     }),
     cache: "no-store",
   });

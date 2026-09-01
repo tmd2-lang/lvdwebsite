@@ -32,6 +32,7 @@ export type Invoice = {
   due_on: string | null;
   status: InvoiceStatus;
   notes: string | null;
+  payment_url: string | null;
   invoice_items: InvoiceItem[];
 };
 

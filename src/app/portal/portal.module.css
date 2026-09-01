@@ -907,3 +907,15 @@
   .realInvoices > ul > li { grid-template-columns: 1fr; }
   .realInvoiceMeta { justify-items: start; text-align: left; }
 }
+
+/* Documents in the client portal */
+.realDocuments { max-width: 1080px; margin: 1.4rem auto 0; padding: clamp(1.5rem, 4vw, 2.2rem); border: 1px solid #ded6c9; border-radius: 7px; background: #fffdfa; }
+.realDocuments ul { display: grid; gap: 0; margin-top: 1.1rem; list-style: none; }
+.realDocuments li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.9rem 0; }
+.realDocuments li + li { border-top: 1px solid #ece5da; }
+.realDocuments strong { font-family: var(--font-bodoni); font-size: 1.05rem; font-weight: 500; }
+.realDocuments small { display: block; margin-top: 0.15rem; color: #8b857c; font-size: 0.64rem; }
+.realDocuments a { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid #cfc5b7; border-radius: 3px; padding: 0.5rem 0.9rem; color: #71582e; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; }
+.realDocuments a:hover { border-color: #a8894e; background: #f7f2e9; }
+.realPayButton { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.35rem; border: 1px solid #211e1a; border-radius: 3px; padding: 0.55rem 0.95rem; background: #211e1a; color: #fffdf9; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; }
+.realPayButton:hover { background: transparent; color: #211e1a; }
