@@ -42,6 +42,10 @@ export type AdminLead = {
   notes: LeadNote[];
 };
 
+export const ADMIN_ROLES = ["owner", "planner"] as const;
+
+export type AdminRole = (typeof ADMIN_ROLES)[number];
+
 export type AdminUser = {
   id: string;
   email: string;
@@ -49,6 +53,6 @@ export type AdminUser = {
   firstName: string;
   lastName: string;
   displayName: string;
-  role: string;
+  role: AdminRole;
   avatarUrl: string | null;
 };

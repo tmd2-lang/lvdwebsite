@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import type { AdminUser } from "@/lib/admin-types";
+import type { AdminRole, AdminUser } from "@/lib/admin-types";
 
 export const ADMIN_ACCESS_COOKIE = "lvd_admin_access";
 export const ADMIN_REFRESH_COOKIE = "lvd_admin_refresh";
@@ -27,6 +27,31 @@ function authConfig() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   return url && anonKey ? { url, anonKey } : null;
+}
+
+function emailList(variable: string | undefined) {
+  return (variable || "")
+    .split(",")
+    .map((item) => item.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+/**
+ * Planners work inside the client portal only. Everyone else approved for the
+ * studio is an owner and sees inquiries as well.
+ */
+export function roleForEmail(email: string): AdminRole {
+  const planners = emailList(process.env.SUPABASE_PLANNER_EMAILS);
+  return planners.includes(email.trim().toLowerCase()) ? "planner" : "owner";
+}
+
+export function canSeeInquiries(user: AdminUser) {
+  return user.role === "owner";
+}
+
+/** Where each role lands after signing in. */
+export function homePathForRole(role: AdminRole) {
+  return role === "planner" ? "/admin/portal" : "/admin";
 }
 
 export function isApprovedAdmin(email: string) {
@@ -73,7 +98,7 @@ function profileFromUser(user: SupabaseAuthUser, fallbackEmail = "") : AdminUser
     firstName,
     lastName,
     displayName,
-    role: cleanText(metadata.role) || "admin",
+    role: roleForEmail(email),
     avatarUrl: cleanText(metadata.avatar_url) || null,
   };
 }
@@ -153,7 +178,7 @@ export async function getAdminUser() {
   const tokenUser = await verifyAdminToken(cookieStore.get(ADMIN_ACCESS_COOKIE)?.value);
   if (tokenUser) return tokenUser;
 
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === "development" && process.env.ADMIN_DEV_BYPASS === "true") {
     const localUser = await findSupabaseUserByEmail(localAdminEmail());
     const localAdmin = localUser ? profileFromUser(localUser) : null;
     if (localAdmin) return localAdmin;
@@ -165,7 +190,7 @@ export async function getAdminUser() {
       firstName: "TJ",
       lastName: "",
       displayName: "TJ (Local Dev)",
-      role: "admin",
+      role: roleForEmail(localAdminEmail()),
       avatarUrl: null,
     };
   }

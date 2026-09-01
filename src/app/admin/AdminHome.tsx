@@ -102,6 +102,7 @@ export default function AdminHome({
         </div>
         <nav aria-label="Studio navigation">
           <Link className={styles.navActive} href="/admin" aria-current="page">Home</Link>
+          <Link href="/admin/portal">Client portal</Link>
           <Link href="/admin/inquiries"><span>Inquiries</span>{needsAttention.length > 0 && <b>{needsAttention.length}</b>}</Link>
           <Link href="/admin/profile">Profile</Link>
         </nav>
@@ -116,6 +117,7 @@ export default function AdminHome({
           <Link href="/admin"><b>LVD</b><span>Studio</span></Link>
           <nav aria-label="Mobile studio navigation">
             <Link className={styles.mobileActive} href="/admin">Home</Link>
+            <Link href="/admin/portal">Portal</Link>
             <Link href="/admin/inquiries">Inquiries</Link>
             <Link href="/admin/profile">Profile</Link>
           </nav>
@@ -138,16 +140,21 @@ export default function AdminHome({
           </div>
         </div>
 
-        <section className={styles.snapshot} aria-label="Today at a glance">
+        <section className={styles.snapshot} aria-label="Studio at a glance">
           <article className={styles.snapshotPrimary}>
+            <span>{needsAttention.length}</span>
+            <div><h2>Waiting for a reply</h2><p>{needsAttention.length > 0 ? "These celebrations still need a first response." : "Everyone has been taken care of."}</p></div>
+          </article>
+          <article>
             <span>{todayLeads.length}</span>
             <div><h2>New {todayLeads.length === 1 ? "inquiry" : "inquiries"} today</h2><p>{todayLeads.length > 0 ? "New celebrations are waiting for you." : "No new submissions yet today."}</p></div>
           </article>
-          <article>
-            <span>{needsAttention.length}</span>
-            <div><h2>Waiting for a reply</h2><p>{needsAttention.length > 0 ? "These clients still need a first response." : "Everyone has been taken care of."}</p></div>
+          <article className={styles.snapshotPending}>
+            <span>Not set up yet</span>
+            <div><h2>Client portals</h2><p>Ready for your first client once portals are connected.</p></div>
           </article>
         </section>
+
 
         <div className={styles.dashboardGrid}>
           <section className={styles.attentionPanel}>
@@ -201,6 +208,42 @@ export default function AdminHome({
             )}
           </section>
         </div>
+
+        <section className={styles.workspaceSection} aria-labelledby="workspace-heading">
+          <div className={styles.workspaceHeading}>
+            <div><p className={styles.sectionKicker}>Choose a workspace</p><h2 id="workspace-heading">What are you working on?</h2></div>
+            <span>One login · two focused spaces</span>
+          </div>
+          <div className={styles.workspaceCards}>
+            <Link className={styles.portalCard} href="/admin/portal">
+              <span className={styles.workspaceNumber}>01</span>
+              <div>
+                <p>Booked clients</p>
+                <h3>Client portals</h3>
+                <span>Create clients, collect payments, and manage documents and images.</span>
+              </div>
+              <dl>
+                <div><dt>Status</dt><dd>Not set up yet</dd></div>
+              </dl>
+              <b>Open client portals <i aria-hidden="true">→</i></b>
+            </Link>
+
+            <Link className={styles.inquiryCard} href="/admin/inquiries">
+              <span className={styles.workspaceNumber}>02</span>
+              <div>
+                <p>Front door</p>
+                <h3>Website inquiries</h3>
+                <span>Review new celebrations, contact leads, and follow each inquiry to booked.</span>
+              </div>
+              <dl>
+                <div><dt>New today</dt><dd>{todayLeads.length}</dd></div>
+                <div><dt>Needs reply</dt><dd>{needsAttention.length}</dd></div>
+                <div><dt>Total leads</dt><dd>{initialLeads.length}</dd></div>
+              </dl>
+              <b>Open inquiries <i aria-hidden="true">→</i></b>
+            </Link>
+          </div>
+        </section>
 
         <footer className={styles.mobileFooter}>
           <button type="button" onClick={() => void signOut()}>Sign out</button>

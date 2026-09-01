@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAdminUser } from "@/lib/admin-auth";
+import { canSeeInquiries, getAdminUser } from "@/lib/admin-auth";
 import { addLeadNote, updateLeadStatus, deleteLead } from "@/lib/admin-data";
 import { LEAD_STATUSES, type LeadStatus } from "@/lib/admin-types";
 
@@ -15,6 +15,7 @@ async function authorizedUser() {
 export async function PATCH(request: Request, context: RouteContext) {
   const user = await authorizedUser();
   if (!user) return NextResponse.json({ error: "Your sign-in has expired." }, { status: 401 });
+  if (!canSeeInquiries(user)) return NextResponse.json({ error: "Your account does not have access to inquiries." }, { status: 403 });
 
   try {
     const { id } = await context.params;
@@ -32,6 +33,7 @@ export async function PATCH(request: Request, context: RouteContext) {
 export async function POST(request: Request, context: RouteContext) {
   const user = await authorizedUser();
   if (!user) return NextResponse.json({ error: "Your sign-in has expired." }, { status: 401 });
+  if (!canSeeInquiries(user)) return NextResponse.json({ error: "Your account does not have access to inquiries." }, { status: 403 });
 
   try {
     const { id } = await context.params;
@@ -48,6 +50,7 @@ export async function POST(request: Request, context: RouteContext) {
 export async function DELETE(request: Request, context: RouteContext) {
   const user = await authorizedUser();
   if (!user) return NextResponse.json({ error: "Your sign-in has expired." }, { status: 401 });
+  if (!canSeeInquiries(user)) return NextResponse.json({ error: "Your account does not have access to inquiries." }, { status: 403 });
 
   try {
     const { id } = await context.params;

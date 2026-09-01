@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getAdminUser, hasAdminRefreshToken } from "@/lib/admin-auth";
+import { canSeeInquiries, getAdminUser, hasAdminRefreshToken } from "@/lib/admin-auth";
 import { getAdminLeads } from "@/lib/admin-data";
 import InquiriesDashboard from "./InquiriesDashboard";
 
@@ -17,6 +17,8 @@ export default async function InquiriesPage({
     }
     redirect("/admin/login");
   }
+
+  if (!canSeeInquiries(user)) redirect("/admin/portal");
 
   const leads = await getAdminLeads();
   const leadParam = (await searchParams).lead;
