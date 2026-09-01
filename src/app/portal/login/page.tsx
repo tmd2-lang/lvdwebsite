@@ -13,7 +13,7 @@ export default function PortalLoginPage() {
         <div className={styles.loginQuote}><p>Every detail, every decision, <em>beautifully held.</em></p><span>Your private planning atelier</span></div>
       </section>
       <section className={styles.loginPanel}>
-        <Link className={styles.demoLink} href="/portal">Demo <span aria-hidden="true">↗</span></Link>
+        <Link className={styles.demoLink} href="/portal/demo">Demo <span aria-hidden="true">↗</span></Link>
         <div className={styles.loginPanelInner}>
           <p className={styles.eyebrow}>Client planning portal</p>
           <h1>Welcome <em>back.</em></h1>

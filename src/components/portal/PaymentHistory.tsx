@@ -49,7 +49,7 @@ export default function PaymentHistory() {
         </div>
       </section>
 
-      <section className={styles.autopayNote}><div><span aria-hidden="true">i</span><p><strong>Payments stay under your control.</strong><small>Nothing is charged automatically. You choose exactly which invoice items to pay and when.</small></p></div><Link href="/portal/invoices">View open invoices <span>→</span></Link></section>
+      <section className={styles.autopayNote}><div><span aria-hidden="true">i</span><p><strong>Payments stay under your control.</strong><small>Nothing is charged automatically. You choose exactly which invoice items to pay and when.</small></p></div><Link href="/portal/demo/invoices">View open invoices <span>→</span></Link></section>
 
       {receipt && <div className={styles.modalBackdrop} onMouseDown={(event) => event.target === event.currentTarget && setReceipt(null)}>
         <section className={`${styles.paymentModal} ${styles.receiptModal}`} role="dialog" aria-modal="true" aria-labelledby="receipt-title">

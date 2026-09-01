@@ -51,18 +51,18 @@ export default function AdminPortal() {
   return (
     <main className={styles.adminShell}>
       <aside className={styles.adminSidebar}>
-        <Link className={styles.brand} href="/portal/admin"><span className={styles.monogram}>LVD</span><span>Portal Studio</span></Link>
+        <Link className={styles.brand} href="/portal/demo/admin"><span className={styles.monogram}>LVD</span><span>Portal Studio</span></Link>
         <nav aria-label="Portal admin navigation">
           {adminNavigation.map((item) => <button className={view === item.id && !selectedClient ? styles.adminNavActive : undefined} type="button" onClick={() => changeView(item.id)} key={item.id}><span>{item.number}</span>{item.label}</button>)}
         </nav>
-        <Link className={styles.clientPreviewLink} href="/portal">Open client preview <span aria-hidden="true">↗</span></Link>
+        <Link className={styles.clientPreviewLink} href="/portal/demo">Open client preview <span aria-hidden="true">↗</span></Link>
         <div className={styles.adminAccount}><span>IV</span><div><strong>Irene Victoria</strong><small>Studio administrator</small></div><button type="button" aria-label="Open admin account menu">•••</button></div>
       </aside>
 
       <section className={styles.adminWorkspace}>
         <header className={styles.adminMobileHeader}>
-          <Link href="/portal/admin"><b>LVD</b><span>Portal Studio</span></Link>
-          <Link href="/portal">Client preview</Link>
+          <Link href="/portal/demo/admin"><b>LVD</b><span>Portal Studio</span></Link>
+          <Link href="/portal/demo">Client preview</Link>
         </header>
 
         <nav className={styles.adminMobileNav} aria-label="Mobile portal admin navigation">
@@ -258,7 +258,7 @@ function AdminClientDetail({ client, onBack, onNotice }: { client: AdminClient; 
       <button className={styles.reviewBack} type="button" onClick={onBack}>← All clients</button>
       <section className={styles.clientDetailHero}>
         <div className={styles.clientDetailIdentity}><span>{client.initials}</span><div><p className={styles.eyebrow}>Client workspace</p><h1>{client.name}</h1><small>{client.event} · {client.venue}</small></div></div>
-        <div className={styles.clientDetailActions}><Link href="/portal">View as client <span>↗</span></Link><button type="button" onClick={() => onNotice("Client message composer is ready for backend connection.")}>Message client</button></div>
+        <div className={styles.clientDetailActions}><Link href="/portal/demo">View as client <span>↗</span></Link><button type="button" onClick={() => onNotice("Client message composer is ready for backend connection.")}>Message client</button></div>
       </section>
 
       <nav className={styles.clientDetailTabs} aria-label="Client workspace sections"><button className={styles.filterActive} type="button">Overview</button><button type="button">Invoices</button><button type="button">Documents</button><button type="button">Planning</button><button type="button">Activity</button></nav>

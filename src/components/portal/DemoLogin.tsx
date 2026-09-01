@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import styles from "@/app/portal/portal.module.css";
+import StudioSupport from "@/components/portal/StudioSupport";
 
 export default function DemoLogin() {
   const router = useRouter();
@@ -17,8 +18,8 @@ export default function DemoLogin() {
       <label>Password<input required type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" /></label>
       <div className={styles.loginOptions}><label><input type="checkbox" /> Remember me</label><button type="button">Forgot password?</button></div>
       <button className={styles.loginSubmit} type="submit">Enter your portal <span aria-hidden="true">→</span></button>
-      <p className={styles.loginSupport}>Need assistance? <button type="button">Contact the studio</button></p>
-      <Link className={styles.adminLoginLink} href="/portal/admin">Preview Irene’s admin portal <span aria-hidden="true">↗</span></Link>
+      <StudioSupport />
+      <Link className={styles.adminLoginLink} href="/portal/demo/admin">Preview Irene’s admin portal <span aria-hidden="true">↗</span></Link>
     </form>
   );
 }

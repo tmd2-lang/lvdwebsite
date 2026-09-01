@@ -63,7 +63,7 @@ export default function InvoiceList() {
         </div>
         <div className={styles.invoiceTable}>
           {filtered.map((invoice) => (
-            <Link href={`/portal/invoices/${invoice.id}`} key={invoice.id}>
+            <Link href={`/portal/demo/invoices/${invoice.id}`} key={invoice.id}>
               <div className={styles.invoiceName}>
                 <span>{invoice.id}</span>
                 <strong>{invoice.name}</strong>

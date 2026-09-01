@@ -38,7 +38,7 @@ export default function PortalDashboardPage() {
           <span>Next payment</span>
           <strong>{money(portalInvoices[0].amount)}</strong>
           <p>{portalInvoices[0].name} · {portalInvoices[0].statusLabel}</p>
-          <Link href={`/portal/invoices/${portalInvoices[0].id}`}>Review balance <i aria-hidden="true">→</i></Link>
+          <Link href={`/portal/demo/invoices/${portalInvoices[0].id}`}>Review balance <i aria-hidden="true">→</i></Link>
         </div>
       </section>
 
@@ -46,11 +46,11 @@ export default function PortalDashboardPage() {
         <section className={styles.panel}>
           <div className={styles.panelHeading}>
             <div><p className={styles.eyebrow}>Financials</p><h2>Recent invoices</h2></div>
-            <Link href="/portal/invoices">View all <span aria-hidden="true">→</span></Link>
+            <Link href="/portal/demo/invoices">View all <span aria-hidden="true">→</span></Link>
           </div>
           <div className={styles.invoiceList}>
             {recentInvoices.map((invoice, index) => (
-              <Link href={`/portal/invoices/${invoice.id}`} key={invoice.id}>
+              <Link href={`/portal/demo/invoices/${invoice.id}`} key={invoice.id}>
                 <span className={styles.invoiceIndex}>0{index + 1}</span>
                 <div><strong>{invoice.name}</strong><small>{invoice.id} · {invoice.phase}</small></div>
                 <b>{money(invoice.amount)}</b>
@@ -63,7 +63,7 @@ export default function PortalDashboardPage() {
         <section className={`${styles.panel} ${styles.nextSteps}`}>
           <div className={styles.panelHeading}>
             <div><p className={styles.eyebrow}>This week</p><h2>Next steps</h2></div>
-            <Link href="/portal/planning">Open plan <span aria-hidden="true">→</span></Link>
+            <Link href="/portal/demo/planning">Open plan <span aria-hidden="true">→</span></Link>
           </div>
           <ol>
             <li><span>01</span><div><strong>Review floral proposal</strong><small>2 selections need your approval</small></div></li>

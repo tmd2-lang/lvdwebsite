@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import styles from "@/app/portal/portal.module.css";
+import StudioSupport from "@/components/portal/StudioSupport";
 
 export default function ClientLogin() {
   const [email, setEmail] = useState("");
@@ -66,7 +67,7 @@ export default function ClientLogin() {
         <span aria-hidden="true">{pending ? "" : "→"}</span>
       </button>
 
-      <p className={styles.loginSupport}>Need assistance? <button type="button">Contact the studio</button></p>
+      <StudioSupport />
     </form>
   );
 }

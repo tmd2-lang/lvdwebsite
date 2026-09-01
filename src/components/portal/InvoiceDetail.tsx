@@ -42,7 +42,7 @@ export default function InvoiceDetail({ invoice }: { invoice: PortalInvoice }) {
   return (
     <>
       <div className={styles.invoiceDetailTopline}>
-        <Link href="/portal/invoices"><span aria-hidden="true">←</span> All invoices</Link>
+        <Link href="/portal/demo/invoices"><span aria-hidden="true">←</span> All invoices</Link>
         <button type="button">Download PDF</button>
       </div>
 

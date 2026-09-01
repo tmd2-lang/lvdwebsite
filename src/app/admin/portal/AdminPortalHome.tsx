@@ -73,7 +73,7 @@ export default function AdminPortalHome({ user, clientCount }: { user: AdminUser
           </div>
           <div className={styles.topActions}>
             <span className={styles.accessStatus}><i aria-hidden="true" /> {isOwner ? "Owner access" : "Planner access"}</span>
-            <Link href="/portal">Preview client portal <span aria-hidden="true">↗</span></Link>
+            <Link href="/portal/demo">Preview client portal <span aria-hidden="true">↗</span></Link>
           </div>
         </div>
 
