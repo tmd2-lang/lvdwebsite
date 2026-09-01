@@ -37,8 +37,17 @@ const MENU_ITEMS = [
     caption: "Turnkey Floral Production & Ceiling Artistry",
   },
   {
-    id: "gallery",
+    id: "planning",
     number: "04",
+    label: "Planning",
+    subtitle: "Four Ways To Plan Together",
+    path: "/planning",
+    image: media["services.capability.1"],
+    caption: "Venue Finding Through Full Planning",
+  },
+  {
+    id: "gallery",
+    number: "05",
     label: "Gallery",
     subtitle: "Curated Celebrations & Ceremonies",
     path: "/gallery",
@@ -47,7 +56,7 @@ const MENU_ITEMS = [
   },
   {
     id: "testimonials",
-    number: "05",
+    number: "06",
     label: "Kind Words",
     subtitle: "54+ Verified Letters & Reviews",
     path: "/testimonials",
@@ -56,7 +65,7 @@ const MENU_ITEMS = [
   },
   {
     id: "quiz",
-    number: "06",
+    number: "07",
     label: "Style Quiz",
     subtitle: "Discover Your Floral Aesthetic",
     path: "/quiz",
@@ -65,7 +74,7 @@ const MENU_ITEMS = [
   },
   {
     id: "journal",
-    number: "07",
+    number: "08",
     label: "Journal",
     subtitle: "Planning Notes & Floral Guidance",
     path: "/journal",
@@ -74,7 +83,7 @@ const MENU_ITEMS = [
   },
   {
     id: "inquire",
-    number: "08",
+    number: "09",
     label: "Inquire",
     subtitle: "Begin Your Bespoke Consultation",
     path: "/inquire",
@@ -239,6 +248,12 @@ export default function Header() {
             className={`hover:text-gold transition-colors ${pathname === "/services" ? "text-gold font-bold" : ""}`}
           >
             Services
+          </Link>
+          <Link 
+            href="/planning" 
+            className={`hover:text-gold transition-colors ${pathname === "/planning" ? "text-gold font-bold" : ""}`}
+          >
+            Planning
           </Link>
           <Link 
             href="/gallery" 
