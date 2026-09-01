@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./login.module.css";
+import Link from "next/link";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -41,6 +42,7 @@ export default function LoginForm() {
         <span>Password</span>
         <input name="password" type="password" autoComplete="current-password" placeholder="Your password" required />
       </label>
+      <Link className={styles.forgotLink} href="/admin/forgot-password">Forgot your password?</Link>
       {error && <p className={styles.error} role="alert">{error}</p>}
       <button type="submit" disabled={busy}>{busy ? "Opening your studio…" : "Enter the studio"}</button>
     </form>

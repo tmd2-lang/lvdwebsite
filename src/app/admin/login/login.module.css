@@ -72,6 +72,8 @@
 
 .formCopy { margin: 1rem 0 2.5rem; color: #756f66; font-size: 0.92rem; line-height: 1.6; }
 .form { display: grid; gap: 1.2rem; }
+.forgotLink { justify-self: end; margin-top: -0.35rem; color: #8a6a33; font-size: 0.68rem; text-decoration-color: #c4ae83; text-underline-offset: 3px; }
+.success { color: #567054; font-size: 0.78rem; line-height: 1.5; }
 .form label { display: grid; gap: 0.55rem; }
 .form label span { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
 

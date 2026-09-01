@@ -26,6 +26,9 @@ export default function ProfileForm({ initialProfile }: { initialProfile: AdminU
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [passwordBusy, setPasswordBusy] = useState(false);
+  const [passwordMessage, setPasswordMessage] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -54,6 +57,33 @@ export default function ProfileForm({ initialProfile }: { initialProfile: AdminU
     }
   }
 
+  async function changePassword(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    setPasswordBusy(true);
+    setPasswordMessage("");
+    setPasswordError("");
+    try {
+      const response = await fetch("/api/admin/auth/password", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentPassword: data.get("currentPassword"), newPassword: data.get("newPassword") }),
+      });
+      const result = await response.json() as { error?: string };
+      if (response.status === 401) {
+        window.location.assign(`/api/admin/auth/refresh?next=${encodeURIComponent(window.location.pathname)}`);
+        return;
+      }
+      if (!response.ok) throw new Error(result.error || "Your password could not be changed.");
+      event.currentTarget.reset();
+      setPasswordMessage("Password changed successfully.");
+    } catch (caught) {
+      setPasswordError(caught instanceof Error ? caught.message : "Your password could not be changed.");
+    } finally {
+      setPasswordBusy(false);
+    }
+  }
+
   async function signOut() {
     await fetch("/api/admin/auth/logout", { method: "POST" }).catch(() => null);
     window.location.assign("/admin/login");
@@ -68,6 +98,7 @@ export default function ProfileForm({ initialProfile }: { initialProfile: AdminU
         </div>
         <nav aria-label="Studio navigation">
           <Link href="/admin">Home</Link>
+          <Link href="/admin/portal">Client portal</Link>
           <Link href="/admin/inquiries">Inquiries</Link>
           <Link className={styles.navActive} href="/admin/profile" aria-current="page">Profile</Link>
         </nav>
@@ -82,6 +113,7 @@ export default function ProfileForm({ initialProfile }: { initialProfile: AdminU
           <Link href="/admin"><b>LVD</b><span>Studio</span></Link>
           <nav aria-label="Mobile studio navigation">
             <Link href="/admin">Home</Link>
+            <Link href="/admin/portal">Portal</Link>
             <Link href="/admin/inquiries">Inquiries</Link>
             <Link className={styles.mobileActive} href="/admin/profile" aria-current="page">Profile</Link>
           </nav>
@@ -116,6 +148,21 @@ export default function ProfileForm({ initialProfile }: { initialProfile: AdminU
             {(message || error) && <p className={error ? styles.error : styles.success} role="status">{error || message}</p>}
             <button className={styles.saveButton} type="submit" disabled={saving}>{saving ? "Saving profile…" : "Save profile"}</button>
           </form>
+
+          <section className={styles.securitySection}>
+            <div>
+              <p className={styles.sectionKicker}>Account security</p>
+              <h3>Change your password.</h3>
+              <p>Use your current password to set a new one. Passwords must be at least 12 characters.</p>
+            </div>
+            <form className={styles.passwordForm} onSubmit={(event) => void changePassword(event)}>
+              <label><span>Current password</span><input name="currentPassword" type="password" autoComplete="current-password" required /></label>
+              <label><span>New password</span><input name="newPassword" type="password" autoComplete="new-password" minLength={12} required /></label>
+              {(passwordMessage || passwordError) && <p className={passwordError ? styles.error : styles.success} role="status">{passwordError || passwordMessage}</p>}
+              <button className={styles.saveButton} type="submit" disabled={passwordBusy}>{passwordBusy ? "Changing password…" : "Change password"}</button>
+            </form>
+            <Link className={styles.resetLink} href="/admin/forgot-password">Forgot your password?</Link>
+          </section>
         </section>
 
         <footer className={styles.mobileFooter}><button type="button" onClick={() => void signOut()}>Sign out</button></footer>

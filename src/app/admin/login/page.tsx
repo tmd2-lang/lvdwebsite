@@ -15,16 +15,16 @@ export default async function AdminLoginPage() {
         <p className={styles.brand}>Lady Victoria Designs</p>
         <div>
           <p className={styles.script}>Welcome back</p>
-          <h1>Your inquiries,<br />beautifully organized.</h1>
-          <p className={styles.introCopy}>A quiet place to review new celebrations, keep notes, and follow each client from first hello to booked.</p>
+          <h1>Your studio,<br />beautifully organized.</h1>
+          <p className={styles.introCopy}>One private workspace for inquiries, client portals, payments, documents, images, and every planning detail.</p>
         </div>
         <p className={styles.privateNote}>Private studio access</p>
       </section>
       <section className={styles.formSide}>
         <div className={styles.formWrap}>
-          <p className={styles.kicker}>Studio sign in</p>
+          <p className={styles.kicker}>Studio administration</p>
           <h2>Good to see you.</h2>
-          <p className={styles.formCopy}>Use the email and password created for your studio.</p>
+          <p className={styles.formCopy}>Sign in with your approved administrator email and password.</p>
           <LoginForm />
           <Link className={styles.siteLink} href="/">← Back to the website</Link>
         </div>
