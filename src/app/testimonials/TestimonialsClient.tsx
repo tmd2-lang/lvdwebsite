@@ -391,19 +391,19 @@ export default function TestimonialsClient() {
               Whether you hold a confirmed date at a historic estate or are beginning the creative search, Irene and our production team are ready to bring your vision to life.
             </p>
             
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Magnetic>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4">
+              <Magnetic className="relative block w-full cursor-pointer sm:w-auto">
                 <Link
                   href="/inquire"
-                  className="w-full sm:w-auto px-8 py-4 bg-ink text-ivory border border-ink font-body text-[11px] uppercase tracking-[0.25em] font-medium hover:bg-gold hover:text-ink hover:border-gold transition-colors duration-300 shadow-xs"
+                  className="block w-full px-8 py-4 bg-ink text-ivory border border-ink font-body text-[11px] uppercase tracking-[0.25em] font-medium text-center hover:bg-gold hover:text-ink hover:border-gold transition-colors duration-300 shadow-xs"
                 >
                   Request Private Consultation
                 </Link>
               </Magnetic>
-              <Magnetic>
+              <Magnetic className="relative block w-full cursor-pointer sm:w-auto">
                 <Link
                   href="/quiz"
-                  className="w-full sm:w-auto px-8 py-4 bg-transparent border border-ink/20 text-ink font-body text-[11px] uppercase tracking-[0.25em] hover:bg-ink hover:text-ivory transition-colors duration-300"
+                  className="block w-full px-8 py-4 bg-transparent border border-ink/20 text-ink font-body text-[11px] uppercase tracking-[0.25em] text-center hover:bg-ink hover:text-ivory transition-colors duration-300"
                 >
                   Estimate Investment Scope
                 </Link>

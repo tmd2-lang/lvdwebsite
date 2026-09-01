@@ -3,7 +3,13 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 
-export default function Magnetic({ children }: { children: React.ReactNode }) {
+export default function Magnetic({
+  children,
+  className = "inline-block relative cursor-pointer",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   const magneticRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -39,7 +45,7 @@ export default function Magnetic({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <div ref={magneticRef} className="inline-block relative cursor-pointer">
+    <div ref={magneticRef} className={className}>
       {children}
     </div>
   );

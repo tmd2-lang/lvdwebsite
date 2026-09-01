@@ -131,10 +131,7 @@ export default function SignatureWork() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-2 py-4 md:py-5">
-              <h3 className="truncate font-body text-sm uppercase tracking-[-0.02em] md:text-base">
-                {project.title}
-              </h3>
+            <div className="py-4 md:py-5">
               <p className="font-body text-[10px] uppercase tracking-[0.16em] text-ink/55 md:text-xs">
                 {project.detail}
               </p>
