@@ -351,7 +351,7 @@
 .loginQuote p { max-width: 520px; font-family: var(--font-bodoni); font-size: clamp(2rem, 4vw, 4rem); line-height: 1.02; }
 .loginQuote p em { color: #d3b779; font-weight: 400; }
 .loginQuote > span { display: block; margin-top: 1rem; color: rgba(255, 253, 249, 0.6); font-size: 0.55rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
-.loginPanel { display: grid; place-items: center; padding: 2rem; }
+.loginPanel { position: relative; display: grid; place-items: center; padding: 2rem; }
 .loginPanelInner { width: min(480px, 100%); }
 .loginPanelInner > h1 { margin-top: 0.45rem; font-family: var(--font-bodoni); font-size: clamp(3.5rem, 7vw, 6.3rem); font-weight: 400; letter-spacing: -0.06em; line-height: 0.92; }
 .loginPanelInner > h1 em { color: #80612f; font-weight: 400; }
@@ -368,6 +368,12 @@
 .loginOptions button, .loginSupport button { border: 0; padding: 0; background: transparent; color: #71582e; font: inherit; font-size: inherit; font-weight: 700; cursor: pointer; }
 .loginSubmit { min-height: 52px; display: flex; align-items: center; justify-content: space-between; margin-top: 0.25rem; border: 1px solid #211e1a; border-radius: 3px; padding: 0 1rem; background: #211e1a; color: #fffdf9; font: inherit; font-size: 0.65rem; font-weight: 700; cursor: pointer; }
 .loginSupport { color: #665f56; font-size: 0.56rem; text-align: center; }
+.demoLink { position: absolute; top: 1.6rem; right: clamp(1.25rem, 3vw, 2.5rem); z-index: 2; display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid #d9d1c5; border-radius: 999px; padding: 0.42rem 0.85rem; background: #fffdfa; color: #71582e; font-size: 0.53rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; transition: border-color 0.2s ease, color 0.2s ease; }
+.demoLink:hover { border-color: #a8894e; color: #4e3c1c; }
+.loginError { border-left: 2px solid #9c4a37; padding: 0.5rem 0.8rem; background: #f6e9e5; color: #7d3a2a; font-size: 0.58rem; line-height: 1.45; }
+.loginSubmit:disabled { background: #4a453e; border-color: #4a453e; cursor: progress; }
+.loginForm > label input:disabled { background: #f2eee7; color: #8b857c; }
+.loginOptions button:disabled, .loginSupport button:disabled { color: #a09a90; cursor: not-allowed; }
 .adminLoginLink { min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 0.4rem; border-top: 1px solid #d9d1c5; padding-top: 0.7rem; color: #71582e; font-size: 0.56rem; font-weight: 700; text-decoration: none; }
 
 .paymentHistorySummary { display: grid; grid-template-columns: 1.25fr 0.72fr 1fr; overflow: hidden; border: 1px solid #d9d1c5; border-radius: 7px; background: #fffdfa; }

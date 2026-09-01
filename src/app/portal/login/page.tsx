@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import DemoLogin from "@/components/portal/DemoLogin";
+import ClientLogin from "@/components/portal/ClientLogin";
 import styles from "../portal.module.css";
 
 export default function PortalLoginPage() {
@@ -13,11 +13,12 @@ export default function PortalLoginPage() {
         <div className={styles.loginQuote}><p>Every detail, every decision, <em>beautifully held.</em></p><span>Your private planning atelier</span></div>
       </section>
       <section className={styles.loginPanel}>
+        <Link className={styles.demoLink} href="/portal">Demo <span aria-hidden="true">↗</span></Link>
         <div className={styles.loginPanelInner}>
           <p className={styles.eyebrow}>Client planning portal</p>
           <h1>Welcome <em>back.</em></h1>
           <p>Sign in to view your celebration plan, invoices, approvals, and documents.</p>
-          <DemoLogin />
+          <ClientLogin />
         </div>
       </section>
     </main>
