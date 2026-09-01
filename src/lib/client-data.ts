@@ -95,3 +95,91 @@ export async function createClient(input: NewClientInput): Promise<PortalClient>
   if (!rows[0]) throw new Error("Could not save this client.");
   return rows[0];
 }
+
+export type ClientMember = {
+  id: string;
+  created_at: string;
+  client_id: string;
+  user_id: string;
+  relationship: string;
+  invited_email: string | null;
+};
+
+/** Everyone who can sign in to this celebration. */
+export async function getClientMembers(clientId: string): Promise<ClientMember[]> {
+  const { url } = databaseConfig();
+  const response = await fetch(
+    `${url}/rest/v1/client_users?select=*&client_id=eq.${encodeURIComponent(clientId)}&order=created_at.asc`,
+    { headers: databaseHeaders(), cache: "no-store" },
+  );
+  return responseJson<ClientMember[]>(response, "Could not load who has access.");
+}
+
+/**
+ * Invite someone into a celebration.
+ *
+ * Supabase sends them a link where they choose their own password, so no
+ * password is ever emailed or known to the studio. If the address already has
+ * an account we reuse it rather than failing.
+ */
+export async function inviteClientMember(
+  clientId: string,
+  email: string,
+  relationship: string,
+  redirectTo: string,
+): Promise<{ alreadyHadAccount: boolean }> {
+  const { url, serviceRoleKey } = databaseConfig();
+  const address = email.trim().toLowerCase();
+  if (!address) throw new Error("Enter an email address.");
+
+  const adminHeaders = {
+    apikey: serviceRoleKey,
+    Authorization: `Bearer ${serviceRoleKey}`,
+    "Content-Type": "application/json",
+  };
+
+  let userId = "";
+  let alreadyHadAccount = false;
+
+  const inviteResponse = await fetch(
+    `${url}/auth/v1/invite?redirect_to=${encodeURIComponent(redirectTo)}`,
+    { method: "POST", headers: adminHeaders, body: JSON.stringify({ email: address }), cache: "no-store" },
+  );
+
+  if (inviteResponse.ok) {
+    const invited = (await inviteResponse.json().catch(() => null)) as { id?: string } | null;
+    userId = invited?.id || "";
+  } else {
+    // Most likely they already have an account, so look them up instead.
+    const lookup = await fetch(`${url}/auth/v1/admin/users?page=1&per_page=1000`, {
+      headers: adminHeaders, cache: "no-store",
+    });
+    const payload = (await lookup.json().catch(() => null)) as {
+      users?: Array<{ id?: string; email?: string }>;
+    } | null;
+    const existing = payload?.users?.find((item) => item.email?.toLowerCase() === address);
+    if (!existing?.id) {
+      console.error("Client invite failed:", await inviteResponse.text().catch(() => ""));
+      throw new Error("Could not send that invitation. Please try again.");
+    }
+    userId = existing.id;
+    alreadyHadAccount = true;
+  }
+
+  if (!userId) throw new Error("Could not send that invitation. Please try again.");
+
+  const linkResponse = await fetch(`${url}/rest/v1/client_users`, {
+    method: "POST",
+    headers: { ...adminHeaders, Prefer: "resolution=merge-duplicates,return=representation" },
+    body: JSON.stringify({
+      client_id: clientId,
+      user_id: userId,
+      relationship,
+      invited_email: address,
+    }),
+    cache: "no-store",
+  });
+
+  await responseJson(linkResponse, "Invitation sent, but linking them to this celebration failed.");
+  return { alreadyHadAccount };
+}

@@ -1,10 +1,12 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styles from "@/app/portal/portal.module.css";
 import StudioSupport from "@/components/portal/StudioSupport";
 
 export default function ClientLogin() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
@@ -15,12 +17,21 @@ export default function ClientLogin() {
     setError("");
     setPending(true);
 
-    // Auth is not connected yet. This stands in for the request so the
-    // pending and error states are real and reviewable.
-    window.setTimeout(() => {
+    try {
+      const response = await fetch("/api/portal/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || "We couldn’t sign you in.");
+
+      router.push("/portal");
+      router.refresh();
+    } catch (submitError) {
       setPending(false);
-      setError("Client accounts aren’t active yet. Reach out to the studio and we’ll get you set up.");
-    }, 700);
+      setError(submitError instanceof Error ? submitError.message : "We couldn’t sign you in.");
+    }
   }
 
   return (

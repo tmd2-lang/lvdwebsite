@@ -197,3 +197,34 @@
   .clientPackage { justify-items: start; }
   .clientStatus { justify-self: start; }
 }
+
+/* Client detail: what they booked, and who can sign in */
+.detailPanel { max-width: 880px; margin: 0 auto 1.4rem; border: 1px solid #e2dbcf; border-radius: 6px; padding: 1.5rem 1.6rem 1.7rem; background: #fffdf9; }
+.detailPanel h2 { margin-bottom: 1.1rem; font-family: var(--font-bodoni); font-size: 1.35rem; font-weight: 500; }
+.detailList { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1rem 1.6rem; }
+.detailList div { display: grid; gap: 0.25rem; }
+.detailList dt { color: #8b8479; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase; }
+.detailList dd { color: #201d19; font-size: 0.82rem; }
+.detailNotes { margin-top: 1.2rem; border-left: 2px solid #e2dbcf; padding-left: 0.9rem; color: #6d665c; font-size: 0.76rem; line-height: 1.6; }
+.detailEmpty { color: #8b8479; font-size: 0.76rem; }
+
+.memberList { display: grid; gap: 0; margin-bottom: 1.4rem; border: 1px solid #ece6dc; border-radius: 5px; list-style: none; }
+.memberList li { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.8rem 1rem; }
+.memberList li + li { border-top: 1px solid #ece6dc; }
+.memberList strong { font-size: 0.78rem; font-weight: 600; }
+.memberList span { color: #8b8479; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+
+.inviteForm { display: grid; gap: 0.8rem; border-top: 1px solid #ece6dc; padding-top: 1.4rem; }
+.inviteRow { display: grid; grid-template-columns: 2fr 1fr auto; align-items: end; gap: 0.8rem; }
+.inviteRow label { display: grid; gap: 0.35rem; }
+.inviteRow label span { color: #4e4942; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.inviteRow input, .inviteRow select { min-height: 44px; border: 1px solid #d8d0c3; border-radius: 3px; padding: 0.5rem 0.7rem; background: #fff; font: inherit; font-size: 0.76rem; }
+.inviteRow input:focus, .inviteRow select:focus { border-color: #a8894e; outline: none; }
+.inviteRow button { min-height: 44px; border: 1px solid #201d19; border-radius: 3px; padding: 0 1.1rem; background: #201d19; color: #fbf8f2; font: inherit; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; }
+.inviteRow button:disabled { opacity: 0.6; cursor: progress; }
+.inviteNote { color: #8b8479; font-size: 0.66rem; line-height: 1.5; }
+.formSuccess { border-left: 2px solid #567054; padding: 0.6rem 0.85rem; background: #eaf0e9; color: #3f553d; font-size: 0.7rem; line-height: 1.5; }
+
+@media (max-width: 700px) {
+  .inviteRow { grid-template-columns: 1fr; }
+}
