@@ -5,10 +5,9 @@ import type { AdminUser } from "@/lib/admin-types";
 import styles from "./portal-admin.module.css";
 
 const portalModules = [
-  { number: "01", label: "Clients", value: "0", detail: "No client records yet" },
-  { number: "02", label: "Invoices", value: "$0", detail: "No payments collected" },
-  { number: "03", label: "Documents", value: "0", detail: "The file vault is empty" },
-  { number: "04", label: "Images", value: "0", detail: "No galleries created" },
+  { number: "01", label: "Invoices", value: "$0", detail: "No payments collected" },
+  { number: "02", label: "Documents", value: "0", detail: "The file vault is empty" },
+  { number: "03", label: "Images", value: "0", detail: "No galleries created" },
 ];
 
 function firstName(user: AdminUser) {
@@ -21,8 +20,9 @@ async function signOut() {
   window.location.assign("/admin/login");
 }
 
-export default function AdminPortalHome({ user }: { user: AdminUser }) {
+export default function AdminPortalHome({ user, clientCount }: { user: AdminUser; clientCount: number }) {
   const isOwner = user.role === "owner";
+  const hasClients = clientCount > 0;
 
   return (
     <main className={styles.app}>
@@ -35,7 +35,7 @@ export default function AdminPortalHome({ user }: { user: AdminUser }) {
         <nav className={styles.portalNav} aria-label="Portal administration">
           <p>Client portal</p>
           <Link className={styles.navActive} href="/admin/portal" aria-current="page"><span>Overview</span><i>01</i></Link>
-          <span aria-disabled="true"><b>Clients</b><i>02</i></span>
+          <Link href="/admin/portal/clients"><span>Clients</span><i>02</i></Link>
           <span aria-disabled="true"><b>Invoices</b><i>03</i></span>
           <span aria-disabled="true"><b>Documents</b><i>04</i></span>
           <span aria-disabled="true"><b>Images</b><i>05</i></span>
@@ -78,7 +78,7 @@ export default function AdminPortalHome({ user }: { user: AdminUser }) {
         </div>
 
         <section className={styles.metrics} aria-label="Portal totals">
-          <article><span>Active clients</span><strong>0</strong><small>Ready for your first record</small></article>
+          <article><span>Active clients</span><strong>{clientCount}</strong><small>{hasClients ? "Across your celebrations" : "Ready for your first record"}</small></article>
           <article><span>Open invoices</span><strong>0</strong><small>No balances due</small></article>
           <article><span>Collected</span><strong>$0</strong><small>Payments connect next</small></article>
         </section>
@@ -87,7 +87,7 @@ export default function AdminPortalHome({ user }: { user: AdminUser }) {
           <section className={styles.firstRun} id="portal-setup">
             <div className={styles.firstRunHeading}>
               <div><p className={styles.sectionKicker}>First-run setup</p><h2>Your portal is ready for <em>real clients.</em></h2></div>
-              <span>0 of 3 complete</span>
+              <span>{hasClients ? "2 of 3 complete" : "1 of 3 complete"}</span>
             </div>
             <p className={styles.firstRunCopy}>Start with one client record. Their private login, files, invoices, and gallery will all connect back to that record.</p>
 
@@ -97,10 +97,10 @@ export default function AdminPortalHome({ user }: { user: AdminUser }) {
                 <div><strong>Admin identity confirmed</strong><small>{user.email} is approved for private studio access.</small></div>
                 <b>Complete</b>
               </li>
-              <li>
-                <span>2</span>
-                <div><strong>Create the first client</strong><small>Add their name, email, event date, and planning package.</small></div>
-                <b>Next</b>
+              <li className={hasClients ? styles.setupComplete : undefined}>
+                <span>{hasClients ? "✓" : "2"}</span>
+                <div><strong>Create the first client</strong><small>{hasClients ? `${clientCount} ${clientCount === 1 ? "celebration is" : "celebrations are"} on file.` : "Add their name, email, event date, and planning package."}</small></div>
+                <b>{hasClients ? "Complete" : "Next"}</b>
               </li>
               <li>
                 <span>3</span>
@@ -110,7 +110,7 @@ export default function AdminPortalHome({ user }: { user: AdminUser }) {
             </ol>
 
             <div className={styles.setupActions}>
-              <span className={styles.primaryPending} aria-disabled="true">Add your first client <small>Database connection next</small></span>
+              <Link className={styles.primaryAction} href="/admin/portal/clients/new">{hasClients ? "Add a client" : "Add your first client"} <span aria-hidden="true">→</span></Link>
               <Link href="/portal/login">View client sign in <span aria-hidden="true">→</span></Link>
             </div>
           </section>
@@ -119,7 +119,7 @@ export default function AdminPortalHome({ user }: { user: AdminUser }) {
             <div><p className={styles.sectionKicker}>Launch readiness</p><h2>System status</h2></div>
             <dl>
               <div><dt>Admin account</dt><dd className={styles.ready}>Active</dd></div>
-              <div><dt>Client records</dt><dd>Not connected</dd></div>
+              <div><dt>Client records</dt><dd className={styles.ready}>Active</dd></div>
               <div><dt>Payments</dt><dd>Not connected</dd></div>
               <div><dt>Private files</dt><dd>Not connected</dd></div>
             </dl>

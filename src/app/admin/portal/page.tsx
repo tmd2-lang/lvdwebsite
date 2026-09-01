@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getAdminUser, hasAdminRefreshToken } from "@/lib/admin-auth";
+import { countClients } from "@/lib/client-data";
 import AdminPortalHome from "./AdminPortalHome";
 
 export const dynamic = "force-dynamic";
@@ -14,5 +15,7 @@ export default async function AdminPortalPage() {
     redirect("/admin/login");
   }
 
-  return <AdminPortalHome user={user} />;
+  const clientCount = await countClients().catch(() => 0);
+
+  return <AdminPortalHome user={user} clientCount={clientCount} />;
 }
