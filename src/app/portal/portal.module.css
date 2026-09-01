@@ -384,6 +384,9 @@
 .loginOptions button:disabled, .loginSupport button:disabled { color: #a09a90; cursor: not-allowed; }
 .adminLoginLink { min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 0.4rem; border-top: 1px solid #d9d1c5; padding-top: 0.7rem; color: #71582e; font-size: 0.56rem; font-weight: 700; text-decoration: none; }
 
+.sidebarFooter button { display: inline-block; margin-top: 0.6rem; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.sidebarFooter button:disabled { opacity: 0.6; cursor: progress; }
+
 .paymentHistorySummary { display: grid; grid-template-columns: 1.25fr 0.72fr 1fr; overflow: hidden; border: 1px solid #d9d1c5; border-radius: 7px; background: #fffdfa; }
 .paymentHistorySummary article { min-height: 145px; display: grid; align-content: center; padding: 1.35rem clamp(1.15rem, 2.3vw, 2rem); }
 .paymentHistorySummary article + article { border-left: 1px solid #e1d9cd; }
@@ -919,3 +922,15 @@
 .realDocuments a:hover { border-color: #a8894e; background: #f7f2e9; }
 .realPayButton { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.35rem; border: 1px solid #211e1a; border-radius: 3px; padding: 0.55rem 0.95rem; background: #211e1a; color: #fffdf9; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; }
 .realPayButton:hover { background: transparent; color: #211e1a; }
+
+/* Real-data adjustments to the ported demo screens */
+.panelEmpty { padding: 1.4rem 0; color: #8b857c; font-size: 0.72rem; line-height: 1.6; }
+.documentEmpty { display: grid; gap: 0.5rem; border: 1px dashed #d2c9ba; border-radius: 7px; padding: 2.6rem; background: #efe9df; text-align: center; }
+.documentEmpty strong { font-family: var(--font-bodoni); font-size: 1.3rem; font-weight: 500; }
+.documentEmpty span { color: #8b857c; font-size: 0.7rem; }
+.invoiceNotes { max-width: 720px; margin: 1rem auto 0; border-left: 2px solid #ded6c9; padding-left: 1rem; color: #665f56; font-size: 0.72rem; line-height: 1.6; }
+.paymentPending { color: rgba(255, 253, 249, 0.6); font-size: 0.62rem; }
+.lineItems > div { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; padding: 0.95rem 0; border-bottom: 1px solid #ece5da; }
+.lineItems > div:last-child { border-bottom: 0; }
+.documentCard a { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid #ded6c9; border-radius: 50%; color: #71582e; text-decoration: none; }
+.documentCard a:hover { border-color: #a8894e; background: #f7f2e9; }
