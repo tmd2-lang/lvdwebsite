@@ -21,7 +21,7 @@ async function responseJson<T>(response: Response): Promise<T> {
   return payload;
 }
 
-export default function ProfileForm({ initialProfile }: { initialProfile: AdminUser }) {
+export default function ProfileForm({ initialProfile, embedded = false }: { initialProfile: AdminUser; embedded?: boolean }) {
   const [profile, setProfile] = useState(initialProfile);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
@@ -90,8 +90,8 @@ export default function ProfileForm({ initialProfile }: { initialProfile: AdminU
   }
 
   return (
-    <main className={styles.app}>
-      <aside className={styles.sidebar}>
+    <main className={embedded ? styles.embeddedApp : styles.app}>
+      {!embedded && <aside className={styles.sidebar}>
         <div>
           <p className={styles.monogram}>LVD</p>
           <p className={styles.studioName}>Lady Victoria<br />Designs</p>
@@ -106,10 +106,10 @@ export default function ProfileForm({ initialProfile }: { initialProfile: AdminU
           <p>{profile.name}</p>
           <button type="button" onClick={() => void signOut()}>Sign out</button>
         </div>
-      </aside>
+      </aside>}
 
-      <section className={styles.workspace}>
-        <header className={styles.mobileHeader}>
+      <section className={embedded ? styles.embeddedWorkspace : styles.workspace}>
+        {!embedded && <header className={styles.mobileHeader}>
           <Link href="/admin"><b>LVD</b><span>Studio</span></Link>
           <nav aria-label="Mobile studio navigation">
             <Link href="/admin">Home</Link>
@@ -117,7 +117,7 @@ export default function ProfileForm({ initialProfile }: { initialProfile: AdminU
             <Link href="/admin/inquiries">Inquiries</Link>
             <Link className={styles.mobileActive} href="/admin/profile" aria-current="page">Profile</Link>
           </nav>
-        </header>
+        </header>}
 
         <div className={styles.pageHeader}>
           <div>
@@ -125,7 +125,7 @@ export default function ProfileForm({ initialProfile }: { initialProfile: AdminU
             <h1>Your <em>profile.</em></h1>
             <p>This is how your name appears across the private studio.</p>
           </div>
-          <Link className={styles.backLink} href="/admin">Back to home <span aria-hidden="true">→</span></Link>
+          <Link className={styles.backLink} href={embedded ? "/admin/portal" : "/admin"}>Back to {embedded ? "portal" : "home"} <span aria-hidden="true">→</span></Link>
         </div>
 
         <section className={styles.profileCard}>
@@ -165,7 +165,7 @@ export default function ProfileForm({ initialProfile }: { initialProfile: AdminU
           </section>
         </section>
 
-        <footer className={styles.mobileFooter}><button type="button" onClick={() => void signOut()}>Sign out</button></footer>
+        {!embedded && <footer className={styles.mobileFooter}><button type="button" onClick={() => void signOut()}>Sign out</button></footer>}
       </section>
     </main>
   );

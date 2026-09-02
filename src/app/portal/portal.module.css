@@ -365,7 +365,7 @@
 .loginOptions { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .loginOptions label { display: flex; align-items: center; gap: 0.45rem; color: #665f56; font-size: 0.56rem; }
 .loginOptions input { accent-color: #211e1a; }
-.loginOptions button, .loginSupport button, .loginSupport a { border: 0; padding: 0; background: transparent; color: #71582e; font: inherit; font-size: inherit; font-weight: 700; cursor: pointer; text-decoration-color: #c4ae83; text-underline-offset: 3px; }
+.loginOptions button, .loginOptions a, .loginSupport button, .loginSupport a { border: 0; padding: 0; background: transparent; color: #71582e; font: inherit; font-size: inherit; font-weight: 700; cursor: pointer; text-decoration-color: #c4ae83; text-underline-offset: 3px; }
 .loginSubmit { min-height: 52px; display: flex; align-items: center; justify-content: space-between; margin-top: 0.25rem; border: 1px solid #211e1a; border-radius: 3px; padding: 0 1rem; background: #211e1a; color: #fffdf9; font: inherit; font-size: 0.65rem; font-weight: 700; cursor: pointer; }
 .loginSupport { color: #665f56; font-size: 0.56rem; text-align: center; }
 .loginSupportWrap { display: grid; gap: .7rem; }
@@ -381,7 +381,7 @@
 .loginError { border-left: 2px solid #9c4a37; padding: 0.5rem 0.8rem; background: #f6e9e5; color: #7d3a2a; font-size: 0.58rem; line-height: 1.45; }
 .loginSubmit:disabled { background: #4a453e; border-color: #4a453e; cursor: progress; }
 .loginForm > label input:disabled { background: #f2eee7; color: #8b857c; }
-.loginOptions button:disabled, .loginSupport button:disabled { color: #a09a90; cursor: not-allowed; }
+.loginOptions button:disabled, .loginOptions a[aria-disabled="true"], .loginSupport button:disabled { color: #a09a90; cursor: not-allowed; }
 .adminLoginLink { min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 0.4rem; border-top: 1px solid #d9d1c5; padding-top: 0.7rem; color: #71582e; font-size: 0.56rem; font-weight: 700; text-decoration: none; }
 
 .sidebarFooter button { display: inline-block; margin-top: 0.6rem; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }

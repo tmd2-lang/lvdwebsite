@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styles from "@/app/portal/portal.module.css";
@@ -70,7 +71,7 @@ export default function ClientLogin() {
 
       <div className={styles.loginOptions}>
         <label><input type="checkbox" name="remember" disabled={pending} /> Remember me</label>
-        <button type="button" disabled={pending}>Forgot password?</button>
+        <Link href="/portal/forgot-password" tabIndex={pending ? -1 : undefined} aria-disabled={pending || undefined}>Forgot password?</Link>
       </div>
 
       <button className={styles.loginSubmit} type="submit" disabled={pending}>

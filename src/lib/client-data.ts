@@ -1,5 +1,6 @@
-import type { NewClientInput, PortalClient } from "@/lib/client-types";
+import type { NewClientInput, PortalClient, UpdateClientInput } from "@/lib/client-types";
 import { coupleDisplayName } from "@/lib/client-types";
+import { deleteDocument, getDocumentsForClient } from "@/lib/document-data";
 
 function databaseConfig() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -94,6 +95,59 @@ export async function createClient(input: NewClientInput): Promise<PortalClient>
   const rows = await responseJson<PortalClient[]>(response, "Could not save this client.");
   if (!rows[0]) throw new Error("Could not save this client.");
   return rows[0];
+}
+
+export async function updateClient(id: string, input: UpdateClientInput): Promise<PortalClient> {
+  const { url } = databaseConfig();
+  const partnerOne = input.partnerOneName.trim();
+  if (!partnerOne) throw new Error("Enter at least one name for this celebration.");
+
+  const response = await fetch(`${url}/rest/v1/clients?id=eq.${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    headers: databaseHeaders("return=representation"),
+    body: JSON.stringify({
+      partner_one_name: partnerOne,
+      partner_two_name: trimmedOrNull(input.partnerTwoName),
+      display_name: coupleDisplayName(partnerOne, input.partnerTwoName),
+      email: trimmedOrNull(input.email)?.toLowerCase() || null,
+      phone: trimmedOrNull(input.phone),
+      event_date: trimmedOrNull(input.eventDate),
+      date_undecided: !trimmedOrNull(input.eventDate),
+      venue: trimmedOrNull(input.venue),
+      location: trimmedOrNull(input.location),
+      guest_count: trimmedOrNull(input.guestCount),
+      planning_package: input.planningPackage,
+      design_tier: input.designTier || null,
+      status: input.status,
+      notes: trimmedOrNull(input.notes),
+    }),
+    cache: "no-store",
+  });
+
+  const rows = await responseJson<PortalClient[]>(response, "Could not update this client.");
+  if (!rows[0]) throw new Error("Could not update this client.");
+  return rows[0];
+}
+
+/**
+ * Remove one celebration and everything scoped to it.
+ *
+ * Database relationships cascade invoices, invoice items, document records,
+ * and portal memberships. Storage objects live outside Postgres, so those are
+ * deliberately removed first. Auth users are kept so an email can be invited
+ * to another test or client record later.
+ */
+export async function deleteClient(id: string): Promise<void> {
+  const { url } = databaseConfig();
+  const documents = await getDocumentsForClient(id);
+  for (const document of documents) await deleteDocument(document.id);
+
+  const response = await fetch(`${url}/rest/v1/clients?id=eq.${encodeURIComponent(id)}`, {
+    method: "DELETE",
+    headers: databaseHeaders(),
+    cache: "no-store",
+  });
+  if (!response.ok) throw new Error("Could not delete this client.");
 }
 
 export type ClientMember = {

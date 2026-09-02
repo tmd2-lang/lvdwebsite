@@ -1,9 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import ClientLogin from "@/components/portal/ClientLogin";
+import UpdatePasswordForm from "./UpdatePasswordForm";
 import styles from "../portal.module.css";
 
-export default function PortalLoginPage() {
+export const dynamic = "force-dynamic";
+
+export default function PortalUpdatePasswordPage() {
   return (
     <main className={styles.loginShell}>
       <section className={styles.loginVisual}>
@@ -15,9 +17,9 @@ export default function PortalLoginPage() {
       <section className={styles.loginPanel}>
         <div className={styles.loginPanelInner}>
           <p className={styles.eyebrow}>Client planning portal</p>
-          <h1>Welcome <em>back.</em></h1>
-          <p>Sign in to view your celebration plan, invoices, approvals, and documents.</p>
-          <ClientLogin />
+          <h1>Choose a <em>new password.</em></h1>
+          <p>Pick something only you would know. We&rsquo;ll take you straight into your portal.</p>
+          <UpdatePasswordForm />
         </div>
       </section>
     </main>

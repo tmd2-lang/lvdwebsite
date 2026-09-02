@@ -72,6 +72,10 @@ export type NewClientInput = {
   notes?: string;
 };
 
+export type UpdateClientInput = NewClientInput & {
+  status: ClientStatus;
+};
+
 /** "Amara & Julien", or just the one name when there is only one. */
 export function coupleDisplayName(partnerOne: string, partnerTwo?: string | null) {
   const one = partnerOne.trim();

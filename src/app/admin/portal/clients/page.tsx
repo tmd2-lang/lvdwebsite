@@ -47,15 +47,18 @@ export default async function ClientsPage() {
         <ul className={styles.clientList}>
           {clients.map((client) => (
             <li key={client.id}>
-              <div className={styles.clientName}>
-                <strong>{client.display_name}</strong>
-                <small>{formatDate(client.event_date)}{client.venue ? ` · ${client.venue}` : ""}</small>
-              </div>
-              <span className={styles.clientPackage}>
-                {PLANNING_PACKAGE_LABELS[client.planning_package]}
-                {client.design_tier && <small>{DESIGN_TIER_LABELS[client.design_tier]}</small>}
-              </span>
-              <span className={styles.clientStatus}>{CLIENT_STATUS_LABELS[client.status]}</span>
+              <Link className={styles.clientRow} href={`/admin/portal/clients/${client.id}`} aria-label={`Open ${client.display_name}`}>
+                <div className={styles.clientName}>
+                  <strong>{client.display_name}</strong>
+                  <small>{formatDate(client.event_date)}{client.venue ? ` · ${client.venue}` : ""}</small>
+                </div>
+                <span className={styles.clientPackage}>
+                  {PLANNING_PACKAGE_LABELS[client.planning_package]}
+                  {client.design_tier && <small>{DESIGN_TIER_LABELS[client.design_tier]}</small>}
+                </span>
+                <span className={styles.clientStatus}>{CLIENT_STATUS_LABELS[client.status]}</span>
+                <span className={styles.clientRowArrow} aria-hidden="true">→</span>
+              </Link>
             </li>
           ))}
         </ul>

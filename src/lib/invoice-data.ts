@@ -35,6 +35,16 @@ function sortItems(invoices: Invoice[]) {
   return invoices;
 }
 
+/** Every studio invoice, newest issue date first. */
+export async function getInvoices(): Promise<Invoice[]> {
+  const { url } = databaseConfig();
+  const response = await fetch(
+    `${url}/rest/v1/invoices?select=${SELECT}&order=issued_on.desc,created_at.desc`,
+    { headers: databaseHeaders(), cache: "no-store" },
+  );
+  return sortItems(await responseJson<Invoice[]>(response, "Could not load invoices."));
+}
+
 /** Every invoice for one celebration, newest issue date first. */
 export async function getInvoicesForClient(clientId: string): Promise<Invoice[]> {
   const { url } = databaseConfig();

@@ -48,6 +48,16 @@ export function readableSize(bytes: number) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+/** Every client document in the studio library, newest first. */
+export async function getDocuments(): Promise<ClientDocument[]> {
+  const { url } = databaseConfig();
+  const response = await fetch(
+    `${url}/rest/v1/documents?select=*&order=created_at.desc`,
+    { headers: databaseHeaders(), cache: "no-store" },
+  );
+  return responseJson<ClientDocument[]>(response, "Could not load documents.");
+}
+
 export async function getDocumentsForClient(clientId: string): Promise<ClientDocument[]> {
   const { url } = databaseConfig();
   const response = await fetch(
@@ -160,11 +170,14 @@ export async function deleteDocument(documentId: string): Promise<void> {
   const path = rows[0]?.storage_path;
 
   if (path) {
-    await fetch(`${url}/storage/v1/object/${DOCUMENT_BUCKET}/${path}`, {
+    const storageRemoved = await fetch(`${url}/storage/v1/object/${DOCUMENT_BUCKET}/${path}`, {
       method: "DELETE",
       headers: { apikey: serviceRoleKey, Authorization: `Bearer ${serviceRoleKey}` },
       cache: "no-store",
-    }).catch(() => null);
+    });
+    if (!storageRemoved.ok && storageRemoved.status !== 404) {
+      throw new Error("Could not remove that document from private storage.");
+    }
   }
 
   const removed = await fetch(`${url}/rest/v1/documents?id=eq.${encodeURIComponent(documentId)}`, {
