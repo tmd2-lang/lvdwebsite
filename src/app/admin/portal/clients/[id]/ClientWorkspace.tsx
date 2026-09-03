@@ -19,6 +19,7 @@ import ImagePanel from "./ImagePanel";
 import TaskPanel from "./TaskPanel";
 import type { ClientTask } from "@/lib/task-view";
 import InviteForm from "./InviteForm";
+import MemberList from "./MemberList";
 import styles from "../../portal-admin.module.css";
 
 type WorkspaceTab = "overview" | "tasks" | "invoices" | "documents" | "images" | "access";
@@ -140,7 +141,7 @@ export default function ClientWorkspace({ client, members, invoices, documents, 
         {tab === "access" && <section className={styles.workspaceCard}>
           <div className={styles.workspaceCardHeader}><div><p className={styles.eyebrow}>Private portal</p><h2>Who Can Sign In</h2></div></div>
           <div className={styles.workspaceAccessBody}>
-            {members.length === 0 ? <p className={styles.detailEmpty}>Nobody can sign in to this celebration yet.</p> : <ul className={styles.memberList}>{members.map((member) => <li key={member.id}><div><strong>{member.display_name || member.invited_email || "Linked account"}</strong>{member.display_name && member.invited_email && <small>{member.invited_email}</small>}</div><span>{member.relationship}</span></li>)}</ul>}
+            <MemberList clientId={client.id} members={members} />
             <InviteForm clientId={client.id} />
           </div>
         </section>}

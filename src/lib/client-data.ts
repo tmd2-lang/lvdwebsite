@@ -173,6 +173,23 @@ export type ClientMember = {
 };
 
 /**
+ * Takes someone's access to a celebration away.
+ *
+ * Only the link is removed, never the account: the same person may be on
+ * another celebration, and keeping the account means they can be invited back
+ * without a new sign-up. Access is checked on every portal request, so this
+ * takes effect on their next page load even if they are signed in right now.
+ */
+export async function removeClientMember(clientId: string, memberId: string): Promise<void> {
+  const { url } = databaseConfig();
+  const response = await fetch(
+    `${url}/rest/v1/client_users?id=eq.${encodeURIComponent(memberId)}&client_id=eq.${encodeURIComponent(clientId)}`,
+    { method: "DELETE", headers: databaseHeaders(), cache: "no-store" },
+  );
+  if (!response.ok) throw new Error("Could not remove their access.");
+}
+
+/**
  * Everyone who can sign in to this celebration.
  *
  * The name a person chose for themselves lives on their account, not on this

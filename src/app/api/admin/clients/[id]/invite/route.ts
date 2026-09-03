@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAdminUser } from "@/lib/admin-auth";
-import { getClientById, inviteClientMember } from "@/lib/client-data";
+import { getClientById, inviteClientMember, removeClientMember } from "@/lib/client-data";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -43,6 +43,25 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Could not send that invitation.";
+    return NextResponse.json({ error: message }, { status: 400 });
+  }
+}
+
+/** Revokes one person's access to this celebration. */
+export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
+  const user = await getAdminUser();
+  if (!user) return NextResponse.json({ error: "Your sign-in has expired." }, { status: 401 });
+
+  try {
+    const { id } = await context.params;
+    const memberId = new URL(request.url).searchParams.get("memberId") || "";
+    if (!memberId) return NextResponse.json({ error: "Which person?" }, { status: 400 });
+
+    // Scoped to this celebration, so an id from another one matches nothing.
+    await removeClientMember(id, memberId);
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Could not remove their access.";
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }
