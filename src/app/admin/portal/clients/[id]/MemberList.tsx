@@ -16,6 +16,9 @@ export default function MemberList({
   const [confirming, setConfirming] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  // The last revoke, kept so it can be put back. Nothing is destroyed by a
+  // revoke, so undo is just re-linking the same account.
+  const [undoable, setUndoable] = useState<ClientMember | null>(null);
 
   function nameFor(member: ClientMember) {
     return member.display_name || member.invited_email || "Linked account";
@@ -36,19 +39,64 @@ export default function MemberList({
       );
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(result.error || "Could not remove their access.");
-      setMessage(`${nameFor(member)} can no longer sign in.`);
+      setUndoable(member);
+      setMessage("");
       router.refresh();
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Could not remove their access.");
     }
   }
 
+  /**
+   * Puts a revoked person back. Their account was never deleted, so this
+   * re-links the same one: no new invitation email, and their password still
+   * works.
+   */
+  async function undoRemove() {
+    if (!undoable) return;
+    setError("");
+    try {
+      const response = await fetch(`/api/admin/clients/${clientId}/invite`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: undoable.invited_email,
+          relationship: undoable.relationship,
+          name: undoable.invited_name || "",
+        }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || "Could not restore their access.");
+      setMessage(`${nameFor(undoable)} can sign in again.`);
+      setUndoable(null);
+      router.refresh();
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Could not restore their access.");
+    }
+  }
+
+  const undoBar = undoable && (
+    <div className={styles.undoBar} role="status">
+      <span>{nameFor(undoable)} can no longer sign in.</span>
+      <button type="button" onClick={() => void undoRemove()}>Undo</button>
+      <button type="button" onClick={() => setUndoable(null)} aria-label="Dismiss">Dismiss</button>
+    </div>
+  );
+
   if (members.length === 0) {
-    return <p className={styles.detailEmpty}>Nobody can sign in to this celebration yet.</p>;
+    return (
+      <>
+        {undoBar}
+        <p className={styles.detailEmpty}>Nobody can sign in to this celebration yet.</p>
+        {error && <p className={styles.formError} role="alert">{error}</p>}
+      </>
+    );
   }
 
   return (
     <>
+      {undoBar}
+
       <ul className={styles.memberList}>
         {members.map((member) => (
           <li key={member.id}>
@@ -68,7 +116,7 @@ export default function MemberList({
                   : `Remove access for ${nameFor(member)}`
               }
             >
-              {confirming === member.id ? "Tap again" : "Remove access"}
+              {confirming === member.id ? "Tap again" : "Remove"}
             </button>
           </li>
         ))}
