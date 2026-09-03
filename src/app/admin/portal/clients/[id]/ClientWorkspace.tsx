@@ -140,7 +140,7 @@ export default function ClientWorkspace({ client, members, invoices, documents, 
         {tab === "access" && <section className={styles.workspaceCard}>
           <div className={styles.workspaceCardHeader}><div><p className={styles.eyebrow}>Private portal</p><h2>Who Can Sign In</h2></div></div>
           <div className={styles.workspaceAccessBody}>
-            {members.length === 0 ? <p className={styles.detailEmpty}>Nobody can sign in to this celebration yet.</p> : <ul className={styles.memberList}>{members.map((member) => <li key={member.id}><strong>{member.invited_email || "Linked account"}</strong><span>{member.relationship}</span></li>)}</ul>}
+            {members.length === 0 ? <p className={styles.detailEmpty}>Nobody can sign in to this celebration yet.</p> : <ul className={styles.memberList}>{members.map((member) => <li key={member.id}><div><strong>{member.display_name || member.invited_email || "Linked account"}</strong>{member.display_name && member.invited_email && <small>{member.invited_email}</small>}</div><span>{member.relationship}</span></li>)}</ul>}
             <InviteForm clientId={client.id} />
           </div>
         </section>}

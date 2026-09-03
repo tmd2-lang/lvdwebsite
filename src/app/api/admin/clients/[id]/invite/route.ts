@@ -17,9 +17,10 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     const client = await getClientById(id);
     if (!client) return NextResponse.json({ error: "That celebration no longer exists." }, { status: 404 });
 
-    const body = (await request.json()) as { email?: unknown; relationship?: unknown };
+    const body = (await request.json()) as { email?: unknown; relationship?: unknown; name?: unknown };
     const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
     const relationship = typeof body.relationship === "string" ? body.relationship : "client";
+    const name = typeof body.name === "string" ? body.name.trim() : "";
 
     if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
       return NextResponse.json({ error: "Enter a valid email address." }, { status: 400 });
@@ -31,7 +32,7 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     // Invitations land where they can choose a password, not on a sign-in form
     // they have no password for yet.
     const redirectTo = `${new URL(request.url).origin}/portal/welcome`;
-    const { alreadyHadAccount } = await inviteClientMember(client.id, email, relationship, redirectTo);
+    const { alreadyHadAccount } = await inviteClientMember(client.id, email, relationship, redirectTo, name);
 
     return NextResponse.json({
       ok: true,

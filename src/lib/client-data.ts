@@ -166,16 +166,51 @@ export type ClientMember = {
   user_id: string;
   relationship: string;
   invited_email: string | null;
+  /** What the studio typed on the invitation. */
+  invited_name: string | null;
+  /** What to actually show: their own name if they have set one, ours if not. */
+  display_name: string | null;
 };
 
-/** Everyone who can sign in to this celebration. */
+/**
+ * Everyone who can sign in to this celebration.
+ *
+ * The name a person chose for themselves lives on their account, not on this
+ * row, so it is merged in here. Theirs wins over the one the studio typed:
+ * invite "Sara", she signs in as "Sarah", the list should say Sarah.
+ */
 export async function getClientMembers(clientId: string): Promise<ClientMember[]> {
-  const { url } = databaseConfig();
+  const { url, serviceRoleKey } = databaseConfig();
   const response = await fetch(
     `${url}/rest/v1/client_users?select=*&client_id=eq.${encodeURIComponent(clientId)}&order=created_at.asc`,
     { headers: databaseHeaders(), cache: "no-store" },
   );
-  return responseJson<ClientMember[]>(response, "Could not load who has access.");
+  const rows = await responseJson<ClientMember[]>(response, "Could not load who has access.");
+  if (rows.length === 0) return rows;
+
+  // One lookup for the whole list. The studio has a handful of accounts, so
+  // this is cheaper than a request per member.
+  const chosenNames = new Map<string, string>();
+  try {
+    const lookup = await fetch(`${url}/auth/v1/admin/users?page=1&per_page=1000`, {
+      headers: { apikey: serviceRoleKey, Authorization: `Bearer ${serviceRoleKey}` },
+      cache: "no-store",
+    });
+    const payload = (await lookup.json().catch(() => null)) as {
+      users?: Array<{ id?: string; user_metadata?: { first_name?: string; display_name?: string } }>;
+    } | null;
+    for (const user of payload?.users || []) {
+      const chosen = (user.user_metadata?.display_name || user.user_metadata?.first_name || "").trim();
+      if (user.id && chosen) chosenNames.set(user.id, chosen);
+    }
+  } catch {
+    // A failed lookup just means we fall back to the invited name.
+  }
+
+  return rows.map((row) => ({
+    ...row,
+    display_name: chosenNames.get(row.user_id) || row.invited_name || null,
+  }));
 }
 
 /**
@@ -190,10 +225,12 @@ export async function inviteClientMember(
   email: string,
   relationship: string,
   redirectTo: string,
+  name = "",
 ): Promise<{ alreadyHadAccount: boolean }> {
   const { url, serviceRoleKey } = databaseConfig();
   const address = email.trim().toLowerCase();
   if (!address) throw new Error("Enter an email address.");
+  const invitedName = name.trim().slice(0, 80);
 
   const adminHeaders = {
     apikey: serviceRoleKey,
@@ -206,7 +243,14 @@ export async function inviteClientMember(
 
   const inviteResponse = await fetch(
     `${url}/auth/v1/invite?redirect_to=${encodeURIComponent(redirectTo)}`,
-    { method: "POST", headers: adminHeaders, body: JSON.stringify({ email: address }), cache: "no-store" },
+    {
+      method: "POST",
+      headers: adminHeaders,
+      // Attached to the new account so the welcome page can offer it back to
+      // them already filled in.
+      body: JSON.stringify(invitedName ? { email: address, data: { first_name: invitedName } } : { email: address }),
+      cache: "no-store",
+    },
   );
 
   if (inviteResponse.ok) {
@@ -239,6 +283,7 @@ export async function inviteClientMember(
       user_id: userId,
       relationship,
       invited_email: address,
+      invited_name: invitedName || null,
     }),
     cache: "no-store",
   });

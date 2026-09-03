@@ -498,3 +498,5 @@
 .taskRows small { color: #8a8177; font-size: .5rem; }
 .taskRows > li > button { border: 0; padding: .3rem .5rem; background: transparent; color: #9a5a4a; font: inherit; font-size: .5rem; font-weight: 700; cursor: pointer; }
 .taskDone strong { color: #9a938a; text-decoration: line-through; }
+.memberList li > div { display: grid; gap: .12rem; }
+.memberList li small { color: #8a8177; font-size: .5rem; }

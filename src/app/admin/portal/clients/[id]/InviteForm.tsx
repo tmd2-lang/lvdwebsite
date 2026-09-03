@@ -22,7 +22,11 @@ export default function InviteForm({ clientId }: { clientId: string }) {
       const response = await fetch(`/api/admin/clients/${clientId}/invite`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: data.get("email"), relationship: data.get("relationship") }),
+        body: JSON.stringify({
+          email: data.get("email"),
+          relationship: data.get("relationship"),
+          name: data.get("name"),
+        }),
       });
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(result.error || "Could not send that invitation.");
@@ -41,6 +45,10 @@ export default function InviteForm({ clientId }: { clientId: string }) {
     <form className={styles.inviteForm} onSubmit={handleSubmit}>
       <div className={styles.inviteRow}>
         <label>
+          <span>Name</span>
+          <input name="name" placeholder="Amara" maxLength={80} disabled={busy} />
+        </label>
+        <label>
           <span>Email address</span>
           <input name="email" type="email" required placeholder="amara@example.com" disabled={busy} />
         </label>
@@ -56,7 +64,7 @@ export default function InviteForm({ clientId }: { clientId: string }) {
         <button type="submit" disabled={busy}>{busy ? "Sending…" : "Send invitation"}</button>
       </div>
       <p className={styles.inviteNote}>
-        They receive a link and choose their own password. Nobody at the studio ever sees it.
+        They receive a link and choose their own password. Nobody at the studio ever sees it. The name is only to help you tell people apart, and they can change it.
       </p>
       {error && <p className={styles.formError} role="alert">{error}</p>}
       {message && <p className={styles.formSuccess} role="status">{message}</p>}

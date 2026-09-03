@@ -17,6 +17,9 @@ export default function WelcomeForm() {
   const [ready, setReady] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  // Whatever the studio typed on the invitation, offered back so they do not
+  // have to retype their own name. Fully editable.
+  const [suggestedName, setSuggestedName] = useState("");
 
   useEffect(() => {
     // Supabase puts the one-time tokens in the part of the address after "#",
@@ -33,6 +36,24 @@ export default function WelcomeForm() {
       setTokens(access ? { access, refresh } : null);
       setReady(true);
     }, 0);
+
+    // Read back the name attached to the invitation. Failing is harmless: the
+    // field is simply empty and they type it themselves.
+    if (access) {
+      const config = supabaseConfig();
+      if (config) {
+        void fetch(`${config.url}/auth/v1/user`, {
+          headers: { apikey: config.anonKey, Authorization: `Bearer ${access}` },
+        })
+          .then((response) => (response.ok ? response.json() : null))
+          .then((user: { user_metadata?: { first_name?: string } } | null) => {
+            const invited = user?.user_metadata?.first_name?.trim();
+            if (invited) setSuggestedName(invited);
+          })
+          .catch(() => null);
+      }
+    }
+
     return () => window.clearTimeout(timer);
   }, []);
 
@@ -119,7 +140,7 @@ export default function WelcomeForm() {
     <form className={styles.loginForm} onSubmit={(event) => void submit(event)}>
       <label>
         What should we call you?
-        <input name="firstName" type="text" autoComplete="given-name" required maxLength={60} disabled={busy} placeholder="Amara" />
+        <input name="firstName" type="text" autoComplete="given-name" required maxLength={60} disabled={busy} placeholder="Amara" defaultValue={suggestedName} key={suggestedName} />
       </label>
       <label>
         Choose a password
