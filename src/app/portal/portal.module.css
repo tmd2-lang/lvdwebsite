@@ -950,3 +950,17 @@
 .portalImageCaption strong { color: #312d27; font-family: var(--font-bodoni); font-size: .95rem; font-weight: 500; }
 .portalImageCaption p { color: #665f56; font-size: .58rem; line-height: 1.45; }
 .portalImageCaption small { color: #9a7840; font-size: .5rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+
+/* Planning tasks --------------------------------------------------------- */
+
+.portalTaskRows { display: grid; list-style: none; }
+.portalTaskRows li { padding: .8rem 0; }
+.portalTaskRows li + li { border-top: 1px solid #ece6dc; }
+.portalTaskRows label, .portalTaskStatic { display: flex; align-items: flex-start; gap: .75rem; cursor: pointer; }
+.portalTaskStatic { cursor: default; }
+.portalTaskStatic b { width: 15px; color: #9a7840; font-size: .7rem; text-align: center; }
+.portalTaskRows input[type="checkbox"] { margin-top: .2rem; width: 16px; height: 16px; accent-color: #211e1a; }
+.portalTaskRows label span, .portalTaskStatic > span { display: grid; gap: .18rem; }
+.portalTaskRows strong { color: #312d27; font-size: .68rem; font-weight: 600; }
+.portalTaskRows small { color: #8a8177; font-size: .54rem; }
+.portalTaskDone strong { color: #9a938a; text-decoration: line-through; }

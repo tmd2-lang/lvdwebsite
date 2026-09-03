@@ -485,3 +485,16 @@
 .undoBar button:first-of-type { border-color: #211e1a; background: #211e1a; color: #fffdfa; }
 .documentPanelHeader { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
 .documentPanelHeader button { border: 1px solid #d9d1c5; border-radius: 999px; padding: .3rem .7rem; background: transparent; color: #71582e; font: inherit; font-size: .52rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
+
+/* Planning tasks -------------------------------------------------------- */
+
+.taskRows { display: grid; padding: 0; list-style: none; }
+.taskRows li { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .75rem 1.35rem; }
+.taskRows li + li { border-top: 1px solid #ece6dc; }
+.taskRows label { display: flex; align-items: flex-start; gap: .7rem; flex: 1; cursor: pointer; }
+.taskRows input[type="checkbox"] { margin-top: .18rem; accent-color: #211e1a; width: 15px; height: 15px; }
+.taskRows label span { display: grid; gap: .15rem; }
+.taskRows strong { color: #312d27; font-size: .62rem; font-weight: 700; }
+.taskRows small { color: #8a8177; font-size: .5rem; }
+.taskRows > li > button { border: 0; padding: .3rem .5rem; background: transparent; color: #9a5a4a; font: inherit; font-size: .5rem; font-weight: 700; cursor: pointer; }
+.taskDone strong { color: #9a938a; text-decoration: line-through; }

@@ -16,13 +16,16 @@ import {
 import type { ViewableImage } from "@/lib/image-view";
 import DocumentPanel from "./DocumentPanel";
 import ImagePanel from "./ImagePanel";
+import TaskPanel from "./TaskPanel";
+import type { ClientTask } from "@/lib/task-view";
 import InviteForm from "./InviteForm";
 import styles from "../../portal-admin.module.css";
 
-type WorkspaceTab = "overview" | "invoices" | "documents" | "images" | "access";
+type WorkspaceTab = "overview" | "tasks" | "invoices" | "documents" | "images" | "access";
 
 const tabs: { id: WorkspaceTab; label: string }[] = [
   { id: "overview", label: "Overview" },
+  { id: "tasks", label: "Tasks" },
   { id: "invoices", label: "Invoices" },
   { id: "documents", label: "Documents" },
   { id: "images", label: "Images" },
@@ -38,7 +41,7 @@ function initials(client: PortalClient) {
   return [client.partner_one_name, client.partner_two_name].filter(Boolean).map((name) => name!.trim()[0]?.toUpperCase()).join("").slice(0, 2);
 }
 
-export default function ClientWorkspace({ client, members, invoices, documents, removedDocuments, images, removedImages, initialTab = "overview" }: { client: PortalClient; members: ClientMember[]; invoices: Invoice[]; documents: ClientDocument[]; removedDocuments: ClientDocument[]; images: ViewableImage[]; removedImages: ViewableImage[]; initialTab?: WorkspaceTab }) {
+export default function ClientWorkspace({ client, members, invoices, documents, removedDocuments, images, removedImages, tasks, initialTab = "overview" }: { client: PortalClient; members: ClientMember[]; invoices: Invoice[]; documents: ClientDocument[]; removedDocuments: ClientDocument[]; tasks: ClientTask[]; images: ViewableImage[]; removedImages: ViewableImage[]; initialTab?: WorkspaceTab }) {
   const [tab, setTab] = useState<WorkspaceTab>(initialTab);
   const totals = celebrationTotals(invoices);
   const locationLine = [formatDate(client.event_date), client.venue, client.location].filter(Boolean).join(" · ");
@@ -112,6 +115,8 @@ export default function ClientWorkspace({ client, members, invoices, documents, 
         </section>}
 
         {tab === "documents" && <DocumentPanel clientId={client.id} documents={documents} removedDocuments={removedDocuments} />}
+
+        {tab === "tasks" && <TaskPanel clientId={client.id} tasks={tasks} />}
 
         {tab === "images" && <ImagePanel clientId={client.id} images={images} removedImages={removedImages} />}
 

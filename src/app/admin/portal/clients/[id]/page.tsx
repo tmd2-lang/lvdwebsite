@@ -4,11 +4,12 @@ import { getClientById, getClientMembers } from "@/lib/client-data";
 import { getInvoicesForClient } from "@/lib/invoice-data";
 import { getDeletedDocumentsForClient, getDocumentsForClient } from "@/lib/document-data";
 import { getDeletedImagesForClient, getImagesForClient, withSignedUrls } from "@/lib/image-data";
+import { getTasksForClient } from "@/lib/task-data";
 import ClientWorkspace from "./ClientWorkspace";
 
 export const dynamic = "force-dynamic";
 
-const WORKSPACE_TABS = ["overview", "invoices", "documents", "images", "access"] as const;
+const WORKSPACE_TABS = ["overview", "tasks", "invoices", "documents", "images", "access"] as const;
 type WorkspaceTab = (typeof WORKSPACE_TABS)[number];
 
 export default async function ClientDetailPage({
@@ -34,14 +35,15 @@ export default async function ClientDetailPage({
   const client = await getClientById(id);
   if (!client) notFound();
 
-  const [members, invoices, documents, removedDocuments, images, removedImages] = await Promise.all([
+  const [members, invoices, documents, removedDocuments, images, removedImages, tasks] = await Promise.all([
     getClientMembers(client.id),
     getInvoicesForClient(client.id).catch(() => []),
     getDocumentsForClient(client.id).catch(() => []),
     getDeletedDocumentsForClient(client.id).catch(() => []),
     getImagesForClient(client.id).then(withSignedUrls).catch(() => []),
     getDeletedImagesForClient(client.id).then(withSignedUrls).catch(() => []),
+    getTasksForClient(client.id).catch(() => []),
   ]);
 
-  return <ClientWorkspace client={client} members={members} invoices={invoices} documents={documents} removedDocuments={removedDocuments} images={images} removedImages={removedImages} initialTab={initialTab} />;
+  return <ClientWorkspace client={client} members={members} invoices={invoices} documents={documents} removedDocuments={removedDocuments} images={images} removedImages={removedImages} tasks={tasks} initialTab={initialTab} />;
 }
