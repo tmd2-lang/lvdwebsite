@@ -20,12 +20,18 @@ export default function ClientPortalShell({
   eventLabel,
   venueLabel,
   initials,
+  viewerName,
+  viewerInitials,
 }: {
   children: React.ReactNode;
   coupleName: string;
   eventLabel: string;
   venueLabel: string;
   initials: string;
+  /** Who is signed in. Not the same as whose celebration this is: a parent or
+   *  an attendant sees the couple's portal while being neither of them. */
+  viewerName: string;
+  viewerInitials: string;
 }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -65,6 +71,11 @@ export default function ClientPortalShell({
         <div className={styles.sidebarFooter}>
           <p>{coupleName}</p>
           <span>{eventLabel}</span>
+          {viewerName && (
+            <Link className={styles.sidebarViewer} href="/portal/profile">
+              Signed in as {viewerName}
+            </Link>
+          )}
           <button type="button" onClick={() => void signOut()} disabled={signingOut}>
             {signingOut ? "Signing out…" : "Sign out"}
           </button>
@@ -78,7 +89,14 @@ export default function ClientPortalShell({
             <span>Your celebration</span>
             <strong>{venueLabel}</strong>
           </div>
-          <span className={styles.avatar} aria-hidden="true">{initials}</span>
+          <Link
+            className={`${styles.avatar} ${styles.avatarLink}`}
+            href="/portal/profile"
+            aria-label={viewerName ? `${viewerName} — your account` : "Your account"}
+            title={viewerName || "Your account"}
+          >
+            {viewerInitials || initials}
+          </Link>
         </header>
 
         {children}

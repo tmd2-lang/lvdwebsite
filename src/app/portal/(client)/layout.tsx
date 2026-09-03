@@ -21,7 +21,8 @@ export default async function ClientPortalLayout({ children }: { children: React
   const session = await getPortalSession();
   if (!session) redirect("/portal/login");
 
-  const { client } = session;
+  const { client, user } = session;
+  const viewerName = user.displayName || user.firstName || "";
   const venue = [client.venue, client.location].filter(Boolean).join(" · ") || "Venue to be confirmed";
 
   return (
@@ -30,6 +31,8 @@ export default async function ClientPortalLayout({ children }: { children: React
       eventLabel={eventLabel(client.event_date)}
       venueLabel={venue}
       initials={initialsOf(client.partner_one_name, client.partner_two_name)}
+      viewerName={viewerName}
+      viewerInitials={viewerName ? viewerName.trim().slice(0, 1).toUpperCase() : ""}
     >
       {children}
     </ClientPortalShell>

@@ -984,3 +984,18 @@
 .portalTaskRows strong { color: #312d27; font-size: .68rem; font-weight: 600; }
 .portalTaskRows small { color: #8a8177; font-size: .54rem; }
 .portalTaskDone strong { color: #9a938a; text-decoration: line-through; }
+
+/* Who is signed in, as distinct from whose celebration this is ------------ */
+
+.avatarLink { text-decoration: none; transition: border-color .2s ease, color .2s ease; }
+.avatarLink:hover { border-color: #a8894e; color: #4e3c1c; }
+.sidebarViewer { display: inline-block; margin-top: .45rem; color: #b7ad9e; font-size: .54rem; text-decoration: underline; text-underline-offset: 3px; }
+.sidebarViewer:hover { color: #e8dcc0; }
+
+.profileForm { display: grid; gap: .8rem; max-width: 420px; }
+.profileForm label { display: grid; gap: .3rem; color: #665f56; font-size: .56rem; }
+.profileForm input { min-height: 46px; border: 1px solid #d9d1c5; border-radius: 4px; padding: 0 .8rem; background: #fffdfa; font: inherit; font-size: .66rem; }
+.profileForm button { min-height: 46px; justify-self: start; border: 1px solid #211e1a; border-radius: 3px; padding: 0 1.2rem; background: #211e1a; color: #fffdf9; font: inherit; font-size: .6rem; font-weight: 700; cursor: pointer; }
+.profileForm button:disabled { opacity: .55; cursor: progress; }
+.profileNote { margin-top: .8rem; color: #8b857c; font-size: .54rem; }
+.profileSaved { border: 1px solid #cfd9c5; border-radius: 4px; padding: .6rem .8rem; background: #f2f6ec; color: #4a5d3a; font-size: .58rem; }
