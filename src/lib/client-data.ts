@@ -320,7 +320,16 @@ export async function inviteClientMember(
     } | null;
     const existing = payload?.users?.find((item) => item.email?.toLowerCase() === address);
     if (!existing?.id) {
-      console.error("Client invite failed:", await inviteResponse.text().catch(() => ""));
+      const detail = await inviteResponse.text().catch(() => "");
+      console.error("Client invite failed:", detail);
+
+      // Supabase's own mail has a low hourly cap on the free tier. Say which
+      // wall we hit, because "try again" is wrong advice for this one.
+      if (inviteResponse.status === 429 || detail.includes("over_email_send_rate_limit")) {
+        throw new Error(
+          "Supabase's email limit for this hour is used up. Invitations sent from the studio's own mailbox are not affected, so this only happens where that is not configured. Try again in an hour.",
+        );
+      }
       throw new Error("Could not send that invitation. Please try again.");
     }
     userId = existing.id;
