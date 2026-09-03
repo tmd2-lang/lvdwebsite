@@ -2,6 +2,7 @@ import type { NewClientInput, PortalClient, UpdateClientInput } from "@/lib/clie
 import { coupleDisplayName } from "@/lib/client-types";
 import { getDeletedDocumentsForClient, getDocumentsForClient, purgeDocument } from "@/lib/document-data";
 import { getDeletedImagesForClient, getImagesForClient, purgeImage } from "@/lib/image-data";
+import { inviteMailConfigured, sendInviteEmail } from "@/lib/invite-email";
 
 function databaseConfig() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -243,6 +244,7 @@ export async function inviteClientMember(
   relationship: string,
   redirectTo: string,
   name = "",
+  celebrationName = "your celebration",
 ): Promise<{ alreadyHadAccount: boolean }> {
   const { url, serviceRoleKey } = databaseConfig();
   const address = email.trim().toLowerCase();
@@ -258,21 +260,56 @@ export async function inviteClientMember(
   let userId = "";
   let alreadyHadAccount = false;
 
-  const inviteResponse = await fetch(
-    `${url}/auth/v1/invite?redirect_to=${encodeURIComponent(redirectTo)}`,
-    {
-      method: "POST",
-      headers: adminHeaders,
-      // Attached to the new account so the welcome page can offer it back to
-      // them already filled in.
-      body: JSON.stringify(invitedName ? { email: address, data: { first_name: invitedName } } : { email: address }),
-      cache: "no-store",
-    },
-  );
+  // Two ways to send this. When our own mailbox is configured we mint the link
+  // and send a Lady Victoria Designs email; otherwise Supabase sends its own,
+  // which works but arrives from "Supabase Auth" on a shared address.
+  const sendOurselves = inviteMailConfigured();
+
+  const inviteResponse = sendOurselves
+    ? await fetch(`${url}/auth/v1/admin/generate_link`, {
+        method: "POST",
+        headers: adminHeaders,
+        body: JSON.stringify({
+          type: "invite",
+          email: address,
+          // redirect_to sits at the top level here, not inside options.
+          redirect_to: redirectTo,
+          ...(invitedName ? { data: { first_name: invitedName } } : {}),
+        }),
+        cache: "no-store",
+      })
+    : await fetch(`${url}/auth/v1/invite?redirect_to=${encodeURIComponent(redirectTo)}`, {
+        method: "POST",
+        headers: adminHeaders,
+        // Attached to the new account so the welcome page can offer it back to
+        // them already filled in.
+        body: JSON.stringify(invitedName ? { email: address, data: { first_name: invitedName } } : { email: address }),
+        cache: "no-store",
+      });
 
   if (inviteResponse.ok) {
-    const invited = (await inviteResponse.json().catch(() => null)) as { id?: string } | null;
-    userId = invited?.id || "";
+    const invited = (await inviteResponse.json().catch(() => null)) as
+      | { id?: string; user?: { id?: string }; action_link?: string }
+      | null;
+    userId = invited?.id || invited?.user?.id || "";
+
+    if (sendOurselves && invited?.action_link) {
+      try {
+        await sendInviteEmail({
+          to: address,
+          link: invited.action_link,
+          celebration: celebrationName,
+          recipientName: invitedName || undefined,
+        });
+      } catch (mailError) {
+        // The account exists at this point, so failing here would leave a
+        // half-made invitation. Say plainly that the link never went out.
+        console.error("Invitation email failed to send:", mailError);
+        throw new Error(
+          "The account was created but the invitation email could not be sent. Check the mail settings and invite them again.",
+        );
+      }
+    }
   } else {
     // Most likely they already have an account, so look them up instead.
     const lookup = await fetch(`${url}/auth/v1/admin/users?page=1&per_page=1000`, {

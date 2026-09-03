@@ -32,7 +32,7 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     // Invitations land where they can choose a password, not on a sign-in form
     // they have no password for yet.
     const redirectTo = `${new URL(request.url).origin}/portal/welcome`;
-    const { alreadyHadAccount } = await inviteClientMember(client.id, email, relationship, redirectTo, name);
+    const { alreadyHadAccount } = await inviteClientMember(client.id, email, relationship, redirectTo, name, client.display_name);
 
     return NextResponse.json({
       ok: true,
