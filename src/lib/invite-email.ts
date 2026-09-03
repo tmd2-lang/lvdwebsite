@@ -9,6 +9,15 @@ import nodemailer from "nodemailer";
  * same mailbox the site already uses for lead notifications.
  */
 
+/**
+ * Sent from the studio's shared Gmail with this as the reply address.
+ *
+ * Known compromise: that mailbox is a personal Google account, so a client who
+ * taps the sender sees a personal address rather than the studio's. Fixing it
+ * properly means a transactional sender (Resend, Postmark) with the domain
+ * verified by DNS, which needs no password from anyone's mailbox. Until then
+ * the display name carries it and replies land in the right place.
+ */
 const REPLY_TO = "hello@ladyvictoriadesigns.com";
 
 export function inviteMailConfigured() {
