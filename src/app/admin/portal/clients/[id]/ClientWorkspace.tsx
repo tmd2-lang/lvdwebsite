@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { ClientMember } from "@/lib/client-data";
 import type { ClientDocument } from "@/lib/document-data";
 import type { Invoice } from "@/lib/invoice-types";
@@ -42,7 +42,24 @@ function initials(client: PortalClient) {
 }
 
 export default function ClientWorkspace({ client, members, invoices, documents, removedDocuments, images, removedImages, tasks, initialTab = "overview" }: { client: PortalClient; members: ClientMember[]; invoices: Invoice[]; documents: ClientDocument[]; removedDocuments: ClientDocument[]; tasks: ClientTask[]; images: ViewableImage[]; removedImages: ViewableImage[]; initialTab?: WorkspaceTab }) {
-  const [tab, setTab] = useState<WorkspaceTab>(initialTab);
+  const [tab, setTabState] = useState<WorkspaceTab>(initialTab);
+
+  /**
+   * The open tab lives in the address as well as in state. Sending an invite
+   * refreshes the page underneath us, and a tab held only in memory drops back
+   * to Overview when that happens. Keeping it in the address also makes a tab
+   * something you can link to, bookmark, and reach with the back button.
+   *
+   * replaceState rather than router.replace: this is the same page, so there is
+   * no reason to ask the server for it again.
+   */
+  const setTab = useCallback((next: WorkspaceTab) => {
+    setTabState(next);
+    const url = new URL(window.location.href);
+    if (next === "overview") url.searchParams.delete("tab");
+    else url.searchParams.set("tab", next);
+    window.history.replaceState(null, "", `${url.pathname}${url.search}`);
+  }, []);
   const totals = celebrationTotals(invoices);
   const locationLine = [formatDate(client.event_date), client.venue, client.location].filter(Boolean).join(" · ");
 

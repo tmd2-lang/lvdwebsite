@@ -1,53 +1,78 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { IMAGE_ALBUMS, type ViewableImage } from "@/lib/image-view";
 import styles from "../../portal.module.css";
 
+const ALL = "All images";
+
 export default function ImageGallery({ images }: { images: ViewableImage[] }) {
-  const [album, setAlbum] = useState<string>("All");
+  const [album, setAlbum] = useState(ALL);
   const [open, setOpen] = useState<ViewableImage | null>(null);
 
-  // Only offer a filter for albums that actually hold something.
-  const albums = ["All", ...IMAGE_ALBUMS.filter((name) => images.some((image) => image.album === name))];
-  const shown = album === "All" ? images : images.filter((image) => image.album === album);
-
-  if (images.length === 0) {
-    return (
-      <div className={styles.documentEmpty}>
-        <h2>Nothing here yet.</h2>
-        <p>Your inspiration boards and event galleries will appear here as we build them together.</p>
-      </div>
-    );
-  }
+  const filtered = useMemo(
+    () => (album === ALL ? images : images.filter((image) => image.album === album)),
+    [album, images],
+  );
 
   return (
     <>
-      {albums.length > 2 && (
-        <div className={styles.filterTabs}>
-          {albums.map((name) => (
-            <button key={name} type="button" className={album === name ? styles.customCheck : undefined} onClick={() => setAlbum(name)}>
-              {name}
+      {/* Same toolbar the Documents page uses: every album is always offered,
+          so the shape of the page does not change as images arrive. */}
+      <div className={styles.documentToolbar}>
+        <div className={styles.filterTabs} aria-label="Filter images by album">
+          {[ALL, ...IMAGE_ALBUMS].map((item) => (
+            <button
+              className={album === item ? styles.filterActive : undefined}
+              type="button"
+              onClick={() => setAlbum(item)}
+              key={item}
+            >
+              {item}
             </button>
           ))}
         </div>
-      )}
+      </div>
 
-      <ul className={styles.portalImageGrid}>
-        {shown.map((image) => (
-          <li key={image.id}>
-            <button type="button" onClick={() => setOpen(image)} aria-label={`Open ${image.name}`}>
-              {image.url ? (
-                // Signed storage links expire, so Next's optimiser cannot cache these.
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={image.url} alt={image.name} loading="lazy" width={image.width || undefined} height={image.height || undefined} />
-              ) : (
-                <span className={styles.portalImageMissing}>Preview unavailable</span>
-              )}
-            </button>
-          </li>
-        ))}
-      </ul>
+      {filtered.length === 0 ? (
+        <section className={styles.documentEmpty}>
+          <strong>{images.length === 0 ? "Nothing here yet" : "Nothing in this album"}</strong>
+          <span>
+            {images.length === 0
+              ? "As the studio shares inspiration, design references, and photographs, they will appear here."
+              : "Try another album."}
+          </span>
+        </section>
+      ) : (
+        <section className={styles.documentGrid} aria-label="Celebration images">
+          {filtered.map((image) => (
+            <article className={styles.documentCard} key={image.id}>
+              <button
+                type="button"
+                className={styles.imageCardPreview}
+                onClick={() => setOpen(image)}
+                aria-label={`Open ${image.name}`}
+              >
+                {image.url ? (
+                  // Signed storage links expire, so Next's optimiser cannot cache these.
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={image.url} alt={image.name} loading="lazy" />
+                ) : (
+                  <span className={styles.portalImageMissing}>Preview unavailable</span>
+                )}
+              </button>
+              <div className={styles.documentInfo}>
+                <span>{image.album}</span>
+                <h2>{image.note || image.name}</h2>
+                <small>
+                  Added {new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" })
+                    .format(new Date(image.created_at))}
+                </small>
+              </div>
+            </article>
+          ))}
+        </section>
+      )}
 
       {open && (
         <div className={styles.modalBackdrop} role="dialog" aria-modal="true" aria-label={open.name} onClick={() => setOpen(null)}>
@@ -58,8 +83,7 @@ export default function ImageGallery({ images }: { images: ViewableImage[] }) {
               <img src={open.url} alt={open.name} />
             )}
             <div className={styles.portalImageCaption}>
-              <strong>{open.name}</strong>
-              {open.note && <p>{open.note}</p>}
+              <strong>{open.note || open.name}</strong>
               <small>{open.album}</small>
             </div>
           </div>
