@@ -61,9 +61,9 @@ export default function ImageGallery({ images }: { images: ViewableImage[] }) {
                   <span className={styles.portalImageMissing}>Preview unavailable</span>
                 )}
               </button>
-              <div className={styles.documentInfo}>
+              <div className={styles.imageCardInfo}>
                 <span>{image.album}</span>
-                <h2>{image.note || image.name}</h2>
+                <h2 title={image.note || image.name}>{image.note || image.name}</h2>
                 <small>
                   Added {new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" })
                     .format(new Date(image.created_at))}

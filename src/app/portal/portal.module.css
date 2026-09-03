@@ -938,11 +938,32 @@
 /* Client image gallery --------------------------------------------------- */
 
 /* The picture area of a card. The card frame itself is .documentCard, shared
-   with the Documents page so both libraries read as one thing. */
-.imageCardPreview { display: block; width: 100%; padding: 0; border: 0; border-bottom: 1px solid #e6dfd5; background: #f4efe7; cursor: zoom-in; }
+   with the Documents page so both libraries read as one thing.
+   The child selector is deliberate: .documentCard > button is the Documents
+   download control, a small circle pinned to the corner, and it would other-
+   wise shrink the preview into that circle. */
+.documentCard > .imageCardPreview {
+  position: static;
+  width: 100%;
+  height: auto;
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: #f4efe7;
+  cursor: zoom-in;
+  backdrop-filter: none;
+}
 .imageCardPreview img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: transform .4s ease; }
 .documentCard:hover .imageCardPreview img { transform: scale(1.03); }
 .portalImageMissing { display: grid; aspect-ratio: 4 / 3; place-items: center; color: #8a8177; font-size: .55rem; }
+
+/* A slim bar under the picture rather than the Documents card's deep block:
+   the image is the content here, the text is just a label for it. */
+.imageCardInfo { display: grid; gap: .18rem; border-top: 1px solid #e6dfd5; padding: .7rem .85rem .8rem; background: #fffdfa; }
+.imageCardInfo > span { color: #71582e; font-size: .5rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.imageCardInfo h2 { overflow: hidden; font-family: var(--font-bodoni); font-size: .92rem; font-weight: 500; white-space: nowrap; text-overflow: ellipsis; }
+.imageCardInfo small { color: #918a80; font-size: .5rem; }
 
 .portalImageViewer { position: relative; display: grid; gap: .8rem; max-width: min(92vw, 940px); max-height: 92vh; padding: 1rem; border-radius: 7px; background: #fffdfa; }
 .portalImageViewer img { max-width: 100%; max-height: 74vh; margin: 0 auto; object-fit: contain; }
