@@ -11,9 +11,10 @@ function greeting(now = new Date()) {
     timeZone: STUDIO_TIME_ZONE,
   }).format(now));
 
-  if (hour < 12) return "Good morning";
-  if (hour < 18) return "Good afternoon";
-  return "Good evening";
+  if (hour >= 5 && hour < 12) return "Good morning";
+  if (hour < 17) return "Good afternoon";
+  if (hour < 21) return "Good evening";
+  return "Welcome back";
 }
 
 function firstName(user: AdminUser) {
