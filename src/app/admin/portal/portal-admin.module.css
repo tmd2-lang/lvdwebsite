@@ -444,3 +444,44 @@
 .uploadActions button:disabled { opacity: 0.6; cursor: progress; }
 
 @media (max-width: 700px) { .uploadRow { grid-template-columns: 1fr; } }
+
+/* Client image library ---------------------------------------------------- */
+
+.imageFilter { display: flex; align-items: center; gap: .3rem; }
+.imageFilter button { border: 1px solid transparent; border-radius: 999px; padding: .32rem .7rem; background: transparent; color: #665f56; font: inherit; font-size: .53rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
+.imageFilter button:hover { color: #4e3c1c; }
+.imageFilterActive { border-color: #d9d1c5 !important; background: #fffdfa !important; color: #71582e !important; }
+
+.imageGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: .9rem; padding: 1.35rem; list-style: none; }
+.imageGrid li { display: grid; overflow: hidden; border: 1px solid #ece6dc; border-radius: 5px; background: #fffdfa; }
+.imageGrid figure { display: grid; }
+.imageGrid img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: #f4efe7; }
+.imageGrid figcaption { display: grid; gap: .15rem; padding: .55rem .65rem; }
+.imageGrid figcaption strong { overflow: hidden; color: #312d27; font-size: .58rem; font-weight: 700; white-space: nowrap; text-overflow: ellipsis; }
+.imageGrid figcaption small { color: #8a8177; font-size: .5rem; }
+
+.imageMissing { display: grid; aspect-ratio: 4 / 3; place-items: center; background: #f4efe7; color: #8a8177; font-size: .53rem; }
+
+.imageActions { display: flex; border-top: 1px solid #ece6dc; }
+.imageActions button { flex: 1; padding: .5rem .4rem; border: 0; background: transparent; color: #71582e; font: inherit; font-size: .5rem; font-weight: 700; cursor: pointer; }
+.imageActions button + button { border-left: 1px solid #ece6dc; color: #9a5a4a; }
+
+/* Staged privately: uploaded, but the couple cannot see it yet. */
+.imageHidden img, .imageHidden .imageMissing { opacity: .42; }
+.imageHidden figcaption strong::after { content: " · Hidden"; color: #9a5a4a; font-weight: 700; }
+
+/* The album filter sits beside the title, so the title must not be squeezed
+   into two lines. On narrow widths the filter drops to its own row instead. */
+.imageCardHeader { flex-wrap: wrap; row-gap: .6rem; }
+.imageCardHeader > div:first-child { flex: 1 1 auto; }
+.imageCardHeader h2 { white-space: nowrap; }
+.imageFilter { flex: 0 1 auto; flex-wrap: wrap; justify-content: flex-end; }
+.imageConfirm { background: #9a5a4a !important; color: #fffdfa !important; }
+
+/* Removal is reversible, so say so where the removal happened. */
+.undoBar { display: flex; align-items: center; gap: .8rem; border-bottom: 1px solid #ece6dc; padding: .7rem 1.35rem; background: #fdf8f0; }
+.undoBar span { flex: 1; overflow: hidden; color: #665f56; font-size: .56rem; white-space: nowrap; text-overflow: ellipsis; }
+.undoBar button { border: 1px solid #cfc5b7; border-radius: 3px; padding: .3rem .7rem; background: #fffdfa; color: #71582e; font: inherit; font-size: .52rem; font-weight: 800; cursor: pointer; }
+.undoBar button:first-of-type { border-color: #211e1a; background: #211e1a; color: #fffdfa; }
+.documentPanelHeader { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.documentPanelHeader button { border: 1px solid #d9d1c5; border-radius: 999px; padding: .3rem .7rem; background: transparent; color: #71582e; font: inherit; font-size: .52rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }

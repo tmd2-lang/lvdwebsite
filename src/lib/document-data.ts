@@ -13,6 +13,8 @@ export type ClientDocument = {
   storage_path: string;
   content_type: string | null;
   size_bytes: number;
+  /** Null means live. Set means removed but recoverable. */
+  deleted_at: string | null;
   uploaded_by: string | null;
 };
 
@@ -52,7 +54,7 @@ export function readableSize(bytes: number) {
 export async function getDocuments(): Promise<ClientDocument[]> {
   const { url } = databaseConfig();
   const response = await fetch(
-    `${url}/rest/v1/documents?select=*&order=created_at.desc`,
+    `${url}/rest/v1/documents?select=*&deleted_at=is.null&order=created_at.desc`,
     { headers: databaseHeaders(), cache: "no-store" },
   );
   return responseJson<ClientDocument[]>(response, "Could not load documents.");
@@ -61,7 +63,7 @@ export async function getDocuments(): Promise<ClientDocument[]> {
 export async function getDocumentsForClient(clientId: string): Promise<ClientDocument[]> {
   const { url } = databaseConfig();
   const response = await fetch(
-    `${url}/rest/v1/documents?select=*&client_id=eq.${encodeURIComponent(clientId)}&order=created_at.desc`,
+    `${url}/rest/v1/documents?select=*&client_id=eq.${encodeURIComponent(clientId)}&deleted_at=is.null&order=created_at.desc`,
     { headers: databaseHeaders(), cache: "no-store" },
   );
   return responseJson<ClientDocument[]>(response, "Could not load documents.");
@@ -74,7 +76,7 @@ export async function getDocumentsForClient(clientId: string): Promise<ClientDoc
 export async function getDocumentForClient(documentId: string, clientId: string): Promise<ClientDocument | null> {
   const { url } = databaseConfig();
   const response = await fetch(
-    `${url}/rest/v1/documents?select=*&id=eq.${encodeURIComponent(documentId)}&client_id=eq.${encodeURIComponent(clientId)}&limit=1`,
+    `${url}/rest/v1/documents?select=*&id=eq.${encodeURIComponent(documentId)}&client_id=eq.${encodeURIComponent(clientId)}&deleted_at=is.null&limit=1`,
     { headers: databaseHeaders(), cache: "no-store" },
   );
   const rows = await responseJson<ClientDocument[]>(response, "Could not load that document.");
@@ -159,7 +161,42 @@ export async function signedDocumentUrl(storagePath: string, seconds = 300): Pro
   return payload?.signedURL ? `${url}/storage/v1${payload.signedURL}` : null;
 }
 
-export async function deleteDocument(documentId: string): Promise<void> {
+/** Removes a document from every view. The file stays in storage. */
+export async function softDeleteDocument(documentId: string): Promise<void> {
+  const { url } = databaseConfig();
+  const response = await fetch(`${url}/rest/v1/documents?id=eq.${encodeURIComponent(documentId)}`, {
+    method: "PATCH",
+    headers: databaseHeaders(),
+    body: JSON.stringify({ deleted_at: new Date().toISOString() }),
+    cache: "no-store",
+  });
+  if (!response.ok) throw new Error("Could not remove that document.");
+}
+
+/** Puts a removed document back. */
+export async function restoreDocument(documentId: string): Promise<void> {
+  const { url } = databaseConfig();
+  const response = await fetch(`${url}/rest/v1/documents?id=eq.${encodeURIComponent(documentId)}`, {
+    method: "PATCH",
+    headers: databaseHeaders(),
+    body: JSON.stringify({ deleted_at: null }),
+    cache: "no-store",
+  });
+  if (!response.ok) throw new Error("Could not restore that document.");
+}
+
+/** Removed documents for one celebration, so they can be restored. */
+export async function getDeletedDocumentsForClient(clientId: string): Promise<ClientDocument[]> {
+  const { url } = databaseConfig();
+  const response = await fetch(
+    `${url}/rest/v1/documents?select=*&client_id=eq.${encodeURIComponent(clientId)}&deleted_at=not.is.null&order=deleted_at.desc`,
+    { headers: databaseHeaders(), cache: "no-store" },
+  );
+  return responseJson<ClientDocument[]>(response, "Could not load removed documents.");
+}
+
+/** Destroys a document for good: the file and the row. */
+export async function purgeDocument(documentId: string): Promise<void> {
   const { url, serviceRoleKey } = databaseConfig();
 
   const lookup = await fetch(

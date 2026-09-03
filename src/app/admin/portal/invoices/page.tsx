@@ -31,7 +31,7 @@ export default async function InvoicesPage() {
           <div className={styles.libraryTableHeader}><span>Invoice</span><span>Client</span><span>Status</span><span>Amount</span></div>
           <div className={styles.libraryRows}>
             {invoices.map((invoice) => (
-              <Link href={`/admin/portal/clients/${invoice.client_id}`} key={invoice.id}>
+              <Link href={`/admin/portal/clients/${invoice.client_id}?tab=invoices`} key={invoice.id}>
                 <div><strong>{invoice.name}</strong><small>{invoice.reference}</small></div>
                 <span>{clientNames.get(invoice.client_id) || "Client record"}</span>
                 <span>{INVOICE_STATUS_LABELS[invoice.status]}</span>

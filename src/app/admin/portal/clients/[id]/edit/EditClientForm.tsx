@@ -119,7 +119,7 @@ export default function EditClientForm({ client }: { client: PortalClient }) {
       <section className={styles.dangerZone} aria-labelledby="delete-client-heading">
         <div>
           <p className={styles.eyebrow}>Danger zone</p>
-          <h2 id="delete-client-heading">Delete this client</h2>
+          <h2 id="delete-client-heading">Delete This Client</h2>
           <p>Removes their portal record, invoices, uploaded documents, and portal access. This cannot be undone.</p>
         </div>
         <button type="button" onClick={() => setDeleteOpen(true)}>Delete client</button>

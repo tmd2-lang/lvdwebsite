@@ -1,6 +1,7 @@
 import type { NewClientInput, PortalClient, UpdateClientInput } from "@/lib/client-types";
 import { coupleDisplayName } from "@/lib/client-types";
-import { deleteDocument, getDocumentsForClient } from "@/lib/document-data";
+import { getDeletedDocumentsForClient, getDocumentsForClient, purgeDocument } from "@/lib/document-data";
+import { getDeletedImagesForClient, getImagesForClient, purgeImage } from "@/lib/image-data";
 
 function databaseConfig() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -139,8 +140,16 @@ export async function updateClient(id: string, input: UpdateClientInput): Promis
  */
 export async function deleteClient(id: string): Promise<void> {
   const { url } = databaseConfig();
-  const documents = await getDocumentsForClient(id);
-  for (const document of documents) await deleteDocument(document.id);
+  // Removed-but-recoverable files still hold storage objects, so both lists
+  // have to be purged or the bucket keeps them after the client is gone.
+  const [documents, removedDocuments, images, removedImages] = await Promise.all([
+    getDocumentsForClient(id),
+    getDeletedDocumentsForClient(id).catch(() => []),
+    getImagesForClient(id).catch(() => []),
+    getDeletedImagesForClient(id).catch(() => []),
+  ]);
+  for (const document of [...documents, ...removedDocuments]) await purgeDocument(document.id);
+  for (const image of [...images, ...removedImages]) await purgeImage(image.id);
 
   const response = await fetch(`${url}/rest/v1/clients?id=eq.${encodeURIComponent(id)}`, {
     method: "DELETE",

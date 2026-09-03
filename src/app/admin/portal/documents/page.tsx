@@ -30,7 +30,7 @@ export default async function DocumentsPage() {
           <div className={styles.libraryTableHeader}><span>Document</span><span>Client</span><span>Category</span><span>Size</span></div>
           <div className={styles.libraryRows}>
             {documents.map((document) => (
-              <Link href={`/admin/portal/clients/${document.client_id}`} key={document.id}>
+              <Link href={`/admin/portal/clients/${document.client_id}?tab=documents`} key={document.id}>
                 <div><strong>{document.name}</strong><small>{new Date(document.created_at).toLocaleDateString("en-US")}</small></div>
                 <span>{clientNames.get(document.client_id) || "Client record"}</span>
                 <span>{document.category}</span>

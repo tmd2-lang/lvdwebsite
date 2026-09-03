@@ -58,7 +58,7 @@ export default function AdminPortalShell({ user, children }: { user: AdminUser; 
 
         <div className={styles.account}>
           <span className={styles.avatar}>{firstName(user).slice(0, 1).toUpperCase()}</span>
-          <div><strong>{user.displayName || user.name}</strong><small>{isOwner ? "Studio owner" : "Studio planner"}</small></div>
+          <div><strong>{user.displayName || user.name}</strong><small>{isOwner ? "Studio Owner" : "Studio Planner"}</small></div>
           <button type="button" onClick={() => void signOut()}>Sign out</button>
         </div>
       </aside>

@@ -13,7 +13,9 @@ import {
   PLANNING_PACKAGE_LABELS,
   type PortalClient,
 } from "@/lib/client-types";
+import type { ViewableImage } from "@/lib/image-view";
 import DocumentPanel from "./DocumentPanel";
+import ImagePanel from "./ImagePanel";
 import InviteForm from "./InviteForm";
 import styles from "../../portal-admin.module.css";
 
@@ -36,8 +38,8 @@ function initials(client: PortalClient) {
   return [client.partner_one_name, client.partner_two_name].filter(Boolean).map((name) => name!.trim()[0]?.toUpperCase()).join("").slice(0, 2);
 }
 
-export default function ClientWorkspace({ client, members, invoices, documents }: { client: PortalClient; members: ClientMember[]; invoices: Invoice[]; documents: ClientDocument[] }) {
-  const [tab, setTab] = useState<WorkspaceTab>("overview");
+export default function ClientWorkspace({ client, members, invoices, documents, removedDocuments, images, removedImages, initialTab = "overview" }: { client: PortalClient; members: ClientMember[]; invoices: Invoice[]; documents: ClientDocument[]; removedDocuments: ClientDocument[]; images: ViewableImage[]; removedImages: ViewableImage[]; initialTab?: WorkspaceTab }) {
+  const [tab, setTab] = useState<WorkspaceTab>(initialTab);
   const totals = celebrationTotals(invoices);
   const locationLine = [formatDate(client.event_date), client.venue, client.location].filter(Boolean).join(" · ");
 
@@ -80,7 +82,7 @@ export default function ClientWorkspace({ client, members, invoices, documents }
 
             <div className={styles.workspaceOverviewGrid}>
               <section className={styles.workspaceCard}>
-                <div className={styles.workspaceCardHeader}><div><p className={styles.eyebrow}>Client record</p><h2>What they booked</h2></div><Link href={`/admin/portal/clients/${client.id}/edit`}>Edit details</Link></div>
+                <div className={styles.workspaceCardHeader}><div><p className={styles.eyebrow}>Client record</p><h2>What They Booked</h2></div><Link href={`/admin/portal/clients/${client.id}/edit`}>Edit details</Link></div>
                 <dl className={styles.workspaceDetails}>
                   <div><dt>Planning package</dt><dd>{PLANNING_PACKAGE_LABELS[client.planning_package]}</dd></div>
                   <div><dt>Design tier</dt><dd>{client.design_tier ? DESIGN_TIER_LABELS[client.design_tier] : "None"}</dd></div>
@@ -93,7 +95,7 @@ export default function ClientWorkspace({ client, members, invoices, documents }
               </section>
 
               <aside className={styles.workspaceCard}>
-                <div className={styles.workspaceCardHeader}><div><p className={styles.eyebrow}>Next steps</p><h2>Client actions</h2></div></div>
+                <div className={styles.workspaceCardHeader}><div><p className={styles.eyebrow}>Next steps</p><h2>Client Actions</h2></div></div>
                 <div className={styles.workspaceActions}>
                   <Link href={`/admin/portal/clients/${client.id}/invoices/new`}><span>01</span><div><strong>Create an invoice</strong><small>Add itemized charges and a payment link.</small></div><i>→</i></Link>
                   <button type="button" onClick={() => setTab("documents")}><span>02</span><div><strong>Upload documents</strong><small>Add contracts, plans, and proposals.</small></div><i>→</i></button>
@@ -105,16 +107,16 @@ export default function ClientWorkspace({ client, members, invoices, documents }
         )}
 
         {tab === "invoices" && <section className={styles.workspaceCard}>
-          <div className={styles.workspaceCardHeader}><div><p className={styles.eyebrow}>Financials</p><h2>Client invoices</h2></div><Link href={`/admin/portal/clients/${client.id}/invoices/new`}>Create invoice</Link></div>
+          <div className={styles.workspaceCardHeader}><div><p className={styles.eyebrow}>Financials</p><h2>Client Invoices</h2></div><Link href={`/admin/portal/clients/${client.id}/invoices/new`}>Create invoice</Link></div>
           {invoices.length === 0 ? <div className={styles.workspaceEmpty}><span>＋</span><h3>No invoices yet.</h3><p>Create the first itemized invoice for this client.</p></div> : <ul className={styles.invoiceRows}>{invoices.map((invoice) => <li key={invoice.id}><div className={styles.invoiceRowName}><strong>{invoice.name}</strong><small>{invoice.reference}{invoice.phase ? ` · ${invoice.phase}` : ""}</small></div><span className={styles.invoiceRowAmount}>{money(invoiceTotal(invoice))}</span><span className={`${styles.invoiceRowStatus} ${invoiceOutstanding(invoice) === 0 ? styles.invoiceRowPaid : ""}`}>{invoiceOutstanding(invoice) === 0 ? "Paid" : INVOICE_STATUS_LABELS[invoice.status]}</span></li>)}</ul>}
         </section>}
 
-        {tab === "documents" && <DocumentPanel clientId={client.id} documents={documents} />}
+        {tab === "documents" && <DocumentPanel clientId={client.id} documents={documents} removedDocuments={removedDocuments} />}
 
-        {tab === "images" && <section className={styles.workspaceCard}><div className={styles.workspaceCardHeader}><div><p className={styles.eyebrow}>Visual library</p><h2>Client images</h2></div></div><div className={styles.workspaceEmpty}><span>＋</span><h3>No images yet.</h3><p>Inspiration and gallery uploads will stay attached to this client.</p></div></section>}
+        {tab === "images" && <ImagePanel clientId={client.id} images={images} removedImages={removedImages} />}
 
         {tab === "access" && <section className={styles.workspaceCard}>
-          <div className={styles.workspaceCardHeader}><div><p className={styles.eyebrow}>Private portal</p><h2>Who can sign in</h2></div></div>
+          <div className={styles.workspaceCardHeader}><div><p className={styles.eyebrow}>Private portal</p><h2>Who Can Sign In</h2></div></div>
           <div className={styles.workspaceAccessBody}>
             {members.length === 0 ? <p className={styles.detailEmpty}>Nobody can sign in to this celebration yet.</p> : <ul className={styles.memberList}>{members.map((member) => <li key={member.id}><strong>{member.invited_email || "Linked account"}</strong><span>{member.relationship}</span></li>)}</ul>}
             <InviteForm clientId={client.id} />
