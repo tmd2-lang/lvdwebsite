@@ -263,7 +263,7 @@ export default function ImagePanel({
                 ) : (
                   <>
                 <button type="button" onClick={() => void toggleVisibility(image)}>
-                  {image.visible_to_client ? "Hide from couple" : "Show to couple"}
+                  {image.visible_to_client ? "Hide from client" : "Show to client"}
                 </button>
                 <button
                   type="button"

@@ -187,15 +187,25 @@ export default function DocumentPanel({
                 <strong>{document.name}</strong>
                 <small>{document.category} · {readableSize(document.size_bytes)}{document.note ? ` · ${document.note}` : ""}</small>
               </div>
-              <button
-                type="button"
-                className={confirming === document.id ? styles.imageConfirm : undefined}
-                onClick={() => void remove(document.id, document.name)}
-                onBlur={() => setConfirming((current) => (current === document.id ? "" : current))}
-                aria-label={confirming === document.id ? `Confirm removing ${document.name}` : `Remove ${document.name}`}
-              >
-                {confirming === document.id ? "Tap again" : "Remove"}
-              </button>
+              <div className={styles.documentRowActions}>
+                <a
+                  href={`/api/admin/documents/${document.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Open ${document.name}`}
+                >
+                  Open
+                </a>
+                <button
+                  type="button"
+                  className={confirming === document.id ? styles.imageConfirm : undefined}
+                  onClick={() => void remove(document.id, document.name)}
+                  onBlur={() => setConfirming((current) => (current === document.id ? "" : current))}
+                  aria-label={confirming === document.id ? `Confirm removing ${document.name}` : `Remove ${document.name}`}
+                >
+                  {confirming === document.id ? "Tap again" : "Remove"}
+                </button>
+              </div>
             </li>
           ))}
         </ul>

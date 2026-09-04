@@ -999,3 +999,122 @@
 .profileForm button:disabled { opacity: .55; cursor: progress; }
 .profileNote { margin-top: .8rem; color: #8b857c; font-size: .54rem; }
 .profileSaved { border: 1px solid #cfd9c5; border-radius: 4px; padding: .6rem .8rem; background: #f2f6ec; color: #4a5d3a; font-size: .58rem; }
+
+/* Real portal UI refinement --------------------------------------------- */
+
+.panel,
+.documentCard {
+  box-shadow: 0 14px 38px rgba(49, 39, 26, .04);
+}
+
+.panelHeading {
+  min-height: 96px;
+  padding: 1.35rem 1.5rem;
+}
+.panelHeading h2 { font-size: 1.65rem; }
+.panelHeading > span {
+  color: #81786d;
+  font-size: .65rem;
+  line-height: 1.4;
+  text-align: right;
+}
+
+.filterTabs button { min-height: 42px; font-size: .68rem; }
+.documentGrid { gap: 1.2rem; }
+.imageCardInfo { gap: .3rem; padding: .95rem 1rem 1.05rem; }
+.imageCardInfo > span { font-size: .6rem; }
+.imageCardInfo h2 { font-size: 1.12rem; }
+.imageCardInfo small { font-size: .62rem; }
+.portalImageMissing { font-size: .68rem; }
+.portalImageCaption strong { font-size: 1.12rem; }
+.portalImageCaption small { font-size: .61rem; }
+
+.portalTaskPanel + .portalTaskPanel { margin-top: 1.2rem; }
+.portalTaskRows { padding: 0 1.5rem; }
+.portalTaskRows li { min-height: 72px; display: grid; align-content: center; padding: 1rem 0; }
+.portalTaskRows label,
+.portalTaskStatic { gap: .9rem; }
+.portalTaskRows input[type="checkbox"] { width: 19px; height: 19px; }
+.portalTaskStatic b { width: 19px; font-size: .84rem; }
+.portalTaskRows label span,
+.portalTaskStatic > span { gap: .28rem; }
+.portalTaskRows strong { font-size: .8rem; line-height: 1.35; }
+.portalTaskRows small { font-size: .66rem; line-height: 1.5; }
+.portalTaskPanel .panelEmpty { padding: 1.5rem; font-size: .74rem; }
+
+.sidebarViewer {
+  width: fit-content;
+  min-height: 34px !important;
+  margin-top: .75rem !important;
+  border: 1px solid rgba(211, 183, 121, .25);
+  border-radius: 999px;
+  padding: 0 .75rem;
+  color: #d8c9aa;
+  font-size: .63rem;
+  text-decoration: none;
+}
+
+.avatarLink {
+  box-shadow: 0 5px 18px rgba(49, 39, 26, .08);
+}
+
+.profileStack {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 1.2rem;
+}
+.profileStack > .loginError,
+.profileStack > .profileSaved { grid-column: 1 / -1; }
+.profileStack > .panel { min-height: 100%; }
+.profileStack .profileForm {
+  max-width: none;
+  gap: 1rem;
+  padding: 1.5rem;
+}
+.profileForm label {
+  gap: .45rem;
+  color: #514b43;
+  font-size: .69rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.profileForm input {
+  min-height: 50px;
+  padding: 0 .9rem;
+  font-size: .82rem;
+}
+.profileForm input:focus {
+  border-color: #a8894e;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(168, 137, 78, .11);
+}
+.profileForm button { min-height: 48px; padding: 0 1.25rem; font-size: .67rem; }
+.profileNote { margin: 0; padding: 0 1.5rem 1.5rem; font-size: .65rem; line-height: 1.55; }
+.profileSaved { padding: .8rem 1rem; font-size: .68rem; }
+
+.portalShell :is(a, button, input):focus-visible {
+  outline: 2px solid #9a7840;
+  outline-offset: 2px;
+}
+
+@media (max-width: 900px) {
+  .profileStack { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 620px) {
+  /* Tasks and Images brought the real portal to six destinations. */
+  .mobileNavigation {
+    grid-template-columns: repeat(6, minmax(58px, 1fr));
+    overflow-x: auto;
+  }
+  .mobileNavigation a { font-size: .58rem; }
+  .panelHeading { min-height: 84px; padding: 1.1rem; }
+  .panelHeading h2 { font-size: 1.45rem; }
+  .panelHeading > span { max-width: 45%; font-size: .61rem; }
+  .portalTaskRows { padding: 0 1.1rem; }
+  .profileStack .profileForm { padding: 1.2rem; }
+  .profileNote { padding: 0 1.2rem 1.2rem; }
+  .documentGrid { gap: .9rem; }
+}

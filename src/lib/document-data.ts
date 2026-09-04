@@ -69,6 +69,17 @@ export async function getDocumentsForClient(clientId: string): Promise<ClientDoc
   return responseJson<ClientDocument[]>(response, "Could not load documents.");
 }
 
+/** One live document for an authenticated studio administrator. */
+export async function getDocument(documentId: string): Promise<ClientDocument | null> {
+  const { url } = databaseConfig();
+  const response = await fetch(
+    `${url}/rest/v1/documents?select=*&id=eq.${encodeURIComponent(documentId)}&deleted_at=is.null&limit=1`,
+    { headers: databaseHeaders(), cache: "no-store" },
+  );
+  const rows = await responseJson<ClientDocument[]>(response, "Could not load that document.");
+  return rows[0] || null;
+}
+
 /**
  * One document, but only if it belongs to the celebration given. The owner
  * check is part of the query, so a stranger's id simply returns nothing.

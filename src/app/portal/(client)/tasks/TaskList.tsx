@@ -47,9 +47,9 @@ export default function TaskList({ tasks }: { tasks: ClientTask[] }) {
     <>
       {error && <p className={styles.loginError} role="alert">{error}</p>}
 
-      <section className={styles.panel}>
+      <section className={`${styles.panel} ${styles.portalTaskPanel}`}>
         <div className={styles.panelHeading}>
-          <h2>For you</h2>
+          <h2>For You</h2>
           <span>{left === 0 ? "All done" : `${left} to go`}</span>
         </div>
         {yours.length === 0 ? (
@@ -77,9 +77,9 @@ export default function TaskList({ tasks }: { tasks: ClientTask[] }) {
       </section>
 
       {studio.length > 0 && (
-        <section className={styles.panel}>
+        <section className={`${styles.panel} ${styles.portalTaskPanel}`}>
           <div className={styles.panelHeading}>
-            <h2>With the studio</h2>
+            <h2>With the Studio</h2>
             <span>We&rsquo;re on these</span>
           </div>
           {/* Shown so the couple can see progress, but not theirs to tick. */}

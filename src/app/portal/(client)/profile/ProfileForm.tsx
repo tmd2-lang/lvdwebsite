@@ -66,13 +66,13 @@ export default function PortalProfileForm({
   }
 
   return (
-    <>
+    <div className={styles.profileStack}>
       {error && <p className={styles.loginError} role="alert">{error}</p>}
       {message && <p className={styles.profileSaved} role="status">{message}</p>}
 
       <section className={styles.panel}>
         <div className={styles.panelHeading}>
-          <h2>Your name</h2>
+          <h2>Your Name</h2>
           <span>How the studio sees you</span>
         </div>
         <form className={styles.profileForm} onSubmit={(event) => void saveName(event)}>
@@ -86,7 +86,7 @@ export default function PortalProfileForm({
 
       <section className={styles.panel}>
         <div className={styles.panelHeading}>
-          <h2>Sign in</h2>
+          <h2>Sign In</h2>
           <span>{email}</span>
         </div>
         <form className={styles.profileForm} onSubmit={(event) => void savePassword(event)}>
@@ -104,6 +104,6 @@ export default function PortalProfileForm({
           Your email address is how the studio invited you. Ask them if it needs to change.
         </p>
       </section>
-    </>
+    </div>
   );
 }

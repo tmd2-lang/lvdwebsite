@@ -64,3 +64,65 @@
   .mobileFooter { display: flex; justify-content: center; margin-top: 1rem; }
   .mobileFooter button { color: #766f65; }
 }
+
+/* Keep Profile inside the same spacious, editorial system as the portal. */
+.embeddedApp { min-height: 0; }
+.embeddedWorkspace { max-width: 1500px; margin: 0 auto; }
+.pageHeader { max-width: 1120px; }
+.profileCard {
+  max-width: 1120px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, .8fr);
+  overflow: hidden;
+  border-radius: 7px;
+  box-shadow: 0 18px 50px rgba(49, 39, 26, .055);
+}
+.profileIntro {
+  grid-column: 1 / -1;
+  padding: 2rem 2.25rem;
+  border-bottom-color: rgba(255, 255, 255, .11);
+  background: #211e1a;
+  color: #fffdf9;
+}
+.profileIntro .avatar {
+  border: 1px solid rgba(211, 184, 121, .52);
+  background: rgba(255, 255, 255, .055);
+}
+.profileIntro .sectionKicker { color: #d3b879; }
+.profileIntro h2 { color: #fffdf9; font-size: 1.9rem; }
+.profileIntro > div:last-child > p:last-child { color: rgba(255, 253, 249, .57); font-size: .76rem; }
+.form { gap: 1.35rem; padding: 2.25rem; }
+.form label,
+.passwordForm label { font-size: .7rem; }
+.form input,
+.passwordForm input { min-height: 50px; font-size: .86rem; }
+.form small { font-size: .68rem; line-height: 1.5; }
+.saveButton { min-height: 48px; padding: .75rem 1.3rem; font-size: .7rem; }
+.securitySection {
+  gap: 1.35rem;
+  border-top: 0;
+  border-left: 1px solid #e5ded4;
+  padding: 2.25rem;
+  background: #faf7f1;
+}
+.securitySection h3 { font-size: 1.65rem; }
+.securitySection > div > p:last-child { font-size: .72rem; }
+.resetLink { min-height: 40px; display: flex; align-items: center; font-size: .7rem; }
+
+.profileCard :is(button, a, input):focus-visible {
+  outline: 2px solid #9a7a42;
+  outline-offset: 2px;
+}
+
+@media (max-width: 920px) {
+  .profileCard { grid-template-columns: 1fr; }
+  .securitySection { border-top: 1px solid #e5ded4; border-left: 0; }
+}
+
+@media (max-width: 760px) {
+  .embeddedWorkspace { padding: 2.4rem 1rem 3rem; }
+  .profileIntro { padding: 1.45rem; }
+  .form,
+  .securitySection { padding: 1.35rem; }
+  .profileIntro h2 { font-size: 1.65rem; }
+}

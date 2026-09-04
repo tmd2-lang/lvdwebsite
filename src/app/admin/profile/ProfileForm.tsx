@@ -122,7 +122,7 @@ export default function ProfileForm({ initialProfile, embedded = false }: { init
         <div className={styles.pageHeader}>
           <div>
             <p className={styles.eyebrow}>Your studio identity</p>
-            <h1>Your <em>profile.</em></h1>
+            <h1>Your <em>Profile.</em></h1>
             <p>This is how your name appears across the private studio.</p>
           </div>
           <Link className={styles.backLink} href={embedded ? "/admin/portal" : "/admin"}>Back to {embedded ? "portal" : "home"} <span aria-hidden="true">→</span></Link>
@@ -132,7 +132,7 @@ export default function ProfileForm({ initialProfile, embedded = false }: { init
           <div className={styles.profileIntro}>
             <div className={styles.avatar}>{profile.avatarUrl ? <Image src={profile.avatarUrl} alt="" width={70} height={70} unoptimized /> : initials(profile)}</div>
             <div>
-              <p className={styles.sectionKicker}>Admin profile</p>
+              <p className={styles.sectionKicker}>Admin Profile</p>
               <h2>{profile.name}</h2>
               <p>{profile.email}</p>
             </div>
@@ -151,8 +151,8 @@ export default function ProfileForm({ initialProfile, embedded = false }: { init
 
           <section className={styles.securitySection}>
             <div>
-              <p className={styles.sectionKicker}>Account security</p>
-              <h3>Change your password.</h3>
+              <p className={styles.sectionKicker}>Account Security</p>
+              <h3>Change Your Password.</h3>
               <p>Use your current password to set a new one. Passwords must be at least 12 characters.</p>
             </div>
             <form className={styles.passwordForm} onSubmit={(event) => void changePassword(event)}>
