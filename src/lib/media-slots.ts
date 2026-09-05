@@ -33,6 +33,7 @@ export const MEDIA_SLOTS: MediaSlotDefinition[] = [
   { id: "about.craft.2", label: "Craft image 2", group: "About", note: "Center artistry image" },
   { id: "about.craft.3", label: "Craft image 3", group: "About", note: "Third artistry image" },
   { id: "services.hero", label: "Services hero", group: "Services", note: "Wide services image" },
+  { id: "planning.hero", label: "Planning hero", group: "Planning", note: "Couple image above the planning packages" },
   { id: "services.capability.1", label: "Full Production", group: "Services", note: "Capability image" },
   { id: "services.capability.2", label: "Floral Design", group: "Services", note: "Capability image" },
   { id: "services.capability.3", label: "Staging & Lighting", group: "Services", note: "Capability image" },

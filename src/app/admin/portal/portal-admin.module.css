@@ -165,7 +165,7 @@
   .mobileHeader > a b { color: #d3b779; font-family: var(--font-bodoni); font-size: 1.25rem; font-style: italic; }
   .mobileHeader > a span { color: rgba(255,253,249,.52); font-size: .5rem; letter-spacing: .12em; text-transform: uppercase; }
   .mobileHeader > button { border: 0; background: transparent; color: rgba(255,253,249,.62); font: inherit; font-size: .56rem; cursor: pointer; }
-  .mobileNav { min-height: 50px; display: grid; grid-template-columns: repeat(5,minmax(82px,1fr)); overflow-x: auto; border-bottom: 1px solid #d8d0c4; background: #fffdfa; }
+  .mobileNav { min-height: 50px; display: grid; grid-template-columns: repeat(6,minmax(82px,1fr)); overflow-x: auto; border-bottom: 1px solid #d8d0c4; background: #fffdfa; }
   .mobileNav a, .mobileNav span { display: grid; place-items: center; border-bottom: 2px solid transparent; color: #665f56; font-size: .53rem; font-weight: 700; text-decoration: none; }
   .mobileNav span { color: #aaa298; }
   .mobileNav .mobileNavActive { border-bottom-color: #8d6e3a; color: #211e1a; }

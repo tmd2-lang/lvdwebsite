@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import BookButton from "@/components/planning/BookButton";
+import PackageInclusions from "@/components/planning/PackageInclusions";
 import { PLANNING_PACKAGES } from "@/data/packages";
 import { media } from "@/lib/media-slots";
 
 export const metadata: Metadata = {
   title: "Planning",
   description:
-    "Four ways to work with Lady Victoria Designs, from finding your venue to full planning of your celebration.",
+    "Four ways to work with Lady Victoria Designs, from venue discovery and budget strategy to full planning of your celebration.",
 };
 
 export default function PackagesPage() {
@@ -29,8 +30,8 @@ export default function PackagesPage() {
       <section className="w-full px-6 md:px-12 py-12 md:py-20 border-b border-ink/20 flex justify-center bg-ivory">
         <div className="max-w-[1440px] w-full h-[45vh] md:h-[62vh] overflow-hidden relative">
           <Image
-            src={media["services.hero"]}
-            alt="A celebration designed and produced by Lady Victoria Designs"
+            src={media["planning.hero"]}
+            alt="A newly married couple beneath a floral ceremony arch designed by Lady Victoria Designs"
             fill
             sizes="100vw"
             className="w-full h-full object-cover"
@@ -73,27 +74,15 @@ export default function PackagesPage() {
                 <BookButton packageName={pkg.name} />
               </div>
 
-              {/* RIGHT: what's included */}
+              {/* RIGHT: fit + expandable inclusions */}
               <div className="lg:w-[58%] lg:border-l lg:border-ink/15 lg:pl-16">
-                <div className="font-body text-[0.6rem] uppercase tracking-[0.18em] text-ink/45 mb-6">
-                  What&rsquo;s included
+                <div className="mb-8 border-b border-ink/10 pb-8 md:mb-10 md:pb-10">
+                  <div className="mb-3 font-body text-[0.6rem] uppercase tracking-[0.18em] text-ink/45">
+                    Ideal for
+                  </div>
+                  <p className="max-w-xl font-body text-sm leading-relaxed text-ink/70">{pkg.idealFor}</p>
                 </div>
-                <ul className="flex flex-col">
-                  {pkg.includes.map((item) => (
-                    <li
-                      key={item}
-                      className="flex gap-4 border-b border-ink/10 py-4 font-body text-sm text-ink/80 leading-relaxed"
-                    >
-                      <span className="text-gold shrink-0" aria-hidden="true">
-                        —
-                      </span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <p className="font-body text-xs text-ink/50 leading-relaxed mt-6">
-                  <span className="text-ink/70">Ideal for:</span> {pkg.idealFor}
-                </p>
+                <PackageInclusions packageDetails={pkg} />
               </div>
             </div>
           </article>

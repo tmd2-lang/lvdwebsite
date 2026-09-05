@@ -126,6 +126,11 @@
 .empty > p:last-child, .emptyDetail { margin-top: 0.4rem; color: #928a80; font-size: 0.68rem; }
 .emptyDetail { display: grid; height: 100%; place-items: center; }
 
+/* The portal route keeps the Portal Studio shell and embeds only this workspace. */
+.portalMode { min-height: 0; display: block; background: transparent; }
+.portalMode > .sidebar, .portalMode .mobileHeader { display: none; }
+.portalMode > .workspace { padding: clamp(2.5rem, 4.5vw, 4.6rem) clamp(1.25rem, 3.5vw, 4.5rem) 5rem; }
+
 @media (max-width: 1080px) {
   .app { grid-template-columns: 180px minmax(0, 1fr); }
   .contentGrid { grid-template-columns: minmax(330px, 0.88fr) minmax(390px, 1.12fr); }
@@ -159,6 +164,10 @@
   .mobileClose { position: absolute; top: 0.75rem; right: 1rem; display: grid; width: 2.2rem; height: 2.2rem; place-items: center; border: 1px solid #ded6ca; border-radius: 50%; background: transparent; color: #1b1814; font-size: 1.35rem; }
 
   .detailScroll { flex: 1 1 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: 1rem 1rem 4rem; }
+}
+
+@media (max-width: 620px) {
+  .portalMode > .workspace { padding: 2.4rem 1rem 3rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

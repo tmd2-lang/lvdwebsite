@@ -17,10 +17,10 @@ export const CLIENT_STATUSES = ["active", "booked", "complete", "archived"] as c
 export type ClientStatus = (typeof CLIENT_STATUSES)[number];
 
 export const PLANNING_PACKAGE_LABELS: Record<PlanningPackageId, string> = {
-  venue_finder: "Venue Finder",
-  coordinating: "Coordinating",
+  venue_finder: "Venue Discovery & Budget Blueprint",
+  coordinating: "Wedding Management & Coordination",
   partial_planning: "Partial Planning",
-  full_planning: "Full Planning",
+  full_planning: "Full Wedding Planning",
   custom: "Custom",
 };
 

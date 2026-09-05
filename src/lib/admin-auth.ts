@@ -36,17 +36,14 @@ function emailList(variable: string | undefined) {
     .filter(Boolean);
 }
 
-/**
- * Planners work inside the client portal only. Everyone else approved for the
- * studio is an owner and sees inquiries as well.
- */
+/** Planners work inside the client portal; all other approved admins are owners. */
 export function roleForEmail(email: string): AdminRole {
   const planners = emailList(process.env.SUPABASE_PLANNER_EMAILS);
   return planners.includes(email.trim().toLowerCase()) ? "planner" : "owner";
 }
 
 export function canSeeInquiries(user: AdminUser) {
-  return user.role === "owner";
+  return user.role === "owner" || user.role === "planner";
 }
 
 /** Where each role lands after signing in. */

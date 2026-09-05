@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Contact from "@/components/sections/Contact";
+import PackageInclusions from "@/components/planning/PackageInclusions";
 import { PLANNING_PACKAGES } from "@/data/packages";
 
 export const metadata: Metadata = {
   title: "Planning Packages",
   description:
-    "Four ways to plan with Lady Victoria Designs — Venue Finder, Coordinating, Partial Planning, and Full Planning — plus custom celebrations built to fit.",
+    "Four ways to plan with Lady Victoria Designs — Venue Discovery & Budget Blueprint, Wedding Management & Coordination, Partial Planning, and Full Wedding Planning.",
   alternates: { canonical: "/packages" },
 };
 
@@ -72,17 +73,7 @@ export default function PackagesPage() {
                 <p className="font-body text-sm text-ink/80 leading-relaxed max-w-2xl">{pkg.idealFor}</p>
               </div>
 
-              <div className="flex flex-col gap-4">
-                <span className="font-body text-[9px] uppercase tracking-[0.2em] text-ink/50">WHAT&rsquo;S INCLUDED</span>
-                <ul className="flex flex-col gap-3">
-                  {pkg.includes.map((item) => (
-                    <li key={item} className="font-body text-sm text-ink/80 leading-relaxed flex gap-4">
-                      <span aria-hidden="true" className="text-gold shrink-0">&mdash;</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <PackageInclusions packageDetails={pkg} />
             </div>
           </article>
         ))}

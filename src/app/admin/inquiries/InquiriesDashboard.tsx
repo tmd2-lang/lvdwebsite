@@ -92,10 +92,12 @@ export default function InquiriesDashboard({
   initialLeads,
   user,
   initialSelectedId,
+  portalMode = false,
 }: {
   initialLeads: AdminLead[];
   user: AdminUser;
   initialSelectedId?: string;
+  portalMode?: boolean;
 }) {
   const [leads, setLeads] = useState(initialLeads);
   const [selectedId, setSelectedId] = useState(initialSelectedId || initialLeads[0]?.id || "");
@@ -248,7 +250,7 @@ export default function InquiriesDashboard({
   }
 
   return (
-    <main className={styles.app}>
+    <main className={`${styles.app} ${portalMode ? styles.portalMode : ""}`}>
       <aside className={styles.sidebar}>
         <div>
           <p className={styles.monogram}>LVD</p>

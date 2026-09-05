@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { canSeeInquiries, getAdminUser, hasAdminRefreshToken } from "@/lib/admin-auth";
+import { getAdminUser, hasAdminRefreshToken } from "@/lib/admin-auth";
 import { getAdminLeads } from "@/lib/admin-data";
 import AdminHome from "./AdminHome";
 
@@ -14,8 +14,8 @@ export default async function AdminPage() {
     redirect("/admin/login");
   }
 
-  // Planners have no inquiry access, so the studio overview is not their home.
-  if (!canSeeInquiries(user)) redirect("/admin/portal");
+  // The studio overview remains owner-only even though planners can work inquiries.
+  if (user.role !== "owner") redirect("/admin/portal");
 
   const leads = await getAdminLeads();
   return <AdminHome initialLeads={leads} user={user} nowIso={new Date().toISOString()} />;

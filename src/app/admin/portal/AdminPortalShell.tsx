@@ -11,6 +11,7 @@ const portalNavigation = [
   { number: "03", label: "Invoices", href: "/admin/portal/invoices" },
   { number: "04", label: "Documents", href: "/admin/portal/documents" },
   { number: "05", label: "Images", href: "/admin/portal/images" },
+  { number: "06", label: "Inquiries", href: "/admin/portal/inquiries" },
 ] as const;
 
 function firstName(user: AdminUser) {
@@ -52,7 +53,6 @@ export default function AdminPortalShell({ user, children }: { user: AdminUser; 
 
         <nav className={styles.studioNav} aria-label="Studio administration">
           {isOwner && <Link href="/admin">Home</Link>}
-          {isOwner && <Link href="/admin/inquiries">Inquiries</Link>}
           <Link className={pathname === "/admin/portal/profile" ? styles.studioNavActive : undefined} href="/admin/portal/profile" aria-current={pathname === "/admin/portal/profile" ? "page" : undefined}>Profile</Link>
         </nav>
 
