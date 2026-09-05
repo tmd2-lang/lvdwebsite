@@ -7,34 +7,49 @@ export default function PackageInclusions({ packageDetails }: { packageDetails: 
         title: "",
         items: packageDetails.includes,
       },
-    ];
+  ];
 
   return (
-    <details className="group border-y border-ink/15">
-      <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-6 py-4 font-body text-[0.65rem] uppercase tracking-[0.18em] text-ink transition-colors hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold [&::-webkit-details-marker]:hidden">
-        <span>View everything included</span>
+    <details className="group border-y border-ink/20">
+      <summary className="grid min-h-20 cursor-pointer list-none grid-cols-[1fr_auto] items-center gap-6 py-5 font-body text-xs uppercase tracking-[0.18em] text-ink transition-colors hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold md:grid-cols-[minmax(170px,.35fr)_minmax(0,1.65fr)_auto] [&::-webkit-details-marker]:hidden">
+        <span>What&rsquo;s included</span>
+        <span className="hidden normal-case tracking-normal text-ink/45 transition-colors group-hover:text-ink/60 md:block">
+          View the complete package scope
+        </span>
         <span
           aria-hidden="true"
-          className="text-xl font-light leading-none text-gold transition-transform duration-300 group-open:rotate-45"
+          className="grid size-10 place-items-center rounded-full border border-gold/50 text-xl font-light leading-none text-gold transition-transform duration-300 group-open:rotate-45"
         >
           +
         </span>
       </summary>
 
-      <div className="pb-7 pt-2 md:pb-9">
-        <div className="flex flex-col gap-8">
+      <div className="border-t border-ink/15 bg-ecru/45 px-5 py-9 md:px-8 md:py-12 lg:px-12 lg:py-14">
+        <div className="mb-10 grid gap-3 border-b border-ink/15 pb-9 md:grid-cols-[minmax(170px,.35fr)_minmax(0,1.65fr)] md:gap-8">
+          <h3 className="font-body text-xs uppercase tracking-[0.18em] text-ink/50">Ideal for</h3>
+          <p className="max-w-3xl font-display text-xl leading-relaxed text-ink/80 md:text-2xl">
+            {packageDetails.idealFor}
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-10 md:gap-12">
           {sections.map((section, sectionIndex) => (
-            <section key={section.title || `inclusions-${sectionIndex}`}>
+            <section
+              className="grid gap-4 md:grid-cols-[minmax(170px,.35fr)_minmax(0,1.65fr)] md:gap-8"
+              key={section.title || `inclusions-${sectionIndex}`}
+            >
               {section.title ? (
-                <h3 className="mb-3 font-body text-[0.62rem] uppercase tracking-[0.16em] text-ink/55">
+                <h3 className="font-body text-xs uppercase tracking-[0.16em] text-ink/55">
                   {section.title}
                 </h3>
-              ) : null}
-              <ul className="flex flex-col">
+              ) : (
+                <h3 className="font-body text-xs uppercase tracking-[0.16em] text-ink/55">Package scope</h3>
+              )}
+              <ul className="grid gap-x-10 lg:grid-cols-2">
                 {section.items.map((item) => (
                   <li
                     key={item}
-                    className="flex gap-4 border-b border-ink/10 py-3.5 font-body text-sm leading-relaxed text-ink/75 last:border-b-0"
+                    className="flex gap-4 border-b border-ink/10 py-4 font-body text-[0.95rem] leading-relaxed text-ink/75 md:text-base"
                   >
                     <span className="shrink-0 text-gold" aria-hidden="true">
                       —
@@ -48,7 +63,7 @@ export default function PackageInclusions({ packageDetails }: { packageDetails: 
         </div>
 
         {packageDetails.note ? (
-          <p className="mt-8 border-t border-ink/15 pt-5 font-body text-xs leading-relaxed text-ink/55">
+          <p className="mt-12 border-t border-ink/15 pt-7 font-body text-sm leading-relaxed text-ink/55">
             <span className="text-ink/75">Please note:</span> {packageDetails.note}
           </p>
         ) : null}

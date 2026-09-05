@@ -110,12 +110,17 @@ export default function Header() {
     pathname?.startsWith("/journal") ||
     pathname?.startsWith("/about") ||
     pathname?.startsWith("/services") ||
+    pathname?.startsWith("/planning") ||
+    pathname?.startsWith("/packages") ||
     pathname?.startsWith("/thank-you");
 
   // Update active preview image based on route
   useEffect(() => {
     const current = MENU_ITEMS.find((item) => item.path === pathname);
-    if (current) setActiveItem(current);
+    if (!current) return;
+
+    const frame = window.requestAnimationFrame(() => setActiveItem(current));
+    return () => window.cancelAnimationFrame(frame);
   }, [pathname]);
 
   // Scroll styling logic

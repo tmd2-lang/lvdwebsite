@@ -15,7 +15,7 @@ export default function PackagesPage() {
   return (
     <main className="w-full bg-ivory text-ink flex flex-col relative">
       {/* HERO */}
-      <section className="w-full min-h-[55vh] md:min-h-[70vh] flex flex-col justify-center items-center text-center px-6 md:px-12 py-20 md:py-48 border-b border-ink/20">
+      <section className="flex w-full flex-col items-center justify-center border-b border-ink/20 px-6 pb-16 pt-36 text-center md:px-12 md:pb-20 md:pt-44">
         <div className="text-xs uppercase tracking-[0.2em] text-gold mb-6 font-body">PLANNING PACKAGES</div>
         <h1 className="font-display text-[clamp(2.5rem,6vw,6.5rem)] text-ink max-w-5xl mx-auto leading-tight mb-8">
           Four ways to <span className="italic text-gold">begin.</span>
@@ -27,7 +27,7 @@ export default function PackagesPage() {
       </section>
 
       {/* HERO IMAGE */}
-      <section className="w-full px-6 md:px-12 py-12 md:py-20 border-b border-ink/20 flex justify-center bg-ivory">
+      <section className="flex w-full justify-center border-b border-ink/20 bg-ivory px-6 py-8 md:px-12 md:py-12">
         <div className="max-w-[1440px] w-full h-[45vh] md:h-[62vh] overflow-hidden relative">
           <Image
             src={media["planning.hero"]}
@@ -45,43 +45,37 @@ export default function PackagesPage() {
         {PLANNING_PACKAGES.map((pkg, index) => (
           <article
             key={pkg.id}
-            className="w-full border-t border-ink/20 px-6 md:px-12 py-14 md:py-24"
+            className="w-full border-t border-ink/20 px-6 py-16 md:px-12 md:py-24 lg:py-28"
           >
-            <div className="max-w-[1440px] mx-auto w-full flex flex-col lg:flex-row gap-10 lg:gap-20">
-              {/* LEFT: identity */}
-              <div className="lg:w-[42%] flex flex-col">
-                <div className="flex items-baseline gap-4 mb-5">
-                  <span className="font-body text-xs tracking-[0.2em] text-gold">{pkg.number}</span>
-                  <span className="font-body text-[0.65rem] uppercase tracking-[0.18em] text-ink/45">
-                    {index === 0 ? "Where most couples start" : `Package ${pkg.number}`}
-                  </span>
-                </div>
-                <h2 className="font-display text-[clamp(2rem,3.6vw,3.4rem)] leading-[1.05] mb-4">
-                  {pkg.name}
-                </h2>
-                <p className="font-display italic text-gold text-lg md:text-xl mb-6">{pkg.tagline}</p>
-                <p className="font-body text-sm md:text-base text-ink/70 leading-relaxed mb-8">
-                  {pkg.description}
-                </p>
-
-                <div className="border-t border-ink/15 pt-6 mb-8">
-                  <div className="font-body text-[0.6rem] uppercase tracking-[0.18em] text-ink/45 mb-2">
-                    Investment
-                  </div>
-                  <div className="font-display text-2xl md:text-3xl text-ink">{pkg.price}</div>
-                </div>
-
-                <BookButton packageName={pkg.name} />
+            <div className="mx-auto w-full max-w-[1440px]">
+              <div className="mb-8 flex items-baseline gap-4 md:mb-10">
+                <span className="font-body text-xs tracking-[0.2em] text-gold">{pkg.number}</span>
+                <span className="font-body text-xs uppercase tracking-[0.18em] text-ink/45">
+                  {index === 0 ? "Where most couples start" : `Package ${pkg.number}`}
+                </span>
               </div>
 
-              {/* RIGHT: fit + expandable inclusions */}
-              <div className="lg:w-[58%] lg:border-l lg:border-ink/15 lg:pl-16">
-                <div className="mb-8 border-b border-ink/10 pb-8 md:mb-10 md:pb-10">
-                  <div className="mb-3 font-body text-[0.6rem] uppercase tracking-[0.18em] text-ink/45">
-                    Ideal for
-                  </div>
-                  <p className="max-w-xl font-body text-sm leading-relaxed text-ink/70">{pkg.idealFor}</p>
+              <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1.45fr)_minmax(270px,.55fr)] lg:gap-20">
+                <div>
+                  <h2 className="max-w-5xl font-display text-[clamp(2.65rem,5vw,5.4rem)] leading-[0.98] tracking-[-0.025em]">
+                  {pkg.name}
+                  </h2>
+                  <p className="mt-5 font-display text-xl italic text-gold md:text-2xl">{pkg.tagline}</p>
+                  <p className="mt-7 max-w-3xl font-body text-base leading-[1.75] text-ink/70">
+                    {pkg.description}
+                  </p>
                 </div>
+
+                <div className="border-t border-ink/15 pt-7 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-1">
+                  <div className="mb-2 font-body text-xs uppercase tracking-[0.18em] text-ink/45">
+                    Investment
+                  </div>
+                  <div className="mb-7 font-display text-4xl text-ink md:text-5xl">{pkg.price}</div>
+                  <BookButton packageName={pkg.name} />
+                </div>
+              </div>
+
+              <div className="mt-12 md:mt-16 lg:mt-20">
                 <PackageInclusions packageDetails={pkg} />
               </div>
             </div>
