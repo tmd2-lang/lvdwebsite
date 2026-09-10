@@ -1,5 +1,7 @@
 "use client";
 
+import { Suspense } from "react";
+import GA4Tracking from "@/components/GA4Tracking";
 import { usePathname } from "next/navigation";
 import Script from "next/script";
 import MetaPixelNavigation from "@/components/MetaPixelNavigation";
@@ -20,6 +22,7 @@ export default function MarketingScripts() {
   return (
     <>
       <MetaPixelNavigation />
+      <Suspense fallback={null}><GA4Tracking /></Suspense>
       <Script
         id="google-tag"
         src="https://www.googletagmanager.com/gtag/js?id=AW-11134478295"

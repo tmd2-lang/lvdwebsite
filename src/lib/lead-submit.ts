@@ -1,3 +1,5 @@
+import { trackGA4 } from "./ga4";
+
 export type LeadSource = "inquire" | "consultation" | "reserve" | "style_quiz";
 
 export type LeadSubmission = {
@@ -30,6 +32,13 @@ export async function submitLead(submission: LeadSubmission) {
   const result = await response.json().catch(() => ({}));
   if (!response.ok) {
     throw new Error(typeof result.error === "string" ? result.error : "Could not submit your inquiry.");
+  }
+
+  if (typeof window !== "undefined") {
+    const path = window.location.pathname.replace(/\/$/, "");
+    if (path === "/welcome" || path === "/inquire") {
+      trackGA4("generate_lead", path === "/welcome" ? "welcome" : "inquire");
+    }
   }
 
   return result as { leadId: string; notificationSent: boolean };
