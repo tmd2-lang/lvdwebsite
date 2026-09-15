@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAdminUser } from "@/lib/admin-auth";
+import { canManageClientPortal, getAdminUser } from "@/lib/admin-auth";
 import { createClient } from "@/lib/client-data";
 import {
   DESIGN_TIER_IDS,
@@ -16,9 +16,10 @@ function text(value: unknown) {
 }
 
 export async function POST(request: Request) {
-  // Owners and planners both create clients. Only inquiries are owner-only.
+  // Client-portal work is limited to owners and planners.
   const user = await getAdminUser();
   if (!user) return NextResponse.json({ error: "Your sign-in has expired." }, { status: 401 });
+  if (!canManageClientPortal(user)) return NextResponse.json({ error: "Your account does not have client-portal access." }, { status: 403 });
 
   try {
     const body = await request.json() as Record<string, unknown>;

@@ -3,6 +3,8 @@ import {
   ADMIN_ACCESS_COOKIE,
   ADMIN_REFRESH_COOKIE,
   isApprovedAdmin,
+  isApprovedAdminAccount,
+  roleFromAppMetadata,
   sessionCookieOptions,
 } from "@/lib/admin-auth";
 
@@ -13,7 +15,7 @@ type LoginResponse = {
   access_token?: unknown;
   refresh_token?: unknown;
   expires_in?: unknown;
-  user?: { email?: unknown };
+  user?: { email?: unknown; app_metadata?: { role?: unknown } | null };
 };
 
 export async function POST(request: Request) {
@@ -43,7 +45,8 @@ export async function POST(request: Request) {
     if (!authResponse.ok || typeof result?.access_token !== "string" || typeof result.refresh_token !== "string") {
       return NextResponse.json({ error: "That email or password doesn’t look right." }, { status: 401 });
     }
-    if (!isApprovedAdmin(userEmail)) {
+    const metadataRole = result?.user ? roleFromAppMetadata(result.user) : null;
+    if (!isApprovedAdmin(userEmail, metadataRole) && !await isApprovedAdminAccount(userEmail)) {
       return NextResponse.json({ error: "This account doesn’t have access to the studio." }, { status: 403 });
     }
 

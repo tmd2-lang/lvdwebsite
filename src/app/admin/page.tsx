@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getAdminUser, hasAdminRefreshToken } from "@/lib/admin-auth";
+import { getAdminUser, hasAdminRefreshToken, homePathForRole } from "@/lib/admin-auth";
 import { getAdminLeads } from "@/lib/admin-data";
 import AdminHome from "./AdminHome";
 
@@ -14,8 +14,8 @@ export default async function AdminPage() {
     redirect("/admin/login");
   }
 
-  // The studio overview remains owner-only even though planners can work inquiries.
-  if (user.role !== "owner") redirect("/admin/portal");
+  // The studio overview remains owner-only; planners and inquiry staff use their scoped workspaces.
+  if (user.role !== "owner") redirect(homePathForRole(user.role));
 
   const leads = await getAdminLeads();
   return <AdminHome initialLeads={leads} user={user} nowIso={new Date().toISOString()} />;

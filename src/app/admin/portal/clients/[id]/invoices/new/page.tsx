@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { getAdminUser, hasAdminRefreshToken } from "@/lib/admin-auth";
+import { canManageClientPortal, getAdminUser, hasAdminRefreshToken } from "@/lib/admin-auth";
 import { getClientById } from "@/lib/client-data";
 import NewInvoiceForm from "./NewInvoiceForm";
 import styles from "../../../../portal-admin.module.css";
@@ -14,6 +14,7 @@ export default async function NewInvoicePage({ params }: { params: Promise<{ id:
     if (await hasAdminRefreshToken()) redirect(`/api/admin/auth/refresh?next=/admin/portal/clients/${id}/invoices/new`);
     redirect("/admin/login");
   }
+  if (!canManageClientPortal(user)) redirect("/admin/portal/inquiries");
 
   const client = await getClientById(id);
   if (!client) notFound();

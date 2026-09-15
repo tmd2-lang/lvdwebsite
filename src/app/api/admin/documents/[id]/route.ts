@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAdminUser } from "@/lib/admin-auth";
+import { canManageClientPortal, getAdminUser } from "@/lib/admin-auth";
 import { getDocument, signedDocumentUrl } from "@/lib/document-data";
 
 export const runtime = "nodejs";
@@ -12,6 +12,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
   const user = await getAdminUser();
   if (!user) return NextResponse.redirect(new URL("/admin/login", request.url));
+  if (!canManageClientPortal(user)) return NextResponse.json({ error: "Your account does not have client-portal access." }, { status: 403 });
 
   const { id } = await context.params;
   const document = await getDocument(id);

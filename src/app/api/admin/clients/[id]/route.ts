@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAdminUser } from "@/lib/admin-auth";
+import { canManageClientPortal, getAdminUser } from "@/lib/admin-auth";
 import { deleteClient, getClientById, updateClient } from "@/lib/client-data";
 import {
   CLIENT_STATUSES,
@@ -20,6 +20,7 @@ function text(value: unknown) {
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const user = await getAdminUser();
   if (!user) return NextResponse.json({ error: "Your sign-in has expired." }, { status: 401 });
+  if (!canManageClientPortal(user)) return NextResponse.json({ error: "Your account does not have client-portal access." }, { status: 403 });
 
   try {
     const { id } = await params;
@@ -61,6 +62,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const user = await getAdminUser();
   if (!user) return NextResponse.json({ error: "Your sign-in has expired." }, { status: 401 });
+  if (!canManageClientPortal(user)) return NextResponse.json({ error: "Your account does not have client-portal access." }, { status: 403 });
 
   try {
     const { id } = await params;

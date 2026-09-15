@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getAdminUser, hasAdminRefreshToken } from "@/lib/admin-auth";
+import { canManageClientPortal, getAdminUser, hasAdminRefreshToken } from "@/lib/admin-auth";
 import NewClientForm from "./NewClientForm";
 import styles from "../../portal-admin.module.css";
 
@@ -12,6 +12,7 @@ export default async function NewClientPage() {
     if (await hasAdminRefreshToken()) redirect("/api/admin/auth/refresh?next=/admin/portal/clients/new");
     redirect("/admin/login");
   }
+  if (!canManageClientPortal(user)) redirect("/admin/portal/inquiries");
 
   return (
     <main className={styles.formShell}>

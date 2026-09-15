@@ -29,6 +29,8 @@ export default function ProfileForm({ initialProfile, embedded = false }: { init
   const [passwordBusy, setPasswordBusy] = useState(false);
   const [passwordMessage, setPasswordMessage] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const embeddedBackHref = initialProfile.role === "inquiry_staff" ? "/admin/portal/inquiries" : "/admin/portal";
+  const embeddedBackLabel = initialProfile.role === "inquiry_staff" ? "inquiries" : "portal";
 
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -125,7 +127,7 @@ export default function ProfileForm({ initialProfile, embedded = false }: { init
             <h1>Your <em>Profile.</em></h1>
             <p>This is how your name appears across the private studio.</p>
           </div>
-          <Link className={styles.backLink} href={embedded ? "/admin/portal" : "/admin"}>Back to {embedded ? "portal" : "home"} <span aria-hidden="true">→</span></Link>
+          <Link className={styles.backLink} href={embedded ? embeddedBackHref : "/admin"}>Back to {embedded ? embeddedBackLabel : "home"} <span aria-hidden="true">→</span></Link>
         </div>
 
         <section className={styles.profileCard}>

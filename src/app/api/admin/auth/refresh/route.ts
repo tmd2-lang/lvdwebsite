@@ -4,6 +4,8 @@ import {
   ADMIN_ACCESS_COOKIE,
   ADMIN_REFRESH_COOKIE,
   isApprovedAdmin,
+  isApprovedAdminAccount,
+  roleFromAppMetadata,
   safeAdminReturnPath,
   sessionCookieOptions,
 } from "@/lib/admin-auth";
@@ -15,7 +17,7 @@ type RefreshResponse = {
   access_token?: unknown;
   refresh_token?: unknown;
   expires_in?: unknown;
-  user?: { email?: unknown };
+  user?: { email?: unknown; app_metadata?: { role?: unknown } | null };
 };
 
 function clearSession(response: NextResponse) {
@@ -45,7 +47,11 @@ export async function GET(request: Request) {
     const result = (await authResponse.json().catch(() => null)) as RefreshResponse | null;
     const email = typeof result?.user?.email === "string" ? result.user.email.toLowerCase() : "";
 
-    if (!authResponse.ok || typeof result?.access_token !== "string" || typeof result.refresh_token !== "string" || !isApprovedAdmin(email)) {
+    const metadataRole = result?.user ? roleFromAppMetadata(result.user) : null;
+    const hasValidSession = authResponse.ok
+      && typeof result?.access_token === "string"
+      && typeof result.refresh_token === "string";
+    if (!hasValidSession || (!isApprovedAdmin(email, metadataRole) && !await isApprovedAdminAccount(email))) {
       const response = NextResponse.redirect(loginUrl);
       clearSession(response);
       return response;

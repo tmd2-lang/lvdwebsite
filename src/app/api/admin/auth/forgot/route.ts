@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { isApprovedAdmin } from "@/lib/admin-auth";
+import { isApprovedAdminAccount } from "@/lib/admin-auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json() as { email?: unknown };
     const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
-    if (!email || !url || !anonKey || !isApprovedAdmin(email)) return genericResponse;
+    if (!email || !url || !anonKey || !await isApprovedAdminAccount(email)) return genericResponse;
 
     const redirectTo = `${new URL(request.url).origin}/admin/update-password`;
     const response = await fetch(`${url}/auth/v1/recover?redirect_to=${encodeURIComponent(redirectTo)}`, {

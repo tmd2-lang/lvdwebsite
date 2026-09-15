@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAdminUser } from "@/lib/admin-auth";
+import { canManageClientPortal, getAdminUser } from "@/lib/admin-auth";
 import { getClientById } from "@/lib/client-data";
 import {
   IMAGE_ALBUMS,
@@ -21,6 +21,7 @@ export const dynamic = "force-dynamic";
 export async function POST(request: Request) {
   const user = await getAdminUser();
   if (!user) return NextResponse.json({ error: "Your sign-in has expired." }, { status: 401 });
+  if (!canManageClientPortal(user)) return NextResponse.json({ error: "Your account does not have client-portal access." }, { status: 403 });
 
   try {
     const form = await request.formData();
@@ -73,6 +74,7 @@ export async function POST(request: Request) {
 export async function PATCH(request: Request) {
   const user = await getAdminUser();
   if (!user) return NextResponse.json({ error: "Your sign-in has expired." }, { status: 401 });
+  if (!canManageClientPortal(user)) return NextResponse.json({ error: "Your account does not have client-portal access." }, { status: 403 });
 
   try {
     const body = (await request.json()) as { id?: unknown; visibleToClient?: unknown; restore?: unknown };
@@ -100,6 +102,7 @@ export async function PATCH(request: Request) {
 export async function DELETE(request: Request) {
   const user = await getAdminUser();
   if (!user) return NextResponse.json({ error: "Your sign-in has expired." }, { status: 401 });
+  if (!canManageClientPortal(user)) return NextResponse.json({ error: "Your account does not have client-portal access." }, { status: 403 });
 
   try {
     const { searchParams } = new URL(request.url);

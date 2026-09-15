@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import type { AdminRole, AdminUser } from "@/lib/admin-types";
+import { ADMIN_ROLES, type AdminRole, type AdminUser } from "@/lib/admin-types";
 
 export const ADMIN_ACCESS_COOKIE = "lvd_admin_access";
 export const ADMIN_REFRESH_COOKIE = "lvd_admin_refresh";
@@ -7,6 +7,9 @@ export const ADMIN_REFRESH_COOKIE = "lvd_admin_refresh";
 type SupabaseAuthUser = {
   id?: unknown;
   email?: unknown;
+  app_metadata?: {
+    role?: unknown;
+  } | null;
   user_metadata?: {
     full_name?: unknown;
     name?: unknown;
@@ -23,6 +26,13 @@ type SupabaseAdminUser = SupabaseAuthUser & {
   email: string;
 };
 
+export function roleFromAppMetadata(user: Pick<SupabaseAuthUser, "app_metadata">): AdminRole | null {
+  const role = user.app_metadata?.role;
+  return typeof role === "string" && ADMIN_ROLES.includes(role as AdminRole)
+    ? (role as AdminRole)
+    : null;
+}
+
 function authConfig() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -36,26 +46,37 @@ function emailList(variable: string | undefined) {
     .filter(Boolean);
 }
 
-/** Planners work inside the client portal; all other approved admins are owners. */
+/** Resolve an approved studio email to its least-privileged workspace role. */
 export function roleForEmail(email: string): AdminRole {
   const planners = emailList(process.env.SUPABASE_PLANNER_EMAILS);
+  const inquiryStaff = emailList(process.env.SUPABASE_INQUIRY_STAFF_EMAILS);
+  if (inquiryStaff.includes(email.trim().toLowerCase())) return "inquiry_staff";
   return planners.includes(email.trim().toLowerCase()) ? "planner" : "owner";
 }
 
 export function canSeeInquiries(user: AdminUser) {
+  return user.role === "owner" || user.role === "planner" || user.role === "inquiry_staff";
+}
+
+/** Full client-portal work is limited to owners and planners. */
+export function canManageClientPortal(user: AdminUser) {
   return user.role === "owner" || user.role === "planner";
 }
 
 /** Where each role lands after signing in. */
 export function homePathForRole(role: AdminRole) {
+  if (role === "inquiry_staff") return "/admin/portal/inquiries";
   return role === "planner" ? "/admin/portal" : "/admin";
 }
 
-export function isApprovedAdmin(email: string) {
-  const approved = (process.env.SUPABASE_ADMIN_EMAILS || "")
-    .split(",")
-    .map((item) => item.trim().toLowerCase())
-    .filter(Boolean);
+export function isApprovedAdmin(email: string, metadataRole: AdminRole | null = null) {
+  if (metadataRole) return true;
+
+  const approved = [
+    ...emailList(process.env.SUPABASE_ADMIN_EMAILS),
+    ...emailList(process.env.SUPABASE_PLANNER_EMAILS),
+    ...emailList(process.env.SUPABASE_INQUIRY_STAFF_EMAILS),
+  ];
 
   return approved.length > 0 && approved.includes(email.trim().toLowerCase());
 }
@@ -95,7 +116,7 @@ function profileFromUser(user: SupabaseAuthUser, fallbackEmail = "") : AdminUser
     firstName,
     lastName,
     displayName,
-    role: roleForEmail(email),
+    role: roleFromAppMetadata(user) || roleForEmail(email),
     avatarUrl: cleanText(metadata.avatar_url) || null,
   };
 }
@@ -136,6 +157,12 @@ async function findSupabaseUserByEmail(email: string) {
   return payload?.users?.find((user) => user.email.toLowerCase() === email.toLowerCase()) || null;
 }
 
+/** Check an account's server-controlled role, with the legacy email lists as fallback. */
+export async function isApprovedAdminAccount(email: string) {
+  const user = await findSupabaseUserByEmail(email);
+  return isApprovedAdmin(email, user ? roleFromAppMetadata(user) : null);
+}
+
 async function getSupabaseUserById(id: string) {
   return supabaseAdminFetch<SupabaseAdminUser>(`/auth/v1/admin/users/${encodeURIComponent(id)}`);
 }
@@ -163,7 +190,7 @@ export async function verifyAdminToken(token: string | undefined): Promise<Admin
     if (!response.ok) return null;
     const user = (await response.json()) as SupabaseAuthUser;
     const adminUser = profileFromUser(user);
-    if (!adminUser || !isApprovedAdmin(adminUser.email)) return null;
+    if (!adminUser || !isApprovedAdmin(adminUser.email, roleFromAppMetadata(user))) return null;
     return adminUser;
   } catch {
     return null;

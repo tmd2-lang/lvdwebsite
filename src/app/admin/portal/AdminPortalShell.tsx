@@ -31,17 +31,22 @@ function isCurrent(pathname: string, item: (typeof portalNavigation)[number]) {
 export default function AdminPortalShell({ user, children }: { user: AdminUser; children: React.ReactNode }) {
   const pathname = usePathname();
   const isOwner = user.role === "owner";
+  const isInquiryStaff = user.role === "inquiry_staff";
+  const visibleNavigation = isInquiryStaff
+    ? portalNavigation.filter((item) => item.href === "/admin/portal/inquiries")
+    : portalNavigation;
+  const homeHref = isInquiryStaff ? "/admin/portal/inquiries" : "/admin/portal";
 
   return (
     <div className={styles.app}>
       <aside className={styles.sidebar}>
-        <Link className={styles.brand} href="/admin/portal" aria-label="Lady Victoria Designs portal administration">
+        <Link className={styles.brand} href={homeHref} aria-label="Lady Victoria Designs portal administration">
           <span className={styles.monogram}>LVD</span>
           <span>Portal Studio</span>
         </Link>
 
         <nav className={styles.portalNav} aria-label="Portal administration">
-          {portalNavigation.map((item) => {
+          {visibleNavigation.map((item) => {
             const active = isCurrent(pathname, item);
             return (
               <Link className={active ? styles.navActive : undefined} href={item.href} aria-current={active ? "page" : undefined} key={item.href}>
@@ -58,19 +63,19 @@ export default function AdminPortalShell({ user, children }: { user: AdminUser; 
 
         <div className={styles.account}>
           <span className={styles.avatar}>{firstName(user).slice(0, 1).toUpperCase()}</span>
-          <div><strong>{user.displayName || user.name}</strong><small>{isOwner ? "Studio Owner" : "Studio Planner"}</small></div>
+          <div><strong>{user.displayName || user.name}</strong><small>{isOwner ? "Studio Owner" : isInquiryStaff ? "Inquiry Staff" : "Studio Planner"}</small></div>
           <button type="button" onClick={() => void signOut()}>Sign out</button>
         </div>
       </aside>
 
       <section className={styles.workspace}>
         <header className={styles.mobileHeader}>
-          <Link href="/admin/portal"><b>LVD</b><span>Portal Studio</span></Link>
+          <Link href={homeHref}><b>LVD</b><span>Portal Studio</span></Link>
           <button type="button" onClick={() => void signOut()}>Sign out</button>
         </header>
 
         <nav className={styles.mobileNav} aria-label="Mobile portal administration">
-          {portalNavigation.map((item) => {
+          {visibleNavigation.map((item) => {
             const active = isCurrent(pathname, item);
             return <Link className={active ? styles.mobileNavActive : undefined} href={item.href} aria-current={active ? "page" : undefined} key={item.href}>{item.label}</Link>;
           })}

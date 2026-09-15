@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getAdminUser, hasAdminRefreshToken } from "@/lib/admin-auth";
+import { canManageClientPortal, getAdminUser, hasAdminRefreshToken } from "@/lib/admin-auth";
 import { getClients } from "@/lib/client-data";
 import {
   CLIENT_STATUS_LABELS,
@@ -24,6 +24,7 @@ export default async function ClientsPage() {
     if (await hasAdminRefreshToken()) redirect("/api/admin/auth/refresh?next=/admin/portal/clients");
     redirect("/admin/login");
   }
+  if (!canManageClientPortal(user)) redirect("/admin/portal/inquiries");
 
   const clients = await getClients();
 

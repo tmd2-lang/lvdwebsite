@@ -13,5 +13,8 @@ export default async function AdminProfilePage() {
     redirect("/admin/login");
   }
 
+  // Non-owners use the portal shell, which applies their role-specific navigation.
+  if (user.role !== "owner") redirect("/admin/portal/profile");
+
   return <ProfileForm initialProfile={user} />;
 }

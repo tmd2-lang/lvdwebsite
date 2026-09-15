@@ -15,6 +15,8 @@ export default async function AdminPortalPage() {
     redirect("/admin/login");
   }
 
+  if (user.role === "inquiry_staff") redirect("/admin/portal/inquiries");
+
   const clientCount = await countClients().catch(() => 0);
 
   return <AdminPortalHome user={user} clientCount={clientCount} />;

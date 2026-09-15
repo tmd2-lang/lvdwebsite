@@ -1,5 +1,5 @@
 import { notFound, redirect } from "next/navigation";
-import { getAdminUser, hasAdminRefreshToken } from "@/lib/admin-auth";
+import { canManageClientPortal, getAdminUser, hasAdminRefreshToken } from "@/lib/admin-auth";
 import { getClientById, getClientMembers } from "@/lib/client-data";
 import { getInvoicesForClient } from "@/lib/invoice-data";
 import { getDeletedDocumentsForClient, getDocumentsForClient } from "@/lib/document-data";
@@ -25,6 +25,7 @@ export default async function ClientDetailPage({
     if (await hasAdminRefreshToken()) redirect(`/api/admin/auth/refresh?next=/admin/portal/clients/${id}`);
     redirect("/admin/login");
   }
+  if (!canManageClientPortal(user)) redirect("/admin/portal/inquiries");
 
   // Links from the studio-wide libraries say which tab they meant.
   const requestedTab = (await searchParams).tab;

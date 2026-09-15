@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAdminUser } from "@/lib/admin-auth";
+import { canManageClientPortal, getAdminUser } from "@/lib/admin-auth";
 import { getClientById, inviteClientMember, removeClientMember } from "@/lib/client-data";
 
 export const runtime = "nodejs";
@@ -11,6 +11,7 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
   // Planners invite clients too — this is portal work, not inquiry work.
   const user = await getAdminUser();
   if (!user) return NextResponse.json({ error: "Your sign-in has expired." }, { status: 401 });
+  if (!canManageClientPortal(user)) return NextResponse.json({ error: "Your account does not have client-portal access." }, { status: 403 });
 
   try {
     const { id } = await context.params;
@@ -51,6 +52,7 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
 export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
   const user = await getAdminUser();
   if (!user) return NextResponse.json({ error: "Your sign-in has expired." }, { status: 401 });
+  if (!canManageClientPortal(user)) return NextResponse.json({ error: "Your account does not have client-portal access." }, { status: 403 });
 
   try {
     const { id } = await context.params;

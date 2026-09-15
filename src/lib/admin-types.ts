@@ -42,7 +42,7 @@ export type AdminLead = {
   notes: LeadNote[];
 };
 
-export const ADMIN_ROLES = ["owner", "planner"] as const;
+export const ADMIN_ROLES = ["owner", "planner", "inquiry_staff"] as const;
 
 export type AdminRole = (typeof ADMIN_ROLES)[number];
 

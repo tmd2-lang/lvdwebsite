@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { canManageClientPortal, getAdminUser } from "@/lib/admin-auth";
 import { getClients } from "@/lib/client-data";
 import { getInvoices } from "@/lib/invoice-data";
 import { INVOICE_STATUS_LABELS, invoiceTotal, money } from "@/lib/invoice-types";
@@ -7,6 +9,10 @@ import styles from "../portal-admin.module.css";
 export const dynamic = "force-dynamic";
 
 export default async function InvoicesPage() {
+  const user = await getAdminUser();
+  if (!user) redirect("/admin/login");
+  if (!canManageClientPortal(user)) redirect("/admin/portal/inquiries");
+
   const [invoices, clients] = await Promise.all([
     getInvoices().catch(() => []),
     getClients().catch(() => []),

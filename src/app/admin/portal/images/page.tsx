@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getAdminUser, hasAdminRefreshToken } from "@/lib/admin-auth";
+import { canManageClientPortal, getAdminUser, hasAdminRefreshToken } from "@/lib/admin-auth";
 import { getClients } from "@/lib/client-data";
 import { getImages, withSignedUrls } from "@/lib/image-data";
 import type { ViewableImage } from "@/lib/image-view";
@@ -14,6 +14,7 @@ export default async function ImagesPage() {
     if (await hasAdminRefreshToken()) redirect("/api/admin/auth/refresh?next=/admin/portal/images");
     redirect("/admin/login");
   }
+  if (!canManageClientPortal(user)) redirect("/admin/portal/inquiries");
 
   // A missing table means the schema file has not been run yet. That is a
   // setup step, not an empty library, so the page says which one it is.
