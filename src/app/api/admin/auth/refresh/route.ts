@@ -60,7 +60,7 @@ export async function GET(request: Request) {
     }
 
     const response = NextResponse.redirect(new URL(nextPath, requestUrl.origin));
-    const expiresIn = typeof result.expires_in === "number" ? result.expires_in : 3600;
+    const expiresIn = typeof result?.expires_in === "number" ? result.expires_in : 3600;
     response.cookies.set(ADMIN_ACCESS_COOKIE, accessToken, sessionCookieOptions(expiresIn));
     response.cookies.set(ADMIN_REFRESH_COOKIE, nextRefreshToken, sessionCookieOptions(60 * 60 * 24 * 30));
     return response;
