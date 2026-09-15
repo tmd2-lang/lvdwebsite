@@ -46,11 +46,13 @@ export async function GET(request: Request) {
     });
     const result = (await authResponse.json().catch(() => null)) as RefreshResponse | null;
     const email = typeof result?.user?.email === "string" ? result.user.email.toLowerCase() : "";
+    const accessToken = typeof result?.access_token === "string" ? result.access_token : "";
+    const nextRefreshToken = typeof result?.refresh_token === "string" ? result.refresh_token : "";
 
     const metadataRole = result?.user ? roleFromAppMetadata(result.user) : null;
     const hasValidSession = authResponse.ok
-      && typeof result?.access_token === "string"
-      && typeof result.refresh_token === "string";
+      && Boolean(accessToken)
+      && Boolean(nextRefreshToken);
     if (!hasValidSession || (!isApprovedAdmin(email, metadataRole) && !await isApprovedAdminAccount(email))) {
       const response = NextResponse.redirect(loginUrl);
       clearSession(response);
@@ -59,8 +61,8 @@ export async function GET(request: Request) {
 
     const response = NextResponse.redirect(new URL(nextPath, requestUrl.origin));
     const expiresIn = typeof result.expires_in === "number" ? result.expires_in : 3600;
-    response.cookies.set(ADMIN_ACCESS_COOKIE, result.access_token, sessionCookieOptions(expiresIn));
-    response.cookies.set(ADMIN_REFRESH_COOKIE, result.refresh_token, sessionCookieOptions(60 * 60 * 24 * 30));
+    response.cookies.set(ADMIN_ACCESS_COOKIE, accessToken, sessionCookieOptions(expiresIn));
+    response.cookies.set(ADMIN_REFRESH_COOKIE, nextRefreshToken, sessionCookieOptions(60 * 60 * 24 * 30));
     return response;
   } catch {
     const response = NextResponse.redirect(loginUrl);
