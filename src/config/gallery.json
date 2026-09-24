@@ -1,6 +1,367 @@
 {
   "collections": [
     {
+      "slug": "terri-baskin",
+      "name": "Terri & Baskin Wedding",
+      "defaultCategory": "Weddings",
+      "cover": "/gallery/terri-baskin/blueford2022-1102.jpg",
+      "visible": true,
+      "images": [
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1102.jpg",
+          "width": 2400,
+          "height": 1597,
+          "alt": "A grand blush-lit wedding reception with chandeliers and white floral arrangements - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-346.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "Rows of gold ceremony chairs in a bright white space - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-347.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "Gold ceremony chairs arranged beside the aisle - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-348.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "White floral arrangement along the ceremony aisle - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-349.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "Close view of white ceremony flowers and greenery - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-350.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "Wide ceremony setup with gold chairs and white flowers - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-351.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "Two tall white floral arrangements framing the ceremony - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-352.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "Gold chairs arranged for the wedding ceremony - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-353.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "Rows of gold chairs along the wedding ceremony aisle - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-354.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "White floral arrangement beside the ceremony seating - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-355.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "White ceremony aisle lined with floral arrangements - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-356.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "White floral wedding ceremony aisle with gold chairs - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-358.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "Side view of the gold ceremony seating and greenery - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-360.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "Front view of the wedding ceremony space - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-361.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "White wedding ceremony aisle leading toward the backdrop - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1026.jpg",
+          "width": 2400,
+          "height": 1597,
+          "alt": "Terri and Baskin together at their wedding reception - Lady Victoria Designs",
+          "category": "Weddings",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1028.jpg",
+          "width": 2400,
+          "height": 1597,
+          "alt": "Terri and Baskin walking through their floral-filled reception - Lady Victoria Designs",
+          "category": "Weddings",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1029.jpg",
+          "width": 2400,
+          "height": 1597,
+          "alt": "Terri and Baskin entering their floral-filled reception - Lady Victoria Designs",
+          "category": "Weddings",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1030.jpg",
+          "width": 1597,
+          "height": 2400,
+          "alt": "Terri and Baskin walking toward their wedding backdrop - Lady Victoria Designs",
+          "category": "Weddings",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1031.jpg",
+          "width": 2400,
+          "height": 1597,
+          "alt": "Terri and Baskin beside a white floral ceremony backdrop - Lady Victoria Designs",
+          "category": "Weddings",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1032.jpg",
+          "width": 2400,
+          "height": 1597,
+          "alt": "Terri and Baskin together beside a white floral installation - Lady Victoria Designs",
+          "category": "Weddings",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1067.jpg",
+          "width": 1597,
+          "height": 2400,
+          "alt": "Terri and Baskin beneath a crystal chandelier - Lady Victoria Designs",
+          "category": "Weddings",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1068.jpg",
+          "width": 1597,
+          "height": 2400,
+          "alt": "Terri and Baskin beneath the crystal chandelier - Lady Victoria Designs",
+          "category": "Weddings",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1085.jpg",
+          "width": 2400,
+          "height": 1597,
+          "alt": "Wide view of the white floral reception and candlelit tables - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1086.jpg",
+          "width": 2400,
+          "height": 1597,
+          "alt": "White roses and place settings at the Terri and Baskin reception - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1087.jpg",
+          "width": 1597,
+          "height": 2400,
+          "alt": "Crystal candleholder and place setting at the reception - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1088.jpg",
+          "width": 1597,
+          "height": 2400,
+          "alt": "White floral centerpiece and gold-accented place setting - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1089.jpg",
+          "width": 1597,
+          "height": 2400,
+          "alt": "White roses and a layered reception place setting - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1090.jpg",
+          "width": 1597,
+          "height": 2400,
+          "alt": "Tall white floral centerpiece beside a reception window - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1091.jpg",
+          "width": 1597,
+          "height": 2400,
+          "alt": "Gold chairs and white floral centerpieces beside tall windows - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1092.jpg",
+          "width": 1597,
+          "height": 2400,
+          "alt": "Gold chairs and white floral tables in the reception room - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1099.jpg",
+          "width": 1597,
+          "height": 2400,
+          "alt": "White floral centerpiece among reception table settings - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1100.jpg",
+          "width": 1597,
+          "height": 2400,
+          "alt": "Candlelight and floral details on a reception table - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1101.jpg",
+          "width": 1597,
+          "height": 2400,
+          "alt": "White floral centerpiece with candles in the wedding reception - Lady Victoria Designs",
+          "category": "Artistry",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1103.jpg",
+          "width": 2400,
+          "height": 1597,
+          "alt": "Wide view of the chandelier-lit ballroom reception - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1104.jpg",
+          "width": 2400,
+          "height": 1597,
+          "alt": "Grand reception room with floral tables and blush lighting - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1105.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "Layered gold-rimmed place setting and printed wedding menu - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1106.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "White floral runner across a reception table - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1107.jpg",
+          "width": 2400,
+          "height": 1597,
+          "alt": "Symmetrical view down the wedding reception room - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1108.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "Gold-backed chairs at a wedding reception table - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1109.jpg",
+          "width": 1597,
+          "height": 2400,
+          "alt": "White floral centerpiece and gold chairs at the reception - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1110.jpg",
+          "width": 1597,
+          "height": 2400,
+          "alt": "Tall white floral centerpiece above a reception table - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1114.jpg",
+          "width": 2400,
+          "height": 1597,
+          "alt": "Circular white floral arch against blush drapery - Lady Victoria Designs",
+          "category": "Artistry",
+          "visible": true
+        },
+        {
+          "src": "/gallery/terri-baskin/blueford2022-1115.jpg",
+          "width": 1597,
+          "height": 2400,
+          "alt": "Monogram backdrop and floral reception tables - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        }
+      ]
+    },
+    {
       "slug": "aniedi-ekemini",
       "name": "Aniedi & Ekemini Wedding",
       "defaultCategory": "Receptions",
