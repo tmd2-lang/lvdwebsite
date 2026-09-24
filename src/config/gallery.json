@@ -1,6 +1,359 @@
 {
   "collections": [
     {
+      "slug": "jasseley-emmanuel",
+      "name": "Jasseley & Emmanuel Wedding",
+      "defaultCategory": "Weddings",
+      "cover": "/gallery/jasseley-emmanuel/r52-5215-retouched.jpg",
+      "visible": true,
+      "images": [
+        {
+          "src": "/gallery/jasseley-emmanuel/r52-5215-retouched.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "Wedding reception with floral arches and sweetheart stage - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-2922-retouched.jpg",
+          "width": 2400,
+          "height": 1600,
+          "alt": "Outdoor wedding ceremony seating and white floral arch beneath a blue sky - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-2926-retouched.jpg",
+          "width": 2400,
+          "height": 1600,
+          "alt": "White floral columns framing the outdoor ceremony aisle - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-2935-retouched.jpg",
+          "width": 1714,
+          "height": 2400,
+          "alt": "Outdoor ceremony arch surrounded by white flowers - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-2939-retouched.jpg",
+          "width": 2400,
+          "height": 1600,
+          "alt": "Low white floral arrangements lining the grass ceremony aisle - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-2950-retouched.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "White draped wedding ceremony arch on the lawn - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-2957-retouched.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "White ceremony flowers atop a column outdoors - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-2958-retouched.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Ceremony floral column beside gold chairs on the lawn - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-2960-retouched.jpg",
+          "width": 2400,
+          "height": 1600,
+          "alt": "Champagne glasses arranged for the wedding celebration - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-3319-retouched.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Tall white floral centerpiece in the wedding reception - Lady Victoria Designs",
+          "category": "Artistry",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-3324-retouched.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Sculptural white fabric installation above a reception table - Lady Victoria Designs",
+          "category": "Artistry",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-3327-retouched.jpg",
+          "width": 2400,
+          "height": 1600,
+          "alt": "Reception room with sculptural fabric installations and white florals - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-3332-retouched.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "White fabric installation rising above a wedding reception table - Lady Victoria Designs",
+          "category": "Artistry",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-3344-retouched.jpg",
+          "width": 2400,
+          "height": 1600,
+          "alt": "White and blush flowers with gold-accented reception place settings - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-3347-retouched.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Blush and white floral arrangement on a reception table - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-3349-retouched.jpg",
+          "width": 1714,
+          "height": 2400,
+          "alt": "Floral arches framing the wedding sweetheart table - Lady Victoria Designs",
+          "category": "Artistry",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-3359-retouched.jpg",
+          "width": 2400,
+          "height": 1714,
+          "alt": "White and blush floral backdrop behind the sweetheart table - Lady Victoria Designs",
+          "category": "Artistry",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-3366-retouched.jpg",
+          "width": 2400,
+          "height": 1600,
+          "alt": "Long wedding reception table with blush and white florals - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-3371-retouched.jpg",
+          "width": 2400,
+          "height": 1600,
+          "alt": "Close view of a long floral wedding reception table - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-3373-retouched.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Wedding reception table with blush flowers and candles - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-3384-retouched.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Tall floral centerpiece and round reception tables - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-3404-retouched.jpg",
+          "width": 2400,
+          "height": 1600,
+          "alt": "Sculptural fabric installations among reception tables - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-3431-retouched.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Long gold-accented wedding table beneath floral arrangements - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-3441-retouched.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Reception room with long floral tables and sculptural decor - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-3458-retouched.jpg",
+          "width": 2400,
+          "height": 1600,
+          "alt": "Wide view of wedding reception with sculptural white installations - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/ctm-3623-retouchedsharp.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Jasseley and Emmanuel together in their wedding reception - Lady Victoria Designs",
+          "category": "Weddings",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/r52-4321-retouched.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "White draped floral ceremony arch on the grass - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/r52-4323-retouched.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "Close view of white flowers on the ceremony arch - Lady Victoria Designs",
+          "category": "Ceremonies",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/r52-5198-retouched.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "Sculptural white wedding reception installation - Lady Victoria Designs",
+          "category": "Artistry",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/r52-5199-retouched.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "Sculptural decor and floral arrangements among reception tables - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/r52-5204-retouched.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "Abundant white flowers and candles across a reception table - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/r52-5212-retouched.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "Round tables with white flowers and sculptural reception decor - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/r52-5219-retouched.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "Long white floral reception tables beneath soft drapery - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/r52-5220-retouched.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "Wedding reception tables with lush white centerpieces - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/r52-5232-retouched.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "White sculptural fabric centerpiece above a wedding table - Lady Victoria Designs",
+          "category": "Artistry",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/r52-5239-retouched.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "White wedding cake before a floral reception backdrop - Lady Victoria Designs",
+          "category": "Artistry",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/r52-5242-retouched.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "Wedding reception place settings beside a floral table runner - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/r52-5246-retouched.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "Blush and white flowers among candles and place settings - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/r52-5250-retouched.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "Sculptural white installations above reception tables - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/r52-5251-retouched.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "Tall crystal candleholders and white floral reception designs - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/r52-5282-retouched.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "Jasseley in her gown inside the decorated reception - Lady Victoria Designs",
+          "category": "Weddings",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/r52-8176-retouched-4.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "Jasseley and Emmanuel sharing a moment at their reception - Lady Victoria Designs",
+          "category": "Weddings",
+          "visible": true
+        },
+        {
+          "src": "/gallery/jasseley-emmanuel/r52-8176-retouched.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "Jasseley and Emmanuel seated together at the wedding reception - Lady Victoria Designs",
+          "category": "Weddings",
+          "visible": true
+        }
+      ]
+    },
+    {
       "slug": "terri-baskin",
       "name": "Terri & Baskin Wedding",
       "defaultCategory": "Weddings",
