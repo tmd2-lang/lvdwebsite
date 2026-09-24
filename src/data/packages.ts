@@ -25,7 +25,7 @@ export const PLANNING_PACKAGES: PlanningPackage[] = [
     tagline: "Your most balanced, luxury-accessible option.",
     description:
       "Designed for newly engaged couples who feel overwhelmed by the first—and most expensive—decision of wedding planning: choosing the right venue and understanding what their budget can truly support. This service gives couples clarity, confidence, and a strategic foundation before they commit to anything.",
-    price: "$750",
+    price: "Starting at $750",
     idealFor: "Couples who want a complete strategic foundation before committing to any major wedding decisions.",
     includes: [
       "A curated shortlist of 3–5 venues selected around your aesthetic, guest count, and preferred location",
@@ -42,7 +42,7 @@ export const PLANNING_PACKAGES: PlanningPackage[] = [
     tagline: "You planned it. We'll carry it.",
     description:
       "Designed for couples who have independently planned their wedding and secured their primary vendors but need professional support bringing every detail together. We organize the existing plans, manage vendor communication and outstanding logistics, build the wedding-day timeline, and oversee the celebration from setup through breakdown.",
-    price: "$3,500",
+    price: "Starting at $3,500",
     idealFor: "Couples who have completed most of their planning and secured their primary vendor team.",
     includes: [
       "A comprehensive review and organization of existing plans, booked vendors, contracts, contacts, payment deadlines, milestones, and outstanding decisions",
@@ -123,7 +123,7 @@ export const PLANNING_PACKAGES: PlanningPackage[] = [
     tagline: "Your planning partner from the first decision to the final send-off.",
     description:
       "Comprehensive planning for couples who want professional guidance and hands-on support throughout the entire process. From establishing the budget and securing the venue to managing vendors, refining the design, and executing the wedding day, Lady Victoria Designs serves as your planning partner and central point of contact.",
-    price: "$6,500",
+    price: "Starting at $6,500",
     idealFor: "Couples who want one experienced team to organize the full planning process while they remain involved in the decisions that make the wedding personal.",
     includes: [
       "A customized planning roadmap, ongoing planning meetings, and organization of contracts, vendor details, payments, deadlines, and outstanding decisions",
