@@ -55,6 +55,8 @@ export default function MarketingScripts() {
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
             fbq('init', '1263840655319183');
+            // Temporary additional pixel. Keep both initialized before tracking.
+            fbq('init', '1245149713783773');
             fbq('track', 'PageView');
           `}
       </Script>
@@ -64,6 +66,14 @@ export default function MarketingScripts() {
           width="1"
           style={{ display: "none" }}
           src="https://www.facebook.com/tr?id=1263840655319183&ev=PageView&noscript=1"
+          alt=""
+        />
+        {/* Temporary additional Meta pixel. */}
+        <img
+          height="1"
+          width="1"
+          style={{ display: "none" }}
+          src="https://www.facebook.com/tr?id=1245149713783773&ev=PageView&noscript=1"
           alt=""
         />
         <img
