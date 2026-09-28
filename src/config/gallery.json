@@ -1,6 +1,327 @@
 {
   "collections": [
     {
+      "slug": "laura-ken",
+      "name": "Laura + Ken",
+      "defaultCategory": "Weddings",
+      "cover": "/gallery/laura-ken/1sm08416.jpg",
+      "visible": true,
+      "images": [
+        {
+          "src": "/gallery/laura-ken/1sm08416.jpg",
+          "width": 2400,
+          "height": 1600,
+          "alt": "Grand ballroom wedding reception with white flowers and crystal chandeliers - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08303.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "White floral centerpiece beneath chandeliers at the wedding reception - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08305.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Tall white floral centerpiece above a candlelit wedding table - Lady Victoria Designs",
+          "category": "Artistry",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08309.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Gold chairs and white florals beneath crystal chandeliers - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08320.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Sculptural white fabric installation above a reception table - Lady Victoria Designs",
+          "category": "Artistry",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08322.jpg",
+          "width": 2400,
+          "height": 1600,
+          "alt": "White fabric sculpture and floral centerpiece in the ballroom - Lady Victoria Designs",
+          "category": "Artistry",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08326.jpg",
+          "width": 2400,
+          "height": 1600,
+          "alt": "White flowers and candles on a round wedding reception table - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08330.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "White floral arrangement displayed on a pedestal in the ballroom - Lady Victoria Designs",
+          "category": "Artistry",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08331.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Long wedding table with gold chairs and glass candle holders - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08333.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "White flowers and tall glass candle holders along a wedding table - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08339.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Gold reception chairs framed by white floral centerpieces - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08341.jpg",
+          "width": 2400,
+          "height": 1600,
+          "alt": "Candlelit wedding tables with gold chairs and white florals - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08359.jpg",
+          "width": 2400,
+          "height": 1600,
+          "alt": "Laura and Ken monogram behind a floral wedding reception table - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08365.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Grand staircase decorated with white wedding flowers - Lady Victoria Designs",
+          "category": "Artistry",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08374.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "White floral arrangements lining the ballroom staircase - Lady Victoria Designs",
+          "category": "Artistry",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08389.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Warmly lit ballroom with chandeliers and white floral centerpieces - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08396.jpg",
+          "width": 2400,
+          "height": 1600,
+          "alt": "Long wedding reception table beneath a crystal chandelier - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08400.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "White wedding flowers and gold chairs in the grand ballroom - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08403.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Ballroom wedding reception with chandeliers and sculptural white decor - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08410.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Crystal chandeliers above a white floral wedding reception - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08450.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Wedding reception tables and white fabric installations from the ballroom balcony - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08453.jpg",
+          "width": 2400,
+          "height": 1600,
+          "alt": "Purple-lit wedding ballroom with chandeliers and white floral decor - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08463.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "White floral centerpieces and candlelight beneath ballroom chandeliers - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08466.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "White sculptural fabric installation above a wedding reception table - Lady Victoria Designs",
+          "category": "Artistry",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08470.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Candlelit long wedding table with gold chairs and white flowers - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08474.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Tall glass candle holders beneath crystal wedding chandeliers - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/1sm08476.jpg",
+          "width": 1600,
+          "height": 2400,
+          "alt": "Crystal chandeliers illuminating the wedding ballroom - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/ja6a9401.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "White floral centerpiece in a silver vase at the wedding reception - Lady Victoria Designs",
+          "category": "Artistry",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/ja6a9414.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "Gold chairs and tall glass candle holders along a reception table - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/ja6a9428.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "Wedding dance floor beneath a grand crystal chandelier - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/ja6a9432.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "Wedding ballroom with crystal chandeliers and white fabric sculptures - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/ja6a9439.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "Grand ballroom dance floor surrounded by candlelit wedding tables - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/ja6a9446.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "Round wedding table with white flowers and elegant place settings - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/ja6a9455.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "Long wedding reception table with gold chairs and candlelight - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/ja6a9550.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "Elevated view of the grand ballroom wedding reception - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/ja6a9554.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "Symmetrical view of the wedding ballroom and white floral decor - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/ja6a9565.jpg",
+          "width": 2400,
+          "height": 1601,
+          "alt": "White sculptural installations and chandeliers above the wedding reception - Lady Victoria Designs",
+          "category": "Receptions",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/ja6a9586.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "Tall glass candle holders on a white wedding reception table - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        },
+        {
+          "src": "/gallery/laura-ken/ja6a9589.jpg",
+          "width": 1601,
+          "height": 2400,
+          "alt": "White floral centerpiece and candles along a wedding table - Lady Victoria Designs",
+          "category": "Tablescapes",
+          "visible": true
+        }
+      ]
+    },
+    {
       "slug": "jasseley-emmanuel",
       "name": "Jasseley & Emmanuel Wedding",
       "defaultCategory": "Weddings",
