@@ -1,14 +1,16 @@
 "use client";
 
-import { FormEvent, MouseEvent, useMemo, useState } from "react";
+import { FormEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import type { AdminLead, AdminUser, LeadNote, LeadStatus } from "@/lib/admin-types";
+import { LEAD_STATUSES } from "@/lib/admin-types";
+import { filterInquiries, lastActivityAt, latestView, viewState, type InquiryFilters } from "@/lib/inquiry-views";
+import type { AdminLead, AdminUser, LeadNote, LeadStatus, LeadActivity } from "@/lib/admin-types";
 import styles from "./inquiries.module.css";
 
 const STATUS_LABELS: Record<LeadStatus, string> = {
   new: "New",
   reviewing: "Reviewing",
-  contacted: "Reached Out",
+  contacted: "Contacted",
   qualified: "Good Fit",
   booked: "Booked",
   archived: "Archived",
@@ -31,7 +33,7 @@ function readableDate(value: string | null, undecided = false) {
 }
 
 function submittedAt(value: string) {
-  return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }).format(new Date(value));
+  return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit", timeZone: "America/New_York" }).format(new Date(value));
 }
 
 function displayPhone(value: string) {
@@ -100,8 +102,15 @@ export default function InquiriesDashboard({
   portalMode?: boolean;
 }) {
   const [leads, setLeads] = useState(initialLeads);
-  const [selectedId, setSelectedId] = useState(initialSelectedId || initialLeads[0]?.id || "");
+  const [selectedId, setSelectedId] = useState(initialSelectedId || "");
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<InquiryFilters["status"]>("all");
+  const [viewFilter, setViewFilter] = useState<InquiryFilters["viewed"]>("all");
+  const [notesFilter, setNotesFilter] = useState<InquiryFilters["notes"]>("all");
+  const [sort, setSort] = useState<InquiryFilters["sort"]>("newest");
+  const recordedViews = useRef(new Set<string>());
+  const detailPanelRef = useRef<HTMLElement>(null);
+  const detailScrollRef = useRef<HTMLDivElement>(null);
   const [mobileDetailOpen, setMobileDetailOpen] = useState(Boolean(initialSelectedId));
   const [savingStatus, setSavingStatus] = useState(false);
   const [selectedLeadIds, setSelectedLeadIds] = useState<string[]>([]);
@@ -110,15 +119,105 @@ export default function InquiriesDashboard({
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  const selected = leads.find((lead) => lead.id === selectedId) || leads[0] || null;
+  const visibleLeads = useMemo(() => filterInquiries(leads, {
+    search, status: statusFilter, viewed: viewFilter, notes: notesFilter, sort,
+  }), [leads, search, statusFilter, viewFilter, notesFilter, sort]);
+  const selected = leads.find((lead) => lead.id === selectedId) || null;
   const selectedGmailUrl = selected?.email ? gmailComposeUrl(selected.email, selected.name) : "";
-  const visibleLeads = useMemo(() => {
-    const query = search.trim().toLowerCase();
-    return leads.filter((lead) => {
-      const haystack = [lead.name, lead.email, lead.venue, lead.celebration_type, lead.event_date].filter(Boolean).join(" ").toLowerCase();
-      return !query || haystack.includes(query);
+  const trackingAvailable = Boolean(initialLeads[0]?.tracking_started_at);
+  const hasFilters = Boolean(search || statusFilter !== "all" || viewFilter !== "all" || notesFilter !== "all");
+
+  useEffect(() => {
+    // A default preview is not a view. Track only an explicitly opened lead or deep link.
+    if (!selectedId || !trackingAvailable || recordedViews.current.has(selectedId)) return;
+    if (window.matchMedia("(max-width: 760px)").matches && !mobileDetailOpen) return;
+    if (!visibleLeads.some((lead) => lead.id === selectedId)) return;
+    const id = selectedId;
+    recordedViews.current.add(id);
+    void fetch(`/api/admin/inquiries/${id}`, {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "view" }),
+    }).then((response) => responseJson<{ activity: LeadActivity }>(response)).then((result) => {
+      setLeads((current) => current.map((lead) => lead.id === id
+        ? { ...lead, activity: [result.activity, ...(lead.activity || [])] } : lead));
+    }).catch((caught) => {
+      recordedViews.current.delete(id);
+      setError(caught instanceof Error ? caught.message : "Could not record this view.");
     });
-  }, [leads, search]);
+  }, [selectedId, trackingAvailable, mobileDetailOpen, visibleLeads]);
+
+  useEffect(() => {
+    const panel = detailPanelRef.current;
+    if (!panel || !selectedId || !mobileDetailOpen) return;
+    if (detailScrollRef.current) detailScrollRef.current.scrollTop = 0;
+    const media = window.matchMedia("(max-width: 760px)");
+    let releaseModal: (() => void) | undefined;
+
+    function updateModal() {
+      releaseModal?.();
+      releaseModal = undefined;
+      if (!media.matches || !panel) return;
+      const previousFocus = document.activeElement;
+      const previousOverflow = document.body.style.overflow;
+      const background: Array<{ element: HTMLElement; inert: boolean }> = [];
+      // Include the enclosing portal navigation, not just this workspace's list.
+      let branch: HTMLElement = panel;
+      while (branch.parentElement) {
+        for (const sibling of Array.from(branch.parentElement.children)) {
+          if (sibling !== branch && sibling instanceof HTMLElement) {
+            background.push({ element: sibling, inert: sibling.inert });
+            sibling.inert = true;
+          }
+        }
+        if (branch.parentElement === document.body) break;
+        branch = branch.parentElement;
+      }
+      panel.setAttribute("role", "dialog");
+      panel.setAttribute("aria-modal", "true");
+      document.body.style.overflow = "hidden";
+      const focusable = () => Array.from(panel.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), select:not([disabled]), textarea:not([disabled]), input:not([disabled]), [tabindex="0"]',
+      )).filter((element) => element.getClientRects().length > 0);
+      const focusFirst = () => focusable()[0]?.focus({ preventScroll: true });
+      function onKeyDown(event: KeyboardEvent) {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          setMobileDetailOpen(false);
+          return;
+        }
+        if (event.key !== "Tab") return;
+        const elements = focusable();
+        const first = elements[0];
+        const last = elements[elements.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault(); last?.focus({ preventScroll: true });
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault(); first?.focus({ preventScroll: true });
+        }
+      }
+      function onFocusIn(event: FocusEvent) {
+        if (event.target instanceof Node && !panel?.contains(event.target)) focusFirst();
+      }
+      document.addEventListener("keydown", onKeyDown);
+      document.addEventListener("focusin", onFocusIn);
+      focusFirst();
+      releaseModal = () => {
+        document.removeEventListener("keydown", onKeyDown);
+        document.removeEventListener("focusin", onFocusIn);
+        background.forEach(({ element, inert }) => { element.inert = inert; });
+        document.body.style.overflow = previousOverflow;
+        panel.removeAttribute("role");
+        panel.removeAttribute("aria-modal");
+        if (previousFocus instanceof HTMLElement && previousFocus.isConnected) previousFocus.focus({ preventScroll: true });
+      };
+    }
+    updateModal();
+    media.addEventListener("change", updateModal);
+    return () => { media.removeEventListener("change", updateModal); releaseModal?.(); };
+  }, [selectedId, mobileDetailOpen]);
+
+  function clearFilters() {
+    setSearch(""); setStatusFilter("all"); setViewFilter("all"); setNotesFilter("all");
+  }
   const allVisibleSelected = visibleLeads.length > 0 && visibleLeads.every((lead) => selectedLeadIds.includes(lead.id));
 
   function chooseLead(id: string) {
@@ -168,7 +267,7 @@ export default function InquiriesDashboard({
       setLeads(remainingLeads);
       setSelectedLeadIds([]);
       if (selectedId && ids.includes(selectedId)) {
-        setSelectedId(remainingLeads[0]?.id || "");
+        setSelectedId("");
         setMobileDetailOpen(false);
       }
       announce(`${ids.length} ${label} deleted.`);
@@ -184,12 +283,12 @@ export default function InquiriesDashboard({
     setSavingStatus(true);
     setError("");
     try {
-      await responseJson(await fetch(`/api/admin/inquiries/${selected.id}`, {
+      const result = await responseJson<{ lead: { status: LeadStatus; updated_at: string }; activity: LeadActivity | null }>(await fetch(`/api/admin/inquiries/${selected.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),
       }));
-      setLeads((current) => current.map((lead) => lead.id === selected.id ? { ...lead, status } : lead));
+      setLeads((current) => current.map((lead) => lead.id === selected.id ? { ...lead, ...result.lead, activity: result.activity ? [result.activity, ...(lead.activity || [])] : lead.activity } : lead));
       announce(`Moved to ${STATUS_LABELS[status]}.`);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "That change could not be saved.");
@@ -229,12 +328,12 @@ export default function InquiriesDashboard({
     setSavingNote(true);
     setError("");
     try {
-      const result = await responseJson<{ note: LeadNote }>(await fetch(`/api/admin/inquiries/${selected.id}`, {
+      const result = await responseJson<{ note: LeadNote; activity: LeadActivity | null }>(await fetch(`/api/admin/inquiries/${selected.id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ body }),
       }));
-      setLeads((current) => current.map((lead) => lead.id === selected.id ? { ...lead, notes: [result.note, ...lead.notes] } : lead));
+      setLeads((current) => current.map((lead) => lead.id === selected.id ? { ...lead, notes: [result.note, ...lead.notes], activity: result.activity ? [result.activity, ...(lead.activity || [])] : lead.activity } : lead));
       form.reset();
       announce("Note saved.");
     } catch (caught) {
@@ -283,13 +382,32 @@ export default function InquiriesDashboard({
           <div className={styles.today}><span>Today</span><b>{new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric" }).format(new Date())}</b></div>
         </div>
 
+        {!trackingAvailable && <p className={styles.trackingNotice}>View tracking is awaiting setup. Historical views are unavailable; notes and status filters still work.</p>}
+        {!selected && (message || error) && <p className={error ? styles.toastError : styles.toast} role={error ? "alert" : "status"}>{error || message}</p>}
         <div className={styles.contentGrid}>
           <section className={styles.listPanel} aria-label="Inquiry list">
             <div className={styles.listToolbar}>
               <label className={styles.search}>
                 <span aria-hidden="true">⌕</span>
-                <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search a name, venue, or date" aria-label="Search inquiries" />
+                <input value={search} onChange={(event) => { setSearch(event.target.value); setSelectedId(""); setMobileDetailOpen(false); setSelectedLeadIds([]); }} placeholder="Search name, email, venue, date, or notes" aria-label="Search inquiries" />
               </label>
+              <div className={styles.filters}>
+                <label>Status<select value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value as InquiryFilters["status"]); setSelectedId(""); setMobileDetailOpen(false); setSelectedLeadIds([]); }}>
+                  <option value="all">All statuses</option><option value="not_contacted">Not contacted (New / Reviewing)</option>
+                  {LEAD_STATUSES.map((status) => <option key={status} value={status}>{STATUS_LABELS[status]}</option>)}
+                </select></label>
+                <label>Viewed<select value={viewFilter} disabled={!trackingAvailable} onChange={(event) => { setViewFilter(event.target.value as InquiryFilters["viewed"]); setSelectedId(""); setMobileDetailOpen(false); setSelectedLeadIds([]); }}>
+                  <option value="all">All view history</option><option value="viewed">Viewed by studio</option>
+                  <option value="unviewed">Not viewed yet</option><option value="unknown">Earlier history unknown</option>
+                </select></label>
+                <label>Notes<select value={notesFilter} onChange={(event) => { setNotesFilter(event.target.value as InquiryFilters["notes"]); setSelectedId(""); setMobileDetailOpen(false); setSelectedLeadIds([]); }}>
+                  <option value="all">With or without notes</option><option value="with">Has notes</option><option value="without">No notes</option>
+                </select></label>
+                <label>Sort by<select value={sort} onChange={(event) => setSort(event.target.value as InquiryFilters["sort"])}>
+                  <option value="newest">Newest received</option><option value="oldest">Oldest received</option><option value="event">Event date (soonest)</option><option value="activity">Latest activity</option>
+                </select></label>
+              </div>
+              <div className={styles.resultsBar}><span role="status">{visibleLeads.length} of {leads.length} inquiries</span>{hasFilters && <button type="button" onClick={clearFilters}>Clear filters</button>}</div>
               <div className={styles.selectionBar}>
                 <label className={styles.selectAll}>
                   <input type="checkbox" checked={allVisibleSelected} onChange={toggleVisibleSelection} aria-label="Select all visible inquiries" />
@@ -303,20 +421,25 @@ export default function InquiriesDashboard({
             <div className={styles.leadList}>
               {visibleLeads.length === 0 ? (
                 <div className={styles.empty}>
-                  <p className={styles.emptyScript}>All clear</p>
-                  <h2>No inquiries here.</h2>
-                  <p>Try another view or clear your search.</p>
+                  <h2>{hasFilters ? "No matching inquiries" : "No inquiries yet"}</h2>
+                  <p>{hasFilters ? "Try different filters or clear your search." : "New submissions will appear here."}</p>
+                  {hasFilters && <button type="button" onClick={clearFilters}>Clear filters</button>}
                 </div>
               ) : visibleLeads.map((lead) => (
                 <div className={styles.leadCardRow} key={lead.id}>
                   <label className={styles.selectLead}>
                     <input type="checkbox" checked={selectedLeadIds.includes(lead.id)} onChange={() => toggleLeadSelection(lead.id)} aria-label={`Select ${lead.name || "new inquiry"}`} />
                   </label>
-                  <button type="button" className={`${styles.leadCard} ${selected?.id === lead.id ? styles.leadCardActive : ""}`} onClick={() => chooseLead(lead.id)}>
-                    {lead.status === "new" && <span className={styles.newIndicator} />}
+                  <button type="button" className={`${styles.leadCard} ${selected?.id === lead.id ? styles.leadCardActive : ""}`} onClick={() => chooseLead(lead.id)} aria-pressed={selected?.id === lead.id}>
+
                     <span className={styles.cardMain}>
                       <span className={styles.cardTitle}><b>{lead.name || "New inquiry"}</b></span>
                       <span className={styles.cardEvent}>{readableDate(lead.event_date, lead.date_undecided)}</span>
+                      <span className={styles.cardBadges}><span>{STATUS_LABELS[lead.status]}</span><span>{lead.notes.length} {lead.notes.length === 1 ? "note" : "notes"}</span>
+                        <span>{viewState(lead) === "viewed" ? "Viewed" : viewState(lead) === "unviewed" ? "Not viewed" : "View history unknown"}</span>
+                      </span>
+                      <span className={styles.cardMeta}>Received {submittedAt(lead.created_at)}</span>
+                      <span className={styles.cardMeta}>Activity {submittedAt(lastActivityAt(lead))}</span>
                     </span>
                   </button>
                 </div>
@@ -324,8 +447,7 @@ export default function InquiriesDashboard({
             </div>
           </section>
 
-          <aside className={styles.detailPanel} data-open={mobileDetailOpen ? "true" : "false"} aria-label="Inquiry details">
-            {(message || error) && <p className={error ? styles.toastError : styles.toast} role="status">{error || message}</p>}
+          <aside ref={detailPanelRef} className={styles.detailPanel} data-open={mobileDetailOpen && selected ? "true" : "false"} aria-label="Inquiry details">
             {selected ? (
               <>
                 <div className={styles.detailHeader}>
@@ -336,7 +458,16 @@ export default function InquiriesDashboard({
                   </div>
                 </div>
 
-                <div className={styles.detailScroll}>
+                <div key={selected.id} ref={detailScrollRef} className={styles.detailScroll}>
+                  {(message || error) && <p className={error ? styles.toastError : styles.toast} role={error ? "alert" : "status"}>{error || message}</p>}
+                  {!visibleLeads.some((lead) => lead.id === selected.id) && <p className={styles.trackingNotice}>This open inquiry no longer matches your filters. Its details stay open until you choose another inquiry or change filters.</p>}
+                  <section className={styles.statusControls} aria-label="Inquiry status">
+                    <label>Status<select value={selected.status} disabled={savingStatus} onChange={(event) => void changeStatus(event.target.value as LeadStatus)}>
+                      {LEAD_STATUSES.map((status) => <option key={status} value={status}>{STATUS_LABELS[status]}</option>)}
+                    </select></label>
+                    <p>{savingStatus ? "Saving status…" : "Update after contacting the lead. Opening Gmail does not mark them contacted."}</p>
+                    <p>{latestView(selected) ? `Last opened by ${latestView(selected)?.actor_name} · ${submittedAt(latestView(selected)!.created_at)}` : viewState(selected) === "unviewed" ? "Not yet opened by the studio." : "Earlier view history is unavailable."}</p>
+                  </section>
                   {(selected.email || selected.phone) && (
                     <section className={styles.contactBlock} aria-label="Contact information">
                       <p>Contact</p>
@@ -379,11 +510,14 @@ export default function InquiriesDashboard({
                   </section>
 
                   <section className={styles.detailSection}>
-                    <p className={styles.editorialText}>
-                      <b>{selected.name || "This client"}</b> is inquiring about a <b>{selected.celebration_type?.toLowerCase() || "celebration"}</b> for <b>{selected.guest_count || "an undecided number of"} guests</b>. 
-                      They are hoping to celebrate on <b>{readableDate(selected.event_date, selected.date_undecided)}</b> at <b>{selected.venue || "a venue they haven't chosen yet"}</b>.
-                      {selected.investment && <span> Their anticipated investment is <b>{selected.investment}</b>.</span>}
-                    </p>
+                    <h3>Event details</h3>
+                    <dl className={styles.eventDetails}>
+                      <div><dt>Celebration</dt><dd>{selected.celebration_type || "Not shared"}</dd></div>
+                      <div><dt>Event date</dt><dd>{readableDate(selected.event_date, selected.date_undecided)}</dd></div>
+                      <div><dt>Guests</dt><dd>{selected.guest_count || "Not shared"}</dd></div>
+                      <div><dt>Venue</dt><dd>{selected.venue || "Not chosen yet"}</dd></div>
+                      <div><dt>Budget</dt><dd>{selected.investment || "Not shared"}</dd></div>
+                    </dl>
                   </section>
 
                   {selected.services.length > 0 && (
@@ -432,8 +566,8 @@ export default function InquiriesDashboard({
 
                   <section className={styles.detailSection}>
                     <div className={styles.notesHeading}><h3>Private notes</h3><span>Only the studio can see these</span></div>
-                    <form className={styles.noteForm} onSubmit={saveNote}>
-                      <textarea name="note" placeholder="Add a reminder, thought, or follow-up…" rows={3} maxLength={4000} />
+                    <form key={selected.id} className={styles.noteForm} onSubmit={saveNote}>
+                      <textarea aria-label="Private note" name="note" placeholder="Add a reminder, thought, or follow-up…" rows={3} maxLength={4000} />
                       <button type="submit" disabled={savingNote}>{savingNote ? "Saving…" : "Save note"}</button>
                     </form>
                     <div className={styles.notesList}>
@@ -446,22 +580,25 @@ export default function InquiriesDashboard({
                     </div>
                   </section>
 
+                  <section className={styles.detailSection}>
+                    <h3>Studio activity</h3>
+                    <p className={styles.activityHelp}>Views are shared across the studio. Earlier activity is not backfilled.</p>
+                    {(selected.activity?.length || 0) > 30 && <p className={styles.activityHelp}>Showing the latest 30 events.</p>}
+                    <ol className={styles.activityList}>
+                      {(selected.activity || []).slice(0, 30).map((item) => <li key={item.id}>
+                        <b>{item.actor_name}</b> {item.kind === "viewed" ? "opened this inquiry" : item.kind === "note_added" ? "added a private note" : `changed status to ${STATUS_LABELS[item.detail as LeadStatus] || item.detail}`}
+                        <time dateTime={item.created_at}>{submittedAt(item.created_at)}</time>
+                      </li>)}
+                    </ol>
+                    {!selected.activity?.length && <p className={styles.noNotes}>No recorded activity yet.</p>}
+                  </section>
                   <section className={styles.organizeActions}>
-                    {selected.status === "new" && (
-                       <button type="button" onClick={() => void changeStatus("contacted")} disabled={savingStatus}>Mark as Contacted</button>
-                    )}
-                    {selected.status !== "booked" && (
-                       <button type="button" onClick={() => void changeStatus("booked")} disabled={savingStatus}>Mark as Booked</button>
-                    )}
-                    {selected.status !== "archived" && (
-                       <button type="button" onClick={() => void changeStatus("archived")} className={styles.archiveButton} disabled={savingStatus}>Archive Inquiry</button>
-                    )}
                     <button type="button" onClick={() => void deleteInquiry()} className={styles.deleteButton} disabled={savingStatus} style={{ color: "red", backgroundColor: "transparent", border: "1px solid red", marginLeft: "auto" }}>Delete</button>
                   </section>
                 </div>
               </>
             ) : (
-              <div className={styles.emptyDetail}><p>New inquiries will appear here.</p></div>
+              <div className={styles.emptyDetail}><p>{visibleLeads.length ? "Choose an inquiry to see its details." : "No inquiries match this view."}</p></div>
             )}
           </aside>
         </div>

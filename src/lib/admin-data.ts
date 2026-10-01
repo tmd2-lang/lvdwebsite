@@ -1,4 +1,4 @@
-import type { AdminLead, LeadNote, LeadStatus } from "@/lib/admin-types";
+import type { AdminLead, LeadNote, LeadStatus, LeadActivity } from "@/lib/admin-types";
 
 type StoredAdminLead = Omit<AdminLead, "attachments" | "notes"> & {
   payload: unknown;
@@ -65,7 +65,7 @@ export async function getAdminLeads(): Promise<AdminLead[]> {
     "vision", "investment", "referral_source", "quiz_score", "quiz_result_tier", "payload",
   ].join(",");
 
-  const [leadsResponse, notesResponse] = await Promise.all([
+  const [leadsResponse, notesResponse, tracking] = await Promise.all([
     fetch(`${url}/rest/v1/leads?select=${leadFields}&order=created_at.desc`, {
       headers: databaseHeaders(),
       cache: "no-store",
@@ -74,6 +74,7 @@ export async function getAdminLeads(): Promise<AdminLead[]> {
       headers: databaseHeaders(),
       cache: "no-store",
     }),
+    getLeadTracking(),
   ]);
 
   const leads = await responseJson<StoredAdminLead[]>(leadsResponse);
@@ -91,6 +92,8 @@ export async function getAdminLeads(): Promise<AdminLead[]> {
     services: Array.isArray(lead.services) ? lead.services : [],
     attachments: attachmentUrls(payload, url),
     notes: notesByLead.get(lead.id) || [],
+    activity: tracking.activity.filter((item) => item.lead_id === lead.id),
+    tracking_started_at: tracking.startedAt,
   }));
 }
 
@@ -147,4 +150,43 @@ export async function deleteLeads(ids: string[]) {
     console.error("Failed to delete inquiries:", errorText);
     throw new Error("Could not delete those inquiries right now.");
   }
+}
+
+
+// Older deployments can still manage inquiries before the tracking migration is applied.
+export async function getLeadTracking(): Promise<{ startedAt: string | null; activity: LeadActivity[] }> {
+  const { url } = databaseConfig();
+  const settings = await fetch(`${url}/rest/v1/lead_tracking_settings?select=started_at&id=eq.1`, { headers: databaseHeaders(), cache: "no-store" });
+  if (!settings.ok) return { startedAt: null, activity: [] };
+  const rows = await settings.json() as Array<{ started_at: string }>;
+  if (!rows[0]?.started_at) return { startedAt: null, activity: [] };
+  const activity: LeadActivity[] = [];
+  // PostgREST caps a response at 1,000 rows; don't silently lose older view history.
+  for (let offset = 0; ; offset += 1000) {
+    const response = await fetch(`${url}/rest/v1/lead_activity?select=*&order=created_at.desc,id.desc&offset=${offset}&limit=1000`, { headers: databaseHeaders(), cache: "no-store" });
+    if (!response.ok) return { startedAt: null, activity: [] };
+    const page = await response.json() as LeadActivity[];
+    activity.push(...page);
+    if (page.length < 1000) break;
+  }
+  return { startedAt: rows[0].started_at, activity };
+}
+
+export async function applyLeadActivity(id: string, actor: { id: string; name: string }, kind: LeadActivity["kind"], detail: string | null = null) {
+  const { url } = databaseConfig();
+  const response = await fetch(`${url}/rest/v1/rpc/apply_lead_activity`, {
+    method: "POST", headers: databaseHeaders(), cache: "no-store",
+    body: JSON.stringify({ p_lead_id: id, p_actor_id: actor.id, p_actor_name: actor.name, p_kind: kind, p_detail: detail }),
+  });
+  // Only a missing RPC may use the legacy write path. Other errors must surface.
+  if (!response.ok) {
+    const error = await response.json().catch(() => null);
+    if (error?.code === "PGRST202") {
+      if (kind === "status_changed") return { lead: await updateLeadStatus(id, detail as LeadStatus), activity: null };
+      if (kind === "note_added") return { note: await addLeadNote(id, detail || "", actor.name), activity: null };
+      throw new Error("View tracking is not available yet. The database update must be applied first.");
+    }
+    throw new Error("Could not save that change. Please try again.");
+  }
+  return await response.json() as { lead?: { id: string; status: LeadStatus; updated_at: string }; note?: LeadNote; activity: LeadActivity | null };
 }

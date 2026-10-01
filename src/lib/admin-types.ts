@@ -18,6 +18,16 @@ export type LeadNote = {
   body: string;
 };
 
+export type LeadActivity = {
+  id: string;
+  lead_id: string;
+  created_at: string;
+  actor_id: string;
+  actor_name: string;
+  kind: "viewed" | "status_changed" | "note_added";
+  detail: string | null;
+};
+
 export type AdminLead = {
   id: string;
   created_at: string;
@@ -40,6 +50,8 @@ export type AdminLead = {
   quiz_result_tier: string | null;
   attachments: string[];
   notes: LeadNote[];
+  activity?: LeadActivity[];
+  tracking_started_at?: string | null;
 };
 
 export const ADMIN_ROLES = ["owner", "planner", "inquiry_staff"] as const;
