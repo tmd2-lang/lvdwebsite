@@ -1,0 +1,82 @@
+.page {
+  min-height: 100svh;
+  padding: 2.2rem clamp(1.2rem, 3.5vw, 4.5rem) 4rem;
+  background: #f4f1eb;
+  color: #1b1814;
+  font-family: var(--font-inter);
+}
+
+.header { display: flex; align-items: end; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.kicker { color: #9a7a42; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.19em; text-transform: uppercase; }
+.header h1 { margin-top: 0.35rem; font-family: var(--font-bodoni); font-size: clamp(2rem, 4vw, 3.4rem); font-weight: 400; letter-spacing: -0.04em; line-height: 1.05; }
+.back { color: #766f65; font-size: 0.78rem; text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+.back:hover { color: #1b1814; }
+
+.error { margin-top: 1.2rem; padding: 0.75rem 1rem; border-radius: 4px; background: #f6e3df; color: #8a2f22; font-size: 0.82rem; }
+.errorText { color: #8a2f22; }
+
+.filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.8rem; }
+.filters button {
+  min-height: 44px; padding: 0 1rem; border: 1px solid #d9d1c5; border-radius: 999px;
+  background: transparent; color: #1b1814; font-size: 0.75rem; cursor: pointer;
+}
+.filters button:hover { background: #ebe5d9; }
+.filters .filterActive { background: #1b1814; border-color: #1b1814; color: #f7f4ee; }
+
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; margin-top: 1.4rem; align-items: start; }
+.card { padding: 1.4rem; border: 1px solid #d9d1c5; border-radius: 6px; background: #fbf9f5; }
+.wide { grid-column: 1 / -1; }
+.card h2 { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; font-family: var(--font-bodoni); font-size: 1.5rem; font-weight: 400; }
+.card h2 span { color: #766f65; font-family: var(--font-inter); font-size: 0.68rem; }
+
+.addRow { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.addRow input { flex: 1 1 12rem; }
+.addRow input, .addRow select, .noteForm textarea, .noteForm select, .stat textarea {
+  min-height: 44px; padding: 0.6rem 0.75rem; border: 1px solid #d9d1c5; border-radius: 4px;
+  background: #fff; color: inherit; font: inherit; font-size: 0.85rem;
+}
+.addRow button, .noteForm button {
+  min-height: 44px; padding: 0 1.2rem; border: 0; border-radius: 4px;
+  background: #1b1814; color: #f7f4ee; font-size: 0.78rem; cursor: pointer;
+}
+.addRow button:disabled, .noteForm button:disabled { opacity: 0.4; cursor: default; }
+
+.list { list-style: none; margin: 0.8rem 0 0; padding: 0; }
+.list li { display: flex; align-items: center; gap: 0.6rem; border-bottom: 1px solid #e6dfd2; }
+.list label { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.7rem; min-height: 44px; font-size: 0.88rem; cursor: pointer; }
+.list label input { width: 1.1rem; height: 1.1rem; accent-color: #9a7a42; flex-shrink: 0; }
+.list em { color: #9a7a42; font-size: 0.66rem; font-style: normal; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; }
+.checked span { color: #9b948a; text-decoration: line-through; }
+.remove { width: 44px; height: 44px; border: 0; background: transparent; color: #9b948a; font-size: 1.2rem; cursor: pointer; }
+.remove:hover { color: #8a2f22; }
+.done { margin-top: 1rem; }
+.done summary { min-height: 44px; display: flex; align-items: center; color: #766f65; font-size: 0.78rem; cursor: pointer; }
+.empty { padding: 0.8rem 0; color: #9b948a; font-size: 0.82rem; border: 0 !important; }
+
+.dayPicker { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.dayPicker button, .dayPicker input {
+  min-height: 44px; padding: 0 0.9rem; border: 1px solid #d9d1c5; border-radius: 4px;
+  background: #fff; color: inherit; font: inherit; font-size: 0.8rem; cursor: pointer;
+}
+.dayPicker button:disabled { opacity: 0.35; cursor: default; }
+.dayNote { margin: -0.4rem 0 1rem; color: #9a7a42; font-size: 0.78rem; }
+
+.stat { display: grid; gap: 0.35rem; margin-bottom: 1rem; }
+.stat label { color: #766f65; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+.stat textarea { width: 100%; resize: vertical; }
+.stat small { min-height: 1em; color: #9b948a; font-size: 0.68rem; }
+
+.noteForm { display: grid; gap: 0.6rem; }
+.noteForm textarea { width: 100%; resize: vertical; }
+.noteForm div { display: flex; gap: 0.5rem; justify-content: flex-end; flex-wrap: wrap; }
+
+.notes { list-style: none; margin: 1.2rem 0 0; padding: 0; display: grid; gap: 0.8rem; }
+.notes li { padding: 1rem 1.1rem; border: 1px solid #e6dfd2; border-radius: 4px; background: #fff; }
+.notes p { font-size: 0.88rem; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
+.notes footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 0.6rem; color: #9b948a; font-size: 0.68rem; }
+.notes footer button { min-height: 44px; padding: 0 0.5rem; border: 0; background: transparent; color: #9b948a; font-size: 0.7rem; cursor: pointer; }
+.notes footer button:hover { color: #8a2f22; }
+
+@media (max-width: 820px) {
+  .grid { grid-template-columns: minmax(0, 1fr); }
+}

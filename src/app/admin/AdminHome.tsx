@@ -103,6 +103,7 @@ export default function AdminHome({
         <nav aria-label="Studio navigation">
           <Link className={styles.navActive} href="/admin" aria-current="page">Home</Link>
           <Link href="/admin/portal">Client portal</Link>
+          <Link href="/admin/marketing">Marketing</Link>
           <Link href="/admin/inquiries"><span>Inquiries</span>{needsAttention.length > 0 && <b>{needsAttention.length}</b>}</Link>
           <Link href="/admin/profile">Profile</Link>
         </nav>
@@ -118,6 +119,7 @@ export default function AdminHome({
           <nav aria-label="Mobile studio navigation">
             <Link className={styles.mobileActive} href="/admin">Home</Link>
             <Link href="/admin/portal">Portal</Link>
+            <Link href="/admin/marketing">Marketing</Link>
             <Link href="/admin/inquiries">Inquiries</Link>
             <Link href="/admin/profile">Profile</Link>
           </nav>
@@ -143,15 +145,15 @@ export default function AdminHome({
         <section className={styles.snapshot} aria-label="Studio at a glance">
           <article className={styles.snapshotPrimary}>
             <span>{needsAttention.length}</span>
-            <div><h2>Waiting for a reply</h2><p>{needsAttention.length > 0 ? "These celebrations still need a first response." : "Everyone has been taken care of."}</p></div>
+            <div><h2>New inquiries</h2><p>{needsAttention.length > 0 ? "These inquiries are marked New. Update their status after responding." : "No inquiries are marked New."}</p></div>
           </article>
           <article>
             <span>{todayLeads.length}</span>
             <div><h2>New {todayLeads.length === 1 ? "inquiry" : "inquiries"} today</h2><p>{todayLeads.length > 0 ? "New celebrations are waiting for you." : "No new submissions yet today."}</p></div>
           </article>
           <article className={styles.snapshotPending}>
-            <span>Not set up yet</span>
-            <div><h2>Client portals</h2><p>Ready for your first client once portals are connected.</p></div>
+            <span>Client workspace</span>
+            <div><h2>Client portals</h2><p>Manage booked clients and their private planning portals.</p></div>
           </article>
         </section>
 
@@ -188,7 +190,7 @@ export default function AdminHome({
 
           <section className={styles.activityPanel}>
             <div className={styles.sectionHeading}>
-              <div><p className={styles.sectionKicker}>Latest</p><h2>Recent contacts</h2></div>
+              <div><p className={styles.sectionKicker}>Latest</p><h2>Recent submissions</h2></div>
             </div>
 
             {recentLeads.length > 0 ? (
@@ -223,7 +225,7 @@ export default function AdminHome({
                 <span>Create clients, collect payments, and manage documents and images.</span>
               </div>
               <dl>
-                <div><dt>Status</dt><dd>Not set up yet</dd></div>
+                <div><dt>Workspace</dt><dd>Booked clients</dd></div>
               </dl>
               <b>Open client portals <i aria-hidden="true">→</i></b>
             </Link>
@@ -237,7 +239,7 @@ export default function AdminHome({
               </div>
               <dl>
                 <div><dt>New today</dt><dd>{todayLeads.length}</dd></div>
-                <div><dt>Needs reply</dt><dd>{needsAttention.length}</dd></div>
+                <div><dt>Marked new</dt><dd>{needsAttention.length}</dd></div>
                 <div><dt>Total leads</dt><dd>{initialLeads.length}</dd></div>
               </dl>
               <b>Open inquiries <i aria-hidden="true">→</i></b>
