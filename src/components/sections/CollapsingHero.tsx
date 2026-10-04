@@ -55,7 +55,9 @@ export default function CollapsingHero() {
     media["home.hero.4"],
     media["home.hero.5"],
     media["home.hero.6"],
-    media["home.hero.7"]
+    media["home.hero.7"],
+    media["home.hero.8"],
+    media["home.hero.9"]
   ];
 
   return (
@@ -70,13 +72,18 @@ export default function CollapsingHero() {
           >
             <Image
               src={src} 
-              alt={`Lady Victoria Designs Hero ${i}`} 
+              alt={i === 7
+                ? "Floating white fabric installations above wedding reception tables"
+                : i === 8
+                  ? "Outdoor wedding ceremony with a white chuppah, chandelier, and white florals"
+                  : `Lady Victoria Designs Hero ${i}`}
               fill
               sizes="100vw"
               quality={100}
               preload={i === 0}
               unoptimized={true}
               className="w-full h-full object-cover"
+              style={{ objectPosition: i === 7 ? "20% center" : i === 8 ? "40% center" : undefined }}
             />
           </div>
         ))}

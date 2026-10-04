@@ -19,6 +19,8 @@ export const MEDIA_SLOTS: MediaSlotDefinition[] = [
   { id: "home.hero.5", label: "Hero slideshow 5", group: "Homepage", note: "Fifth slideshow image" },
   { id: "home.hero.6", label: "Hero slideshow 6", group: "Homepage", note: "Colorful installation after the original five images" },
   { id: "home.hero.7", label: "Hero slideshow 7", group: "Homepage", note: "Magenta room reveal after the original five images" },
+  { id: "home.hero.8", label: "Hero slideshow 8", group: "Homepage", note: "Floating fabric installations" },
+  { id: "home.hero.9", label: "Hero slideshow 9", group: "Homepage", note: "Outdoor chuppah ceremony" },
   { id: "home.parallax", label: "Full-width divider", group: "Homepage", note: "Large image above Our Work" },
   { id: "home.work.1", label: "Our Work 1", group: "Homepage", note: "Parallax project grid" },
   { id: "home.work.2", label: "Our Work 2", group: "Homepage", note: "Parallax project grid" },
