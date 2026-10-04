@@ -181,7 +181,7 @@ export default function QuizClient() {
     }
     if (score <= 45) {
       return {
-        range: "$12,000 – $15,000",
+        range: "$12,000 – $19,000",
         tier: "Elegant",
         badge: "TIER THREE",
         message: "Your vision is beautifully focused. With cohesive florals and thoughtful details, Irene and our design team will bring your celebration to life with elegance and intention.",
@@ -189,7 +189,7 @@ export default function QuizClient() {
     }
     if (score <= 90) {
       return {
-        range: "$20,000 – $35,000",
+        range: "$20,000 – $34,000",
         tier: "Design + Florals",
         badge: "TIER TWO",
         message: "Your celebration calls for custom floral artistry. Expect lush arrangements, curated specialty rentals, and an elevated atmosphere tailored to your aesthetic.",

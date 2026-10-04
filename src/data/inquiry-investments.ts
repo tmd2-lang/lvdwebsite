@@ -2,14 +2,14 @@
 export const INQUIRY_INVESTMENTS = [
   {
     id: "essentials",
-    tier: "$12,000 – $15,000",
+    tier: "$12,000 – $19,000",
     label: "Elegant",
     sub: "Signature floral styling for intimate gatherings",
     summary: "Considered personal flowers, ceremony and reception florals, and styling for intimate celebrations.",
   },
   {
     id: "design-florals",
-    tier: "$20,000 – $35,000",
+    tier: "$20,000 – $34,000",
     label: "Design + Florals",
     sub: "Bespoke floral architecture & complete aesthetic direction",
     summary: "Cohesive aesthetic direction, bespoke ceremony and reception florals, styling, and select rentals.",
