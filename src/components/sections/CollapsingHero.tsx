@@ -53,7 +53,9 @@ export default function CollapsingHero() {
     media["home.hero.2"],
     media["home.hero.3"],
     media["home.hero.4"],
-    media["home.hero.5"]
+    media["home.hero.5"],
+    media["home.hero.6"],
+    media["home.hero.7"]
   ];
 
   return (
