@@ -35,7 +35,7 @@ export default function FooterCTA() {
             <a href="https://www.instagram.com/ladyvictoriadesigns/" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors">Instagram</a>
             <a href="mailto:hello@ladyvictoriadesigns.com" className="hover:text-gold transition-colors">Contact</a>
           </div>
-          <div>Washington, DC & Beyond</div>
+          <div>Washington, DC · Maryland · Virginia</div>
         </div>
       </div>
     </footer>

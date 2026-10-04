@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import gsap from "gsap";
 import Magnetic from "@/components/Magnetic";
 import { media } from "@/lib/media-slots";
-import { INVESTMENT_TIERS } from "@/data/investments";
+import { INQUIRY_INVESTMENTS } from "@/data/inquiry-investments";
 import { submitLead } from "@/lib/lead-submit";
 import { trackMetaLead } from "@/lib/meta-pixel";
 
@@ -43,21 +43,6 @@ const portfolioImages = [
     detail: "Floral Design",
   },
 ];
-
-const reserveInvestmentRanges = {
-  production: "$55,000+",
-  "design-florals": "$20,000–$35,000",
-  essentials: "$8,000–$15,000",
-} as const;
-
-const reserveInvestmentSummaries = {
-  production:
-    "Complete creative direction, floral artistry, custom fabrication, rentals, installation, and production management.",
-  "design-florals":
-    "Cohesive aesthetic direction, bespoke ceremony and reception florals, styling, and select rentals.",
-  essentials:
-    "Considered personal flowers, ceremony and reception florals, and styling for intimate celebrations.",
-} as const;
 
 const memoryCards = [
   {
@@ -321,6 +306,10 @@ export default function ReservePage() {
               Florals, atmosphere, and artful direction for celebrations with a point of view.
             </p>
 
+            <p className="mt-5 font-body text-xs uppercase tracking-[0.16em] text-ivory">
+              Floral &amp; production investment from $12,000
+            </p>
+
             <div className="reserve-hero__cta mt-8 flex flex-wrap items-center gap-x-10 gap-y-4">
               <button
                 onClick={scrollToForm}
@@ -474,21 +463,21 @@ export default function ReservePage() {
           </header>
 
           <div className="border-t border-ink/25">
-            {INVESTMENT_TIERS.map((tier) => (
+            {[...INQUIRY_INVESTMENTS].reverse().map((tier, index) => (
               <article
                 key={tier.id}
                 className="group grid gap-5 border-b border-ink/20 py-9 transition-colors duration-300 hover:bg-ecru/40 md:grid-cols-[72px_minmax(220px,0.9fr)_minmax(300px,1.25fr)_auto] md:items-center md:gap-8 md:px-4 md:py-12"
               >
                 <p className="font-body text-[10px] uppercase tracking-[0.22em] text-ink/45">
-                  {tier.tierNumber}
+                  {String(index + 1).padStart(2, "0")}
                 </p>
 
                 <h3 className="font-display text-3xl leading-none transition-colors duration-300 group-hover:text-gold md:text-4xl lg:text-5xl">
-                  {tier.name}
+                  {tier.label}
                 </h3>
 
                 <p className="max-w-xl font-body text-sm leading-relaxed text-ink/65 md:text-base">
-                  {reserveInvestmentSummaries[tier.id]}
+                  {tier.summary}
                 </p>
 
                 <div className="md:min-w-52 md:text-right">
@@ -496,7 +485,7 @@ export default function ReservePage() {
                     Investment Range
                   </p>
                   <p className="font-display text-2xl leading-none text-ink md:text-3xl">
-                    {reserveInvestmentRanges[tier.id]}
+                    {tier.tier}
                   </p>
                 </div>
               </article>
@@ -608,6 +597,30 @@ export default function ReservePage() {
             : ""
         }`}
       >
+        {isReserveV2 && step === 1 && (
+          <div className="mb-16 w-full max-w-[900px] border-b border-ink/15 pb-12 sm:mb-20">
+            <p className="mb-3 font-body text-[10px] font-semibold uppercase tracking-[0.25em] text-gold sm:text-xs">
+              Ways to Work Together
+            </p>
+            <h2 className="font-display text-3xl leading-tight sm:text-4xl">
+              Floral &amp; production investment
+            </h2>
+            <p className="mt-4 max-w-2xl font-body text-sm leading-relaxed text-ink/70">
+              Our Elegant collection begins at $12,000. These ranges are starting
+              points; your proposal is tailored to your venue, guest count, and design scope.
+            </p>
+            <dl className="mt-7 grid gap-4 sm:grid-cols-2">
+              {INQUIRY_INVESTMENTS.map((tier) => (
+                <div key={tier.id} className="border border-ink/15 bg-ecru/40 p-5 sm:p-6">
+                  <dt className="font-display text-xl">{tier.label}</dt>
+                  <dd className="mt-2 font-body text-sm font-medium text-ink">{tier.tier}</dd>
+                  <dd className="mt-3 font-body text-xs leading-relaxed text-ink/65">{tier.summary}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        )}
+
         {/* Editorial Section Header (visible during inquiry steps) */}
         {step < 6 && (
           <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
@@ -947,12 +960,7 @@ export default function ReservePage() {
                           { tier: "$10,000 – $20,000", label: "Elevated Intimate Styling", sub: "Bespoke ceremony arch + full tablescape installations" },
                           { tier: "$20,000+", label: "Full Production Micro-Experience", sub: "High-touch immersive transformation" }
                         ]
-                      : [
-                          { tier: "$8,000 – $15,000", label: "Elegant", sub: "Signature floral styling for intimate gatherings" },
-                          { tier: "$20,000 – $35,000", label: "Design + Florals", sub: "Bespoke floral architecture & complete aesthetic direction" },
-                          { tier: "$35,000 – $55,000", label: "Elevated Production", sub: "Grand floral arches, focal installations & ambient styling" },
-                          { tier: "$55,000+", label: "The Full Production", sub: "Comprehensive custom fabrication & white-glove execution" }
-                        ]
+                      : INQUIRY_INVESTMENTS
                     ).map((item) => (
                       <button
                         type="button"

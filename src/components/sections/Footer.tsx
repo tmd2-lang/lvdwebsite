@@ -97,7 +97,7 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="w-full max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-[9px] font-body text-ivory/40 uppercase tracking-[0.2em] text-center md:text-left">
         <p>© 2026 Lady Victoria Designs</p>
-        <p>Washington, DC &amp; Beyond</p>
+        <p>Washington, DC · Maryland · Virginia</p>
         <div className="flex flex-wrap justify-center gap-x-5 gap-y-2">
           <Link href="/privacy" className="hover:text-ivory transition-colors">Privacy Policy</Link>
           <p>All Rights Reserved</p>

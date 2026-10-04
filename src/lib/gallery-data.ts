@@ -28,3 +28,16 @@ export const galleryImages: GalleryImage[] = galleryConfig.collections.flatMap((
       slug: collection.slug
     }));
 });
+
+// Introduce different settings and palettes before the collection archive.
+// Derive from visible images so hidden collections stay hidden.
+const openingImageSources = [
+  "/gallery/editorial-wedding-archive/editorial-wedding-archive-04.jpg",
+  "/gallery/r-and-j/r-and-j-04.jpeg",
+  "/gallery/editorial-wedding-archive/editorial-wedding-archive-56.jpg",
+];
+
+export const galleryOpeningImages = openingImageSources.flatMap((src) => {
+  const image = galleryImages.find((image) => image.src === src);
+  return image ? [image] : [];
+});

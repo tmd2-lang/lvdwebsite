@@ -108,7 +108,7 @@ export const INVESTMENT_TIERS: InvestmentTierData[] = [
     tierLabel: "TIER THREE",
     isSignature: false,
     name: "Elegant",
-    price: "FROM $8,000 – $15,000",
+    price: "FROM $12,000 – $15,000",
     tagline: "Where your vision begins to bloom.",
     desc: "Perfect for couples who want beautifully cohesive florals and considered styling for intimate weddings and celebrations without managing multiple vendors.",
     idealFor: "Intimate gatherings, boutique venues, micro-weddings, and private estate dinners with refined floral focus.",
@@ -140,6 +140,6 @@ export const INVESTMENT_TIERS: InvestmentTierData[] = [
       },
     ],
     subtext: "* Final pricing varies based on guest count and floral selections.",
-    inquireQuery: "Elegant ($8k-$15k)",
+    inquireQuery: "Elegant ($12k-$15k)",
   },
 ];

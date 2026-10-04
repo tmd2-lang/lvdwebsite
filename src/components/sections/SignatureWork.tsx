@@ -107,7 +107,7 @@ export default function SignatureWork() {
       </header>
 
       <div className="grid grid-cols-1 gap-x-2 gap-y-24 px-2 pb-24 sm:px-4 md:grid-cols-2 md:gap-x-3 md:gap-y-32 md:px-3 md:pb-36 lg:grid-cols-3">
-        {projects.map((project) => (
+        {[projects[5], projects[2], projects[0], projects[1], projects[3], projects[4]].map((project) => (
           <Link
             key={project.id}
             href="/gallery"

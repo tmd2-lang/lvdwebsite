@@ -65,7 +65,7 @@ export default function CurtsyStatement() {
             ref={firstLineRef}
             className="block whitespace-nowrap text-[clamp(2.1rem,7vw,7.25rem)] uppercase will-change-transform"
           >
-            A Sweeping Curtsy
+            A Distinctive Vision
           </span>
           <span
             ref={secondLineRef}

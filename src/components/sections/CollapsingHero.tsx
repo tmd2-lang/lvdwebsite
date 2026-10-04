@@ -61,14 +61,18 @@ export default function CollapsingHero() {
       {/* The Hero Imagery (Slideshow) */}
       <div className="absolute inset-0 w-full h-full z-0">
         {heroImages.map((src, i) => (
-          <div key={i} className="hero-slide absolute inset-0 w-full h-full z-0">
+          <div
+            key={i}
+            className="hero-slide absolute inset-0 w-full h-full z-0"
+            style={{ clipPath: i === 0 ? "inset(0)" : "inset(0 100% 0 0)" }}
+          >
             <Image
               src={src} 
               alt={`Lady Victoria Designs Hero ${i}`} 
               fill
               sizes="100vw"
               quality={100}
-              priority={i === 0}
+              preload={i === 0}
               unoptimized={true}
               className="w-full h-full object-cover"
             />
@@ -94,7 +98,12 @@ export default function CollapsingHero() {
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 font-body text-[10px] md:text-[11px] uppercase tracking-[0.2em] text-ivory/90 mt-2 sm:mt-0">
           <span>Luxury Wedding Design</span>
           <span className="hidden sm:block w-[1px] h-3 bg-ivory/40 self-center"></span>
-          <span>Washington, DC & Beyond</span>
+          <span>Washington, DC · Maryland · Virginia</span>
+        </div>
+        <div className="mt-2 border-t border-ivory/30 pt-4">
+          <p className="font-body text-xs uppercase tracking-[0.14em] text-ivory sm:text-sm">
+            Wedding floral &amp; event design from $12,000
+          </p>
         </div>
       </div>
     </section>

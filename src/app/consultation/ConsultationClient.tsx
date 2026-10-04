@@ -6,6 +6,7 @@ import gsap from "gsap";
 import Magnetic from "@/components/Magnetic";
 import Image from "next/image";
 import { media } from "@/lib/media-slots";
+import { INQUIRY_INVESTMENTS } from "@/data/inquiry-investments";
 import { submitLead } from "@/lib/lead-submit";
 import { trackMetaLead } from "@/lib/meta-pixel";
 import { useRouter } from "next/navigation";
@@ -545,28 +546,7 @@ export default function ConsultationClient() {
                             sub: "High-touch immersive transformation",
                           },
                         ]
-                      : [
-                          {
-                            tier: "$8,000 – $15,000",
-                            label: "Elegant",
-                            sub: "Signature floral styling for intimate focal points",
-                          },
-                          {
-                            tier: "$20,000 – $35,000",
-                            label: "Design + Florals",
-                            sub: "Bespoke floral architecture & complete aesthetic direction",
-                          },
-                          {
-                            tier: "$35,000 – $55,000",
-                            label: "Elevated Production",
-                            sub: "Grand floral arches, focal installations & ambient styling",
-                          },
-                          {
-                            tier: "$55,000+",
-                            label: "The Full Production",
-                            sub: "Comprehensive custom fabrication & white-glove execution",
-                          },
-                        ]
+                      : INQUIRY_INVESTMENTS
                     ).map((item) => (
                       <button
                         type="button"

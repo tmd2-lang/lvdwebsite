@@ -37,7 +37,7 @@ export default function StyleGuide() {
           <div>
             <div className="text-xs text-ink/50 mb-2">Utility / Eyebrow (Manrope, uppercase, tracked)</div>
             <div className="font-body text-[11px] md:text-[12px] uppercase tracking-[0.2em] text-gold">
-              Luxury Wedding Design · Washington, DC & Beyond
+              Luxury Wedding Design · Washington, DC · Maryland · Virginia
             </div>
           </div>
         </div>

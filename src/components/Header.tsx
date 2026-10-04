@@ -335,7 +335,7 @@ export default function Header() {
           </Link>
 
           <span className="hidden md:block font-body text-[9px] uppercase tracking-[0.3em] text-ivory/40">
-            Studio Index · Washington, D.C. &amp; Beyond
+            Studio Index · Washington, DC · Maryland · Virginia
           </span>
 
           <button
