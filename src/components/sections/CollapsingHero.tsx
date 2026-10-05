@@ -1,12 +1,34 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { media } from "@/lib/media-slots";
 
+const mobileHeroQuery = "(max-width: 767px)";
+
+function subscribeToMobileHero(onChange: () => void) {
+  const query = window.matchMedia(mobileHeroQuery);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+function getMobileHeroSnapshot() {
+  return window.matchMedia(mobileHeroQuery).matches;
+}
+
+function getServerMobileHeroSnapshot() {
+  return false;
+}
+
 export default function CollapsingHero() {
+  const isMobile = useSyncExternalStore(
+    subscribeToMobileHero,
+    getMobileHeroSnapshot,
+    getServerMobileHeroSnapshot,
+  );
+
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -46,7 +68,7 @@ export default function CollapsingHero() {
     return () => {
       slideCtx.revert();
     };
-  }, []);
+  }, [isMobile]);
 
   const heroImages = [
     media["home.hero.1"],
@@ -57,7 +79,20 @@ export default function CollapsingHero() {
     media["home.hero.6"],
     media["home.hero.7"],
     media["home.hero.8"],
-    media["home.hero.9"]
+    media["home.hero.9"],
+    ...(isMobile ? [
+      media["home.hero.mobile.1"],
+      media["home.hero.mobile.2"],
+      media["home.hero.mobile.3"],
+    ] : []),
+  ];
+
+  const additionalImageAlts = [
+    "Floating white fabric installations above wedding reception tables",
+    "Outdoor wedding ceremony with a white chuppah, chandelier, and white florals",
+    "Lush white and green wedding floral installation in a gold ballroom",
+    "Candlelit wedding tablescape with white florals and gold chairs",
+    "Floating white fabric sculptures above an elegant wedding reception",
   ];
 
   return (
@@ -72,11 +107,7 @@ export default function CollapsingHero() {
           >
             <Image
               src={src} 
-              alt={i === 7
-                ? "Floating white fabric installations above wedding reception tables"
-                : i === 8
-                  ? "Outdoor wedding ceremony with a white chuppah, chandelier, and white florals"
-                  : `Lady Victoria Designs Hero ${i}`}
+              alt={additionalImageAlts[i - 7] ?? `Lady Victoria Designs Hero ${i}`}
               fill
               sizes="100vw"
               quality={100}
