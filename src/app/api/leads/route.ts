@@ -5,6 +5,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const LEAD_SOURCES = new Set(["inquire", "consultation", "reserve", "style_quiz"]);
+const BLOCKED_EMAILS = new Set(["emmahines23@gmail.com"]);
+const BLOCKED_PHONES = new Set(["302233290"]);
 
 type LeadRequest = {
   source?: unknown;
@@ -76,6 +78,12 @@ export async function POST(request: Request) {
     const name = stringValue(body.name);
     const email = stringValue(body.email).toLowerCase();
     const phone = stringValue(body.phone);
+
+    // Apply the sender block to every form before storing or emailing an inquiry.
+    const normalizedPhone = phone.replace(/\D/g, "");
+    if (BLOCKED_EMAILS.has(email) || BLOCKED_PHONES.has(normalizedPhone)) {
+      return Response.json({ error: "Unable to accept this inquiry." }, { status: 403 });
+    }
 
     if (!LEAD_SOURCES.has(source)) {
       return Response.json({ error: "Choose a valid inquiry source." }, { status: 400 });
