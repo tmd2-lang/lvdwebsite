@@ -74,3 +74,24 @@ test('server rejects junk and falls back to the submitting page URL', () => {
   assert.equal(fallback.meta_ad_id, '52668773909274');
   assert.equal(fallback.landing_page, '/welcome');
 });
+
+const { adSourceLabel } = load('src/lib/ad-source.ts');
+test('ad labels: captured name first, then known legacy names, then the ID', () => {
+  assert.equal(adSourceLabel({ utm_source: 'ig', meta_ad_id: '1234567', attribution: { first: { params: { utm_ad_name: 'BTS Transformation' } } } }), 'Instagram · BTS Transformation');
+  assert.equal(adSourceLabel({ utm_source: 'fb', meta_ad_id: '52664971809074' }), 'Facebook · Video Ad 4 - RT');
+  assert.equal(adSourceLabel({ utm_source: 'ig', meta_ad_id: '99999999999' }), 'Instagram · Ad 99999999999');
+  assert.equal(adSourceLabel({ utm_source: 'Pinterest', utm_campaign: '626759449594' }), 'Pinterest');
+  assert.equal(adSourceLabel({ utm_source: null }), null);
+});
+
+test('only marketing viewers may see ad attribution', () => {
+  const env = { MARKETING_VIEWER_EMAILS: '' };
+  const { canSeeMarketing } = load('src/lib/marketing-access.ts', { process: { env } });
+  assert.equal(canSeeMarketing({ email: 'TJDozier98@gmail.com ' }), true);
+  assert.equal(canSeeMarketing({ email: 'hello@ladyvictoriadesigns.com' }), false);
+  assert.equal(canSeeMarketing({ email: 'tanahkaisa123@gmail.com' }), false);
+  assert.equal(canSeeMarketing(null), false);
+  env.MARKETING_VIEWER_EMAILS = 'someone@example.com';
+  assert.equal(canSeeMarketing({ email: 'tjdozier98@gmail.com' }), false);
+  assert.equal(canSeeMarketing({ email: 'someone@example.com' }), true);
+});

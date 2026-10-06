@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { canSeeInquiries, getAdminUser, hasAdminRefreshToken } from "@/lib/admin-auth";
 import { getAdminLeads } from "@/lib/admin-data";
+import { canSeeMarketing } from "@/lib/marketing-access";
 import InquiriesDashboard from "./InquiriesDashboard";
 
 export const dynamic = "force-dynamic";
@@ -20,7 +21,7 @@ export default async function InquiriesPage({
 
   if (!canSeeInquiries(user)) redirect("/admin/portal");
 
-  const leads = await getAdminLeads();
+  const leads = await getAdminLeads({ includeMarketing: canSeeMarketing(user) });
   const leadParam = (await searchParams).lead;
   const requestedLeadId = typeof leadParam === "string" ? leadParam : "";
   const initialSelectedId = leads.some((lead) => lead.id === requestedLeadId) ? requestedLeadId : undefined;

@@ -16,8 +16,8 @@ proposal and the booking.
 
 | # | Step | Status |
 |---|------|--------|
-| 1 | Save which ad each inquiry came from | Built; waiting on database change |
-| 2 | Show the ad on each inquiry in the portal | Not started |
+| 1 | Save which ad each inquiry came from | Live (Oct 6, 2026) |
+| 2 | Show the ad on each inquiry in the portal (marketing viewers only) | Built |
 | 3 | Calendly updates the inquiry automatically | Not started |
 | 4 | One-click buttons after the call (outcome, fit, proposal, booked/lost) | Not started |
 | 5 | "Needs attention" list for the sales team | Not started |
@@ -71,3 +71,41 @@ even days later on the same device, those tags are saved with the inquiry.
 - Before this, tags only survived if the person submitted on the page they landed on. Anyone who browsed first lost them.
 - Count inquiries from your own database, not from Meta's "leads" column. Meta's number can include things that never reach the inbox.
 - Two Meta pixels are installed on the LVD site (one marked temporary). Worth confirming which one the ad sets optimize on.
+
+---
+
+## Step 2: Show the ad on each inquiry (marketing viewers only)
+
+**What it does.** In the inquiry portal, each inquiry that came from an ad shows
+a line like **Instagram · BTS Transformation**, on the list and under the
+person's name. A collapsed **Marketing details** section shows the source,
+landing page, campaign / ad set / ad IDs, first-click time, and the most recent
+ad if it was different.
+
+**Who sees it.** Only the marketing person. At LVD that is one account; the
+owner and planners don't see it. Reason: ads should be judged in the per-ad
+report (step 6), not one lead at a time by gut feel. The list lives in
+`MARKETING_VIEWER_EMAILS` (comma-separated), defaulting to the LVD marketing
+account. For anyone else, the server never even loads the ad fields, so they
+aren't hidden in the page's code either.
+
+**Where the ad name comes from**
+
+1. `utm_ad_name={{ad.name}}` in the ad's URL parameters (Meta fills it in). Best option, no upkeep.
+2. A short hard-coded list of older ads' names (`src/lib/ad-source.ts`), for ads that ran before step 2.
+3. Otherwise: "Instagram · Ad 52668773909274".
+
+The ad **ID** is always the permanent key. The name is a display label, a
+snapshot of what the ad was called when she clicked. Renaming an ad later
+doesn't break reports.
+
+**Setup at a new business**
+
+1. Add `&utm_ad_name={{ad.name}}` to the URL parameters line from step 1.
+2. Set `MARKETING_VIEWER_EMAILS` to whoever runs the ads.
+3. Optionally fill in the legacy names list for ads that ran before.
+
+**Gotchas**
+
+- The new-inquiry email goes to the owner, so it does not include the ad.
+- Opening an inquiry marks it read for whoever opened it. Checking the portal yourself changes the sales team's unread counts only for your own account.

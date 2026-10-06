@@ -1,3 +1,5 @@
+import type { Attribution } from "./attribution";
+
 export const LEAD_STATUSES = [
   "new",
   "reviewing",
@@ -52,6 +54,15 @@ export type AdminLead = {
   notes: LeadNote[];
   activity?: LeadActivity[];
   tracking_started_at?: string | null;
+  utm_source?: string | null;
+  utm_medium?: string | null;
+  utm_campaign?: string | null;
+  meta_campaign_id?: string | null;
+  meta_adset_id?: string | null;
+  meta_ad_id?: string | null;
+  landing_page?: string | null;
+  first_touch_at?: string | null;
+  attribution?: Attribution | null;
 };
 
 export const ADMIN_ROLES = ["owner", "planner", "inquiry_staff"] as const;

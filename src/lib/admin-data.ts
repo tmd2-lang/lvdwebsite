@@ -57,12 +57,15 @@ function attachmentUrls(payload: unknown, supabaseUrl: string) {
   return [...new Set(validAttachments)].slice(0, 5);
 }
 
-export async function getAdminLeads(): Promise<AdminLead[]> {
+/** Ad attribution is only selected for marketing viewers (see marketing-access.ts). */
+export async function getAdminLeads({ includeMarketing = false } = {}): Promise<AdminLead[]> {
   const { url } = databaseConfig();
   const leadFields = [
     "id", "created_at", "updated_at", "source", "status", "name", "email", "phone",
     "celebration_type", "event_date", "date_undecided", "venue", "guest_count", "services",
     "vision", "investment", "referral_source", "quiz_score", "quiz_result_tier", "payload",
+    ...(includeMarketing ? ["utm_source", "utm_medium", "utm_campaign", "meta_campaign_id", "meta_adset_id",
+      "meta_ad_id", "landing_page", "first_touch_at", "attribution"] : []),
   ].join(",");
 
   const [leadsResponse, notesResponse, tracking] = await Promise.all([

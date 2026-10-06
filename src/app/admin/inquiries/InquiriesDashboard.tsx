@@ -3,6 +3,7 @@
 import { FormEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { LEAD_STATUSES } from "@/lib/admin-types";
+import { adSourceLabel } from "@/lib/ad-source";
 import { filterInquiries, lastActivityAt, latestView, viewState, isUnread, inquiryCounts, type InquiryFilters } from "@/lib/inquiry-views";
 import type { AdminLead, AdminUser, LeadNote, LeadStatus, LeadActivity } from "@/lib/admin-types";
 import styles from "./inquiries.module.css";
@@ -480,6 +481,7 @@ export default function InquiriesDashboard({
                       <span className={styles.cardBadges}><span>{STATUS_LABELS[lead.status]}</span><span>{lead.notes.length} {lead.notes.length === 1 ? "note" : "notes"}</span>
                         <span>{trackingAvailable ? isUnread(lead, user.id) ? "Unread for you" : "Read by you" : "Read tracking unavailable"}</span>
                       </span>
+                      {adSourceLabel(lead) && <span className={styles.cardSource}>{adSourceLabel(lead)}</span>}
                       <span className={styles.cardMeta}>Received {submittedAt(lead.created_at)}</span>
                       <span className={styles.cardMeta}>{latestView(lead) ? `Seen by ${latestView(lead)!.actor_name}` : ""}</span>
                       <span className={styles.cardMeta}>Activity {submittedAt(lastActivityAt(lead))}</span>
@@ -497,7 +499,7 @@ export default function InquiriesDashboard({
                   <button className={styles.mobileClose} type="button" onClick={() => setMobileDetailOpen(false)} aria-label="Close inquiry">×</button>
                   <div className={styles.detailIdentity}>
                     <span className={styles.avatarLarge}>{initials(selected.name)}</span>
-                    <div><p>{SOURCE_LABELS[selected.source] || "Website inquiry"}</p><h2>{selected.name || "New inquiry"}</h2><span>Received {submittedAt(selected.created_at)}</span></div>
+                    <div><p>{SOURCE_LABELS[selected.source] || "Website inquiry"}</p><h2>{selected.name || "New inquiry"}</h2>{adSourceLabel(selected) && <span className={styles.detailSource}>{adSourceLabel(selected)}</span>}<span>Received {submittedAt(selected.created_at)}</span></div>
                   </div>
                 </div>
 
@@ -565,6 +567,23 @@ export default function InquiriesDashboard({
                       <div><dt>Budget</dt><dd>{selected.investment || "Not shared"}</dd></div>
                     </dl>
                   </section>
+
+                  {selected.utm_source && (
+                    <details className={styles.marketingDetails}>
+                      <summary>Marketing details</summary>
+                      <dl className={styles.eventDetails}>
+                        <div><dt>Source / medium</dt><dd>{selected.utm_source} / {selected.utm_medium || "—"}</dd></div>
+                        <div><dt>Landing page</dt><dd>{selected.landing_page || "—"}</dd></div>
+                        <div><dt>Campaign ID</dt><dd>{selected.meta_campaign_id || selected.utm_campaign || "—"}</dd></div>
+                        <div><dt>Ad set ID</dt><dd>{selected.meta_adset_id || "—"}</dd></div>
+                        <div><dt>Ad ID</dt><dd>{selected.meta_ad_id || "—"}</dd></div>
+                        <div><dt>First clicked</dt><dd>{selected.first_touch_at ? submittedAt(selected.first_touch_at) : "Not recorded"}</dd></div>
+                        {selected.attribution?.last && selected.attribution.last.params.utm_content !== selected.attribution.first?.params.utm_content && (
+                          <div><dt>Most recent ad</dt><dd>{selected.attribution.last.params.utm_ad_name || selected.attribution.last.params.utm_content || "—"}</dd></div>
+                        )}
+                      </dl>
+                    </details>
+                  )}
 
                   {selected.services.length > 0 && (
                     <section className={styles.detailSection}>

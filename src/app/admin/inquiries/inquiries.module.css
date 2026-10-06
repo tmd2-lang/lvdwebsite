@@ -186,6 +186,11 @@
 .cardBadges { display: flex; flex-wrap: wrap; gap: 0.35rem; }
 .cardBadges span { border-radius: 4px; background: #eee7dc; padding: 0.25rem 0.45rem; color: #554739; font-size: 0.7rem; }
 .cardMeta { color: #6f675d; font-size: 0.7rem; line-height: 1.4; }
+.cardSource { color: #795f32; font-size: 0.7rem; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
+.detailSource { display: block; color: #795f32; font-size: 0.78rem; font-weight: 600; margin: 0.15rem 0; overflow-wrap: anywhere; }
+.marketingDetails { border-top: 1px solid #e9e3d9; padding: 1rem 0; }
+.marketingDetails summary { cursor: pointer; color: #6f6253; font-size: 0.78rem; font-weight: 600; }
+.marketingDetails dl { margin-top: 0.9rem; }
 .statusControls { display: grid; gap: 0.65rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e4ddd2; }
 .statusControls p, .activityHelp, .trackingNotice { color: #6f6253; font-size: 0.78rem; line-height: 1.6; }
 .trackingNotice { margin: 1rem 0; border: 1px solid #d9c69e; background: #faf4e7; border-radius: 4px; padding: 0.8rem 1rem; }

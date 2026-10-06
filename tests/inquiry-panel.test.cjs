@@ -34,6 +34,7 @@ function setup(mobile = true) {
     if (name === 'react') return { useState: value => [value, next => updates.push(next)], useRef: value => ({ current: value }), useMemo: fn => fn(), useEffect: fn => effects.push(fn) };
     if (name === 'react/jsx-runtime') return { jsx, jsxs: jsx, Fragment: 'fragment' };
     if (name === 'next/image') return () => null;
+    if (name.includes('ad-source')) return { adSourceLabel: () => null };
     if (name.includes('admin-types')) return { LEAD_STATUSES: ['new', 'contacted', 'booked'] };
     if (name.includes('inquiry-views')) return { filterInquiries: rows => rows, isUnread: () => true, inquiryCounts: rows => ({ total: rows.length, unread: rows.length, contacted: 0, booked: 0 }), viewState: () => 'unknown', latestView: () => undefined, lastActivityAt: row => row.created_at };
     if (name.endsWith('.css')) return { default: { detailPanel: 'detailPanel', detailScroll: 'detailScroll' } };

@@ -161,6 +161,7 @@ test('unread inbox opens immediately, persists even when row leaves filter, and 
       };
       if (name === 'react/jsx-runtime') return { jsx, jsxs: jsx, Fragment: 'fragment' };
       if (name === 'next/image') return () => null;
+      if (name.includes('ad-source')) return { adSourceLabel: () => null };
       if (name.includes('admin-types')) return { LEAD_STATUSES: ['new', 'contacted', 'booked'] };
       if (name.includes('inquiry-views')) return helpers;
       if (name.endsWith('.css')) return { default: {} };
