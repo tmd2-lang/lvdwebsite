@@ -7,7 +7,11 @@ export async function POST(request: Request) {
   const type = process.env.CALENDLY_DESIGN_CONSULTATION_EVENT_TYPE_URI;
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!key || !type || !url || !serviceKey) return NextResponse.json({ error: "Consultation sync is not configured." }, { status: 503 });
+  if (!key || !type || !url || !serviceKey) {
+    const missing = [!key && "CALENDLY_WEBHOOK_SIGNING_KEY", !type && "CALENDLY_DESIGN_CONSULTATION_EVENT_TYPE_URI", !url && "NEXT_PUBLIC_SUPABASE_URL", !serviceKey && "SUPABASE_SERVICE_ROLE_KEY"].filter(Boolean);
+    console.error("Calendly configuration missing:", missing.join(", "));
+    return NextResponse.json({ error: "Consultation sync is not configured." }, { status: 503 });
+  }
   // Bound actual streamed bytes, not just the caller-supplied Content-Length.
   const reader = request.body?.getReader();
   if (!reader) return NextResponse.json({ error: "Missing body." }, { status: 400 });
