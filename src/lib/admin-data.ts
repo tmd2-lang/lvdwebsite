@@ -1,4 +1,5 @@
 import type { AdminLead, LeadNote, LeadStatus, LeadActivity, LeadAppointment } from "@/lib/admin-types";
+import type { SalesAction } from "@/lib/sales-stage";
 
 type StoredAdminLead = Omit<AdminLead, "attachments" | "notes"> & {
   payload: unknown;
@@ -57,6 +58,9 @@ function attachmentUrls(payload: unknown, supabaseUrl: string) {
   return [...new Set(validAttachments)].slice(0, 5);
 }
 
+const SALES_FIELDS = ["consult_outcome", "consult_outcome_at", "fit", "fit_at", "proposal_amount", "proposal_sent_at",
+  "sales_outcome", "booked_amount", "sales_outcome_at", "lost_reason", "lost_note"];
+
 /** Ad attribution is only selected for marketing viewers (see marketing-access.ts). */
 export async function getAdminLeads({ includeMarketing = false } = {}): Promise<AdminLead[]> {
   const { url } = databaseConfig();
@@ -66,13 +70,14 @@ export async function getAdminLeads({ includeMarketing = false } = {}): Promise<
     "vision", "investment", "referral_source", "quiz_score", "quiz_result_tier", "payload",
     ...(includeMarketing ? ["utm_source", "utm_medium", "utm_campaign", "meta_campaign_id", "meta_adset_id",
       "meta_ad_id", "landing_page", "first_touch_at", "attribution"] : []),
-  ].join(",");
+  ];
+  const fetchLeads = (fields: string[]) => fetch(`${url}/rest/v1/leads?select=${fields.join(",")}&order=created_at.desc`, {
+    headers: databaseHeaders(),
+    cache: "no-store",
+  });
 
-  const [leadsResponse, notesResponse, tracking, consultations] = await Promise.all([
-    fetch(`${url}/rest/v1/leads?select=${leadFields}&order=created_at.desc`, {
-      headers: databaseHeaders(),
-      cache: "no-store",
-    }),
+  const [firstLeadsResponse, notesResponse, tracking, consultations] = await Promise.all([
+    fetchLeads([...leadFields, ...SALES_FIELDS]),
     fetch(`${url}/rest/v1/lead_notes?select=id,lead_id,created_at,author_name,body&order=created_at.desc`, {
       headers: databaseHeaders(),
       cache: "no-store",
@@ -81,6 +86,16 @@ export async function getAdminLeads({ includeMarketing = false } = {}): Promise<
     getLeadAppointments(),
   ]);
 
+  // Until lead-sales-schema.sql is applied (42703 = unknown column), load without sales fields.
+  let leadsResponse = firstLeadsResponse;
+  let salesAvailable = true;
+  if (!leadsResponse.ok) {
+    const failure = await leadsResponse.clone().json().catch(() => null);
+    if (failure?.code === "42703") {
+      salesAvailable = false;
+      leadsResponse = await fetchLeads(leadFields);
+    }
+  }
   const leads = await responseJson<StoredAdminLead[]>(leadsResponse);
   const notes = await responseJson<LeadNote[]>(notesResponse);
   const notesByLead = new Map<string, LeadNote[]>();
@@ -98,6 +113,7 @@ export async function getAdminLeads({ includeMarketing = false } = {}): Promise<
     notes: notesByLead.get(lead.id) || [],
     activity: tracking.activity.filter((item) => item.lead_id === lead.id),
     tracking_started_at: tracking.startedAt,
+    sales_available: salesAvailable,
     appointments: consultations.appointments.filter((item) => item.lead_id === lead.id),
     consultation_sync_available: consultations.available,
   }));
@@ -222,4 +238,22 @@ export async function getLeadAppointments(): Promise<{ available: boolean; appoi
     }
     return { available: true, appointments };
   } catch { return { available: false, appointments: [] }; }
+}
+
+// Step 4: one sales click, saved atomically with its activity row.
+export async function applySalesUpdate(id: string, actor: { id: string; name: string },
+  update: { action: SalesAction; amount?: number | null; reason?: string | null; note?: string | null }) {
+  const { url } = databaseConfig();
+  const response = await fetch(`${url}/rest/v1/rpc/apply_sales_update`, {
+    method: "POST", headers: databaseHeaders(), cache: "no-store",
+    body: JSON.stringify({ p_lead_id: id, p_actor_id: actor.id, p_actor_name: actor.name, p_action: update.action,
+      p_amount: update.amount ?? null, p_reason: update.reason ?? null, p_note: update.note ?? null }),
+  });
+  if (!response.ok) {
+    const error = await response.json().catch(() => null);
+    if (error?.code === "PGRST202") throw new Error("Sales tracking isn't installed yet. The database update must be applied first.");
+    // Our own validation messages (e.g. "Enter the proposal amount") are safe to show.
+    throw new Error(error?.code === "P0001" && typeof error.message === "string" ? error.message : "Could not save that change. Please try again.");
+  }
+  return await response.json() as { lead: Partial<AdminLead> & { id: string; status: LeadStatus; updated_at: string }; activity: LeadActivity };
 }

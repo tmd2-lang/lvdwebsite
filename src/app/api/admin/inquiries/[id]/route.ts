@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { canSeeInquiries, getAdminUser } from "@/lib/admin-auth";
-import { applyLeadActivity, deleteLead, markLeadUnread } from "@/lib/admin-data";
+import { applyLeadActivity, applySalesUpdate, deleteLead, markLeadUnread } from "@/lib/admin-data";
+import { LOST_REASONS, SALES_ACTIONS, type SalesAction } from "@/lib/sales-stage";
 import { LEAD_STATUSES, type LeadStatus } from "@/lib/admin-types";
 
 export const runtime = "nodejs";
@@ -37,8 +38,16 @@ export async function POST(request: Request, context: RouteContext) {
 
   try {
     const { id } = await context.params;
-    const payload = (await request.json()) as { body?: unknown; action?: unknown };
+    const payload = (await request.json()) as { body?: unknown; action?: unknown; sales?: unknown };
     if (payload.action === "view") return NextResponse.json(await applyLeadActivity(id, user, "viewed"));
+    if (payload.action === "sales") {
+      const sales = (payload.sales && typeof payload.sales === "object" ? payload.sales : {}) as Record<string, unknown>;
+      if (!SALES_ACTIONS.includes(sales.action as SalesAction)) return NextResponse.json({ error: "Choose a valid action." }, { status: 400 });
+      const amount = typeof sales.amount === "number" && Number.isFinite(sales.amount) ? sales.amount : null;
+      const reason = typeof sales.reason === "string" && sales.reason in LOST_REASONS ? sales.reason : null;
+      const note = typeof sales.note === "string" ? sales.note.slice(0, 500) : null;
+      return NextResponse.json(await applySalesUpdate(id, user, { action: sales.action as SalesAction, amount, reason, note }));
+    }
     if (payload.action === "mark_unread") return NextResponse.json(await markLeadUnread(id, user));
     if (payload.action !== undefined) return NextResponse.json({ error: "Choose a valid action." }, { status: 400 });
     const body = typeof payload.body === "string" ? payload.body.trim() : "";

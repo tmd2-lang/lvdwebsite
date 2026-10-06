@@ -17,9 +17,9 @@ proposal and the booking.
 | # | Step | Status |
 |---|------|--------|
 | 1 | Save which ad each inquiry came from | Live (Oct 6, 2026) |
-| 2 | Show the ad on each inquiry in the portal (marketing viewers only) | Built |
-| 3 | Calendly updates the inquiry automatically | Built locally; awaiting migration, credentials and deployment |
-| 4 | One-click buttons after the call (outcome, fit, proposal, booked/lost) | Not started |
+| 2 | Show the ad on each inquiry in the portal (marketing viewers only) | Live (Oct 6, 2026) |
+| 3 | Calendly updates the inquiry automatically | Live (Oct 6, 2026); real booking lifecycle test pending |
+| 4 | One-click buttons after the call (outcome, fit, proposal, booked/lost) | Built; waiting on database change |
 | 5 | "Needs attention" list for the sales team | Not started |
 | 6 | Per-ad report: spend → inquiries → consults → bookings → $ | Not started |
 | 7 | Send qualified and booked results back to Meta | Not started |
@@ -112,4 +112,46 @@ doesn't break reports.
 
 ## Step 3: Calendly updates the inquiry
 
-Design Consultation bookings, reschedules and cancellations sync to linked inquiries. See [activation instructions and data flow](CALENDLY-SETUP.md). This step is built and tested locally; live activation is still required.
+Design Consultation bookings, reschedules and cancellations sync to linked inquiries. See [activation instructions and data flow](CALENDLY-SETUP.md). This step is live on the confirmed production project with an active Calendly webhook. A real booking, reschedule and cancellation test remains pending.
+
+---
+
+## Step 4: Sales buttons after the call
+
+**As Valentina:** her consultation happens. Irene opens her inquiry and the
+**Sales** box asks one question at a time:
+
+1. *Did the consultation happen?* → **Completed** or **No-show**
+2. *Was it a good fit?* → **Good fit** or **Not a fit**
+3. *When the proposal goes out, enter its amount* → `$38,500` → **Proposal sent**
+4. *Did they book?* → **Booked** + amount (blank = the proposal amount), or **Lost** + reason (Budget, No response, Went with someone else, Date unavailable, Wanted a different service, Other) + optional note
+
+Every answer has an **Undo**, and every click is saved in the inquiry's
+activity history with who did it and when. A summary line keeps earlier
+answers visible ("Consult completed Oct 8 · Good fit · Proposal $38,500 sent Oct 9").
+
+**What gets saved:** each fact in its own field: `consult_outcome`, `fit`,
+`proposal_amount` + `proposal_sent_at`, `sales_outcome` (booked/lost),
+`booked_amount`, `lost_reason`, `lost_note`, each with a timestamp. The step
+shown is worked out from those fields (`src/lib/sales-stage.ts`).
+
+**The status dropdown keeps working** and follows along, forward only:
+Completed → Contacted (if still New/Reviewing) · Good fit → Good Fit ·
+Not a fit → Not a Fit · Booked → Booked · Lost → Archived. Undo never moves
+status back; fix it with the dropdown if needed.
+
+**Who sees it:** everyone with inquiry access (owner, planners, inquiry staff).
+Sales facts aren't marketing data.
+
+**Setup at a new business**
+
+1. Run `supabase/lead-sales-schema.sql` (after the activity and appointments files).
+2. Adjust the lost reasons to the business (in the SQL and `LOST_REASONS`).
+3. Map the automatic status changes to the business's own statuses.
+
+**Design decisions**
+
+- One question at a time, never a form. The goal is seconds per lead, or the team stops updating it.
+- Calls without a Calendly booking (they phoned directly) still work: the buttons are always there.
+- Until the database change is applied, the portal hides the Sales box instead of breaking.
+- Each click is one database transaction (`apply_sales_update`): the change and its history entry are saved together or not at all.

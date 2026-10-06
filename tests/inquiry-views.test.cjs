@@ -69,7 +69,8 @@ function routeSetup(user) {
       if (name === 'next/server') return { NextResponse: { json: (body, options) => ({ body, status: options?.status || 200 }) } };
       if (name.includes('admin-auth')) return { getAdminUser: async () => user, canSeeInquiries: account => ['owner', 'planner', 'inquiry_staff'].includes(account.role) };
       if (name.includes('admin-types')) return { LEAD_STATUSES: ['new', 'reviewing', 'contacted', 'qualified', 'booked', 'archived', 'spam'] };
-      if (name.includes('admin-data')) return { markLeadUnread: async (...args) => { calls.push([...args, "mark_unread"]); return { activity: { detail: "unread" } }; }, applyLeadActivity: async (...args) => { calls.push(args); return { activity: { kind: args[2] } }; } };
+      if (name.includes('admin-data')) return { markLeadUnread: async (...args) => { calls.push([...args, "mark_unread"]); return { activity: { detail: "unread" } }; }, applyLeadActivity: async (...args) => { calls.push(args); return { activity: { kind: args[2] } }; }, applySalesUpdate: async (...args) => { calls.push([...args, 'sales']); return { lead: {}, activity: { kind: 'sales_update' } }; } };
+      if (name.includes('sales-stage')) return load('src/lib/sales-stage.ts', { Number });
       throw Error(name);
     },
   });
@@ -163,6 +164,7 @@ test('unread inbox opens immediately, persists even when row leaves filter, and 
       if (name === 'next/image') return () => null;
       if (name.includes('consultation-display')) return { consultationLabel: () => 'No linked consultation' };
     if (name.includes('ad-source')) return { adSourceLabel: () => null };
+    if (name.includes('SalesControls')) return { __esModule: true, default: () => null };
       if (name.includes('admin-types')) return { LEAD_STATUSES: ['new', 'contacted', 'booked'] };
       if (name.includes('inquiry-views')) return helpers;
       if (name.endsWith('.css')) return { default: {} };
@@ -193,4 +195,21 @@ test('unread inbox opens immediately, persists even when row leaves filter, and 
   render(); effects[0]();
   assert.equal(helpers.isUnread(hooks[0][0], 'tj'), true);
   assert.deepEqual(requests, ['view', 'mark_unread']);
+});
+
+test('sales route validates the action and uses the signed-in identity', async () => {
+  const { routes, calls } = routeSetup({ id: 'real-staff', name: 'Tanah', role: 'planner' });
+  const context = { params: Promise.resolve({ id: 'lead-1' }) };
+  const bad = await routes.POST({ json: async () => ({ action: 'sales', sales: { action: 'delete_everything' } }) }, context);
+  assert.equal(bad.status, 400);
+  assert.equal(calls.length, 0);
+  await routes.POST({ json: async () => ({ action: 'sales', actor_id: 'forged', sales: { action: 'lost', reason: 'budget', note: 'x'.repeat(900), amount: 'lots' } }) }, context);
+  const [id, actor, update] = calls[0];
+  assert.equal(id, 'lead-1');
+  assert.equal(actor.id, 'real-staff');
+  assert.equal(update.reason, 'budget');
+  assert.equal(update.note.length, 500);
+  assert.equal(update.amount, null);
+  await routes.POST({ json: async () => ({ action: 'sales', sales: { action: 'lost', reason: 'made_up' } }) }, context);
+  assert.equal(calls[1][2].reason, null);
 });

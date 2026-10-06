@@ -8,6 +8,7 @@ import { adSourceLabel } from "@/lib/ad-source";
 import { filterInquiries, lastActivityAt, latestView, viewState, isUnread, inquiryCounts, type InquiryFilters } from "@/lib/inquiry-views";
 import type { AdminLead, AdminUser, LeadNote, LeadStatus, LeadActivity, LeadAppointment } from "@/lib/admin-types";
 import styles from "./inquiries.module.css";
+import SalesControls, { type SalesUpdate } from "./SalesControls";
 
 const STATUS_LABELS: Record<LeadStatus, string> = {
   new: "New",
@@ -330,6 +331,25 @@ export default function InquiriesDashboard({
     }
   }
 
+  async function updateSales(update: SalesUpdate) {
+    if (!selected) return false;
+    const leadId = selected.id;
+    setError("");
+    try {
+      const result = await responseJson<{ lead: Partial<AdminLead>; activity: LeadActivity }>(await fetch(`/api/admin/inquiries/${leadId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "sales", sales: update }),
+      }));
+      setLeads((current) => current.map((lead) => lead.id === leadId ? { ...lead, ...result.lead, activity: [result.activity, ...(lead.activity || [])] } : lead));
+      announce(result.activity.detail ? `Saved: ${result.activity.detail}.` : "Saved.");
+      return true;
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "That change could not be saved.");
+      return false;
+    }
+  }
+
   async function deleteInquiry() {
     if (!selected) return;
     if (!confirm("Are you sure you want to permanently delete this inquiry? This cannot be undone.")) return;
@@ -529,6 +549,7 @@ export default function InquiriesDashboard({
                     <p>{consultationLabel(selected)}</p>
                     <small>Synced from Calendly. Scheduling does not confirm attendance or a booked event.</small>
                   </section>
+                  {selected.sales_available !== false && <SalesControls lead={selected} onUpdate={updateSales} />}
                   <section className={styles.statusControls} aria-label="Inquiry status">
                     <label>Status<select value={selected.status} disabled={savingStatus} onChange={(event) => void changeStatus(event.target.value as LeadStatus)}>
                       {LEAD_STATUSES.map((status) => <option key={status} value={status}>{STATUS_LABELS[status]}</option>)}
@@ -674,7 +695,7 @@ export default function InquiriesDashboard({
                     {(selected.activity?.length || 0) > 30 && <p className={styles.activityHelp}>Showing the latest 30 events.</p>}
                     <ol className={styles.activityList}>
                       {(selected.activity || []).slice(0, 30).map((item) => <li key={item.id}>
-                        <b>{item.actor_name}</b> {item.kind === "viewed" ? item.detail === "unread" ? "marked unread for themselves" : "opened this inquiry" : item.kind === "note_added" ? "added a private note" : item.kind.startsWith("appointment_") ? `${item.kind === "appointment_scheduled" ? "scheduled" : item.kind === "appointment_rescheduled" ? "rescheduled" : "canceled"} a design consultation${item.detail ? ` · ${submittedAt(item.detail)} ET` : ""}` : `changed status to ${STATUS_LABELS[item.detail as LeadStatus] || item.detail}`}
+                        <b>{item.actor_name}</b> {item.kind === "viewed" ? item.detail === "unread" ? "marked unread for themselves" : "opened this inquiry" : item.kind === "note_added" ? "added a private note" : item.kind === "sales_update" ? `recorded: ${item.detail || "sales update"}` : item.kind.startsWith("appointment_") ? `${item.kind === "appointment_scheduled" ? "scheduled" : item.kind === "appointment_rescheduled" ? "rescheduled" : "canceled"} a design consultation${item.detail ? ` · ${submittedAt(item.detail)} ET` : ""}` : `changed status to ${STATUS_LABELS[item.detail as LeadStatus] || item.detail}`}
                         <time dateTime={item.created_at}>{submittedAt(item.created_at)}</time>
                       </li>)}
                     </ol>

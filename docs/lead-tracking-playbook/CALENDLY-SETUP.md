@@ -1,6 +1,12 @@
 # Step 3: Design Consultation → inquiry
 
-Built locally October 6, 2026. Not activated in production yet.
+Live October 6, 2026 on the confirmed production project: `https://vercel.com/tjdozier98-1658s-projects/lvdwebsite` (project `prj_Fg3L7PV0HMdAVHLTZkvd4Sl2xxLx`). Production deployment: `dpl_9mk8pG6WbNC2tAWuE5YxMbAUG3gL`, commit 8091394.
+
+The Supabase migration is applied. The replacement Calendly token has webhook access, and the organization-scope subscription for invitee.created / invitee.canceled is registered at `https://www.ladyvictoriadesigns.com/api/webhooks/calendly`. Only the configured Design Consultation event type is persisted.
+
+Live readiness checks pass: unsigned request rejected with 401; signed connection check acknowledged with 200 / ignored; appointment refresh endpoint rejects unauthenticated access with 401. Connection checks create no appointments or notifications. A real booking → reschedule → cancellation test has not yet been performed.
+
+Earlier environment updates targeted a duplicate project at `lady-victoria-designs/lvdwebsite`. The correct live project was subsequently confirmed by its verified www domain, and its existing database settings were retained. No DNS changes were required or made. Use the confirmed production project above for future updates.
 
 Valentina submits an inquiry, then books at https://calendly.com/ladyvictoriadesigns/design-consultation. Her inquiry card and detail panel show the consultation time in Eastern time, including EST/EDT. Rescheduling replaces the displayed appointment; cancellation marks it canceled. Calendly writes an activity entry. Nothing automatically marks a lead contacted, qualified, booked, completed or no-show.
 
@@ -11,7 +17,7 @@ Valentina submits an inquiry, then books at https://calendly.com/ladyvictoriades
 3. Generate a random signing key of at least 32 characters (a password manager can generate it). Set `CALENDLY_WEBHOOK_SIGNING_KEY` locally and in Vercel. This must be the exact same value used to create the subscription.
 4. Run read-only discovery: `node --env-file=.env.local scripts/setup-calendly.mjs`. It locates the exact Design Consultation scheduling URL in the token's organization and prints its API event type URI. Set that value as `CALENDLY_DESIGN_CONSULTATION_EVENT_TYPE_URI` locally and in Vercel. This is an API URI, **not** the public booking URL. Missing configuration returns 503 rather than accepting unrelated bookings.
 5. Deploy this change with those production environment variables present.
-6. Locally set `CALENDLY_WEBHOOK_URL=https://YOUR-LIVE-DOMAIN/api/webhooks/calendly`. Run `node --env-file=.env.local scripts/setup-calendly.mjs --subscribe`. This explicitly creates one organization-scope subscription for `invitee.created` and `invitee.canceled`. The application filters deliveries to the exact Design Consultation event type. Existing subscriptions at that callback are inspected instead of duplicated; an existing signing key must be confirmed manually.
+6. Locally set `CALENDLY_WEBHOOK_URL=https://www.ladyvictoriadesigns.com/api/webhooks/calendly`. Run `node --env-file=.env.local scripts/setup-calendly.mjs --subscribe`. This explicitly creates one organization-scope subscription for `invitee.created` and `invitee.canceled`. The application filters deliveries to the exact Design Consultation event type. Existing subscriptions at that callback are inspected instead of duplicated; an existing signing key must be confirmed manually.
 7. Verify with an explicitly approved test inquiry and test consultation: book, reschedule and cancel. Check the portal and `lead_appointments`; verify other event types are ignored. A live inquiry submission emails the studio, so coordinate this test first. No production submissions were made during implementation.
 
 ## Data flow and matching

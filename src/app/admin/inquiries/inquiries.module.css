@@ -240,3 +240,17 @@
 .consultationBlock h3 { margin: 0 0 8px; font-size: .9rem; }
 .consultationBlock p { margin: 0 0 8px; font-size: .9rem; line-height: 1.5; }
 .consultationBlock small { display: block; color: #786f64; font-size: .75rem; line-height: 1.5; }
+
+.salesBlock { display: grid; gap: 0.6rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e4ddd2; }
+.salesBlock h3 { font-family: var(--font-bodoni); font-size: 1.05rem; font-weight: 600; }
+.salesBlock p, .salesBlock small { color: #6f6253; font-size: 0.8rem; line-height: 1.6; }
+.salesHistory { color: #795f32 !important; font-weight: 600; }
+.salesDone b { color: #2e2923; }
+.salesButtons { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+.salesButtons button { border: 1px solid #795f32; border-radius: 4px; background: #fffdfa; color: #795f32; padding: 0.5rem 0.9rem; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+.salesButtons button:hover:not(:disabled), .salesButtons button[aria-pressed="true"] { background: #795f32; color: #fffdfa; }
+.salesButtons button:disabled { opacity: 0.5; cursor: default; }
+.salesButtons select, .salesButtons input { min-width: 0; border: 1px solid #d9cfc1; border-radius: 4px; background: #fff; padding: 0.45rem 0.6rem; font-size: 0.8rem; }
+.salesAmount { display: inline-flex; align-items: center; gap: 0.3rem; color: #6f6253; font-size: 0.85rem; }
+.salesAmount input { width: 7.5rem; }
+.salesUndo { border: none; background: none; padding: 0 0.25rem; color: #795f32; font-size: 0.75rem; text-decoration: underline; cursor: pointer; }

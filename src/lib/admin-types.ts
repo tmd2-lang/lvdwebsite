@@ -1,4 +1,5 @@
 import type { Attribution } from "./attribution";
+import type { LostReason } from "./sales-stage";
 
 export const LEAD_STATUSES = [
   "new",
@@ -26,7 +27,7 @@ export type LeadActivity = {
   created_at: string;
   actor_id: string;
   actor_name: string;
-  kind: "viewed" | "status_changed" | "note_added" | "appointment_scheduled" | "appointment_canceled" | "appointment_rescheduled";
+  kind: "viewed" | "status_changed" | "note_added" | "appointment_scheduled" | "appointment_canceled" | "appointment_rescheduled" | "sales_update";
   detail: string | null;
 };
 
@@ -71,6 +72,18 @@ export type AdminLead = {
   landing_page?: string | null;
   first_touch_at?: string | null;
   attribution?: Attribution | null;
+  consult_outcome?: "completed" | "no_show" | null;
+  consult_outcome_at?: string | null;
+  fit?: "good_fit" | "not_fit" | null;
+  fit_at?: string | null;
+  proposal_amount?: number | string | null;
+  proposal_sent_at?: string | null;
+  sales_outcome?: "booked" | "lost" | null;
+  booked_amount?: number | string | null;
+  sales_outcome_at?: string | null;
+  lost_reason?: LostReason | null;
+  lost_note?: string | null;
+  sales_available?: boolean;
 };
 
 export const ADMIN_ROLES = ["owner", "planner", "inquiry_staff"] as const;
