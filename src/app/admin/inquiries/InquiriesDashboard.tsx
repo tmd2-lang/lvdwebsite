@@ -9,6 +9,7 @@ import { filterInquiries, lastActivityAt, latestView, viewState, isUnread, inqui
 import type { AdminLead, AdminUser, LeadNote, LeadStatus, LeadActivity, LeadAppointment } from "@/lib/admin-types";
 import styles from "./inquiries.module.css";
 import SalesControls, { type SalesUpdate } from "./SalesControls";
+import { ATTENTION_REASONS, attentionReasons, needsAttention } from "@/lib/attention";
 
 const STATUS_LABELS: Record<LeadStatus, string> = {
   new: "New",
@@ -124,14 +125,19 @@ export default function InquiriesDashboard({
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  const visibleLeads = useMemo(() => filterInquiries(leads, {
-    search, status: statusFilter, viewed: viewFilter, notes: notesFilter, sort, actorId: user.id,
-  }), [leads, search, statusFilter, viewFilter, notesFilter, sort, user.id]);
+  const [attentionOnly, setAttentionOnly] = useState(false);
+  const attentionLeads = useMemo(() => needsAttention(leads), [leads]);
+  const visibleLeads = useMemo(() => {
+    const filtered = filterInquiries(leads, { search, status: statusFilter, viewed: viewFilter, notes: notesFilter, sort, actorId: user.id });
+    if (!attentionOnly) return filtered;
+    const keep = new Set(filtered.map((lead) => lead.id));
+    return attentionLeads.filter((lead) => keep.has(lead.id));
+  }, [leads, search, statusFilter, viewFilter, notesFilter, sort, user.id, attentionOnly, attentionLeads]);
   const counts = inquiryCounts(leads, user.id);
   const selected = leads.find((lead) => lead.id === selectedId) || null;
   const selectedGmailUrl = selected?.email ? gmailComposeUrl(selected.email, selected.name) : "";
   const trackingAvailable = Boolean(initialLeads[0]?.tracking_started_at);
-  const hasFilters = Boolean(search || statusFilter !== "all" || viewFilter !== "all" || notesFilter !== "all");
+  const hasFilters = Boolean(attentionOnly || search || statusFilter !== "all" || viewFilter !== "all" || notesFilter !== "all");
 
   useEffect(() => {
     // A default preview is not a view. Track only an explicitly opened lead or deep link.
@@ -222,7 +228,7 @@ export default function InquiriesDashboard({
   }, [selectedId, mobileDetailOpen]);
 
   function clearFilters() {
-    setSearch(""); setStatusFilter("all"); setViewFilter("all"); setNotesFilter("all");
+    setSearch(""); setStatusFilter("all"); setViewFilter("all"); setNotesFilter("all"); setAttentionOnly(false);
   }
   const allVisibleSelected = visibleLeads.length > 0 && visibleLeads.every((lead) => selectedLeadIds.includes(lead.id));
 
@@ -240,8 +246,9 @@ export default function InquiriesDashboard({
     setMessage("");
   }
 
-  function filterCard(kind: "total" | "unread" | "contacted" | "booked") {
+  function filterCard(kind: "attention" | "total" | "unread" | "contacted" | "booked") {
     clearFilters(); setSelectedId(""); setMobileDetailOpen(false); setSelectedLeadIds([]);
+    if (kind === "attention") setAttentionOnly(true);
     if (kind === "unread") setViewFilter("unread");
     if (kind === "contacted" || kind === "booked") setStatusFilter(kind);
   }
@@ -453,14 +460,15 @@ export default function InquiriesDashboard({
 
         <section className={styles.summaryCards} aria-label="Inquiry overview">
           {([
+            { key: "attention", label: "Needs attention", hint: "Consults today, missing outcomes, proposals and new leads to call" },
             { key: "total", label: "Total inquiries", hint: "Across your studio" },
             { key: "unread", label: "Unread", hint: "Waiting for you to open" },
             { key: "contacted", label: "Contacted", hint: "Leads you've reached out to" },
             { key: "booked", label: "Booked", hint: "Confirmed bookings" },
           ] as const).map((card) => <button type="button" key={card.key} disabled={card.key === "unread" && !trackingAvailable}
-            aria-pressed={card.key === "total" ? !hasFilters : card.key === "unread" ? viewFilter === "unread" : statusFilter === card.key}
+            aria-pressed={card.key === "attention" ? attentionOnly : card.key === "total" ? !hasFilters : card.key === "unread" ? viewFilter === "unread" : statusFilter === card.key}
             onClick={() => filterCard(card.key)}>
-            <span>{card.label}</span><b>{card.key === "unread" && !trackingAvailable ? "—" : counts[card.key]}</b><small>{card.hint}</small>
+            <span>{card.label}</span><b>{card.key === "attention" ? attentionLeads.length : card.key === "unread" && !trackingAvailable ? "—" : counts[card.key]}</b><small>{card.hint}</small>
           </button>)}
         </section>
         {!trackingAvailable && <p className={styles.trackingNotice}>View tracking is awaiting setup. Historical views are unavailable; notes and status filters still work.</p>}
@@ -519,6 +527,7 @@ export default function InquiriesDashboard({
                         <span>{trackingAvailable ? isUnread(lead, user.id) ? "Unread for you" : "Read by you" : "Read tracking unavailable"}</span>
                       </span>
                       <span className={styles.cardConsultation}>{consultationLabel(lead)}</span>
+                      {attentionReasons(lead).length > 0 && <span className={styles.attentionTags}>{attentionReasons(lead).map((reason) => <span key={reason}>{ATTENTION_REASONS[reason]}</span>)}</span>}
                       {adSourceLabel(lead) && <span className={styles.cardSource}>{adSourceLabel(lead)}</span>}
                       <span className={styles.cardMeta}>Received {submittedAt(lead.created_at)}</span>
                       <span className={styles.cardMeta}>{latestView(lead) ? `Seen by ${latestView(lead)!.actor_name}` : ""}</span>

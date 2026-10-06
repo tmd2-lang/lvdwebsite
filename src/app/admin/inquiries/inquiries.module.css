@@ -217,7 +217,7 @@
   .filters, .eventDetails { grid-template-columns: 1fr; }
 }
 
-.summaryCards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; margin: 1.6rem 0; }
+.summaryCards { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1rem; margin: 1.6rem 0; }
 .summaryCards button { display: grid; gap: 0.55rem; text-align: left; border: 1px solid #ded5c7; border-radius: 6px; padding: 1.25rem; background: #fffdfa; color: #2e2923; cursor: pointer; }
 .summaryCards button:hover { border-color: #a98a50; }
 .summaryCards button[aria-pressed="true"] { background: #f3ecdf; border-color: #a98a50; box-shadow: inset 0 3px #a98a50; }
@@ -254,3 +254,5 @@
 .salesAmount { display: inline-flex; align-items: center; gap: 0.3rem; color: #6f6253; font-size: 0.85rem; }
 .salesAmount input { width: 7.5rem; }
 .salesUndo { border: none; background: none; padding: 0 0.25rem; color: #795f32; font-size: 0.75rem; text-decoration: underline; cursor: pointer; }
+.attentionTags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.attentionTags span { border-radius: 4px; background: #f3dfd6; color: #8c4935; padding: 0.2rem 0.45rem; font-size: 0.68rem; font-weight: 600; }

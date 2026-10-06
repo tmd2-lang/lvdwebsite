@@ -165,6 +165,7 @@ test('unread inbox opens immediately, persists even when row leaves filter, and 
       if (name.includes('consultation-display')) return { consultationLabel: () => 'No linked consultation' };
     if (name.includes('ad-source')) return { adSourceLabel: () => null };
     if (name.includes('SalesControls')) return { __esModule: true, default: () => null };
+    if (name.includes('attention')) return { ATTENTION_REASONS: {}, attentionReasons: () => [], needsAttention: () => [] };
       if (name.includes('admin-types')) return { LEAD_STATUSES: ['new', 'contacted', 'booked'] };
       if (name.includes('inquiry-views')) return helpers;
       if (name.endsWith('.css')) return { default: {} };

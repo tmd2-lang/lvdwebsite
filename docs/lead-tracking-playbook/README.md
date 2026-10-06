@@ -19,8 +19,8 @@ proposal and the booking.
 | 1 | Save which ad each inquiry came from | Live (Oct 6, 2026) |
 | 2 | Show the ad on each inquiry in the portal (marketing viewers only) | Live (Oct 6, 2026) |
 | 3 | Calendly updates the inquiry automatically | Live (Oct 6, 2026); real booking lifecycle test pending |
-| 4 | One-click buttons after the call (outcome, fit, proposal, booked/lost) | Built; waiting on database change |
-| 5 | "Needs attention" list for the sales team | Not started |
+| 4 | One-click buttons after the call (outcome, fit, proposal, booked/lost) | Live (Oct 6, 2026) |
+| 5 | "Needs attention" list for the sales team | Built |
 | 6 | Per-ad report: spend → inquiries → consults → bookings → $ | Not started |
 | 7 | Send qualified and booked results back to Meta | Not started |
 
@@ -155,3 +155,34 @@ Sales facts aren't marketing data.
 - Calls without a Calendly booking (they phoned directly) still work: the buttons are always there.
 - Until the database change is applied, the portal hides the Sales box instead of breaking.
 - Each click is one database transaction (`apply_sales_update`): the change and its history entry are saved together or not at all.
+
+---
+
+## Step 5: "Needs attention"
+
+**As Irene:** she opens the portal in the morning. The first card says
+**Needs attention · 6**. One click shows only those inquiries, most urgent
+first, each tagged with why:
+
+| Tag | Means | Clears when |
+|---|---|---|
+| Consult today | A Calendly consult is booked for today (Eastern) | Someone clicks Completed / No-show |
+| Outcome missing | The consult time has passed with no outcome | Same |
+| Proposal waiting | A proposal went out over 7 days ago, no Booked/Lost | Booked or Lost is recorded |
+| New, not contacted | Came in during the last 14 days, still New/Reviewing, nothing else recorded | Status moves on, a consult gets booked, or any sales answer is recorded |
+
+Booked, lost, not-a-fit, archived and spam inquiries never show up.
+
+**Why it matters for tracking:** this is what makes the team keep the record
+current. They get a to-do list; the system gets its data as a side effect.
+
+**Nothing new is stored.** It's worked out from data the portal already has
+(`src/lib/attention.ts`), so there's no database change.
+
+**Setup at a new business:** pick the two windows (`NEW_LEAD_WINDOW_DAYS`,
+`PROPOSAL_FOLLOW_UP_DAYS`) and the business's time zone.
+
+**Design decisions**
+
+- Only the last 14 days of uncontacted leads count. LVD had 83 old "New" inquiries; counting them all would bury the real to-dos. Older ones stay reachable through the "Not contacted" filter.
+- A consult booked for a later day replaces "not contacted": the next action is the consult itself.
