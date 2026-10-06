@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import nodemailer from "nodemailer";
 import { after } from "next/server";
+import { attributionColumns } from "@/lib/attribution";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -26,6 +27,7 @@ type LeadRequest = {
   quizResultTier?: unknown;
   attachments?: unknown;
   payload?: unknown;
+  attribution?: unknown;
 };
 
 function stringValue(value: unknown) {
@@ -114,8 +116,9 @@ export async function POST(request: Request) {
       referrer: optionalString(request.headers.get("referer")),
       ip_hash: ipHash(request, serviceRoleKey),
     };
+    const tracking = attributionColumns(body.attribution, request.headers.get("referer"), new Date());
 
-    const response = await fetch(`${supabaseUrl}/rest/v1/leads`, {
+    const insertLead = (row: object) => fetch(`${supabaseUrl}/rest/v1/leads`, {
       method: "POST",
       headers: {
         apikey: serviceRoleKey,
@@ -123,11 +126,19 @@ export async function POST(request: Request) {
         "Content-Type": "application/json",
         Prefer: "return=representation",
       },
-      body: JSON.stringify(lead),
+      body: JSON.stringify(row),
       cache: "no-store",
     });
 
-    const result = await response.json().catch(() => null);
+    let response = await insertLead({ ...lead, ...tracking });
+    let result = await response.json().catch(() => null);
+    // Never lose an inquiry over tracking: if the attribution columns are not
+    // installed yet (PostgREST PGRST204), save the lead without them.
+    if (!response.ok && result?.code === "PGRST204") {
+      console.error("Attribution columns missing; saving lead without them:", result.message);
+      response = await insertLead(lead);
+      result = await response.json().catch(() => null);
+    }
     if (!response.ok) {
       console.error("Supabase lead insert failed:", result);
       return Response.json({ error: "Could not save your inquiry. Please try again." }, { status: 502 });

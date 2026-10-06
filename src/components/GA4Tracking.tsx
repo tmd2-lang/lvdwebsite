@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { isPublicPage, trackGA4 } from "@/lib/ga4";
+import { captureAdAttribution } from "@/lib/attribution";
 
 export default function GA4Tracking() {
   const pathname = usePathname();
@@ -14,7 +15,9 @@ export default function GA4Tracking() {
     const key = `${pathname}?${search}`;
     if (lastPage.current === key) return;
     lastPage.current = key;
-    if (isPublicPage(pathname)) trackGA4("page_view");
+    if (!isPublicPage(pathname)) return;
+    captureAdAttribution();
+    trackGA4("page_view");
   }, [pathname, search]);
 
   useEffect(() => {

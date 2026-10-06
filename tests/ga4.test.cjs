@@ -7,7 +7,10 @@ const ts = require('typescript');
 function setup({ blocked = false, stored = null, ok = true } = {}) {
   const storage = new Map(stored ? [['lvd_marketing_attribution', stored]] : []);
   const window = { location: { pathname: '/welcome', origin: 'https://example.com', search: '?gclid=click_123&utm_source=google&utm_campaign=weddings&email=private%40example.com' } };
-  const context = vm.createContext({ window, document: { referrer: 'https://search.example/?email=secret' }, URL, URLSearchParams,
+  Object.defineProperty(window.location, 'href', { get: () => window.location.origin + window.location.pathname + window.location.search });
+  const local = new Map();
+  const context = vm.createContext({ window, document: { referrer: 'https://search.example/?email=secret', cookie: '' }, URL, URLSearchParams,
+    localStorage: { getItem: k => local.get(k) ?? null, setItem: (k, v) => local.set(k, v) },
     sessionStorage: { getItem: k => { if (blocked) throw Error(); return storage.get(k); }, setItem: (k,v) => { if (blocked) throw Error(); storage.set(k,v); } },
     fetch: async () => ({ ok, json: async () => ok ? { leadId: '123' } : { error: 'Rejected' } }),
   });
@@ -18,9 +21,10 @@ function setup({ blocked = false, stored = null, ok = true } = {}) {
     return context.exports;
   }
   const ga = load('src/lib/ga4.ts');
-  const lead = load('src/lib/lead-submit.ts', () => ga);
+  const attribution = load('src/lib/attribution.ts');
+  const lead = load('src/lib/lead-submit.ts', name => name.includes('attribution') ? attribution : ga);
   const events = () => (window.dataLayer || []).map(a => Array.from(a));
-  return { ga, lead, window, storage, events, load, context };
+  return { ga, attribution, lead, window, storage, local, events, load, context };
 }
 
 test('queues targeted GA4 events, strips PII and preserves attribution through navigation/reload', () => {
@@ -79,7 +83,7 @@ test('navigation replay is deduplicated and Calendly requires a trusted iframe',
       usePathname: () => s.window.location.pathname,
       useSearchParams: () => new URLSearchParams(s.window.location.search),
     };
-    return s.ga;
+    return name.includes('attribution') ? s.attribution : s.ga;
   }).default;
   function render() { index = 0; callbacks.length = 0; component(); callbacks.forEach(fn => fn()); }
   render(); render();
@@ -94,4 +98,18 @@ test('navigation replay is deduplicated and Calendly requires a trusted iframe',
   listener({ origin: 'https://calendly.com', source: frameWindow, data });
   assert.equal(s.events().filter(e => e[1] === 'book_appointment').length, 1);
   assert.doesNotMatch(JSON.stringify(s.events()), /private/);
+});
+
+test('submitted inquiries carry the remembered ad attribution after browsing', async () => {
+  const s = setup();
+  s.attribution.captureAdAttribution();
+  s.window.location.pathname = '/inquire'; s.window.location.search = '';
+  s.attribution.captureAdAttribution();
+  let sent;
+  s.context.fetch = async (url, init) => { sent = JSON.parse(init.body); return { ok: true, json: async () => ({ leadId: '1' }) }; };
+  await s.lead.submitLead({ source: 'inquire', name: 'A', email: 'a@b.co', phone: '1' });
+  assert.equal(sent.attribution.first.landing_page, '/welcome');
+  assert.equal(sent.attribution.first.params.utm_campaign, 'weddings');
+  assert.equal(sent.attribution.first.params.email, undefined);
+  assert.equal(sent.email, 'a@b.co');
 });
