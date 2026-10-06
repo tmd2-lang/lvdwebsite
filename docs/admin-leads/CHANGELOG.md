@@ -68,3 +68,14 @@ Messaging, ownership/assignments, follow-up reminders, and new bulk actions are 
 - Supabase tracking migration remains unapplied; view tracking stays disabled with the setup notice until it is installed.
 
 - October 1 production build passed (`npm run build -- --webpack` in the isolated copy). Source is included in the requested commit/push; production deployment has not been verified.
+
+## October 5, 2026 — Personal inbox and overview
+
+- Add four clickable overview cards: Total inquiries, Unread for the signed-in user, Contacted, and Booked. Cards reset other filters and show the corresponding list. Counts cover the full studio inbox.
+- Opening an inquiry immediately clears that user's unread dot and bold name and updates their unread count. A failed save restores unread state and shows an error. Status stays independent.
+- Personal filters: Unread for me / Read by me. Keep Seen by anyone in studio as a shared filter and show the latest opener on rows and details.
+- Mark unread for me persists across reloads without deleting shared view history or resetting another user's inbox.
+- Existing inquiries with no recorded view by this user start unread. Previously recorded personal views count as read.
+- Uses the installed activity schema. A viewed-kind event with detail `unread` is a personal reset marker; view display helpers exclude these markers from shared opener history. No new SQL migration is required.
+- Validation: 19 automated tests passed, including personal separation, server-owned actor identity, card counts, and the actual open/mark-unread component flow under the unread filter. TypeScript and ESLint passed.
+- October 6: user verified the localhost preview works and approved production release. All 19 tests, TypeScript and ESLint passed again before committing.

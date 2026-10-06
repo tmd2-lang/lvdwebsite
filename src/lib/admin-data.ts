@@ -190,3 +190,15 @@ export async function applyLeadActivity(id: string, actor: { id: string; name: s
   }
   return await response.json() as { lead?: { id: string; status: LeadStatus; updated_at: string }; note?: LeadNote; activity: LeadActivity | null };
 }
+
+// Store a personal unread marker in the existing activity stream; do not erase views.
+export async function markLeadUnread(id: string, actor: { id: string; name: string }) {
+  const { url } = databaseConfig();
+  const response = await fetch(`${url}/rest/v1/lead_activity`, {
+    method: "POST", headers: databaseHeaders("return=representation"), cache: "no-store",
+    body: JSON.stringify({ lead_id: id, actor_id: actor.id, actor_name: actor.name, kind: "viewed", detail: "unread" }),
+  });
+  const rows = await responseJson<LeadActivity[]>(response);
+  if (!rows[0]) throw new Error("Could not mark this inquiry unread.");
+  return { activity: rows[0] };
+}

@@ -5,11 +5,11 @@ const vm = require('node:vm');
 const ts = require('typescript');
 function load(file, globals = {}) {
   const exports = {};
-  const code = ts.transpileModule(fs.readFileSync(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 } }).outputText;
+  const code = ts.transpileModule(fs.readFileSync(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, jsx: ts.JsxEmit.ReactJSX } }).outputText;
   vm.runInNewContext(code, { exports, ...globals });
   return exports;
 }
-const { viewState, filterInquiries, lastActivityAt } = load('src/lib/inquiry-views.ts');
+const { viewState, filterInquiries, lastActivityAt, isUnread, inquiryCounts } = load('src/lib/inquiry-views.ts');
 const defaults = { search: '', status: 'all', viewed: 'all', notes: 'all', sort: 'newest' };
 function lead(overrides = {}) {
   return { id: 'a', name: 'Alex', created_at: '2026-09-29T12:00:00Z', updated_at: '2026-09-29T12:00:00Z', tracking_started_at: '2026-09-30T12:00:00Z', status: 'new', notes: [], activity: [], date_undecided: false, ...overrides };
@@ -69,7 +69,7 @@ function routeSetup(user) {
       if (name === 'next/server') return { NextResponse: { json: (body, options) => ({ body, status: options?.status || 200 }) } };
       if (name.includes('admin-auth')) return { getAdminUser: async () => user, canSeeInquiries: account => ['owner', 'planner', 'inquiry_staff'].includes(account.role) };
       if (name.includes('admin-types')) return { LEAD_STATUSES: ['new', 'reviewing', 'contacted', 'qualified', 'booked', 'archived', 'spam'] };
-      if (name.includes('admin-data')) return { applyLeadActivity: async (...args) => { calls.push(args); return { activity: { kind: args[2] } }; } };
+      if (name.includes('admin-data')) return { markLeadUnread: async (...args) => { calls.push([...args, "mark_unread"]); return { activity: { detail: "unread" } }; }, applyLeadActivity: async (...args) => { calls.push(args); return { activity: { kind: args[2] } }; } };
       throw Error(name);
     },
   });
@@ -109,4 +109,86 @@ test('tracking reader paginates past the database row cap', async () => {
   const result = await getLeadTracking();
   assert.equal(result.activity.length, 1001);
   assert.equal(calls, 3);
+});
+
+test('personal unread is independent of colleagues and historical unknown state', () => {
+  const row = lead({ activity: [{ kind: 'viewed', actor_id: 'tj', detail: null }] });
+  assert.equal(isUnread(row, 'tj'), false);
+  assert.equal(isUnread(row, 'tanah'), true);
+  assert.equal(isUnread(lead(), 'tj'), true);
+  assert.deepEqual(ids(filterInquiries([row], { ...defaults, viewed: 'unread', actorId: 'tanah' })), ['a']);
+  assert.deepEqual(ids(filterInquiries([row], { ...defaults, viewed: 'unread', actorId: 'tj' })), []);
+});
+test('mark unread preserves shared seen history and reopening restores personal read', () => {
+  const history = [{ kind: 'viewed', actor_id: 'tj', detail: 'unread' }, { kind: 'viewed', actor_id: 'tanah', detail: null }, { kind: 'viewed', actor_id: 'tj', detail: null }];
+  assert.equal(isUnread(lead({ activity: history }), 'tj'), true);
+  assert.equal(isUnread(lead({ activity: history }), 'tanah'), false);
+  assert.equal(viewState(lead({ activity: history })), 'viewed');
+  assert.equal(isUnread(lead({ activity: [{ kind: 'viewed', actor_id: 'tj', detail: null }, ...history] }), 'tj'), false);
+});
+test('overview counts use personal unread and shared statuses', () => {
+  const rows = [lead(), lead({ id: 'b', status: 'booked', activity: [{ kind: 'viewed', actor_id: 'tj' }] }), lead({ id: 'c', status: 'contacted' })];
+  assert.equal(JSON.stringify(inquiryCounts(rows, 'tj')), JSON.stringify({ total: 3, unread: 2, contacted: 1, booked: 1 }));
+  assert.equal(rows[0].status, 'new');
+});
+test('mark unread uses signed-in identity, ignoring a forged actor', async () => {
+  const user = { id: 'tj', name: 'TJ', role: 'owner' };
+  const { routes, calls } = routeSetup(user);
+  const result = await routes.POST({ json: async () => ({ action: 'mark_unread', actor_id: 'tanah' }) }, context);
+  assert.equal(result.status, 200);
+  assert.equal(calls[0][1], user);
+  assert.equal(calls[0][2], 'mark_unread');
+});
+
+test('unread inbox opens immediately, persists even when row leaves filter, and mark unread survives rerender', async () => {
+  const hooks = [], effects = [];
+  let cursor = 0, requests = [], resolveView;
+  const helpers = load('src/lib/inquiry-views.ts');
+  const jsx = (type, props) => ({ type, props });
+  const { default: Dashboard } = load('src/app/admin/inquiries/InquiriesDashboard.tsx', {
+    window: { matchMedia: () => ({ matches: false }), setTimeout: () => 0 },
+    fetch: async (_, init) => {
+      const action = JSON.parse(init.body).action; requests.push(action);
+      if (action === 'view') await new Promise(resolve => { resolveView = resolve; });
+      return { ok: true, json: async () => ({ activity: { id: String(requests.length), kind: 'viewed', actor_id: 'tj', actor_name: 'TJ', detail: action === 'mark_unread' ? 'unread' : null, created_at: '2026-10-05T12:00:00Z' } }) };
+    },
+    require: name => {
+      if (name === 'react') return {
+        useState: initial => { const index = cursor++; if (!(index in hooks)) hooks[index] = initial; return [hooks[index], next => { hooks[index] = typeof next === 'function' ? next(hooks[index]) : next; }]; },
+        useRef: initial => { const index = cursor++; return hooks[index] ||= { current: initial }; },
+        useMemo: fn => fn(), useEffect: fn => effects.push(fn),
+        createElement: (type, props, ...children) => jsx(type, { ...props, children }),
+      };
+      if (name === 'react/jsx-runtime') return { jsx, jsxs: jsx, Fragment: 'fragment' };
+      if (name === 'next/image') return () => null;
+      if (name.includes('admin-types')) return { LEAD_STATUSES: ['new', 'contacted', 'booked'] };
+      if (name.includes('inquiry-views')) return helpers;
+      if (name.endsWith('.css')) return { default: {} };
+      throw Error(name);
+    },
+  });
+  const row = lead({ name: 'Test Lead', source: 'admin', services: [], attachments: [] });
+  const render = () => { cursor = 0; effects.length = 0; return Dashboard({ initialLeads: [row], user: { id: 'tj', name: 'TJ' } }); };
+  function buttons(node, result = []) {
+    if (!node || typeof node !== 'object') return result;
+    if (Array.isArray(node)) { node.forEach(child => buttons(child, result)); return result; }
+    if (node.type === 'button') result.push(node);
+    buttons(node.props?.children, result); return result;
+  }
+  const text = node => typeof node === 'string' ? node : Array.isArray(node) ? node.map(text).join('') : node && typeof node === 'object' ? text(node.props?.children) : '';
+  buttons(render()).find(button => text(button).includes('Waiting for you to open')).props.onClick();
+  let tree = render();
+  buttons(tree).find(button => text(button).includes('Test Lead')).props.onClick();
+  tree = render();
+  assert.equal(helpers.isUnread(hooks[0][0], 'tj'), false);
+  assert.equal(buttons(tree).some(button => text(button).includes('Test Lead')), false);
+  effects[0]();
+  assert.deepEqual(requests, ['view']);
+  resolveView(); await new Promise(setImmediate);
+  tree = render();
+  const mark = buttons(tree).find(button => text(button) === 'Mark unread for me');
+  await mark.props.onClick(); await new Promise(setImmediate);
+  render(); effects[0]();
+  assert.equal(helpers.isUnread(hooks[0][0], 'tj'), true);
+  assert.deepEqual(requests, ['view', 'mark_unread']);
 });

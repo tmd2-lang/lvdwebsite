@@ -26,3 +26,12 @@ Preview screenshots are saved locally for the handoff and are not included in th
 
 
 October 1 follow-up: the detail panel now stays visible while browsing the desktop list, opening an inquiry starts its content at the top, and the mobile panel supports Tab, Shift+Tab, and Escape without moving focus behind it.
+
+## October 5 preview — Your own unread inbox
+
+- Four overview cards show Total inquiries, your Unread count, Contacted, and Booked. Click a card to filter the list.
+- An unread inquiry has a dot and bold name. Opening it marks it read for you immediately.
+- TJ opening an inquiry leaves it unread for Tanah. Both can still see who has opened it.
+- Use “Mark unread for me” to put an inquiry back in your unread inbox.
+- Opening an inquiry keeps its status unchanged. Update Contacted or Booked separately.
+- Reviewed on localhost and approved for production release on October 6.

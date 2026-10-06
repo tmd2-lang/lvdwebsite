@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { canSeeInquiries, getAdminUser } from "@/lib/admin-auth";
-import { applyLeadActivity, deleteLead } from "@/lib/admin-data";
+import { applyLeadActivity, deleteLead, markLeadUnread } from "@/lib/admin-data";
 import { LEAD_STATUSES, type LeadStatus } from "@/lib/admin-types";
 
 export const runtime = "nodejs";
@@ -39,6 +39,8 @@ export async function POST(request: Request, context: RouteContext) {
     const { id } = await context.params;
     const payload = (await request.json()) as { body?: unknown; action?: unknown };
     if (payload.action === "view") return NextResponse.json(await applyLeadActivity(id, user, "viewed"));
+    if (payload.action === "mark_unread") return NextResponse.json(await markLeadUnread(id, user));
+    if (payload.action !== undefined) return NextResponse.json({ error: "Choose a valid action." }, { status: 400 });
     const body = typeof payload.body === "string" ? payload.body.trim() : "";
     if (!body) return NextResponse.json({ error: "Write a note first." }, { status: 400 });
     if (body.length > 4000) return NextResponse.json({ error: "That note is a little too long." }, { status: 400 });

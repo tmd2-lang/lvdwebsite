@@ -3,7 +3,7 @@
 import { FormEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { LEAD_STATUSES } from "@/lib/admin-types";
-import { filterInquiries, lastActivityAt, latestView, viewState, type InquiryFilters } from "@/lib/inquiry-views";
+import { filterInquiries, lastActivityAt, latestView, viewState, isUnread, inquiryCounts, type InquiryFilters } from "@/lib/inquiry-views";
 import type { AdminLead, AdminUser, LeadNote, LeadStatus, LeadActivity } from "@/lib/admin-types";
 import styles from "./inquiries.module.css";
 
@@ -108,6 +108,7 @@ export default function InquiriesDashboard({
   const [viewFilter, setViewFilter] = useState<InquiryFilters["viewed"]>("all");
   const [notesFilter, setNotesFilter] = useState<InquiryFilters["notes"]>("all");
   const [sort, setSort] = useState<InquiryFilters["sort"]>("newest");
+  const [openVersion, setOpenVersion] = useState(0);
   const recordedViews = useRef(new Set<string>());
   const detailPanelRef = useRef<HTMLElement>(null);
   const detailScrollRef = useRef<HTMLDivElement>(null);
@@ -115,13 +116,15 @@ export default function InquiriesDashboard({
   const [savingStatus, setSavingStatus] = useState(false);
   const [selectedLeadIds, setSelectedLeadIds] = useState<string[]>([]);
   const [deletingSelected, setDeletingSelected] = useState(false);
+  const [savingRead, setSavingRead] = useState(false);
   const [savingNote, setSavingNote] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
   const visibleLeads = useMemo(() => filterInquiries(leads, {
-    search, status: statusFilter, viewed: viewFilter, notes: notesFilter, sort,
-  }), [leads, search, statusFilter, viewFilter, notesFilter, sort]);
+    search, status: statusFilter, viewed: viewFilter, notes: notesFilter, sort, actorId: user.id,
+  }), [leads, search, statusFilter, viewFilter, notesFilter, sort, user.id]);
+  const counts = inquiryCounts(leads, user.id);
   const selected = leads.find((lead) => lead.id === selectedId) || null;
   const selectedGmailUrl = selected?.email ? gmailComposeUrl(selected.email, selected.name) : "";
   const trackingAvailable = Boolean(initialLeads[0]?.tracking_started_at);
@@ -131,19 +134,19 @@ export default function InquiriesDashboard({
     // A default preview is not a view. Track only an explicitly opened lead or deep link.
     if (!selectedId || !trackingAvailable || recordedViews.current.has(selectedId)) return;
     if (window.matchMedia("(max-width: 760px)").matches && !mobileDetailOpen) return;
-    if (!visibleLeads.some((lead) => lead.id === selectedId)) return;
     const id = selectedId;
     recordedViews.current.add(id);
+    const pendingId = `pending-view-${id}`;
     void fetch(`/api/admin/inquiries/${id}`, {
       method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "view" }),
     }).then((response) => responseJson<{ activity: LeadActivity }>(response)).then((result) => {
       setLeads((current) => current.map((lead) => lead.id === id
-        ? { ...lead, activity: [result.activity, ...(lead.activity || [])] } : lead));
+        ? { ...lead, activity: [result.activity, ...(lead.activity || []).filter((item) => item.id !== pendingId)] } : lead));
     }).catch((caught) => {
-      recordedViews.current.delete(id);
+      setLeads((current) => current.map((lead) => lead.id === id ? { ...lead, activity: (lead.activity || []).filter((item) => item.id !== pendingId) } : lead));
       setError(caught instanceof Error ? caught.message : "Could not record this view.");
     });
-  }, [selectedId, trackingAvailable, mobileDetailOpen, visibleLeads]);
+  }, [selectedId, trackingAvailable, mobileDetailOpen, user.id, user.name, openVersion]);
 
   useEffect(() => {
     const panel = detailPanelRef.current;
@@ -221,10 +224,38 @@ export default function InquiriesDashboard({
   const allVisibleSelected = visibleLeads.length > 0 && visibleLeads.every((lead) => selectedLeadIds.includes(lead.id));
 
   function chooseLead(id: string) {
+    if (savingRead || leads.find((lead) => lead.id === id)?.activity?.some((item) => item.id.startsWith("pending-view-"))) return;
+    recordedViews.current.delete(id);
+    if (trackingAvailable) {
+      const pending: LeadActivity = { id: `pending-view-${id}`, lead_id: id, actor_id: user.id, actor_name: user.name, kind: "viewed", detail: null, created_at: new Date().toISOString() };
+      setLeads((current) => current.map((lead) => lead.id === id ? { ...lead, activity: [pending, ...(lead.activity || []).filter((item) => item.id !== pending.id)] } : lead));
+    }
+    setOpenVersion((value) => value + 1);
     setSelectedId(id);
     setMobileDetailOpen(true);
     setError("");
     setMessage("");
+  }
+
+  function filterCard(kind: "total" | "unread" | "contacted" | "booked") {
+    clearFilters(); setSelectedId(""); setMobileDetailOpen(false); setSelectedLeadIds([]);
+    if (kind === "unread") setViewFilter("unread");
+    if (kind === "contacted" || kind === "booked") setStatusFilter(kind);
+  }
+
+  async function markUnread() {
+    if (!selected || savingRead) return;
+    const id = selected.id;
+    setSavingRead(true); setError("");
+    try {
+      const result = await responseJson<{ activity: LeadActivity }>(await fetch(`/api/admin/inquiries/${id}`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "mark_unread" }),
+      }));
+      recordedViews.current.add(id);
+      setLeads((current) => current.map((lead) => lead.id === id ? { ...lead, activity: [result.activity, ...(lead.activity || [])] } : lead));
+      announce("Marked unread for you.");
+    } catch (caught) { setError(caught instanceof Error ? caught.message : "Could not mark unread."); }
+    finally { setSavingRead(false); }
   }
 
   function announce(text: string) {
@@ -358,7 +389,7 @@ export default function InquiriesDashboard({
         <nav aria-label="Studio navigation">
           <a href="/admin">Home</a>
           <a href="/admin/portal">Client portal</a>
-          <a className={styles.navActive} href="/admin/inquiries"><span>Inquiries</span><b>{leads.filter((lead) => lead.status === "new").length}</b></a>
+          <a className={styles.navActive} href="/admin/inquiries"><span>Inquiries</span><b>{trackingAvailable ? counts.unread : counts.total}</b></a>
           <a href="/admin/profile">Profile</a>
         </nav>
         <div className={styles.account}>
@@ -382,6 +413,18 @@ export default function InquiriesDashboard({
           <div className={styles.today}><span>Today</span><b>{new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric" }).format(new Date())}</b></div>
         </div>
 
+        <section className={styles.summaryCards} aria-label="Inquiry overview">
+          {([
+            { key: "total", label: "Total inquiries", hint: "Across your studio" },
+            { key: "unread", label: "Unread", hint: "Waiting for you to open" },
+            { key: "contacted", label: "Contacted", hint: "Leads you've reached out to" },
+            { key: "booked", label: "Booked", hint: "Confirmed bookings" },
+          ] as const).map((card) => <button type="button" key={card.key} disabled={card.key === "unread" && !trackingAvailable}
+            aria-pressed={card.key === "total" ? !hasFilters : card.key === "unread" ? viewFilter === "unread" : statusFilter === card.key}
+            onClick={() => filterCard(card.key)}>
+            <span>{card.label}</span><b>{card.key === "unread" && !trackingAvailable ? "—" : counts[card.key]}</b><small>{card.hint}</small>
+          </button>)}
+        </section>
         {!trackingAvailable && <p className={styles.trackingNotice}>View tracking is awaiting setup. Historical views are unavailable; notes and status filters still work.</p>}
         {!selected && (message || error) && <p className={error ? styles.toastError : styles.toast} role={error ? "alert" : "status"}>{error || message}</p>}
         <div className={styles.contentGrid}>
@@ -396,9 +439,8 @@ export default function InquiriesDashboard({
                   <option value="all">All statuses</option><option value="not_contacted">Not contacted (New / Reviewing)</option>
                   {LEAD_STATUSES.map((status) => <option key={status} value={status}>{STATUS_LABELS[status]}</option>)}
                 </select></label>
-                <label>Viewed<select value={viewFilter} disabled={!trackingAvailable} onChange={(event) => { setViewFilter(event.target.value as InquiryFilters["viewed"]); setSelectedId(""); setMobileDetailOpen(false); setSelectedLeadIds([]); }}>
-                  <option value="all">All view history</option><option value="viewed">Viewed by studio</option>
-                  <option value="unviewed">Not viewed yet</option><option value="unknown">Earlier history unknown</option>
+                <label>Read / unread<select value={viewFilter} disabled={!trackingAvailable} onChange={(event) => { setViewFilter(event.target.value as InquiryFilters["viewed"]); setSelectedId(""); setMobileDetailOpen(false); setSelectedLeadIds([]); }}>
+                  <option value="all">All inquiries</option><option value="unread">Unread for me</option><option value="read">Read by me</option><option value="viewed">Seen by anyone in studio</option>
                 </select></label>
                 <label>Notes<select value={notesFilter} onChange={(event) => { setNotesFilter(event.target.value as InquiryFilters["notes"]); setSelectedId(""); setMobileDetailOpen(false); setSelectedLeadIds([]); }}>
                   <option value="all">With or without notes</option><option value="with">Has notes</option><option value="without">No notes</option>
@@ -430,15 +472,16 @@ export default function InquiriesDashboard({
                   <label className={styles.selectLead}>
                     <input type="checkbox" checked={selectedLeadIds.includes(lead.id)} onChange={() => toggleLeadSelection(lead.id)} aria-label={`Select ${lead.name || "new inquiry"}`} />
                   </label>
-                  <button type="button" className={`${styles.leadCard} ${selected?.id === lead.id ? styles.leadCardActive : ""}`} onClick={() => chooseLead(lead.id)} aria-pressed={selected?.id === lead.id}>
+                  <button type="button" className={`${styles.leadCard} ${trackingAvailable && isUnread(lead, user.id) ? styles.leadUnread : ""} ${selected?.id === lead.id ? styles.leadCardActive : ""}`} onClick={() => chooseLead(lead.id)} aria-pressed={selected?.id === lead.id}>
 
                     <span className={styles.cardMain}>
-                      <span className={styles.cardTitle}><b>{lead.name || "New inquiry"}</b></span>
+                      <span className={styles.cardTitle}>{trackingAvailable && isUnread(lead, user.id) && <span className={styles.unreadDot} aria-label="Unread for you" />}<b>{lead.name || "New inquiry"}</b></span>
                       <span className={styles.cardEvent}>{readableDate(lead.event_date, lead.date_undecided)}</span>
                       <span className={styles.cardBadges}><span>{STATUS_LABELS[lead.status]}</span><span>{lead.notes.length} {lead.notes.length === 1 ? "note" : "notes"}</span>
-                        <span>{viewState(lead) === "viewed" ? "Viewed" : viewState(lead) === "unviewed" ? "Not viewed" : "View history unknown"}</span>
+                        <span>{trackingAvailable ? isUnread(lead, user.id) ? "Unread for you" : "Read by you" : "Read tracking unavailable"}</span>
                       </span>
                       <span className={styles.cardMeta}>Received {submittedAt(lead.created_at)}</span>
+                      <span className={styles.cardMeta}>{latestView(lead) ? `Seen by ${latestView(lead)!.actor_name}` : ""}</span>
                       <span className={styles.cardMeta}>Activity {submittedAt(lastActivityAt(lead))}</span>
                     </span>
                   </button>
@@ -466,6 +509,9 @@ export default function InquiriesDashboard({
                       {LEAD_STATUSES.map((status) => <option key={status} value={status}>{STATUS_LABELS[status]}</option>)}
                     </select></label>
                     <p>{savingStatus ? "Saving status…" : "Update after contacting the lead. Opening Gmail does not mark them contacted."}</p>
+                    <div className={styles.readControls}><span>{trackingAvailable ? isUnread(selected, user.id) ? "Unread for you" : "Read by you" : "Read tracking unavailable"}</span>
+                      <button type="button" disabled={!trackingAvailable || savingRead || selected.activity?.some((item) => item.id.startsWith("pending-view-")) || isUnread(selected, user.id)} onClick={() => void markUnread()}>{savingRead ? "Saving…" : "Mark unread for me"}</button>
+                    </div>
                     <p>{latestView(selected) ? `Last opened by ${latestView(selected)?.actor_name} · ${submittedAt(latestView(selected)!.created_at)}` : viewState(selected) === "unviewed" ? "Not yet opened by the studio." : "Earlier view history is unavailable."}</p>
                   </section>
                   {(selected.email || selected.phone) && (
@@ -582,11 +628,11 @@ export default function InquiriesDashboard({
 
                   <section className={styles.detailSection}>
                     <h3>Studio activity</h3>
-                    <p className={styles.activityHelp}>Views are shared across the studio. Earlier activity is not backfilled.</p>
+                    <p className={styles.activityHelp}>Read / unread is personal. The studio can still see who opened an inquiry. Earlier activity is not backfilled.</p>
                     {(selected.activity?.length || 0) > 30 && <p className={styles.activityHelp}>Showing the latest 30 events.</p>}
                     <ol className={styles.activityList}>
                       {(selected.activity || []).slice(0, 30).map((item) => <li key={item.id}>
-                        <b>{item.actor_name}</b> {item.kind === "viewed" ? "opened this inquiry" : item.kind === "note_added" ? "added a private note" : `changed status to ${STATUS_LABELS[item.detail as LeadStatus] || item.detail}`}
+                        <b>{item.actor_name}</b> {item.kind === "viewed" ? item.detail === "unread" ? "marked unread for themselves" : "opened this inquiry" : item.kind === "note_added" ? "added a private note" : `changed status to ${STATUS_LABELS[item.detail as LeadStatus] || item.detail}`}
                         <time dateTime={item.created_at}>{submittedAt(item.created_at)}</time>
                       </li>)}
                     </ol>

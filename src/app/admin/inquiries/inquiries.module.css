@@ -211,3 +211,21 @@
 @media (max-width: 380px) {
   .filters, .eventDetails { grid-template-columns: 1fr; }
 }
+
+.summaryCards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; margin: 1.6rem 0; }
+.summaryCards button { display: grid; gap: 0.55rem; text-align: left; border: 1px solid #ded5c7; border-radius: 6px; padding: 1.25rem; background: #fffdfa; color: #2e2923; cursor: pointer; }
+.summaryCards button:hover { border-color: #a98a50; }
+.summaryCards button[aria-pressed="true"] { background: #f3ecdf; border-color: #a98a50; box-shadow: inset 0 3px #a98a50; }
+.summaryCards button:disabled { opacity: 0.55; cursor: default; }
+.summaryCards span { font-size: 0.85rem; font-weight: 600; }
+.summaryCards b { font-family: var(--font-bodoni); font-size: clamp(2.2rem, 3vw, 3rem); font-weight: 500; line-height: 1; }
+.summaryCards small { color: #756858; font-size: 0.72rem; line-height: 1.4; }
+.cardTitle { display: flex; align-items: center; gap: 0.5rem; }
+.unreadDot { width: 8px; height: 8px; flex: 0 0 8px; border-radius: 50%; background: #9a7435; }
+.leadUnread { background: #fcf8ef; }
+.leadUnread .cardTitle b { font-weight: 700; }
+.readControls { display: flex; align-items: center; justify-content: space-between; gap: 0.65rem; color: #6f6253; font-size: 0.8rem; }
+.readControls button { min-height: 44px; padding: 0.5rem 0.75rem; border: 1px solid #cfc5b7; border-radius: 4px; background: #faf8f4; color: #55432e; font: inherit; cursor: pointer; }
+.readControls button:disabled { opacity: 0.5; cursor: default; }
+@media (max-width: 1080px) { .summaryCards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) { .summaryCards { margin: 1rem; gap: 0.65rem; } .summaryCards button { padding: 1rem; } }

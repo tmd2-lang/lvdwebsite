@@ -4,12 +4,23 @@ export type ViewState = "viewed" | "unviewed" | "unknown" | "unavailable";
 export type InquiryFilters = {
   search: string;
   status: "all" | LeadStatus | "not_contacted";
-  viewed: "all" | ViewState;
+  viewed: "all" | ViewState | "read" | "unread";
+  actorId?: string;
   notes: "all" | "with" | "without";
   sort: "newest" | "oldest" | "event" | "activity";
 };
 export function latestView(lead: AdminLead): LeadActivity | undefined {
-  return lead.activity?.find((item) => item.kind === "viewed");
+  return lead.activity?.find((item) => item.kind === "viewed" && item.detail !== "unread");
+}
+// Unread markers preserve shared view history while resetting only this actor's inbox.
+export function isUnread(lead: AdminLead, actorId: string): boolean {
+  const latest = lead.activity?.find((item) => item.kind === "viewed" && item.actor_id === actorId);
+  return !latest || latest.detail === "unread";
+}
+export function inquiryCounts(leads: AdminLead[], actorId: string) {
+  return { total: leads.length, unread: leads.filter((lead) => isUnread(lead, actorId)).length,
+    contacted: leads.filter((lead) => lead.status === "contacted").length,
+    booked: leads.filter((lead) => lead.status === "booked").length };
 }
 export function viewState(lead: AdminLead): ViewState {
   if (latestView(lead)) return "viewed";
@@ -27,7 +38,7 @@ export function filterInquiries(leads: AdminLead[], filters: InquiryFilters): Ad
       ...lead.notes.map((note) => note.body)].filter(Boolean).join(" ").toLowerCase();
     return (!query || haystack.includes(query))
       && (filters.status === "all" || (filters.status === "not_contacted" ? ["new", "reviewing"].includes(lead.status) : lead.status === filters.status))
-      && (filters.viewed === "all" || viewState(lead) === filters.viewed)
+      && (filters.viewed === "all" || (filters.viewed === "read" || filters.viewed === "unread" ? isUnread(lead, filters.actorId || "") === (filters.viewed === "unread") : viewState(lead) === filters.viewed))
       && (filters.notes === "all" || (filters.notes === "with" ? lead.notes.length > 0 : lead.notes.length === 0));
   }).sort((a, b) => {
     let comparison = 0;
