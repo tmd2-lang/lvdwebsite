@@ -1,4 +1,5 @@
 import { attributionForSubmit } from "./attribution";
+import { rememberConsultation } from "./consultation-booking";
 import { trackGA4 } from "./ga4";
 
 export type LeadSource = "inquire" | "consultation" | "reserve" | "style_quiz";
@@ -34,6 +35,8 @@ export async function submitLead(submission: LeadSubmission) {
   if (!response.ok) {
     throw new Error(typeof result.error === "string" ? result.error : "Could not submit your inquiry.");
   }
+
+  rememberConsultation(result.leadId, submission.name, submission.email);
 
   if (typeof window !== "undefined") {
     const path = window.location.pathname.replace(/\/$/, "");

@@ -3,9 +3,10 @@
 import { FormEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { LEAD_STATUSES } from "@/lib/admin-types";
+import { consultationLabel } from "@/lib/consultation-display";
 import { adSourceLabel } from "@/lib/ad-source";
 import { filterInquiries, lastActivityAt, latestView, viewState, isUnread, inquiryCounts, type InquiryFilters } from "@/lib/inquiry-views";
-import type { AdminLead, AdminUser, LeadNote, LeadStatus, LeadActivity } from "@/lib/admin-types";
+import type { AdminLead, AdminUser, LeadNote, LeadStatus, LeadActivity, LeadAppointment } from "@/lib/admin-types";
 import styles from "./inquiries.module.css";
 
 const STATUS_LABELS: Record<LeadStatus, string> = {
@@ -380,6 +381,22 @@ export default function InquiriesDashboard({
     window.location.assign("/admin/login");
   }
 
+  useEffect(() => {
+    let active = true;
+    const refresh = async () => {
+      if (document.visibilityState === "hidden") return;
+      try {
+        const response = await fetch("/api/admin/inquiries/appointments", { cache: "no-store" });
+        if (!response.ok) return;
+        const result = await response.json() as { available: boolean; appointments: LeadAppointment[] };
+        if (active) setLeads((current) => current.map((lead) => ({ ...lead, consultation_sync_available: result.available,
+          appointments: result.appointments.filter((item) => item.lead_id === lead.id) })));
+      } catch { /* The next interval retries without interrupting planner edits. */ }
+    };
+    const timer = window.setInterval(() => { void refresh(); }, 60000);
+    return () => { active = false; window.clearInterval(timer); };
+  }, []);
+
   return (
     <main className={`${styles.app} ${portalMode ? styles.portalMode : ""}`}>
       <aside className={styles.sidebar}>
@@ -481,6 +498,7 @@ export default function InquiriesDashboard({
                       <span className={styles.cardBadges}><span>{STATUS_LABELS[lead.status]}</span><span>{lead.notes.length} {lead.notes.length === 1 ? "note" : "notes"}</span>
                         <span>{trackingAvailable ? isUnread(lead, user.id) ? "Unread for you" : "Read by you" : "Read tracking unavailable"}</span>
                       </span>
+                      <span className={styles.cardConsultation}>{consultationLabel(lead)}</span>
                       {adSourceLabel(lead) && <span className={styles.cardSource}>{adSourceLabel(lead)}</span>}
                       <span className={styles.cardMeta}>Received {submittedAt(lead.created_at)}</span>
                       <span className={styles.cardMeta}>{latestView(lead) ? `Seen by ${latestView(lead)!.actor_name}` : ""}</span>
@@ -506,6 +524,11 @@ export default function InquiriesDashboard({
                 <div key={selected.id} ref={detailScrollRef} className={styles.detailScroll}>
                   {(message || error) && <p className={error ? styles.toastError : styles.toast} role={error ? "alert" : "status"}>{error || message}</p>}
                   {!visibleLeads.some((lead) => lead.id === selected.id) && <p className={styles.trackingNotice}>This open inquiry no longer matches your filters. Its details stay open until you choose another inquiry or change filters.</p>}
+                  <section className={styles.consultationBlock} aria-label="Design consultation">
+                    <h3>Design consultation</h3>
+                    <p>{consultationLabel(selected)}</p>
+                    <small>Synced from Calendly. Scheduling does not confirm attendance or a booked event.</small>
+                  </section>
                   <section className={styles.statusControls} aria-label="Inquiry status">
                     <label>Status<select value={selected.status} disabled={savingStatus} onChange={(event) => void changeStatus(event.target.value as LeadStatus)}>
                       {LEAD_STATUSES.map((status) => <option key={status} value={status}>{STATUS_LABELS[status]}</option>)}
@@ -651,7 +674,7 @@ export default function InquiriesDashboard({
                     {(selected.activity?.length || 0) > 30 && <p className={styles.activityHelp}>Showing the latest 30 events.</p>}
                     <ol className={styles.activityList}>
                       {(selected.activity || []).slice(0, 30).map((item) => <li key={item.id}>
-                        <b>{item.actor_name}</b> {item.kind === "viewed" ? item.detail === "unread" ? "marked unread for themselves" : "opened this inquiry" : item.kind === "note_added" ? "added a private note" : `changed status to ${STATUS_LABELS[item.detail as LeadStatus] || item.detail}`}
+                        <b>{item.actor_name}</b> {item.kind === "viewed" ? item.detail === "unread" ? "marked unread for themselves" : "opened this inquiry" : item.kind === "note_added" ? "added a private note" : item.kind.startsWith("appointment_") ? `${item.kind === "appointment_scheduled" ? "scheduled" : item.kind === "appointment_rescheduled" ? "rescheduled" : "canceled"} a design consultation${item.detail ? ` · ${submittedAt(item.detail)} ET` : ""}` : `changed status to ${STATUS_LABELS[item.detail as LeadStatus] || item.detail}`}
                         <time dateTime={item.created_at}>{submittedAt(item.created_at)}</time>
                       </li>)}
                     </ol>

@@ -22,7 +22,8 @@ function setup({ blocked = false, stored = null, ok = true } = {}) {
   }
   const ga = load('src/lib/ga4.ts');
   const attribution = load('src/lib/attribution.ts');
-  const lead = load('src/lib/lead-submit.ts', name => name.includes('attribution') ? attribution : ga);
+  const booking = load('src/lib/consultation-booking.ts');
+  const lead = load('src/lib/lead-submit.ts', name => name.includes('consultation-booking') ? booking : name.includes('attribution') ? attribution : ga);
   const events = () => (window.dataLayer || []).map(a => Array.from(a));
   return { ga, attribution, lead, window, storage, local, events, load, context };
 }

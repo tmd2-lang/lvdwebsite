@@ -1,4 +1,4 @@
-import type { AdminLead, LeadNote, LeadStatus, LeadActivity } from "@/lib/admin-types";
+import type { AdminLead, LeadNote, LeadStatus, LeadActivity, LeadAppointment } from "@/lib/admin-types";
 
 type StoredAdminLead = Omit<AdminLead, "attachments" | "notes"> & {
   payload: unknown;
@@ -68,7 +68,7 @@ export async function getAdminLeads({ includeMarketing = false } = {}): Promise<
       "meta_ad_id", "landing_page", "first_touch_at", "attribution"] : []),
   ].join(",");
 
-  const [leadsResponse, notesResponse, tracking] = await Promise.all([
+  const [leadsResponse, notesResponse, tracking, consultations] = await Promise.all([
     fetch(`${url}/rest/v1/leads?select=${leadFields}&order=created_at.desc`, {
       headers: databaseHeaders(),
       cache: "no-store",
@@ -78,6 +78,7 @@ export async function getAdminLeads({ includeMarketing = false } = {}): Promise<
       cache: "no-store",
     }),
     getLeadTracking(),
+    getLeadAppointments(),
   ]);
 
   const leads = await responseJson<StoredAdminLead[]>(leadsResponse);
@@ -97,6 +98,8 @@ export async function getAdminLeads({ includeMarketing = false } = {}): Promise<
     notes: notesByLead.get(lead.id) || [],
     activity: tracking.activity.filter((item) => item.lead_id === lead.id),
     tracking_started_at: tracking.startedAt,
+    appointments: consultations.appointments.filter((item) => item.lead_id === lead.id),
+    consultation_sync_available: consultations.available,
   }));
 }
 
@@ -204,4 +207,19 @@ export async function markLeadUnread(id: string, actor: { id: string; name: stri
   const rows = await responseJson<LeadActivity[]>(response);
   if (!rows[0]) throw new Error("Could not mark this inquiry unread.");
   return { activity: rows[0] };
+}
+
+export async function getLeadAppointments(): Promise<{ available: boolean; appointments: LeadAppointment[] }> {
+  const { url } = databaseConfig();
+  const appointments: LeadAppointment[] = [];
+  try {
+    for (let offset = 0; ; offset += 1000) {
+      const response = await fetch(`${url}/rest/v1/lead_appointments?select=id,lead_id,starts_at,ends_at,status,rescheduled,outcome&order=starts_at.desc,id.desc&offset=${offset}&limit=1000`, { headers: databaseHeaders(), cache: "no-store" });
+      if (!response.ok) return { available: false, appointments: [] };
+      const page = await response.json() as LeadAppointment[];
+      appointments.push(...page);
+      if (page.length < 1000) break;
+    }
+    return { available: true, appointments };
+  } catch { return { available: false, appointments: [] }; }
 }

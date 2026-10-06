@@ -234,3 +234,9 @@
 .readControls button:disabled { opacity: 0.5; cursor: default; }
 @media (max-width: 1080px) { .summaryCards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 760px) { .summaryCards { margin: 1rem; gap: 0.65rem; } .summaryCards button { padding: 1rem; } }
+
+.cardConsultation { display: block; color: #695344; font-size: .78rem; line-height: 1.5; margin-top: .45rem; }
+.consultationBlock { border: 1px solid #e2d8cc; background: #f7f2eb; border-radius: 12px; padding: 16px; margin-bottom: 18px; }
+.consultationBlock h3 { margin: 0 0 8px; font-size: .9rem; }
+.consultationBlock p { margin: 0 0 8px; font-size: .9rem; line-height: 1.5; }
+.consultationBlock small { display: block; color: #786f64; font-size: .75rem; line-height: 1.5; }

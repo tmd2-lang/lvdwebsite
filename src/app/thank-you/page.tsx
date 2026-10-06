@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import MarketingConversionTracking from "@/components/MarketingConversionTracking";
+import CalendlyBookingLink from "@/components/CalendlyBookingLink";
 import CalendlyEmbed from "@/components/CalendlyEmbed";
 
 export const metadata: Metadata = {
@@ -59,14 +60,13 @@ export default function ThankYouPage() {
           {/* Direct Link Fallback */}
           <div className="mt-5 flex items-center justify-center gap-2">
             <span className="font-body text-xs text-ink/60">Prefer opening in a new tab?</span>
-            <a
-              href="https://calendly.com/ladyvictoriadesigns"
+            <CalendlyBookingLink
               target="_blank"
               rel="noopener noreferrer"
               className="font-body text-xs uppercase tracking-widest text-gold font-semibold underline hover:text-ink transition-colors"
             >
               Open Calendar Full Screen ↗
-            </a>
+            </CalendlyBookingLink>
           </div>
         </div>
 

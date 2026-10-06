@@ -26,11 +26,19 @@ export type LeadActivity = {
   created_at: string;
   actor_id: string;
   actor_name: string;
-  kind: "viewed" | "status_changed" | "note_added";
+  kind: "viewed" | "status_changed" | "note_added" | "appointment_scheduled" | "appointment_canceled" | "appointment_rescheduled";
   detail: string | null;
 };
 
+export type LeadAppointment = {
+  id: string; lead_id: string | null; starts_at: string; ends_at: string;
+  status: "scheduled" | "canceled"; rescheduled: boolean;
+  outcome: "completed" | "no_show" | null;
+};
+
 export type AdminLead = {
+  appointments?: LeadAppointment[];
+  consultation_sync_available?: boolean;
   id: string;
   created_at: string;
   updated_at: string;

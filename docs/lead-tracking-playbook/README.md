@@ -18,7 +18,7 @@ proposal and the booking.
 |---|------|--------|
 | 1 | Save which ad each inquiry came from | Live (Oct 6, 2026) |
 | 2 | Show the ad on each inquiry in the portal (marketing viewers only) | Built |
-| 3 | Calendly updates the inquiry automatically | Not started |
+| 3 | Calendly updates the inquiry automatically | Built locally; awaiting migration, credentials and deployment |
 | 4 | One-click buttons after the call (outcome, fit, proposal, booked/lost) | Not started |
 | 5 | "Needs attention" list for the sales team | Not started |
 | 6 | Per-ad report: spend → inquiries → consults → bookings → $ | Not started |
@@ -109,3 +109,7 @@ doesn't break reports.
 
 - The new-inquiry email goes to the owner, so it does not include the ad.
 - Opening an inquiry marks it read for whoever opened it. Checking the portal yourself changes the sales team's unread counts only for your own account.
+
+## Step 3: Calendly updates the inquiry
+
+Design Consultation bookings, reschedules and cancellations sync to linked inquiries. See [activation instructions and data flow](CALENDLY-SETUP.md). This step is built and tested locally; live activation is still required.

@@ -3,7 +3,7 @@
 import Script from "next/script";
 import { useCallback, useEffect, useRef } from "react";
 
-const CALENDLY_URL = "https://calendly.com/ladyvictoriadesigns";
+import { consultationContext, consultationUrl } from "@/lib/consultation-booking";
 
 declare global {
   interface Window {
@@ -12,6 +12,7 @@ declare global {
         url: string;
         parentElement: HTMLElement;
         resize?: boolean;
+        prefill?: { name: string; email: string };
       }) => void;
     };
   }
@@ -26,8 +27,10 @@ export default function CalendlyEmbed() {
       return;
     }
 
+    const context = consultationContext();
     window.Calendly.initInlineWidget({
-      url: CALENDLY_URL,
+      url: consultationUrl(),
+      ...(context ? { prefill: { name: context.name, email: context.email } } : {}),
       parentElement: container,
       resize: true,
     });
