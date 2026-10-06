@@ -26,5 +26,5 @@ export default async function InquiriesPage({
   const requestedLeadId = typeof leadParam === "string" ? leadParam : "";
   const initialSelectedId = leads.some((lead) => lead.id === requestedLeadId) ? requestedLeadId : undefined;
 
-  return <InquiriesDashboard initialLeads={leads} user={user} initialSelectedId={initialSelectedId} />;
+  return <InquiriesDashboard initialLeads={leads} user={user} initialSelectedId={initialSelectedId} showAdReport={canSeeMarketing(user)} />;
 }

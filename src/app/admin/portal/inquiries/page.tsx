@@ -20,5 +20,5 @@ export default async function PortalInquiriesPage({
   const requestedLeadId = typeof leadParam === "string" ? leadParam : "";
   const initialSelectedId = leads.some((lead) => lead.id === requestedLeadId) ? requestedLeadId : undefined;
 
-  return <InquiriesDashboard initialLeads={leads} user={user} initialSelectedId={initialSelectedId} portalMode />;
+  return <InquiriesDashboard initialLeads={leads} user={user} initialSelectedId={initialSelectedId} showAdReport={canSeeMarketing(user)} portalMode />;
 }

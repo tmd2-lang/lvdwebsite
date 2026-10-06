@@ -99,11 +99,13 @@ export default function InquiriesDashboard({
   user,
   initialSelectedId,
   portalMode = false,
+  showAdReport = false,
 }: {
   initialLeads: AdminLead[];
   user: AdminUser;
   initialSelectedId?: string;
   portalMode?: boolean;
+  showAdReport?: boolean;
 }) {
   const [leads, setLeads] = useState(initialLeads);
   const [selectedId, setSelectedId] = useState(initialSelectedId || "");
@@ -435,6 +437,7 @@ export default function InquiriesDashboard({
           <a href="/admin">Home</a>
           <a href="/admin/portal">Client portal</a>
           <a className={styles.navActive} href="/admin/inquiries"><span>Inquiries</span><b>{trackingAvailable ? counts.unread : counts.total}</b></a>
+          {showAdReport && <a href="/admin/ad-report">Ad report</a>}
           <a href="/admin/profile">Profile</a>
         </nav>
         <div className={styles.account}>

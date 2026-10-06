@@ -20,8 +20,8 @@ proposal and the booking.
 | 2 | Show the ad on each inquiry in the portal (marketing viewers only) | Live (Oct 6, 2026) |
 | 3 | Calendly updates the inquiry automatically | Live (Oct 6, 2026); real booking lifecycle test pending |
 | 4 | One-click buttons after the call (outcome, fit, proposal, booked/lost) | Live (Oct 6, 2026) |
-| 5 | "Needs attention" list for the sales team | Built |
-| 6 | Per-ad report: spend → inquiries → consults → bookings → $ | Not started |
+| 5 | "Needs attention" list for the sales team | Live (Oct 6, 2026) |
+| 6 | Per-ad report: spend → inquiries → consults → bookings → $ | Built; waiting on database change |
 | 7 | Send qualified and booked results back to Meta | Not started |
 
 Rule for what's automatic vs. manual: anything a system knows is captured
@@ -186,3 +186,43 @@ current. They get a to-do list; the system gets its data as a side effect.
 
 - Only the last 14 days of uncontacted leads count. LVD had 83 old "New" inquiries; counting them all would bury the real to-dos. Older ones stay reachable through the "Not contacted" filter.
 - A consult booked for a later day replaces "not contacted": the next action is the consult itself.
+
+---
+
+## Step 6: The ad report
+
+**As Valentina:** the BTS ad brought her in, she picked $20–34k, booked a
+consult, was a good fit, got a $38,500 proposal and booked at $36,000. On the
+**Ad report** page, her inquiry is one of the BTS ad's inquiries, one of its
+"$20k+" picks, one of its consults, one of its bookings, and $36,000 of its
+booked revenue.
+
+**What it shows, per Meta ad:** spend · inquiries · cost per inquiry ·
+how many picked $20k+ · consults · completed · good fit · proposals ·
+booked (count and $) · cost per booking · lost. Totals at the top, including
+booked dollars per $1 spent. Inquiries that didn't come from a Meta ad are
+listed underneath for comparison.
+
+**Where each number comes from**
+
+| Number | Source |
+|---|---|
+| Spend | Typed in per ad on the page (step 7 will pull it from Meta) |
+| Inquiries, budgets | The inbox (step 1), grouped by the first ad clicked |
+| Consults | Calendly (step 3) or a recorded consult outcome |
+| Completed, fit, proposals, booked, lost | The Sales buttons (step 4); old-dropdown "Booked" counts too, without an amount |
+
+**Who sees it:** marketing viewers only (`/admin/ad-report`, linked in the
+inquiry sidebar). The page and the spend endpoint both refuse everyone else.
+
+**Setup at a new business**
+
+1. Run `supabase/ad-spend-schema.sql`.
+2. Each week, in Ads Manager set the date range to *the day tracking started → today*, and type each ad's "Amount spent".
+3. Set `HIGH_BUDGET_FROM` (`src/lib/ad-report.ts`) to the business's "good budget" line.
+
+**Gotchas**
+
+- Use spend since tracking started, not lifetime. Inquiries before that weren't saved, so lifetime spend makes older ads look worse than they are.
+- Count inquiries from the inbox, never Meta's "leads".
+- With only a handful of inquiries per ad, the percentages swing a lot. Treat them as hints until each ad has a few dozen.

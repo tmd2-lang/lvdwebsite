@@ -257,3 +257,25 @@ export async function applySalesUpdate(id: string, actor: { id: string; name: st
   }
   return await response.json() as { lead: Partial<AdminLead> & { id: string; status: LeadStatus; updated_at: string }; activity: LeadActivity };
 }
+
+// Step 6: spend per Meta ad, typed in on the Ad report page.
+export async function getAdSpend(): Promise<{ available: boolean; spend: Record<string, number> }> {
+  const { url } = databaseConfig();
+  try {
+    const response = await fetch(`${url}/rest/v1/ad_spend?select=meta_ad_id,spend`, { headers: databaseHeaders(), cache: "no-store" });
+    if (!response.ok) return { available: false, spend: {} };
+    const rows = await response.json() as { meta_ad_id: string; spend: number | string }[];
+    return { available: true, spend: Object.fromEntries(rows.map((row) => [row.meta_ad_id, Number(row.spend)])) };
+  } catch { return { available: false, spend: {} }; }
+}
+
+export async function saveAdSpend(adId: string, spend: number | null, actor: { name: string }) {
+  const { url } = databaseConfig();
+  const response = spend === null
+    ? await fetch(`${url}/rest/v1/ad_spend?meta_ad_id=eq.${encodeURIComponent(adId)}`, { method: "DELETE", headers: databaseHeaders(), cache: "no-store" })
+    : await fetch(`${url}/rest/v1/ad_spend?on_conflict=meta_ad_id`, {
+      method: "POST", headers: databaseHeaders("resolution=merge-duplicates,return=minimal"), cache: "no-store",
+      body: JSON.stringify({ meta_ad_id: adId, spend, updated_at: new Date().toISOString(), updated_by: actor.name }),
+    });
+  if (!response.ok) throw new Error("Could not save spend. Has ad-spend-schema.sql been applied?");
+}
