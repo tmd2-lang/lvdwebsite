@@ -64,9 +64,11 @@ test('database errors never fall back to unaudited writes except missing migrati
 });
 function routeSetup(user) {
   const calls = [];
+  const background = [];
   const routes = load('src/app/api/admin/inquiries/[id]/route.ts', {
     require: name => {
-      if (name === 'next/server') return { NextResponse: { json: (body, options) => ({ body, status: options?.status || 200 }) } };
+      if (name === 'next/server') return { after: fn => background.push(fn), NextResponse: { json: (body, options) => ({ body, status: options?.status || 200 }) } };
+      if (name.includes('meta-ads')) return { CAPI_EVENTS: { consult_completed: 'ConsultCompleted', fit_good: 'QualifiedLead', booked: 'Purchase' }, capiEvent: () => ({}), sendCapiEvent: async () => ({ skipped: true }) };
       if (name.includes('admin-auth')) return { getAdminUser: async () => user, canSeeInquiries: account => ['owner', 'planner', 'inquiry_staff'].includes(account.role) };
       if (name.includes('admin-types')) return { LEAD_STATUSES: ['new', 'reviewing', 'contacted', 'qualified', 'booked', 'archived', 'spam'] };
       if (name.includes('admin-data')) return { markLeadUnread: async (...args) => { calls.push([...args, "mark_unread"]); return { activity: { detail: "unread" } }; }, applyLeadActivity: async (...args) => { calls.push(args); return { activity: { kind: args[2] } }; }, applySalesUpdate: async (...args) => { calls.push([...args, 'sales']); return { lead: {}, activity: { kind: 'sales_update' } }; } };
@@ -74,7 +76,7 @@ function routeSetup(user) {
       throw Error(name);
     },
   });
-  return { routes, calls };
+  return { routes, calls, background };
 }
 const context = { params: Promise.resolve({ id: 'lead-id' }) };
 test('activity routes reject expired sessions and unauthorized roles before writing', async () => {
@@ -213,4 +215,17 @@ test('sales route validates the action and uses the signed-in identity', async (
   assert.equal(update.amount, null);
   await routes.POST({ json: async () => ({ action: 'sales', sales: { action: 'lost', reason: 'made_up' } }) }, context);
   assert.equal(calls[1][2].reason, null);
+});
+
+test('only completed, good fit and booked are reported to Meta, after the response', async () => {
+  const { routes, background } = routeSetup({ id: 'real-staff', name: 'Irene', role: 'owner' });
+  const context = { params: Promise.resolve({ id: 'lead-1' }) };
+  for (const action of ['consult_no_show', 'fit_not', 'proposal_sent', 'lost', 'outcome_clear']) {
+    await routes.POST({ json: async () => ({ action: 'sales', sales: { action, amount: 100, reason: 'budget' } }) }, context);
+  }
+  assert.equal(background.length, 0);
+  for (const action of ['consult_completed', 'fit_good', 'booked']) {
+    await routes.POST({ json: async () => ({ action: 'sales', sales: { action, amount: 36000 } }) }, context);
+  }
+  assert.equal(background.length, 3);
 });

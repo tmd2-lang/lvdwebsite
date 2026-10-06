@@ -34,10 +34,22 @@ function SpendInput({ row, onSave }: { row: AdRow; onSave: (adId: string, spend:
   );
 }
 
-export default function AdReport({ leads, initialSpend, spendAvailable }: { leads: AdminLead[]; initialSpend: Record<string, number>; spendAvailable: boolean }) {
+export default function AdReport({ leads, initialSpend, spendAvailable, names, metaSyncedAt }: {
+  leads: AdminLead[]; initialSpend: Record<string, number>; spendAvailable: boolean; names: Record<string, string>; metaSyncedAt: string | null;
+}) {
   const [spend, setSpend] = useState(initialSpend);
   const [error, setError] = useState("");
-  const report = useMemo(() => buildAdReport(leads, spend), [leads, spend]);
+  const [syncing, setSyncing] = useState(false);
+  const fromMeta = Boolean(metaSyncedAt);
+  const report = useMemo(() => buildAdReport(leads, spend, names), [leads, spend, names]);
+
+  async function refreshFromMeta() {
+    setSyncing(true); setError("");
+    const response = await fetch("/api/admin/ad-spend/sync", { method: "POST" }).catch(() => null);
+    const result = await response?.json().catch(() => ({}));
+    if (!response?.ok) { setError(result?.error || "Could not reach Meta."); setSyncing(false); return; }
+    window.location.reload();
+  }
   const { totals } = report;
 
   async function saveSpend(adId: string, value: number | null) {
@@ -71,6 +83,10 @@ export default function AdReport({ leads, initialSpend, spendAvailable }: { lead
         {tiles.map((tile) => <div key={tile.label}><span>{tile.label}</span><b>{tile.value}</b></div>)}
       </section>
 
+      <div className={styles.syncBar}>
+        <span>{fromMeta ? `Spend from Meta · updated ${new Date(metaSyncedAt!).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: "America/New_York" })} ET · refreshes every morning` : "Spend is typed in by hand until Meta is connected."}</span>
+        <button type="button" onClick={() => void refreshFromMeta()} disabled={syncing}>{syncing ? "Refreshing…" : "Refresh from Meta"}</button>
+      </div>
       {!spendAvailable && <p className={styles.notice}>Spend can&apos;t be saved yet: run <code>supabase/ad-spend-schema.sql</code> in Supabase first.</p>}
       {error && <p className={styles.error} role="alert">{error}</p>}
 
@@ -87,7 +103,7 @@ export default function AdReport({ leads, initialSpend, spendAvailable }: { lead
           <tbody>
             {report.ads.map((row) => <tr key={row.key}>
               <th scope="row">{row.label}<small>{row.adId}</small></th>
-              <td>{spendAvailable ? <SpendInput row={row} onSave={saveSpend} /> : "—"}</td>
+              <td>{fromMeta ? money(row.spend) : spendAvailable ? <SpendInput row={row} onSave={saveSpend} /> : "—"}</td>
               <td>{row.inquiries}</td>
               <td>{money(costPer(row.spend, row.inquiries))}</td>
               <td>{share(row.highBudget, row.inquiries)}</td>
@@ -111,7 +127,7 @@ export default function AdReport({ leads, initialSpend, spendAvailable }: { lead
       <section className={styles.notes} aria-label="How to read this">
         <h2>How to read this</h2>
         <ul>
-          <li><b>Spend:</b> in Ads Manager, set the date range to <b>Aug 13, 2026 – today</b> and type each ad&apos;s &ldquo;Amount spent&rdquo;. Inquiries before Aug 13 weren&apos;t saved, so lifetime spend would make ads look worse than they are. Update it weekly with the audit.</li>
+          <li><b>Spend</b> counts from <b>Aug 13, 2026</b>, when inquiries started being saved. Lifetime spend would make older ads look worse than they are. {fromMeta ? "Meta sends it every morning." : "Until Meta is connected, type each ad's \u201cAmount spent\u201d for Aug 13 – today."}</li>
           <li><b>Inquiries</b> are real inquiries in the inbox, not Meta&apos;s &ldquo;leads&rdquo; number. An inquiry counts for the first ad she clicked.</li>
           <li><b>Consults, completed, good fit, proposals, booked</b> come from Calendly and the Sales buttons. They&apos;re only as complete as Irene and Tanah&apos;s clicks.</li>
           <li><b>Small numbers.</b> A few inquiries per ad is a hint, not proof. Compare ads once each has a few dozen.</li>

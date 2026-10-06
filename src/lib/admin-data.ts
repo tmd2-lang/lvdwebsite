@@ -1,5 +1,6 @@
 import type { AdminLead, LeadNote, LeadStatus, LeadActivity, LeadAppointment } from "@/lib/admin-types";
 import type { SalesAction } from "@/lib/sales-stage";
+import type { Attribution } from "@/lib/attribution";
 
 type StoredAdminLead = Omit<AdminLead, "attachments" | "notes"> & {
   payload: unknown;
@@ -259,14 +260,55 @@ export async function applySalesUpdate(id: string, actor: { id: string; name: st
 }
 
 // Step 6: spend per Meta ad, typed in on the Ad report page.
-export async function getAdSpend(): Promise<{ available: boolean; spend: Record<string, number> }> {
+export type AdSpendState = { available: boolean; spend: Record<string, number>; names: Record<string, string>; metaSyncedAt: string | null };
+
+export async function getAdSpend(): Promise<AdSpendState> {
   const { url } = databaseConfig();
+  const empty = { available: false, spend: {}, names: {}, metaSyncedAt: null };
   try {
-    const response = await fetch(`${url}/rest/v1/ad_spend?select=meta_ad_id,spend`, { headers: databaseHeaders(), cache: "no-store" });
-    if (!response.ok) return { available: false, spend: {} };
-    const rows = await response.json() as { meta_ad_id: string; spend: number | string }[];
-    return { available: true, spend: Object.fromEntries(rows.map((row) => [row.meta_ad_id, Number(row.spend)])) };
-  } catch { return { available: false, spend: {} }; }
+    // Step 7 adds ad_name/source; fall back to the step 6 columns if that SQL isn't applied.
+    let response = await fetch(`${url}/rest/v1/ad_spend?select=meta_ad_id,spend,ad_name,source,updated_at`, { headers: databaseHeaders(), cache: "no-store" });
+    if (!response.ok) response = await fetch(`${url}/rest/v1/ad_spend?select=meta_ad_id,spend`, { headers: databaseHeaders(), cache: "no-store" });
+    if (!response.ok) return empty;
+    const rows = await response.json() as { meta_ad_id: string; spend: number | string; ad_name?: string | null; source?: string; updated_at?: string }[];
+    const synced = rows.filter((row) => row.source === "meta" && row.updated_at).map((row) => row.updated_at as string).sort();
+    return {
+      available: true,
+      spend: Object.fromEntries(rows.map((row) => [row.meta_ad_id, Number(row.spend)])),
+      names: Object.fromEntries(rows.filter((row) => row.ad_name).map((row) => [row.meta_ad_id, row.ad_name as string])),
+      metaSyncedAt: synced.at(-1) || null,
+    };
+  } catch { return empty; }
+}
+
+// Step 7a: Meta's numbers replace typed-in spend for the same ad.
+export async function saveMetaSpend(rows: { ad_id: string; ad_name: string | null; spend: number }[], since: string) {
+  if (!rows.length) return 0;
+  const { url } = databaseConfig();
+  const now = new Date().toISOString();
+  const response = await fetch(`${url}/rest/v1/ad_spend?on_conflict=meta_ad_id`, {
+    method: "POST", headers: databaseHeaders("resolution=merge-duplicates,return=minimal"), cache: "no-store",
+    body: JSON.stringify(rows.map((row) => ({ meta_ad_id: row.ad_id, spend: row.spend, ad_name: row.ad_name, source: "meta", spend_since: since, updated_at: now, updated_by: "Meta" }))),
+  });
+  if (!response.ok) throw new Error("Could not save Meta spend. Has meta-sync-schema.sql been applied?");
+  return rows.length;
+}
+
+// Step 7b: the lead details the Conversions API needs, and a log of each send.
+export async function getCapiLead(id: string) {
+  const { url } = databaseConfig();
+  const response = await fetch(`${url}/rest/v1/leads?select=id,email,phone,attribution&id=eq.${encodeURIComponent(id)}`, { headers: databaseHeaders(), cache: "no-store" });
+  if (!response.ok) return null;
+  const rows = await response.json() as { id: string; email: string | null; phone: string | null; attribution: Attribution | null }[];
+  return rows[0] || null;
+}
+
+export async function logCapiEvent(entry: { event_id: string; lead_id: string; event_name: string; value: number | null; ok: boolean; response: unknown }) {
+  const { url } = databaseConfig();
+  await fetch(`${url}/rest/v1/meta_capi_events?on_conflict=event_id`, {
+    method: "POST", headers: databaseHeaders("resolution=merge-duplicates,return=minimal"), cache: "no-store",
+    body: JSON.stringify({ ...entry, sent_at: new Date().toISOString() }),
+  }).catch(() => null);
 }
 
 export async function saveAdSpend(adId: string, spend: number | null, actor: { name: string }) {

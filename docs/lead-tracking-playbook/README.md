@@ -21,8 +21,8 @@ proposal and the booking.
 | 3 | Calendly updates the inquiry automatically | Live (Oct 6, 2026); real booking lifecycle test pending |
 | 4 | One-click buttons after the call (outcome, fit, proposal, booked/lost) | Live (Oct 6, 2026) |
 | 5 | "Needs attention" list for the sales team | Live (Oct 6, 2026) |
-| 6 | Per-ad report: spend → inquiries → consults → bookings → $ | Built; waiting on database change |
-| 7 | Send qualified and booked results back to Meta | Not started |
+| 6 | Per-ad report: spend → inquiries → consults → bookings → $ | Live (Oct 6, 2026) |
+| 7 | Meta sends spend in; we send sales results back to Meta | Built; waiting on Meta keys |
 
 Rule for what's automatic vs. manual: anything a system knows is captured
 automatically (ad, page, inquiry details, Calendly bookings, ad spend). People
@@ -226,3 +226,52 @@ inquiry sidebar). The page and the spend endpoint both refuse everyone else.
 - Use spend since tracking started, not lifetime. Inquiries before that weren't saved, so lifetime spend makes older ads look worse than they are.
 - Count inquiries from the inbox, never Meta's "leads".
 - With only a handful of inquiries per ad, the percentages swing a lot. Treat them as hints until each ad has a few dozen.
+
+---
+
+## Step 7: Meta both ways
+
+### 7a. Spend comes in from Meta
+
+**As Valentina:** nobody types spend anymore. Every morning at 7 AM Eastern
+the site asks Meta how much each ad has spent since tracking began
+(Aug 13, 2026), along with each ad's current name, and the Ad report updates
+by itself. The **Refresh from Meta** button does the same thing on demand.
+
+- Meta Marketing API, Insights endpoint, `level=ad`, `act_<ad account>/insights` (`src/lib/meta-ads.ts`), Graph API v26.0 (override with `META_GRAPH_VERSION`).
+- Scheduled by Vercel Cron (`vercel.json` → `/api/cron/meta-spend`), protected by `CRON_SECRET`.
+- Meta's numbers replace typed-in spend for the same ad. Once Meta is connected, the spend boxes become read-only.
+
+### 7b. Sales results go back to Meta (Conversions API)
+
+**As Valentina:** when Irene clicks **Completed**, **Good fit**, or
+**Booked · $36,000**, the site quietly tells Meta. Meta matches it to the
+person who clicked the BTS ad and learns that this kind of person books, not
+just fills out forms.
+
+| Click in the Sales box | Event sent to Meta |
+|---|---|
+| Completed | `ConsultCompleted` (custom) |
+| Good fit | `QualifiedLead` (custom) |
+| Booked | `Purchase` with the booked amount in USD |
+
+- Sent server-to-server to the pixel's `/events` endpoint, `action_source: system_generated`.
+- Match keys: SHA-256 hashed email and phone (normalized as Meta requires), hashed lead ID, plus the `_fbc` / `_fbp` browser IDs saved in step 1. No readable personal data is sent.
+- Event ID `lvd_<lead>_<step>`: if someone undoes and re-clicks, Meta drops the repeat.
+- Runs after the click has already saved. A Meta outage can't slow down or block the sales team.
+- Every send is logged in `meta_capi_events` (what was sent, when, and Meta's reply).
+- Undo can't take an event back from Meta. That's acceptable at this volume.
+
+**Setup at a new business**
+
+1. Run `supabase/meta-sync-schema.sql`.
+2. Business Settings → Users → System users → add one (Employee) → assign the ad account with "View performance" → generate a token with `ads_read`. Store as `META_ADS_READ_TOKEN`.
+3. Events Manager → the ads' dataset (pixel) → Settings → Conversions API → Generate access token. Store as `META_CAPI_TOKEN`.
+4. Set `META_AD_ACCOUNT_ID`, `META_PIXEL_ID`, and a random `CRON_SECRET` locally and in the host. Deploy.
+5. Test 7b with `META_CAPI_TEST_CODE` from Events Manager → Test events, then remove it.
+6. Make sure the privacy policy says site data is shared with advertising partners.
+
+**Gotchas**
+
+- LVD had two pixels installed; only one is used by the ad sets. Send Conversions API events to that one.
+- Meta optimizes on an event only once it gets a decent volume of it each week. Bookings will be too rare for that at first; their value is in reporting and in Meta's matching.

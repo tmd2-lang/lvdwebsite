@@ -33,13 +33,14 @@ function emptyRow(key: string, adId: string | null, label: string, spend: number
   return { key, adId, label, inquiries: 0, highBudget: 0, consults: 0, completed: 0, goodFit: 0, proposals: 0, booked: 0, bookedAmount: 0, lost: 0, spend };
 }
 
-export function buildAdReport(leads: AdminLead[], spendByAd: Record<string, number> = {}) {
+/** names: current ad names from Meta (step 7a); they win over names captured at click time. */
+export function buildAdReport(leads: AdminLead[], spendByAd: Record<string, number> = {}, names: Record<string, string> = {}) {
   const rows = new Map<string, AdRow>();
   for (const lead of leads) {
     let key: string; let row: AdRow | undefined;
     if (lead.meta_ad_id) {
       key = `meta:${lead.meta_ad_id}`;
-      row = rows.get(key) || emptyRow(key, lead.meta_ad_id, `${adName(lead)}`, spendByAd[lead.meta_ad_id] ?? null);
+      row = rows.get(key) || emptyRow(key, lead.meta_ad_id, names[lead.meta_ad_id] || `${adName(lead)}`, spendByAd[lead.meta_ad_id] ?? null);
     } else if (lead.utm_source) {
       key = `other:${lead.utm_source.toLowerCase()}`;
       row = rows.get(key) || emptyRow(key, null, `${platformName(lead.utm_source)} (tagged link, not a Meta ad)`, null);
@@ -64,7 +65,7 @@ export function buildAdReport(leads: AdminLead[], spendByAd: Record<string, numb
   // Ads with spend but no inquiries still belong in the report.
   for (const [adId, spend] of Object.entries(spendByAd)) {
     const key = `meta:${adId}`;
-    if (!rows.has(key)) rows.set(key, emptyRow(key, adId, adName({ meta_ad_id: adId }) || `Ad ${adId}`, spend));
+    if (!rows.has(key)) rows.set(key, emptyRow(key, adId, names[adId] || adName({ meta_ad_id: adId }) || `Ad ${adId}`, spend));
   }
   const all = [...rows.values()];
   const ads = all.filter((row) => row.adId).sort((a, b) => b.bookedAmount - a.bookedAmount || b.inquiries - a.inquiries);

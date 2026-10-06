@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { canSeeInquiries, getAdminUser } from "@/lib/admin-auth";
-import { applyLeadActivity, applySalesUpdate, deleteLead, markLeadUnread } from "@/lib/admin-data";
+import { applyLeadActivity, applySalesUpdate, deleteLead, getCapiLead, logCapiEvent, markLeadUnread } from "@/lib/admin-data";
+import { CAPI_EVENTS, capiEvent, sendCapiEvent, type CapiTrigger } from "@/lib/meta-ads";
 import { LOST_REASONS, SALES_ACTIONS, type SalesAction } from "@/lib/sales-stage";
 import { LEAD_STATUSES, type LeadStatus } from "@/lib/admin-types";
 
@@ -31,6 +32,22 @@ export async function PATCH(request: Request, context: RouteContext) {
   }
 }
 
+// Step 7b: tell Meta about real sales progress. Runs after the response, so a
+// Meta problem can never slow down or fail the planner's click.
+async function reportToMeta(leadId: string, trigger: CapiTrigger, value: number | null) {
+  try {
+    const lead = await getCapiLead(leadId);
+    if (!lead) return;
+    const event = capiEvent(trigger, lead, value);
+    const sent = await sendCapiEvent(event);
+    if (sent.skipped) return;
+    await logCapiEvent({ event_id: event.event_id, lead_id: leadId, event_name: event.event_name, value: trigger === "booked" ? value : null, ok: sent.ok, response: sent.body });
+    if (!sent.ok) console.error("Meta Conversions API rejected an event:", event.event_name);
+  } catch {
+    console.error("Meta Conversions API send failed.");
+  }
+}
+
 export async function POST(request: Request, context: RouteContext) {
   const user = await authorizedUser();
   if (!user) return NextResponse.json({ error: "Your sign-in has expired." }, { status: 401 });
@@ -46,7 +63,9 @@ export async function POST(request: Request, context: RouteContext) {
       const amount = typeof sales.amount === "number" && Number.isFinite(sales.amount) ? sales.amount : null;
       const reason = typeof sales.reason === "string" && sales.reason in LOST_REASONS ? sales.reason : null;
       const note = typeof sales.note === "string" ? sales.note.slice(0, 500) : null;
-      return NextResponse.json(await applySalesUpdate(id, user, { action: sales.action as SalesAction, amount, reason, note }));
+      const result = await applySalesUpdate(id, user, { action: sales.action as SalesAction, amount, reason, note });
+      if (Object.hasOwn(CAPI_EVENTS, sales.action as string)) after(() => reportToMeta(id, sales.action as CapiTrigger, Number(result.lead.booked_amount) || null));
+      return NextResponse.json(result);
     }
     if (payload.action === "mark_unread") return NextResponse.json(await markLeadUnread(id, user));
     if (payload.action !== undefined) return NextResponse.json({ error: "Choose a valid action." }, { status: 400 });

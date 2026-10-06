@@ -15,5 +15,5 @@ export default async function AdReportPage() {
   if (!canSeeMarketing(user)) redirect("/admin/inquiries");
 
   const [leads, spend] = await Promise.all([getAdminLeads({ includeMarketing: true }), getAdSpend()]);
-  return <AdReport leads={leads} initialSpend={spend.spend} spendAvailable={spend.available} />;
+  return <AdReport leads={leads} initialSpend={spend.spend} spendAvailable={spend.available} names={spend.names} metaSyncedAt={spend.metaSyncedAt} />;
 }
