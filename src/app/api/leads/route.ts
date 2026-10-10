@@ -6,8 +6,12 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const LEAD_SOURCES = new Set(["inquire", "consultation", "reserve", "style_quiz"]);
-const BLOCKED_EMAILS = new Set(["emmahines23@gmail.com"]);
-const BLOCKED_PHONES = new Set(["302233290"]);
+const BLOCKED_EMAILS = new Set(["emmahines23@gmail.com", "emmahines23@gamil.com"]);
+const BLOCKED_PHONES = new Set(["302233290", "3022333290"]);
+// Same network hash on both known inquiries; uses the existing storage hash format.
+const BLOCKED_IP_HASHES = new Set([
+  "90ed09a1288d18d82c9c75f25f576112ce4ef54518cf5351179be9b70748f3a6",
+]);
 
 type LeadRequest = {
   source?: unknown;
@@ -82,8 +86,13 @@ export async function POST(request: Request) {
     const phone = stringValue(body.phone);
 
     // Apply the sender block to every form before storing or emailing an inquiry.
-    const normalizedPhone = phone.replace(/\D/g, "");
-    if (BLOCKED_EMAILS.has(email) || BLOCKED_PHONES.has(normalizedPhone)) {
+    const phoneDigits = phone.replace(/\D/g, "");
+    const normalizedPhone = phoneDigits.length === 11 && phoneDigits.startsWith("1")
+      ? phoneDigits.slice(1)
+      : phoneDigits;
+    const senderIpHash = ipHash(request, serviceRoleKey);
+    if (BLOCKED_EMAILS.has(email) || BLOCKED_PHONES.has(normalizedPhone)
+      || (senderIpHash !== null && BLOCKED_IP_HASHES.has(senderIpHash))) {
       return Response.json({ error: "Unable to accept this inquiry." }, { status: 403 });
     }
 
@@ -114,7 +123,7 @@ export async function POST(request: Request) {
       payload: { ...plainPayload(body.payload), attachments: stringArray(body.attachments) },
       user_agent: optionalString(request.headers.get("user-agent")),
       referrer: optionalString(request.headers.get("referer")),
-      ip_hash: ipHash(request, serviceRoleKey),
+      ip_hash: senderIpHash,
     };
     const tracking = attributionColumns(body.attribution, request.headers.get("referer"), new Date());
 
