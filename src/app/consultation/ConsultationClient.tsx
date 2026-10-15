@@ -314,10 +314,11 @@ export default function ConsultationClient() {
                 {/* Venue / Location */}
                 <div className="flex flex-col gap-1.5 relative group">
                   <label className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 group-focus-within:text-gold transition-colors font-semibold">
-                    Venue, Estate, or Target City
+                    Venue, Estate, or Target City *
                   </label>
                   <input
                     type="text"
+                    required
                     value={formData.venue}
                     onChange={(e) => setFormData((prev) => ({ ...prev, venue: e.target.value }))}
                     className="w-full bg-transparent border-b border-ink/20 pb-2.5 font-display text-xl sm:text-2xl text-ink outline-none focus:border-gold transition-colors placeholder:text-ink/25"
@@ -366,7 +367,7 @@ export default function ConsultationClient() {
                 <Magnetic>
                   <button
                     onClick={nextStep}
-                    disabled={!formData.guestCount || !formData.date}
+                    disabled={!formData.venue.trim() || !formData.guestCount || !formData.date}
                     className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-9 py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-40 flex items-center gap-3 rounded-full cursor-pointer"
                   >
                     Continue <span className="text-sm">→</span>

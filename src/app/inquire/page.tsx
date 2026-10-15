@@ -264,10 +264,11 @@ export default function InquirePage() {
                 {/* Venue / Location */}
                 <div className="flex flex-col gap-2 relative group">
                   <label className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 group-focus-within:text-gold transition-colors font-semibold">
-                    Venue or City
+                    Venue or City *
                   </label>
                   <input 
                     type="text" 
+                    required
                     value={formData.venue}
                     onChange={(e) => setFormData((prev) => ({ ...prev, venue: e.target.value }))}
                     className="w-full bg-transparent border-b border-ink/20 pb-3 font-display text-2xl text-ink outline-none focus:border-gold transition-colors placeholder:text-ink/20"
@@ -317,7 +318,7 @@ export default function InquirePage() {
                 <Magnetic>
                   <button 
                     onClick={nextStep}
-                    disabled={!formData.guestCount || !formData.date}
+                    disabled={!formData.venue.trim() || !formData.guestCount || !formData.date}
                     className="bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 sm:px-10 sm:py-4 hover:bg-gold hover:text-ink transition-colors disabled:opacity-50 flex items-center gap-3 rounded-full"
                   >
                     Continue <span className="text-sm">→</span>
