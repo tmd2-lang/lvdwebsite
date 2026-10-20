@@ -4,6 +4,9 @@ export interface PlanningPackage {
   id: PackageId;
   number: string;
   name: string;
+  shortName: string;
+  startingPoint: string;
+  highlights: string[];
   tagline: string;
   description: string;
   price: string;
@@ -16,18 +19,26 @@ export interface PlanningPackage {
   note?: string;
 }
 
-// Starting prices are placeholders until Irene confirms real numbers.
 export const PLANNING_PACKAGES: PlanningPackage[] = [
   {
     id: "venue-finder",
     number: "01",
     name: "Venue Discovery & Budget Blueprint",
-    tagline: "Your most balanced, luxury-accessible option.",
+    shortName: "Venue Discovery",
+    startingPoint: "Help us choose a venue and understand our budget.",
+    highlights: [
+      "Discovery consultation around your vision and priorities",
+      "A curated shortlist of 3–5 venues",
+      "A realistic budget blueprint and décor feasibility review",
+      "Spending strategy and a clear next-steps roadmap",
+    ],
+    tagline: "Where most couples start.",
     description:
       "Designed for newly engaged couples who feel overwhelmed by the first—and most expensive—decision of wedding planning: choosing the right venue and understanding what their budget can truly support. This service gives couples clarity, confidence, and a strategic foundation before they commit to anything.",
-    price: "Starting at $750",
+    price: "$850",
     idealFor: "Couples who want a complete strategic foundation before committing to any major wedding decisions.",
     includes: [
+      "Discovery consultation to understand your vision, priorities, and non-negotiables",
       "A curated shortlist of 3–5 venues selected around your aesthetic, guest count, and preferred location",
       "A realistic budget blueprint covering venue rental ranges, catering estimates, décor and floral feasibility, hidden fees, cost traps, and recommended adjustments",
       "Honest décor feasibility notes for each venue, including ceiling height, rigging points, ballroom limitations, outdoor considerations, and transformation potential",
@@ -39,10 +50,18 @@ export const PLANNING_PACKAGES: PlanningPackage[] = [
     id: "coordinating",
     number: "02",
     name: "Wedding Management & Coordination",
+    shortName: "Coordination",
+    startingPoint: "We've planned it. Take over the final logistics.",
+    highlights: [
+      "Review and organization of your existing plans and vendors",
+      "Final vendor logistics, floor plan, and guest flow",
+      "Master wedding-day timeline and rehearsal coordination",
+      "On-site management from setup through breakdown",
+    ],
     tagline: "You planned it. We'll carry it.",
     description:
       "Designed for couples who have independently planned their wedding and secured their primary vendors but need professional support bringing every detail together. We organize the existing plans, manage vendor communication and outstanding logistics, build the wedding-day timeline, and oversee the celebration from setup through breakdown.",
-    price: "Starting at $3,500",
+    price: "$4,200+",
     idealFor: "Couples who have completed most of their planning and secured their primary vendor team.",
     includes: [
       "A comprehensive review and organization of existing plans, booked vendors, contracts, contacts, payment deadlines, milestones, and outstanding decisions",
@@ -97,34 +116,53 @@ export const PLANNING_PACKAGES: PlanningPackage[] = [
         ],
       },
     ],
-    note: "Full vendor sourcing, extensive design development, budget creation and management, and comprehensive planning from the beginning of the engagement are not included. These services may require an upgrade to Full Wedding Planning or a separate quote.",
+    note: "Vendor sourcing, design development, and budget creation are not included. For support with these, explore Partial Planning or Full Wedding Planning.",
   },
   {
     id: "partial-planning",
     number: "03",
     name: "Partial Planning",
+    shortName: "Partial Planning",
+    startingPoint: "We've started. Help us finish.",
+    highlights: [
+      "Everything in Wedding Management & Coordination",
+      "Sourcing and booking support for up to 4 remaining vendors",
+      "Design guidance, budget tracking, and monthly planning sessions",
+      "Guest list and RSVP oversight support, plus rehearsal dinner logistics planning",
+    ],
     tagline: "Join partway. Finish together.",
     description:
-      "For celebrations already underway that need a steadier hand the rest of the way. We pick up from wherever you are, take over what is unfinished, and see it through to the last dance.",
-    price: "Custom quote",
-    idealFor: "Couples who started strong and want a professional to carry the remaining decisions.",
+      "Your venue is booked and some vendors are in place. We step in to organize the remaining decisions, source your outstanding vendors, refine the design direction, and carry your plans through the wedding day.",
+    price: "$7,200+",
+    idealFor: "Couples with a venue booked and some vendors secured who want professional support completing their plans.",
     includes: [
       "Everything in Wedding Management & Coordination",
-      "Vendor sourcing and contract negotiation from your current point forward",
-      "Design direction and cohesive styling across the celebration",
+      "Vendor sourcing, contract negotiation, and assistance booking up to 4 remaining vendors from your current point forward",
+      "Design direction and cohesive styling recommendations across the celebration",
       "Budget tracking and payment schedule management",
-      "Monthly planning sessions until the final month",
+      "Monthly planning sessions through the final month",
+      "Guest list and RSVP oversight support",
+      "Rehearsal dinner logistics coordination (planning only; on-site event coordination is a separate service)",
     ],
+    note: "Rehearsal dinner support covers planning and logistics; on-site dinner coordination is quoted separately. Multi-venue, destination, and other complex celebrations may require a custom scope.",
   },
   {
     id: "full-planning",
     number: "04",
     name: "Full Wedding Planning",
-    tagline: "Your planning partner from the first decision to the final send-off.",
+    shortName: "Full Planning",
+    startingPoint: "Guide and manage the entire process.",
+    highlights: [
+      "Concept development and mood boards for your approval",
+      "Budget development, venue research, and vendor sourcing",
+      "Design direction and guest-experience planning",
+      "Rehearsal coordination and wedding-day management",
+    ],
+    tagline: "Concept to fruition. You approve, we execute.",
     description:
-      "Comprehensive planning for couples who want professional guidance and hands-on support throughout the entire process. From establishing the budget and securing the venue to managing vendors, refining the design, and executing the wedding day, Lady Victoria Designs serves as your planning partner and central point of contact.",
-    price: "Starting at $6,500",
-    idealFor: "Couples who want one experienced team to organize the full planning process while they remain involved in the decisions that make the wedding personal.",
+      "From the first concept to the final send-off, we research, organize, and manage the details. Our team develops your budget, sources the venue and vendors, presents design concepts, and oversees the wedding day. You review the options, approve the direction, and stay involved wherever you choose.",
+    price: "$9,500+",
+    idealFor: "Couples who want one team to carry the full planning process, doing the legwork while they review and approve the decisions.",
     includes: [
       "A customized planning roadmap, ongoing planning meetings, and organization of contracts, vendor details, payments, deadlines, and outstanding decisions",
       "Budget creation, recommended allocations, ongoing tracking, payment reminders, and vendor proposal review",
@@ -135,9 +173,10 @@ export const PLANNING_PACKAGES: PlanningPackage[] = [
     ],
     inclusionSections: [
       {
-        title: "Planning & Organization",
+        title: "Concept, Vision & Organization",
         items: [
           "Initial planning consultation to review your vision, priorities, guest count, budget, and planning needs",
+          "Mood boards and design concepts developed and presented for your approval",
           "Customized planning roadmap with key milestones, deadlines, and next steps",
           "Ongoing planning meetings and communication throughout the planning process",
           "Organization and tracking of contracts, vendor details, payments, deadlines, and outstanding decisions",

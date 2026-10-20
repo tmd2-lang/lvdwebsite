@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { submitLead } from "@/lib/lead-submit";
 
 const BUDGET_RANGES = [
@@ -26,22 +26,45 @@ export default function BookButton({
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
   const closeRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
 
   useEffect(() => {
     if (!open) return;
+    const trigger = triggerRef.current;
     closeRef.current?.focus();
-    const onKey = (event: KeyboardEvent) => event.key === "Escape" && setOpen(false);
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+      if (event.key !== "Tab") return;
+      const controls = dialogRef.current?.querySelectorAll<HTMLElement>(
+        'button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), a[href]',
+      );
+      if (!controls?.length) return;
+      const first = controls[0];
+      const last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
     window.addEventListener("keydown", onKey);
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
+      trigger?.focus();
     };
   }, [open]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
+    const bookedVendors = String(form.get("bookedVendors") || "").trim();
     setError("");
     setStatus("sending");
 
@@ -53,9 +76,11 @@ export default function BookButton({
         phone: String(form.get("phone") || ""),
         date: String(form.get("date") || "") || undefined,
         venue: String(form.get("venue") || "") || undefined,
+        guestCount: String(form.get("guestCount") || "") || undefined,
+        vision: bookedVendors ? `Already booked: ${bookedVendors}` : undefined,
         investment: String(form.get("budget") || "") || undefined,
         services: [packageName],
-        payload: { formType: "planning-booking", package: packageName },
+        payload: { formType: "planning-booking", package: packageName, bookedVendors },
       });
       setStatus("sent");
     } catch (submitError) {
@@ -71,9 +96,9 @@ export default function BookButton({
 
   return (
     <>
-      <button type="button" className={buttonClass} onClick={() => setOpen(true)}>
-        {label || `Book ${packageName}`}
-        <span aria-hidden="true">→</span>
+      <button ref={triggerRef} type="button" className={`${buttonClass} max-w-full text-left`} onClick={() => setOpen(true)}>
+        <span>{label || "Inquire about this package"}</span>
+        <span aria-hidden="true" className="shrink-0">→</span>
       </button>
 
       {open && (
@@ -82,9 +107,10 @@ export default function BookButton({
           onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}
         >
           <div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
-            aria-labelledby="booking-title"
+            aria-labelledby={titleId}
             className="relative w-full max-w-lg bg-ivory my-auto"
           >
             <button
@@ -100,7 +126,7 @@ export default function BookButton({
             {status === "sent" ? (
               <div className="px-8 py-14 text-center">
                 <div className="text-xs uppercase tracking-[0.2em] text-gold mb-5 font-body">Received</div>
-                <h2 id="booking-title" className="font-display text-3xl md:text-4xl mb-5">
+                <h2 id={titleId} className="font-display text-3xl md:text-4xl mb-5">
                   Thank you.
                 </h2>
                 <p className="font-body text-sm text-ink/70 leading-relaxed mb-8">
@@ -117,8 +143,8 @@ export default function BookButton({
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="px-7 md:px-9 py-9 md:py-11">
-                <div className="text-xs uppercase tracking-[0.2em] text-gold mb-3 font-body">Booking request</div>
-                <h2 id="booking-title" className="font-display text-3xl md:text-4xl leading-tight mb-2">
+                <div className="text-xs uppercase tracking-[0.2em] text-gold mb-3 font-body">Planning inquiry</div>
+                <h2 id={titleId} className="font-display text-3xl md:text-4xl leading-tight mb-2">
                   {packageName}
                 </h2>
                 <p className="font-body text-sm text-ink/60 leading-relaxed mb-7">
@@ -183,7 +209,34 @@ export default function BookButton({
                   </div>
 
                   <label className="font-body text-[0.65rem] uppercase tracking-[0.14em] text-ink/60 flex flex-col gap-1.5">
-                    Budget range
+                    Estimated guest count
+                    <input
+                      type="number"
+                      name="guestCount"
+                      min="1"
+                      step="1"
+                      inputMode="numeric"
+                      placeholder="e.g. 150"
+                      disabled={status === "sending"}
+                      className="border border-ink/25 bg-white px-3.5 py-3 font-body text-sm normal-case tracking-normal text-ink focus:border-gold focus:outline-none disabled:bg-ink/5"
+                    />
+                    <span className="font-body text-xs normal-case tracking-normal text-ink/50">An estimate is fine. Leave blank if you&rsquo;re still deciding.</span>
+                  </label>
+
+                  <label className="font-body text-[0.65rem] uppercase tracking-[0.14em] text-ink/60 flex flex-col gap-1.5">
+                    What have you already booked?
+                    <textarea
+                      name="bookedVendors"
+                      rows={3}
+                      maxLength={3000}
+                      placeholder="Venue, photographer, catering… or tell us you're just getting started."
+                      disabled={status === "sending"}
+                      className="resize-y border border-ink/25 bg-white px-3.5 py-3 font-body text-sm normal-case tracking-normal text-ink focus:border-gold focus:outline-none disabled:bg-ink/5"
+                    />
+                  </label>
+
+                  <label className="font-body text-[0.65rem] uppercase tracking-[0.14em] text-ink/60 flex flex-col gap-1.5">
+                    Overall wedding budget
                     <select
                       name="budget"
                       defaultValue="Not sure yet"
@@ -208,7 +261,7 @@ export default function BookButton({
                   disabled={status === "sending"}
                   className="mt-7 w-full inline-flex items-center justify-between gap-6 border border-ink bg-ink text-ivory px-6 py-4 font-body text-xs uppercase tracking-[0.18em] hover:bg-transparent hover:text-ink transition-colors duration-300 disabled:opacity-60 disabled:hover:bg-ink disabled:hover:text-ivory"
                 >
-                  {status === "sending" ? "Sending…" : "Send booking request"}
+                  {status === "sending" ? "Sending…" : "Send inquiry"}
                   <span aria-hidden="true">{status === "sending" ? "" : "→"}</span>
                 </button>
               </form>

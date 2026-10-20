@@ -40,12 +40,45 @@ export default function PackagesPage() {
         </div>
       </section>
 
+      <section aria-labelledby="choose-package" className="w-full px-6 py-14 md:px-12 md:py-20">
+        <div className="mx-auto max-w-[1440px]">
+          <p className="mb-4 font-body text-xs uppercase tracking-[0.18em] text-gold">Find your starting point</p>
+          <h2 id="choose-package" className="max-w-4xl text-balance font-display text-3xl leading-tight md:text-5xl">
+            Where would you like us to step in?
+          </h2>
+          <div className="mt-10 grid gap-x-8 md:grid-cols-2 xl:grid-cols-4">
+            {PLANNING_PACKAGES.map((pkg) => (
+              <a
+                key={pkg.id}
+                href={`#${pkg.id}`}
+                className="group flex flex-col border-t border-ink/20 py-7 transition-colors hover:border-gold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold"
+              >
+                <span className="font-body text-xs tracking-[0.18em] text-gold">{pkg.number}</span>
+                <h3 className="mt-4 font-display text-2xl text-ink">{pkg.shortName}</h3>
+                <p className="mb-6 mt-3 max-w-xs font-body text-sm leading-relaxed text-ink/70">{pkg.startingPoint}</p>
+                <div className="mt-auto flex items-center justify-between gap-4">
+                  <span className="font-display text-2xl text-ink">{pkg.price}</span>
+                  <span className="font-body text-xs text-ink/70 transition-colors group-hover:text-gold">
+                    View package <span aria-hidden="true">↗</span>
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+          <p className="mt-4 max-w-2xl font-body text-sm leading-relaxed text-ink/60">
+            Prices marked + are starting investments. Your final proposal reflects the scope and needs of your celebration.
+          </p>
+        </div>
+      </section>
+
       {/* PACKAGES */}
       <section className="w-full flex flex-col border-b border-ink/20">
         {PLANNING_PACKAGES.map((pkg, index) => (
           <article
             key={pkg.id}
-            className="w-full border-t border-ink/20 px-6 py-16 md:px-12 md:py-24 lg:py-28"
+            id={pkg.id}
+            aria-labelledby={`${pkg.id}-title`}
+            className="w-full scroll-mt-28 border-t border-ink/20 px-6 py-16 md:px-12 md:py-24 lg:py-28"
           >
             <div className="mx-auto w-full max-w-[1440px]">
               <div className="mb-8 flex items-baseline gap-4 md:mb-10">
@@ -57,7 +90,7 @@ export default function PackagesPage() {
 
               <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1.45fr)_minmax(270px,.55fr)] lg:gap-20">
                 <div>
-                  <h2 className="max-w-5xl font-display text-[clamp(2.65rem,5vw,5.4rem)] leading-[0.98] tracking-[-0.025em]">
+                  <h2 id={`${pkg.id}-title`} className="max-w-5xl font-display text-[clamp(2.65rem,5vw,5.4rem)] leading-[0.98] tracking-[-0.025em]">
                   {pkg.name}
                   </h2>
                   <p className="mt-5 font-display text-xl italic text-gold md:text-2xl">{pkg.tagline}</p>
@@ -72,10 +105,33 @@ export default function PackagesPage() {
                   </div>
                   <div className="mb-7 font-display text-4xl text-ink md:text-5xl">{pkg.price}</div>
                   <BookButton packageName={pkg.name} />
+                  {pkg.price.endsWith("+") && (
+                    <p className="mt-4 font-body text-sm leading-relaxed text-ink/60">
+                      Starting investment. Final pricing is tailored to your celebration.
+                    </p>
+                  )}
+                  {pkg.id === "full-planning" && (
+                    <p className="mt-4 font-body text-sm leading-relaxed text-ink/70">
+                      Planning and creative direction are included. Floral design, décor production,
+                      rentals, installations, and third-party goods and services are quoted separately.
+                    </p>
+                  )}
                 </div>
               </div>
 
-              <div className="mt-12 md:mt-16 lg:mt-20">
+              <div className="mt-10 md:mt-12">
+                <h3 className="mb-4 font-body text-xs uppercase tracking-[0.18em] text-ink/50">At a glance</h3>
+                <ul className="grid gap-x-12 md:grid-cols-2">
+                  {pkg.highlights.map((highlight) => (
+                    <li key={highlight} className="flex gap-4 border-t border-ink/10 py-4 font-body text-sm leading-relaxed text-ink/75 md:text-base">
+                      <span aria-hidden="true" className="text-gold">—</span>
+                      <span>{highlight}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mt-8 md:mt-10">
                 <PackageInclusions packageDetails={pkg} />
               </div>
             </div>
