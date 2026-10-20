@@ -11,6 +11,7 @@ import { PHOTO_PLACEHOLDER } from "@/lib/image-placeholder";
 export default function GalleryClient() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [openingReady, setOpeningReady] = useState(false);
 
   const categories = ["All", "Weddings", "Ceremonies", "Receptions", "Tablescapes", "Artistry"];
 
@@ -79,7 +80,7 @@ export default function GalleryClient() {
                 aria-label={`Open ${image.alt}`}
                 className="group relative aspect-[4/5] overflow-hidden rounded-sm border border-ivory/5 bg-ink/40 text-left cursor-pointer"
               >
-                <Image
+                {(index === 0 || openingReady) && <Image
                   src={image.src}
                   alt={image.alt}
                   fill
@@ -88,8 +89,10 @@ export default function GalleryClient() {
                   fetchPriority={index === 0 ? "high" : "auto"}
                   placeholder="blur"
                   blurDataURL={PHOTO_PLACEHOLDER}
+                  onLoad={() => { if (index === 0) setOpeningReady(true); }}
+                  onError={() => { if (index === 0) setOpeningReady(true); }}
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
+                />}
                 <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/90 to-transparent px-5 pb-5 pt-12 font-body text-[10px] uppercase tracking-[0.18em] text-ivory">
                   {image.collection}
                 </span>
@@ -101,6 +104,7 @@ export default function GalleryClient() {
         {/* Masonry Grid */}
         <MasonryGrid 
           key={selectedCategory}
+          enabled={openingImages.length === 0 || openingReady}
           images={archiveImages}
           onImageClick={(index) => setLightboxIndex(index + openingImages.length)}
         />
