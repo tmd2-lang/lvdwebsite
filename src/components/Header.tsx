@@ -405,14 +405,14 @@ export default function Header() {
             
             {/* Artwork Frame */}
             <div className="relative w-full aspect-[4/3] rounded-xs overflow-hidden border border-ivory/20 bg-ivory/5 shadow-2xl">
-              <Image
+              {isMenuOpen && <Image
                 src={activeItem.image}
                 alt={activeItem.caption}
                 fill
                 sizes="(max-width: 1200px) 40vw, 35vw"
                 className="object-cover transition-opacity duration-500"
-                priority
-              />
+                loading="eager"
+              />}
               <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-transparent" />
               
               {/* Image Caption Overlay */}

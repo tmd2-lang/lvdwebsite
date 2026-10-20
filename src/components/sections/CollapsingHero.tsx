@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { media } from "@/lib/media-slots";
 
@@ -23,6 +22,8 @@ function getServerMobileHeroSnapshot() {
 }
 
 export default function CollapsingHero() {
+  const heroRef = useRef<HTMLElement>(null);
+  const [preparedCount, setPreparedCount] = useState(1);
   const isMobile = useSyncExternalStore(
     subscribeToMobileHero,
     getMobileHeroSnapshot,
@@ -30,12 +31,12 @@ export default function CollapsingHero() {
   );
 
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    let interval: ReturnType<typeof setInterval> | undefined;
     // Slideshow Animation Context
     const slideCtx = gsap.context(() => {
-      const slides = gsap.utils.toArray(".hero-slide") as HTMLElement[];
+      const slides = Array.from(heroRef.current?.querySelectorAll<HTMLElement>(".hero-slide") ?? []);
       if (slides.length === 0) return;
 
       let currentIndex = 0;
@@ -46,8 +47,13 @@ export default function CollapsingHero() {
 
       const nextSlide = () => {
         const current = slides[currentIndex];
-        currentIndex = (currentIndex + 1) % slides.length;
-        const next = slides[currentIndex];
+        const nextIndex = (currentIndex + 1) % slides.length;
+        const next = slides[nextIndex];
+        const image = next.querySelector("img");
+        // Keep the current photograph visible until its replacement has loaded.
+        if (!image?.complete || !image.naturalWidth) return;
+        currentIndex = nextIndex;
+        setPreparedCount((count) => Math.max(count, Math.min(slides.length, nextIndex + 2)));
 
         // Prepare the next slide to wipe over the current one
         gsap.set(next, { zIndex: 2, clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)" });
@@ -57,15 +63,19 @@ export default function CollapsingHero() {
         gsap.to(next, {
           clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
           duration: 1.5,
-          ease: "power4.inOut"
+          ease: "power4.inOut",
+          onComplete: () => {
+            gsap.set(current, { zIndex: 0, clipPath: "inset(0 100% 0 0)" });
+            gsap.set(next, { zIndex: 1 });
+          },
         });
       };
 
-      const interval = setInterval(nextSlide, 3000); // 3 seconds
-      return () => clearInterval(interval);
-    });
+      interval = setInterval(nextSlide, 3000);
+    }, heroRef);
 
     return () => {
+      clearInterval(interval);
       slideCtx.revert();
     };
   }, [isMobile]);
@@ -96,7 +106,7 @@ export default function CollapsingHero() {
   ];
 
   return (
-    <section className="relative w-full min-h-[100svh] bg-ink z-10 overflow-hidden flex flex-col justify-end pb-12 sm:pb-16 px-6 sm:px-10 md:px-12">
+    <section ref={heroRef} className="relative w-full min-h-[100svh] bg-ink z-10 overflow-hidden flex flex-col justify-end pb-12 sm:pb-16 px-6 sm:px-10 md:px-12">
       {/* The Hero Imagery (Slideshow) */}
       <div className="absolute inset-0 w-full h-full z-0">
         {heroImages.map((src, i) => (
@@ -105,17 +115,21 @@ export default function CollapsingHero() {
             className="hero-slide absolute inset-0 w-full h-full z-0"
             style={{ clipPath: i === 0 ? "inset(0)" : "inset(0 100% 0 0)" }}
           >
-            <Image
+            {i < preparedCount && <Image
               src={src} 
               alt={additionalImageAlts[i - 7] ?? `Lady Victoria Designs Hero ${i}`}
               fill
               sizes="100vw"
-              quality={100}
               preload={i === 0}
-              unoptimized={true}
+              loading={i === 0 ? undefined : "eager"}
+              onLoad={() => {
+                if (i === 0 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                  setPreparedCount((count) => Math.max(count, 2));
+                }
+              }}
               className="w-full h-full object-cover"
               style={{ objectPosition: i === 7 ? "20% center" : i === 8 ? "40% center" : undefined }}
-            />
+            />}
           </div>
         ))}
       </div>

@@ -6,6 +6,7 @@ import MasonryGrid from "@/components/sections/MasonryGrid";
 import Lightbox from "@/components/ui/Lightbox";
 import Contact from "@/components/sections/Contact";
 import { galleryImages, galleryOpeningImages } from "@/lib/gallery-data";
+import { PHOTO_PLACEHOLDER } from "@/lib/image-placeholder";
 
 export default function GalleryClient() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
@@ -83,6 +84,10 @@ export default function GalleryClient() {
                   alt={image.alt}
                   fill
                   sizes="(max-width: 767px) 100vw, 33vw"
+                  loading={index === 0 ? "eager" : "lazy"}
+                  fetchPriority={index === 0 ? "high" : "auto"}
+                  placeholder="blur"
+                  blurDataURL={PHOTO_PLACEHOLDER}
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/90 to-transparent px-5 pb-5 pt-12 font-body text-[10px] uppercase tracking-[0.18em] text-ivory">
@@ -95,6 +100,7 @@ export default function GalleryClient() {
 
         {/* Masonry Grid */}
         <MasonryGrid 
+          key={selectedCategory}
           images={archiveImages}
           onImageClick={(index) => setLightboxIndex(index + openingImages.length)}
         />

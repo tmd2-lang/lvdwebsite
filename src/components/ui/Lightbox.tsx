@@ -1,9 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import gsap from "gsap";
 import { GalleryImage } from "@/lib/gallery-data";
+import { PHOTO_PLACEHOLDER } from "@/lib/image-placeholder";
+
+const LIGHTBOX_SIZES = "(max-width: 768px) 84vw, 80vw";
 
 type LightboxProps = {
   images: GalleryImage[];
@@ -16,6 +19,27 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
   const containerRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const touchStartX = useRef<number | null>(null);
+  const [loadedSource, setLoadedSource] = useState<string | null>(null);
+  const neighborsRef = useRef<HTMLImageElement[]>([]);
+
+  function preloadNeighbors() {
+    // Wait for the displayed photo before spending bandwidth on adjacent ones.
+    neighborsRef.current = [...new Set([
+      (currentIndex + 1) % images.length,
+      (currentIndex - 1 + images.length) % images.length,
+    ])].filter((index) => index !== currentIndex).map((index) => {
+      const image = images[index];
+      const { props } = getImageProps({
+        src: image.src, alt: "", width: image.width, height: image.height, sizes: LIGHTBOX_SIZES,
+      });
+      const preload = new window.Image();
+      preload.fetchPriority = "low";
+      preload.sizes = props.sizes ?? "";
+      preload.srcset = props.srcSet ?? "";
+      preload.src = props.src;
+      return preload;
+    });
+  }
 
   const handleNext = useCallback(() => {
     setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
@@ -156,12 +180,26 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
       <div className="relative w-full max-w-[1200px] h-full max-h-[85vh] flex flex-col items-center justify-center pointer-events-none">
         <div className="relative w-[84vw] md:w-[80vw] h-[72vh] pointer-events-auto" onClick={(e) => e.stopPropagation()}>
           <Image
+            key={images[currentIndex].src}
             src={images[currentIndex].src}
             alt={images[currentIndex].alt || `Gallery image ${currentIndex + 1}`}
             fill
-            sizes="(max-width: 768px) 84vw, 80vw"
+            sizes={LIGHTBOX_SIZES}
+            loading="eager"
+            fetchPriority="high"
+            placeholder="blur"
+            blurDataURL={PHOTO_PLACEHOLDER}
+            onLoad={() => {
+              setLoadedSource(images[currentIndex].src);
+              preloadNeighbors();
+            }}
             className="object-contain drop-shadow-2xl"
           />
+          {loadedSource !== images[currentIndex].src && (
+            <div role="status" className="pointer-events-none absolute inset-0 grid place-items-center font-body text-xs tracking-wider text-ivory/70">
+              Loading photograph…
+            </div>
+          )}
           <div id="lightbox-caption" className="absolute inset-x-0 -bottom-11 flex flex-col items-center text-center">
             <span className="font-body text-[10px] uppercase tracking-[0.25em] text-gold">
               {images[currentIndex].collection}
