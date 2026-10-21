@@ -120,18 +120,6 @@ export default function PackagesPage() {
               </div>
 
               <div className="mt-10 md:mt-12">
-                <h3 className="mb-4 font-body text-xs uppercase tracking-[0.18em] text-ink/50">At a glance</h3>
-                <ul className="grid gap-x-12 md:grid-cols-2">
-                  {pkg.highlights.map((highlight) => (
-                    <li key={highlight} className="flex gap-4 border-t border-ink/10 py-4 font-body text-sm leading-relaxed text-ink/75 md:text-base">
-                      <span aria-hidden="true" className="text-gold">—</span>
-                      <span>{highlight}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="mt-8 md:mt-10">
                 <PackageInclusions packageDetails={pkg} />
               </div>
             </div>
