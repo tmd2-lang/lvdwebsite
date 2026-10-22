@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import BookButton from "@/components/planning/BookButton";
-import PackageInclusions from "@/components/planning/PackageInclusions";
+import PlanningDetailsButton from "@/components/planning/PlanningDetailsButton";
 import { PLANNING_PACKAGES } from "@/data/packages";
 import { media } from "@/lib/media-slots";
+
+const packageImages = [
+  media["home.work.1"],
+  media["home.work.2"],
+  media["home.work.3"],
+  media["home.work.4"],
+];
 
 export const metadata: Metadata = {
   title: "Planning",
@@ -40,88 +47,40 @@ export default function PackagesPage() {
         </div>
       </section>
 
-      <section aria-labelledby="choose-package" className="w-full px-6 py-14 md:px-12 md:py-20">
-        <div className="mx-auto max-w-[1440px]">
-          <p className="mb-4 font-body text-xs uppercase tracking-[0.18em] text-gold">Find your starting point</p>
-          <h2 id="choose-package" className="max-w-4xl text-balance font-display text-3xl leading-tight md:text-5xl">
-            Where would you like us to step in?
-          </h2>
-          <div className="mt-10 grid gap-x-8 md:grid-cols-2 xl:grid-cols-4">
-            {PLANNING_PACKAGES.map((pkg) => (
-              <a
-                key={pkg.id}
-                href={`#${pkg.id}`}
-                className="group flex flex-col border-t border-ink/20 py-7 transition-colors hover:border-gold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold"
-              >
-                <span className="font-body text-xs tracking-[0.18em] text-gold">{pkg.number}</span>
-                <h3 className="mt-4 font-display text-2xl text-ink">{pkg.shortName}</h3>
-                <p className="mb-6 mt-3 max-w-xs font-body text-sm leading-relaxed text-ink/70">{pkg.startingPoint}</p>
-                <div className="mt-auto flex items-center justify-between gap-4">
-                  <span className="font-display text-2xl text-ink">{pkg.price}</span>
-                  <span className="font-body text-xs text-ink/70 transition-colors group-hover:text-gold">
-                    View package <span aria-hidden="true">↗</span>
-                  </span>
-                </div>
-              </a>
-            ))}
-          </div>
-          <p className="mt-4 max-w-2xl font-body text-sm leading-relaxed text-ink/60">
-            Prices marked + are starting investments. Your final proposal reflects the scope and needs of your celebration.
-          </p>
-        </div>
-      </section>
-
       {/* PACKAGES */}
       <section className="w-full flex flex-col border-b border-ink/20">
         {PLANNING_PACKAGES.map((pkg, index) => (
-          <article
-            key={pkg.id}
-            id={pkg.id}
-            aria-labelledby={`${pkg.id}-title`}
-            className="w-full scroll-mt-28 border-t border-ink/20 px-6 py-16 md:px-12 md:py-24 lg:py-28"
-          >
-            <div className="mx-auto w-full max-w-[1440px]">
-              <div className="mb-8 flex items-baseline gap-4 md:mb-10">
-                <span className="font-body text-xs tracking-[0.2em] text-gold">{pkg.number}</span>
-                <span className="font-body text-xs uppercase tracking-[0.18em] text-ink/45">
-                  {index === 0 ? "Where most couples start" : `Package ${pkg.number}`}
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1.45fr)_minmax(270px,.55fr)] lg:gap-20">
+          <article key={pkg.id} id={pkg.id} aria-labelledby={`${pkg.id}-title`} className="w-full scroll-mt-28 border-t border-ink/20">
+            <div className={`flex w-full flex-col-reverse lg:flex-row ${index % 2 ? "lg:flex-row-reverse" : ""}`}>
+              <div className={`flex w-full flex-col justify-between px-8 py-12 md:px-12 md:py-16 lg:w-2/5 lg:p-16 ${index % 2 ? "lg:border-l" : "lg:border-r"} border-ink/20`}>
                 <div>
-                  <h2 id={`${pkg.id}-title`} className="max-w-5xl font-display text-[clamp(2.65rem,5vw,5.4rem)] leading-[0.98] tracking-[-0.025em]">
-                  {pkg.name}
+                  <span className="mb-4 block font-body text-[10px] uppercase tracking-[0.2em] text-ink/50">
+                    {pkg.number} · {index === 0 ? "Where most couples start" : `Package ${pkg.number}`}
+                  </span>
+                  <h2 id={`${pkg.id}-title`} className="font-display text-[clamp(2.3rem,4vw,4.5rem)] leading-[1.02] text-ink">
+                    {pkg.name}
                   </h2>
                   <p className="mt-5 font-display text-xl italic text-gold md:text-2xl">{pkg.tagline}</p>
-                  <p className="mt-7 max-w-3xl font-body text-base leading-[1.75] text-ink/70">
-                    {pkg.description}
-                  </p>
                 </div>
-
-                <div className="border-t border-ink/15 pt-7 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-1">
-                  <div className="mb-2 font-body text-xs uppercase tracking-[0.18em] text-ink/45">
-                    Investment
+                <div className="mt-12 flex flex-col gap-7 lg:mt-24">
+                  <p className="max-w-xl font-body text-sm leading-relaxed text-ink/80 md:text-base">{pkg.description}</p>
+                  <div className="border-t border-ink/20 pt-6">
+                    <p className="mb-2 font-body text-[10px] uppercase tracking-[0.2em] text-ink/50">Investment</p>
+                    <p className="mb-6 font-display text-4xl text-ink">{pkg.price}</p>
+                    <PlanningDetailsButton packageDetails={pkg} />
+                    {pkg.price.endsWith("+") && <p className="mt-4 font-body text-sm leading-relaxed text-ink/60">Starting investment. Final pricing is tailored to your celebration.</p>}
+                    {pkg.id === "full-planning" && <p className="mt-4 font-body text-sm leading-relaxed text-ink/70">Planning and creative direction are included. Floral design, décor production, rentals, installations, and third-party goods and services are quoted separately.</p>}
                   </div>
-                  <div className="mb-7 font-display text-4xl text-ink md:text-5xl">{pkg.price}</div>
-                  <BookButton packageName={pkg.name} />
-                  {pkg.price.endsWith("+") && (
-                    <p className="mt-4 font-body text-sm leading-relaxed text-ink/60">
-                      Starting investment. Final pricing is tailored to your celebration.
-                    </p>
-                  )}
-                  {pkg.id === "full-planning" && (
-                    <p className="mt-4 font-body text-sm leading-relaxed text-ink/70">
-                      Planning and creative direction are included. Floral design, décor production,
-                      rentals, installations, and third-party goods and services are quoted separately.
-                    </p>
-                  )}
                 </div>
               </div>
-
-              <div className="mt-10 md:mt-12">
-                <PackageInclusions packageDetails={pkg} />
+              <div className="w-full p-0 md:p-8 lg:w-3/5 lg:p-16">
+                <div className="relative h-[45vh] min-h-[340px] w-full overflow-hidden md:h-[60vh] lg:h-full lg:min-h-[70vh]">
+                  <Image src={packageImages[index]} alt={`${pkg.shortName} wedding celebration by Lady Victoria Designs`} fill sizes="(min-width: 1024px) 60vw, 100vw" className="object-cover" />
+                </div>
               </div>
+            </div>
+            <div className="mx-auto w-full max-w-[1440px] px-6 pb-12 md:px-12 md:pb-20">
+              <BookButton packageName={pkg.name} variant="row" />
             </div>
           </article>
         ))}

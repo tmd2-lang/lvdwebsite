@@ -19,7 +19,7 @@ export default function BookButton({
   label,
 }: {
   packageName: string;
-  variant?: "solid" | "outline";
+  variant?: "solid" | "outline" | "row";
   label?: string;
 }) {
   const [open, setOpen] = useState(false);
@@ -92,13 +92,15 @@ export default function BookButton({
   const buttonClass =
     variant === "solid"
       ? "inline-flex items-center justify-between gap-6 border border-ink bg-ink text-ivory px-6 py-4 font-body text-xs uppercase tracking-[0.18em] hover:bg-transparent hover:text-ink transition-colors duration-300 self-start"
-      : "inline-flex items-center gap-4 border border-ink px-8 py-4 font-body text-xs uppercase tracking-[0.18em] hover:bg-ink hover:text-ivory transition-colors duration-300";
+      : variant === "row"
+        ? "flex w-full items-center justify-between gap-6 border-y border-ink/20 py-6 font-body text-xs font-light uppercase tracking-[0.18em] text-ink transition-colors hover:text-gold"
+        : "inline-flex items-center gap-4 border border-ink px-8 py-4 font-body text-xs uppercase tracking-[0.18em] hover:bg-ink hover:text-ivory transition-colors duration-300";
 
   return (
     <>
       <button ref={triggerRef} type="button" className={`${buttonClass} max-w-full text-left`} onClick={() => setOpen(true)}>
         <span>{label || "Inquire about this package"}</span>
-        <span aria-hidden="true" className="shrink-0">→</span>
+        <span aria-hidden="true" className={variant === "row" ? "grid size-10 shrink-0 place-items-center rounded-full border border-gold/50 text-lg text-gold" : "shrink-0"}>→</span>
       </button>
 
       {open && (
