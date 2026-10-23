@@ -105,7 +105,8 @@ export default function BookButton({
 
       {open && (
         <div
-          className="fixed inset-0 z-[100] flex items-start md:items-center justify-center bg-ink/60 overflow-y-auto p-4 md:p-8"
+          data-lenis-prevent
+          className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden overscroll-contain bg-ink/60 p-2 md:p-8"
           onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}
         >
           <div
@@ -113,18 +114,20 @@ export default function BookButton({
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            className="relative w-full max-w-lg bg-ivory my-auto"
+            data-lenis-prevent
+            className="relative my-auto max-h-[calc(100dvh-1rem)] w-full max-w-lg overflow-y-auto overscroll-contain bg-ivory [-webkit-overflow-scrolling:touch] md:max-h-[90dvh]"
           >
-            <button
-              ref={closeRef}
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-label="Close booking form"
-              className="absolute top-4 right-4 text-ink/50 hover:text-ink text-xl leading-none"
-            >
-              ×
-            </button>
-
+            <div className="sticky top-0 z-20 flex justify-end bg-ivory px-4 pt-4 md:px-6">
+              <button
+                ref={closeRef}
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="Close booking form"
+                className="grid size-8 place-items-center text-ink/50 hover:text-ink text-xl leading-none"
+              >
+                ×
+              </button>
+            </div>
             {status === "sent" ? (
               <div className="px-8 py-14 text-center">
                 <div className="text-xs uppercase tracking-[0.2em] text-gold mb-5 font-body">Received</div>
