@@ -74,7 +74,7 @@ export default function Services() {
                     <h3 className="font-display text-3xl xl:text-4xl text-ivory whitespace-nowrap -rotate-90 origin-center absolute bottom-1/2 translate-y-1/2">
                       {tier.name}
                     </h3>
-                    <div className="font-body text-[8px] uppercase tracking-widest text-gold mt-auto text-center px-4 w-full">
+                    <div className="mt-auto w-full px-3 py-2 text-center font-body text-xs font-semibold leading-snug tracking-[0.06em] text-ivory drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)] xl:text-sm">
                       {tier.price}
                     </div>
                   </div>
@@ -84,7 +84,7 @@ export default function Services() {
                     isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8 pointer-events-none"
                   }`}>
                     <div className="flex items-center gap-3 mb-2">
-                      <span className="font-body text-[10px] uppercase tracking-[0.25em] text-gold font-bold">
+                      <span className="font-body text-xs font-bold uppercase tracking-[0.16em] text-ivory drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)]">
                         {tier.tierLabel}
                       </span>
                     </div>
@@ -92,7 +92,7 @@ export default function Services() {
                       {tier.name}
                     </h3>
                     
-                    <p className="font-display italic text-lg text-gold/90 mb-6">
+                    <p className="mb-6 max-w-full font-display text-lg italic text-ivory drop-shadow-[0_1px_5px_rgba(0,0,0,0.95)]">
                       &ldquo;{tier.tagline}&rdquo;
                     </p>
 
@@ -102,7 +102,7 @@ export default function Services() {
                       </p>
                       
                       <div className="flex flex-col items-start md:items-end gap-3 shrink-0">
-                        <span className="font-body text-xs uppercase tracking-[0.2em] text-gold font-medium">
+                        <span className="font-body text-base font-semibold tracking-normal text-ivory drop-shadow-[0_1px_5px_rgba(0,0,0,0.95)] lg:text-lg">
                           {tier.price}
                         </span>
                         <button
@@ -178,11 +178,11 @@ export default function Services() {
 
             {/* Foreground Content */}
             <div className="relative z-10 flex flex-col">
-              <div className="flex items-center justify-between gap-2 mb-3">
-                <span className="inline-flex rounded-full border border-gold/50 bg-ink/75 px-3 py-1.5 font-body text-[10px] uppercase tracking-[0.2em] text-gold font-bold shadow-md backdrop-blur-sm">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                <span className="font-body text-[11px] font-bold uppercase tracking-[0.16em] text-ivory drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)]">
                   {INVESTMENT_TIERS[activeIndex].tierLabel}
                 </span>
-                <span className="font-body text-[10px] uppercase tracking-[0.2em] text-ivory/90 px-3 py-1 rounded-full bg-ivory/10 backdrop-blur-xs border border-ivory/20">
+                <span className="max-w-[52%] text-right font-body text-xs font-semibold leading-snug tracking-normal text-ivory drop-shadow-[0_1px_5px_rgba(0,0,0,0.95)] sm:text-sm">
                   {INVESTMENT_TIERS[activeIndex].price}
                 </span>
               </div>
@@ -191,7 +191,7 @@ export default function Services() {
                 {INVESTMENT_TIERS[activeIndex].name}
               </h3>
 
-              <p className="font-display italic text-sm text-gold/90 mb-3">
+              <p className="mb-3 max-w-full font-display text-sm italic text-ivory drop-shadow-[0_1px_5px_rgba(0,0,0,0.95)]">
                 &ldquo;{INVESTMENT_TIERS[activeIndex].tagline}&rdquo;
               </p>
 
