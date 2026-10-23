@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
 import { getAdminUser, hasAdminRefreshToken, homePathForRole } from "@/lib/admin-auth";
 import { getNotes, getStatsForDay, getTodos } from "@/lib/marketing-data";
+import { canSeeMarketing } from "@/lib/marketing-access";
 import MarketingWorkspace from "./MarketingWorkspace";
+import MarketingDashboard from "./MarketingDashboard";
 
 export const dynamic = "force-dynamic";
 
@@ -29,5 +31,13 @@ export default async function MarketingPage() {
     setupError = error instanceof Error ? error.message : "Could not load the workspace.";
   }
 
-  return <MarketingWorkspace {...data} today={today} setupError={setupError} />;
+  return (
+    <MarketingDashboard
+      openTodos={data.todos.filter((todo) => !todo.completed_at).length}
+      notesCount={data.notes.length}
+      canViewAdReport={canSeeMarketing(user)}
+      setupError={setupError}
+      journal={<MarketingWorkspace {...data} today={today} setupError={setupError} />}
+    />
+  );
 }

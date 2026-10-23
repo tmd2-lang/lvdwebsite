@@ -179,7 +179,7 @@ export default function Services() {
             {/* Foreground Content */}
             <div className="relative z-10 flex flex-col">
               <div className="flex items-center justify-between gap-2 mb-3">
-                <span className="font-body text-[10px] uppercase tracking-[0.25em] text-gold font-bold">
+                <span className="inline-flex rounded-full border border-gold/50 bg-ink/75 px-3 py-1.5 font-body text-[10px] uppercase tracking-[0.2em] text-gold font-bold shadow-md backdrop-blur-sm">
                   {INVESTMENT_TIERS[activeIndex].tierLabel}
                 </span>
                 <span className="font-body text-[10px] uppercase tracking-[0.2em] text-ivory/90 px-3 py-1 rounded-full bg-ivory/10 backdrop-blur-xs border border-ivory/20">

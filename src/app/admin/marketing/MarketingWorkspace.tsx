@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRef, useState } from "react";
 import {
   MARKETING_CHANNELS,
@@ -185,13 +184,13 @@ export default function MarketingWorkspace({
   const statusText = { saving: "Saving…", saved: "Saved", error: "Not saved — check your connection" };
 
   return (
-    <main className={styles.page}>
+    <section className={styles.page}>
       <header className={styles.header}>
         <div>
-          <p className={styles.kicker}>Marketing</p>
-          <h1>{longDay(today)}</h1>
+          <p className={styles.kicker}>Marketing / Journal</p>
+          <h1>Journal</h1>
         </div>
-        <Link href="/admin" className={styles.back}>← Studio home</Link>
+        <span className={styles.back}>{longDay(today)}</span>
       </header>
 
       {setupError && <p className={styles.error} role="alert">{setupError}</p>}
@@ -326,6 +325,6 @@ export default function MarketingWorkspace({
           </ul>
         </section>
       </div>
-    </main>
+    </section>
   );
 }

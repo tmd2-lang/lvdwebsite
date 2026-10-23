@@ -111,9 +111,6 @@ export default function PrivacyPage() {
           <p className={paragraphClass}>We may update this policy from time to time. The current version will always be posted on this page with its effective date.</p>
         </section>
 
-        <p className="border-t border-ink/15 pt-6 mt-8 font-body text-xs leading-6 text-ink/45 italic">
-          This is a standard small-business template prepared September 2026. Consider having it reviewed by your attorney.
-        </p>
       </article>
     </main>
   );
