@@ -1,0 +1,42 @@
+/* V1.6: V1.3's side-by-side packages (no writing on photos) and quieter headings. */
+
+/* Packages: photo on one side, writing on the other. The photo stays put while you read. */
+.package{grid-template-columns:44% 56%;min-height:0;align-items:start}
+.photo{position:sticky;top:64px;height:calc(100svh - 64px);min-height:560px}
+.photo:after{display:none}
+.package-content{padding:72px 9% 60px}
+.package .chapter-tagline{margin-bottom:16px}
+.package .price{margin-top:22px}
+.package-desc{font-size:14px;max-width:520px}
+.inclusion h3{font-size:13px}
+.inclusion p{font-size:13px}
+.full-scope+.scope{border-top:0;padding-top:0}
+.full-scope-grid{columns:1}
+@media(min-width:1180px){.full-scope-grid{columns:2;column-gap:48px}}
+
+/* Headings: smaller, normal spacing, italic as a quiet accent in the same ink. */
+h1{font-size:clamp(54px,6.2vw,92px);line-height:.98;letter-spacing:-.02em}
+h1 em{margin-left:44px}
+h2{font-size:clamp(36px,3.9vw,54px);line-height:1.1;letter-spacing:-.015em}
+.package h2{font-size:clamp(34px,3.2vw,46px)}
+h1 em,h2 em,.design-content h2 em{color:inherit}
+.comparison .name{font-size:24px;letter-spacing:-.01em}
+.addon-group h3{font-size:24px;letter-spacing:-.01em}
+.scope-group h4,.design-tier span:first-child{font-size:21px;letter-spacing:-.01em}
+.price{font-size:38px;letter-spacing:-.01em}
+.closing h2{letter-spacing:-.015em}
+.closing-mark span{letter-spacing:-.03em}
+
+@media(max-width:760px){
+  .package{grid-template-columns:1fr}
+  .photo{position:relative;top:auto;height:340px;min-height:0}
+  .package-content{padding:38px 7% 30px}
+  h1{font-size:clamp(46px,13vw,58px)}
+  h1 em{margin-left:14px}
+  h2{font-size:clamp(34px,9vw,42px)}
+  .package h2{font-size:36px}
+  .comparison .name{font-size:20px}
+  .closing h2{font-size:42px}
+  .price{font-size:34px}
+}
+@media print{.photo{position:relative;top:auto;height:auto;min-height:260mm}}

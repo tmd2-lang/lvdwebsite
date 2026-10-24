@@ -23,6 +23,19 @@ const nextConfig: NextConfig = {
       ...(supabaseSiteImages ? [supabaseSiteImages] : []),
     ],
   },
+  // The planning investment guide is a static page in public/planning-guide,
+  // shared by link only, so it stays out of search results.
+  async rewrites() {
+    return [{ source: "/planning-guide", destination: "/planning-guide/index.html" }];
+  },
+  async headers() {
+    return [
+      {
+        source: "/planning-guide/:path*",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+    ];
+  },
 };
 
 const withMDX = createMDX({});
