@@ -6,11 +6,21 @@ import { PLANNING_PACKAGES } from "@/data/packages";
 import { media } from "@/lib/media-slots";
 
 const packageImages = [
-  media["home.work.1"],
-  media["home.work.2"],
-  media["home.work.3"],
-  media["home.work.4"],
+  media["planning.package.venue"],
+  media["planning.package.coordination"],
+  media["planning.package.partial"],
+  media["planning.package.full"],
 ];
+
+const packageImageAlts = [
+  "Outdoor wedding venue framed by trees, with ceremony seating along a garden aisle",
+  "Newlyweds walking back down a church aisle as their guests applaud",
+  "Bride and groom laughing together in a sunlit reception room set with white florals",
+  "Newlyweds posing before a stage of illuminated rose sculptures, crystal strands, and white florals",
+];
+
+// Keeps each couple in frame as the crop changes between desktop and mobile.
+const packageImagePositions = ["50% 50%", "50% 60%", "50% 45%", "50% 50%"];
 
 export const metadata: Metadata = {
   title: "Planning",
@@ -38,10 +48,11 @@ export default function PackagesPage() {
         <div className="max-w-[1440px] w-full h-[45vh] md:h-[62vh] overflow-hidden relative">
           <Image
             src={media["planning.hero"]}
-            alt="A newly married couple beneath a floral ceremony arch designed by Lady Victoria Designs"
+            alt="Groom dipping his bride into a kiss beneath a stone archway framed by garden greenery"
             fill
             sizes="100vw"
             className="w-full h-full object-cover"
+            style={{ objectPosition: "50% 27%" }}
             priority
           />
         </div>
@@ -75,7 +86,7 @@ export default function PackagesPage() {
               </div>
               <div className="w-full p-0 md:p-8 lg:w-3/5 lg:p-16">
                 <div className="relative h-[45vh] min-h-[340px] w-full overflow-hidden md:h-[60vh] lg:h-full lg:min-h-[70vh]">
-                  <Image src={packageImages[index]} alt={`${pkg.shortName} wedding celebration by Lady Victoria Designs`} fill sizes="(min-width: 1024px) 60vw, 100vw" className="object-cover" />
+                  <Image src={packageImages[index]} alt={packageImageAlts[index]} fill sizes="(min-width: 1024px) 60vw, 100vw" className="object-cover" style={{ objectPosition: packageImagePositions[index] }} />
                 </div>
               </div>
             </div>
