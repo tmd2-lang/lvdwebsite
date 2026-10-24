@@ -5,6 +5,10 @@ const supabaseInquiryImages = process.env.NEXT_PUBLIC_SUPABASE_URL
   ? new URL("/storage/v1/object/public/inquiry_attachments/**", process.env.NEXT_PUBLIC_SUPABASE_URL)
   : null;
 
+const supabaseSiteImages = process.env.NEXT_PUBLIC_SUPABASE_URL
+  ? new URL("/storage/v1/object/public/site-images/**", process.env.NEXT_PUBLIC_SUPABASE_URL)
+  : null;
+
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["127.0.0.1", "192.168.12.183", "10.225.16.51"],
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
@@ -16,6 +20,7 @@ const nextConfig: NextConfig = {
         pathname: "/photo-**",
       },
       ...(supabaseInquiryImages ? [supabaseInquiryImages] : []),
+      ...(supabaseSiteImages ? [supabaseSiteImages] : []),
     ],
   },
 };
