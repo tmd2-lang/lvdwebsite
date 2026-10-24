@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lady Victoria Designs | Planning Investment Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1F2A3D;
+    --navy-soft: #2C3B55;
+    --gold: #A6813C;
+    --gold-light: #C9A668;
+    --bg: #FBF9F5;
+    --card-bg: #FFFFFF;
+    --text: #2B2B2B;
+    --text-soft: #5B5B5B;
+    --border: #E4DFD4;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14181F;
+      --card-bg: #1B212C;
+      --text: #ECE8E0;
+      --text-soft: #AFAAA0;
+      --border: #333A46;
+      --navy-soft: #26324A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14181F;
+    --card-bg: #1B212C;
+    --text: #ECE8E0;
+    --text-soft: #AFAAA0;
+    --border: #333A46;
+    --navy-soft: #26324A;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lato', system-ui, sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; font-weight: 600; margin: 0; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 28px; }
+
+  header.hero {
+    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-soft) 100%);
+    color: #F5F2EA;
+    text-align: center;
+    padding: 72px 24px 56px;
+  }
+  .eyebrow {
+    letter-spacing: 4px;
+    font-size: 0.72rem;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  header.hero h1 { font-size: 2.4rem; margin-top: 14px; }
+  header.hero .sub {
+    margin-top: 16px;
+    font-size: 1rem;
+    color: #D8D4C8;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .divider { width: 48px; height: 2px; background: var(--gold); margin: 24px auto 0; }
+
+  section { padding: 56px 0; }
+  section.intro { text-align: center; }
+  section.intro p {
+    max-width: 600px;
+    margin: 0 auto;
+    font-size: 1.05rem;
+    color: var(--text-soft);
+  }
+
+  .section-title {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .section-title h2 { font-size: 1.6rem; color: var(--navy-soft); }
+  :root[data-theme="dark"] .section-title h2,
+  @media (prefers-color-scheme: dark) { .section-title h2 { color: #E9E4D8; } }
+
+  .packages { display: flex; flex-direction: column; gap: 20px; }
+  .package-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 30px 32px;
+    position: relative;
+  }
+  .package-card .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .package-card h3 { font-size: 1.4rem; margin-top: 6px; color: var(--text); }
+  .package-card .tagline { font-style: italic; color: var(--text-soft); font-size: 0.92rem; margin-top: 4px; }
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 18px 0 20px;
+    flex-wrap: wrap;
+  }
+  .price { font-family: 'Playfair Display', serif; font-size: 1.7rem; color: var(--gold); }
+  .price-note { font-size: 0.85rem; color: var(--text-soft); }
+  .package-card ul { margin: 0; padding-left: 18px; color: var(--text-soft); font-size: 0.95rem; }
+  .package-card li { margin-bottom: 7px; }
+
+  .addon-groups { display: flex; flex-direction: column; gap: 32px; }
+  .addon-group h3 {
+    font-size: 1.05rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    font-family: 'Lato', sans-serif;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+  }
+  .addon-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--border);
+    font-size: 0.95rem;
+  }
+  .addon-row:last-child { border-bottom: none; }
+  .addon-name { color: var(--text); }
+  .addon-price { color: var(--gold); white-space: nowrap; font-weight: 700; }
+
+  footer.cta {
+    background: var(--navy);
+    color: #F5F2EA;
+    text-align: center;
+    padding: 64px 24px;
+    margin-top: 40px;
+  }
+  footer.cta h2 { font-size: 1.6rem; color: #F5F2EA; }
+  footer.cta p { color: #D8D4C8; max-width: 440px; margin: 14px auto 28px; }
+  .btn {
+    display: inline-block;
+    background: var(--gold);
+    color: #1F2A3D;
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    padding: 14px 34px;
+    border-radius: 2px;
+  }
+  footer.cta .fine {
+    margin-top: 28px;
+    font-size: 0.75rem;
+    color: #8A8E9B;
+  }
+
+  @media (max-width: 600px) {
+    header.hero h1 { font-size: 1.8rem; }
+    .package-card { padding: 24px 20px; }
+    .addon-row { font-size: 0.9rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow">Lady Victoria Designs</div>
+  <h1>The Planning Investment Guide</h1>
+  <div class="divider"></div>
+  <p class="sub">A transparent look at what it takes to bring your celebration to life &mdash; from the first spark of an idea to the final send-off.</p>
+</header>
+
+<div class="wrap">
+
+<section class="intro">
+  <p>Every couple's path to the altar looks different. Whether you're just beginning to dream or already deep into the details, we've built our planning services to meet you exactly where you are &mdash; with full transparency on what's included at every level.</p>
+</section>
+
+<section id="packages">
+  <div class="section-title">
+    <div class="eyebrow" style="color:var(--gold)">Core Services</div>
+    <h2>Planning Packages</h2>
+  </div>
+
+  <div class="packages">
+
+    <div class="package-card">
+      <div class="num">Package 01</div>
+      <h3>Venue Discovery &amp; Budget Blueprint</h3>
+      <div class="tagline">Where most couples start.</div>
+      <div class="price-row"><span class="price">$850</span></div>
+      <ul>
+        <li>Discovery consultation &amp; curated venue shortlist</li>
+        <li>Full budget blueprint with investment strategy</li>
+        <li>Décor feasibility review per venue</li>
+        <li>Next-steps roadmap to move forward with clarity</li>
+      </ul>
+    </div>
+
+    <div class="package-card">
+      <div class="num">Package 02</div>
+      <h3>Wedding Management &amp; Coordination</h3>
+      <div class="tagline">You planned it. We'll carry it.</div>
+      <div class="price-row"><span class="price">$4,200</span><span class="price-note">up to 150 guests &middot; +$500 / additional 50</span></div>
+      <ul>
+        <li>Full review and organization of existing plans</li>
+        <li>Comprehensive wedding-day master timeline</li>
+        <li>On-site coordination for the full event</li>
+        <li>Primary point of contact for venue &amp; vendors</li>
+      </ul>
+    </div>
+
+    <div class="package-card">
+      <div class="num">Package 03</div>
+      <h3>Partial Planning</h3>
+      <div class="tagline">Join partway. Finish together.</div>
+      <div class="price-row"><span class="price">$7,200</span><span class="price-note">up to 150 guests &middot; +$600 / additional 50</span></div>
+      <ul>
+        <li>Everything in Wedding Management</li>
+        <li>Vendor sourcing from your current point forward</li>
+        <li>Design direction &amp; cohesive styling</li>
+        <li>Budget tracking through your final month</li>
+      </ul>
+    </div>
+
+    <div class="package-card">
+      <div class="num">Package 04</div>
+      <h3>Full Wedding Planning</h3>
+      <div class="tagline">Concept to fruition &mdash; you approve, we execute.</div>
+      <div class="price-row"><span class="price">$9,500</span><span class="price-note">up to 150 guests &middot; +$750 / additional 50</span></div>
+      <ul>
+        <li>Full concept, design &amp; vendor team built from scratch</li>
+        <li>Complete budget development &amp; management</li>
+        <li>Every detail from venue to send-off, fully executed</li>
+        <li>You approve the vision; our team does the rest</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<section id="addons">
+  <div class="section-title">
+    <div class="eyebrow" style="color:var(--gold)">Tailored To You</div>
+    <h2>Add-On Services</h2>
+  </div>
+
+  <div class="addon-groups">
+
+    <div class="addon-group">
+      <h3>Guest Management</h3>
+      <div class="addon-row"><span class="addon-name">RSVP Management</span><span class="addon-price">$650</span></div>
+      <div class="addon-row"><span class="addon-name">Guest List &amp; Seating Chart Development</span><span class="addon-price">$850</span></div>
+      <div class="addon-row"><span class="addon-name">Hotel Room Block Coordination</span><span class="addon-price">$450</span></div>
+      <div class="addon-row"><span class="addon-name">Group Transportation Coordination</span><span class="addon-price">$550</span></div>
+      <div class="addon-row"><span class="addon-name">Welcome Bag Curation &amp; Delivery</span><span class="addon-price">$650 + goods</span></div>
+      <div class="addon-row"><span class="addon-name">Guest Communication Hub</span><span class="addon-price">$400</span></div>
+    </div>
+
+    <div class="addon-group">
+      <h3>Extra Days of Coordination</h3>
+      <div class="addon-row"><span class="addon-name">Welcome Dinner Coordination</span><span class="addon-price">$1,200</span></div>
+      <div class="addon-row"><span class="addon-name">Rehearsal Dinner Coordination</span><span class="addon-price">$1,100</span></div>
+      <div class="addon-row"><span class="addon-name">Farewell Brunch Coordination</span><span class="addon-price">$950</span></div>
+      <div class="addon-row"><span class="addon-name">Cultural / Ceremonial Event</span><span class="addon-price">$1,500</span></div>
+      <div class="addon-row"><span class="addon-name">Multi-Day Bundle (2+ events)</span><span class="addon-price">15% off</span></div>
+    </div>
+
+    <div class="addon-group">
+      <h3>Pre-Wedding Celebrations</h3>
+      <div class="addon-row"><span class="addon-name">Engagement Party Planning</span><span class="addon-price">$1,800</span></div>
+      <div class="addon-row"><span class="addon-name">Bridal / Couple's Shower Coordination</span><span class="addon-price">$1,200</span></div>
+      <div class="addon-row"><span class="addon-name">Invitation Assembly &amp; Mailing</span><span class="addon-price">$350</span></div>
+      <div class="addon-row"><span class="addon-name">Additional Planning Hours</span><span class="addon-price">$175/hr</span></div>
+    </div>
+
+  </div>
+</section>
+
+</div>
+
+<footer class="cta">
+  <h2>Let's Begin</h2>
+  <p>Every celebration starts with a conversation. We'd love to hear your story and help you bring your vision to life.</p>
+  <a class="btn" href="https://www.ladyvictoriadesigns.com/planning">Schedule a Consultation</a>
+  <div class="fine">Pricing reflects base packages for weddings up to 150 guests across DC, MD, VA, NJ, NY &amp; PA. Final investment customized per celebration.</div>
+</footer>
+
+</body>
+</html>

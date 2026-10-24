@@ -1,0 +1,39 @@
+[
+  {
+    "asset": "venue-discovery.jpg",
+    "source": "/Users/tjdozier7/Documents/Irene's Choices/Venue/venuepic.JPG",
+    "alt": "The stone entrance of a wedding venue framed by greenery"
+  },
+  {
+    "asset": "partial-wedding-party.jpg",
+    "source": "/Users/tjdozier7/Documents/Irene's Choices/People/brideandmaids.JPG",
+    "alt": "A bride with her bridesmaids holding white bouquets at their reception"
+  },
+  {
+    "asset": "full-ballroom.jpg",
+    "source": "/Users/tjdozier7/Documents/Irene's Choices/Venue/bluewhitecrystal.JPG",
+    "alt": "A grand wedding ballroom with crystal chandeliers and abundant floral arrangements"
+  },
+  {
+    "asset": "closing-bride.jpg",
+    "source": "/Users/tjdozier7/Documents/Irene's Choices/People/bride1.JPG",
+    "alt": "A bride holding a bouquet in soft natural light"
+  },
+  {
+    "asset": "booking-reception.jpg",
+    "source": "/Users/tjdozier7/Documents/Irene's Choices/Venue/whiteflowervenue.JPG",
+    "alt": "An elegant wedding reception with white flowers and gold chairs"
+  },
+  {
+    "asset": "hero-portrait.jpg",
+    "source": "/Users/tjdozier7/Documents/Irene's Choices/People/intimatecouplepicclass1.JPG",
+    "alt": "Newlyweds embracing beside a garden gazebo",
+    "usage": "Mobile cover crop"
+  },
+  {
+    "asset": "hero-fun-couple.jpg",
+    "source": "/Users/tjdozier7/Documents/Irene's Choices/People/funcouplepic-class1.JPG",
+    "alt": "Newlyweds and their wedding party celebrating together in a garden",
+    "usage": "Desktop cover"
+  }
+]

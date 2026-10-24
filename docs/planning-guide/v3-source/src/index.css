@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+html{scroll-behavior:smooth;scroll-padding-top:100px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid #C4886B;outline-offset:5px}
+.package-detail{scroll-margin-top:85px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.process-section{height:auto!important;overflow:visible!important}.process-section>div{height:auto!important;display:block!important}.process-card{position:relative!important;top:auto!important;left:auto!important;transform:none!important}}

@@ -1,0 +1,138 @@
+/* V1.4: image-led package chapters with a restrained scroll narrative. */
+main{max-width:none}
+html{scroll-padding-top:64px}
+.package.chapter{display:block;min-height:0;margin:0;scroll-margin-top:0;position:relative;isolation:isolate;z-index:var(--chapter-order,1);background:transparent}
+.chapter-stage{height:calc(100svh - 64px);min-height:650px;position:sticky;top:64px;overflow:hidden;color:#fffaf2;background:#302820}
+.chapter-stage .photo{position:absolute;inset:0;min-height:0;height:100%;overflow:hidden}
+.chapter-stage .photo img{inset:0;width:100%;height:100%;object-fit:cover;object-position:center;transform:scale(1.04)}
+.chapter-stage::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,#171712d9 0%,#211e19a8 37%,#211e192e 77%),linear-gradient(0deg,#171712a8,transparent 68%)}
+.chapter-intro{position:absolute;z-index:2;left:clamp(28px,9vw,150px);right:clamp(28px,14vw,220px);bottom:clamp(55px,11vh,130px);max-width:1030px}
+.chapter-stage .package-top{border:0;border-bottom:1px solid #ffffff64;padding:0 0 16px;margin:0 0 24px;max-width:750px}
+.chapter-stage .package-top .eyebrow{color:#e3ba99}
+.chapter-stage .num{color:#e3ba99;font-size:27px}
+.chapter-stage h2{font-size:clamp(66px,8.8vw,132px);line-height:.84;letter-spacing:-.055em;max-width:1050px;text-wrap:balance}
+.chapter-stage h2 em{color:#e3ba99}
+.chapter-stage .price{font-size:clamp(35px,4vw,58px);line-height:1;margin:25px 0 0;color:#fffaf2}
+.chapter-stage .price small{color:#ffffffbd;font-size:9px;letter-spacing:.2em;margin-top:7px}
+.chapter-stage .package-desc{font-size:clamp(14px,1.2vw,17px);line-height:1.8;color:#fffaf2d9;margin:18px 0 0;max-width:520px}
+.chapter-stage .photo-label{top:38px;right:44px;bottom:auto;left:auto;max-width:245px;border-top:1px solid #ffffff8c;padding-top:10px;text-align:right;font:500 9px/1.6 'Inter',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#fffaf2e8}
+.chapter-cue{position:absolute;z-index:2;right:clamp(28px,6vw,90px);bottom:30px;display:flex;align-items:center;gap:12px;color:#fffaf2bd;font-size:8px;letter-spacing:.2em;text-transform:uppercase}
+.chapter-cue::before{content:"";width:36px;height:1px;background:#e3ba99}
+.chapter-detail{position:relative;z-index:2;margin:-34px auto 0;width:min(1320px,calc(100% - 64px));background:var(--paper);box-shadow:0 -14px 50px #17171215}
+.chapter-detail .package-content{padding:clamp(64px,9vw,120px) clamp(28px,9vw,140px) 55px;max-width:none}
+.chapter-detail-heading{display:grid;grid-template-columns:.8fr 1.2fr;align-items:end;gap:50px;margin-bottom:48px}
+.chapter-detail-heading .eyebrow{color:var(--copper);margin-bottom:16px}
+.chapter-detail-heading h3{font-size:clamp(46px,5.2vw,72px);line-height:.95;letter-spacing:-.04em}
+.chapter-detail-heading p{font-size:14px;line-height:1.85;color:var(--muted);max-width:430px;justify-self:end}
+.chapter-detail .inclusions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:64px;border-top:1px solid var(--line)}
+.chapter-detail .inclusion{padding:25px 0 27px;border-bottom:1px solid var(--line)}
+.chapter-detail .inclusion h3{font:500 14px/1.45 'Inter',sans-serif;letter-spacing:.01em;margin:0 0 9px}
+.chapter-detail .inclusion p{font-size:14px;line-height:1.8;color:var(--muted);max-width:470px}
+.chapter-detail .scope{font-size:12px;line-height:1.85;border-top:1px solid var(--line);padding-top:23px;margin:28px 0 48px;max-width:760px}
+.chapter-detail .folio{margin-top:35px}
+.chapter-rail{position:fixed;z-index:25;right:22px;top:50%;transform:translateY(-50%);display:grid;gap:5px;padding:12px 9px;background:#F7F4EEe8;border:1px solid #D8D1C580;backdrop-filter:blur(10px);box-shadow:0 8px 30px #211b1614}
+.chapter-rail a{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:9px;padding:7px 5px;transition:color .25s}
+.chapter-rail a::before{content:"";width:13px;height:1px;background:var(--line);transition:width .25s,background .25s}
+.chapter-rail a[aria-current="step"]{color:var(--ink)}
+.chapter-rail a[aria-current="step"]::before{width:23px;background:var(--copper)}
+.chapter-rail .rail-label{display:none}
+.chapter-rail a:hover .rail-label,.chapter-rail a:focus-visible .rail-label{display:inline;white-space:nowrap}
+.intro{padding-top:85px;padding-bottom:60px}
+.comparison a{padding:24px 0}
+.comparison .name{font-size:30px}
+@media(max-width:1050px){.chapter-intro{right:100px}.chapter-stage h2{font-size:clamp(64px,9vw,112px)}.chapter-detail{width:calc(100% - 40px)}.chapter-rail{right:10px}}
+@media(max-width:760px){
+  .package.chapter{scroll-margin-top:0}
+  .chapter-stage{height:calc(82svh - 58px);min-height:560px;position:relative;top:auto}
+  .chapter-stage .photo img{transform:none;object-position:center 48%}
+  .chapter-stage::after{background:linear-gradient(90deg,#171712a8,#211e1940 90%),linear-gradient(0deg,#171712c9,transparent 75%)}
+  .chapter-intro{left:7%;right:7%;bottom:68px}
+  .chapter-stage .package-top{padding-bottom:12px;margin-bottom:21px}
+  .chapter-stage .package-top .eyebrow{font-size:8px;letter-spacing:.19em}
+  .chapter-stage .num{font-size:22px}
+  .chapter-stage h2{font-size:clamp(58px,15vw,82px);line-height:.87}
+  #venue .chapter-stage h2{font-size:clamp(43px,12.8vw,53px)}
+  .chapter-stage .price{font-size:39px;margin-top:20px}
+  .chapter-stage .package-desc{font-size:13px;line-height:1.7;margin-top:12px;max-width:390px}
+  .chapter-stage .photo-label{top:22px;right:7%;max-width:180px;font-size:7px;letter-spacing:.14em}
+  .chapter-cue{right:7%;bottom:24px;font-size:7px}
+  .chapter-detail{width:100%;margin:-18px 0 0;box-shadow:0 -12px 36px #17171218}
+  .chapter-detail .package-content{padding:56px 7% 36px}
+  .chapter-detail-heading{grid-template-columns:1fr;gap:16px;margin-bottom:30px}
+  .chapter-detail-heading .eyebrow{margin-bottom:12px;font-size:8px}
+  .chapter-detail-heading h3{font-size:50px;max-width:450px}
+  .chapter-detail-heading p{justify-self:start;font-size:13px;max-width:460px}
+  .chapter-detail .inclusions{grid-template-columns:1fr;column-gap:0}
+  .chapter-detail .inclusion{padding:20px 0 22px}
+  .chapter-detail .inclusion h3{font-size:13px}
+  .chapter-detail .inclusion p{font-size:13px;line-height:1.75}
+  .chapter-detail .scope{font-size:11px;margin-bottom:35px}
+  .chapter-detail .folio{font-size:7px}
+  .chapter-rail{display:none}
+  .intro{padding-top:50px}
+  .comparison a{padding:17px 0}
+  .comparison .name{font-size:22px}
+}
+@media(prefers-reduced-motion:reduce){.chapter-stage .photo img,.chapter-rail a,.chapter-rail a::before{transition:none;transform:none}}
+@media print{.chapter-stage{height:220mm;min-height:0;position:relative;top:auto}.chapter-detail{width:100%;margin:0;box-shadow:none}.chapter-detail .package-content{padding:15mm}.chapter-rail,.chapter-cue{display:none!important}.package.chapter{break-after:page}}
+
+/* Brand alignment and Irene's contrast/color notes. */
+:root{
+  --paper:#F7F4EE;
+  --ink:#14120F;
+  --copper:#A8894E;
+  --gold:#A8894E;
+  --rose-smoke:#C9B6B2;
+  --ecru:#EDE7DB;
+  --line:#D8D1C5;
+  --muted:#716C62;
+}
+body{font-family:'Inter',Arial,sans-serif;background:var(--ecru)}
+h1,h2,h3,.brand,.comparison .name,.price,.signature{font-family:'Bodoni Moda',Georgia,serif}
+.brand{font-style:italic;letter-spacing:-.025em}
+.signature{font-family:'Pinyon Script',cursive;color:var(--gold)}
+.finder-text{
+  display:flex;align-items:center;justify-content:space-between;gap:34px;
+  min-height:76px;min-width:min(440px,100%);margin:0 0 30px;padding:0 27px;
+  border:1px solid var(--ink);background:var(--ink);color:var(--paper);
+  text-align:left;font:500 11px/1.5 'Inter',sans-serif;letter-spacing:.04em;
+  transition:background .25s,color .25s,border-color .25s,transform .25s;
+}
+.finder-text:hover{background:var(--gold);border-color:var(--gold);color:var(--ink);transform:translateY(-2px)}
+.finder-prompt{color:#F7F4EEB8}
+.finder-action{display:flex;align-items:center;gap:15px;color:var(--paper);font-size:10px;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap}
+.finder-action::after{content:'';display:block;width:27px;height:1px;background:var(--gold);transition:width .25s,background .25s}
+.finder-text:hover .finder-action{color:var(--ink)}
+.finder-text:hover .finder-action::after{width:38px;background:var(--ink)}
+.chapter-stage .package-top .eyebrow,.chapter-stage .num,.chapter-stage h2 em,.chapter-cue::before{color:var(--gold)}
+.chapter-cue::before{background:var(--gold)}
+.chapter-detail{background:var(--paper)}
+.chapter-rail{background:#14120Ff0;border-color:#ffffff24;box-shadow:0 8px 30px #14120f2a}
+.chapter-rail a{color:#F7F4EE9c}
+.chapter-rail a[aria-current="step"]{color:var(--paper)}
+.chapter-rail a::before{background:#ffffff40}
+.chapter-rail a[aria-current="step"]::before{background:var(--gold)}
+#full .photo img{filter:saturate(1.24) contrast(1.055)}
+.closing{position:relative;isolation:isolate;overflow:hidden;background:var(--ink)}
+.closing-content{position:relative}
+.closing-mark{display:grid;gap:0;margin-top:55px;padding-top:28px;width:100%;border-top:1px solid #F7F4EE30;text-align:center}
+.closing-mark span{font:500 clamp(38px,5vw,70px)/.92 'Bodoni Moda',Georgia,serif;letter-spacing:-.06em;text-transform:uppercase;white-space:nowrap}
+.closing-mark em{margin-top:-4px;color:var(--gold);font:clamp(40px,5vw,70px)/.9 'Pinyon Script',cursive}
+.closing-content small{margin-top:28px;color:#F7F4EE80;font-size:8px;letter-spacing:.2em}
+.booking-badge{border-color:#F7F4EE65;background:#F7F4EE12}
+.booking-content h2 em{color:var(--gold)}
+.booking-button:hover{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+@media(max-width:760px){
+  .finder-text{width:100%;min-width:0;min-height:72px;padding:0 18px;gap:12px}
+  .finder-prompt{max-width:145px}
+  .finder-action{font-size:9px;gap:9px}
+  .closing-mark{margin-top:38px;padding-top:23px}
+  .closing-mark span{font-size:clamp(31px,9vw,48px)}
+  .closing-mark em{font-size:48px}
+}
+@media(prefers-reduced-motion:reduce){.finder-text{transition:none}.finder-text:hover{transform:none}}
+@media print{.chapter-rail{background:var(--ink)!important}}
+@media(max-width:760px){
+  .cover h1{font-size:clamp(48px,15.5vw,62px);line-height:.9}
+  .cover h1 em{margin-left:8px}
+}

@@ -1,0 +1,60 @@
+/* Brand alignment and Irene's contrast/color notes. */
+:root{
+  --paper:#F7F4EE;
+  --ink:#14120F;
+  --copper:#A8894E;
+  --gold:#A8894E;
+  --rose-smoke:#C9B6B2;
+  --ecru:#EDE7DB;
+  --line:#D8D1C5;
+  --muted:#716C62;
+}
+body{font-family:'Inter',Arial,sans-serif;background:var(--ecru)}
+h1,h2,h3,.brand,.comparison .name,.price,.signature{font-family:'Bodoni Moda',Georgia,serif}
+.brand{font-style:italic;letter-spacing:-.025em}
+.signature{font-family:'Pinyon Script',cursive;color:var(--gold)}
+.finder-text{
+  display:flex;align-items:center;justify-content:space-between;gap:34px;
+  min-height:76px;min-width:min(440px,100%);margin:0 0 30px;padding:0 27px;
+  border:1px solid var(--ink);background:var(--ink);color:var(--paper);
+  text-align:left;font:500 11px/1.5 'Inter',sans-serif;letter-spacing:.04em;
+  transition:background .25s,color .25s,border-color .25s,transform .25s;
+}
+.finder-text:hover{background:var(--gold);border-color:var(--gold);color:var(--ink);transform:translateY(-2px)}
+.finder-prompt{color:#F7F4EEB8}
+.finder-action{display:flex;align-items:center;gap:15px;color:var(--paper);font-size:10px;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap}
+.finder-action::after{content:'';display:block;width:27px;height:1px;background:var(--gold);transition:width .25s,background .25s}
+.finder-text:hover .finder-action{color:var(--ink)}
+.finder-text:hover .finder-action::after{width:38px;background:var(--ink)}
+.chapter-stage .package-top .eyebrow,.chapter-stage .num,.chapter-stage h2 em,.chapter-cue::before{color:var(--gold)}
+.chapter-cue::before{background:var(--gold)}
+.chapter-detail{background:var(--paper)}
+.chapter-rail{background:#14120Ff0;border-color:#ffffff24;box-shadow:0 8px 30px #14120f2a}
+.chapter-rail a{color:#F7F4EE9c}
+.chapter-rail a[aria-current="step"]{color:var(--paper)}
+.chapter-rail a::before{background:#ffffff40}
+.chapter-rail a[aria-current="step"]::before{background:var(--gold)}
+#full .photo img{filter:saturate(1.24) contrast(1.055)}
+.closing{position:relative;isolation:isolate;overflow:hidden;background:var(--ink)}
+.closing-content{position:relative}
+.closing-mark{display:grid;gap:0;margin-top:55px;padding-top:28px;width:100%;border-top:1px solid #F7F4EE30;text-align:center}
+.closing-mark span{font:500 clamp(38px,5vw,70px)/.92 'Bodoni Moda',Georgia,serif;letter-spacing:-.06em;text-transform:uppercase;white-space:nowrap}
+.closing-mark em{margin-top:-4px;color:var(--gold);font:clamp(40px,5vw,70px)/.9 'Pinyon Script',cursive}
+.closing-content small{margin-top:28px;color:#F7F4EE80;font-size:8px;letter-spacing:.2em}
+.booking-badge{border-color:#F7F4EE65;background:#F7F4EE12}
+.booking-content h2 em{color:var(--gold)}
+.booking-button:hover{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+@media(max-width:760px){
+  .finder-text{width:100%;min-width:0;min-height:72px;padding:0 18px;gap:12px}
+  .finder-prompt{max-width:145px}
+  .finder-action{font-size:9px;gap:9px}
+  .closing-mark{margin-top:38px;padding-top:23px}
+  .closing-mark span{font-size:clamp(31px,9vw,48px)}
+  .closing-mark em{font-size:48px}
+}
+@media(prefers-reduced-motion:reduce){.finder-text{transition:none}.finder-text:hover{transform:none}}
+@media print{.chapter-rail{background:var(--ink)!important}}
+@media(max-width:760px){
+  .cover h1{font-size:clamp(48px,15.5vw,62px);line-height:.9}
+  .cover h1 em{margin-left:8px}
+}

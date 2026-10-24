@@ -1,0 +1,4 @@
+# Review screenshots, the separately hosted review copy, and v3-source's symlinked node_modules stay out of git.
+*.png
+irene-review-hosted/
+v3-source/node_modules

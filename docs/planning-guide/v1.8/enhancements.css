@@ -1,0 +1,56 @@
+/* Retain V1's visual system; additions are limited to motion and package finding. */
+.nav-finder,.finder-text{font-family:inherit;background:none;color:var(--ink);cursor:pointer}
+.nav-finder{border:1px solid var(--line);font-size:10px;letter-spacing:.13em;text-transform:uppercase;padding:9px 13px;white-space:nowrap;transition:border-color .2s,color .2s}
+.nav-finder:hover,.finder-text:hover{color:var(--copper);border-color:var(--copper)}
+.finder-text{font-size:11px;border:0;border-bottom:1px solid var(--copper);padding:0 0 7px;margin-bottom:30px}
+.collection-note{display:flex;align-items:baseline;justify-content:space-between;gap:25px}
+.collection-note .scope{max-width:540px}
+.finder{border:1px solid var(--line);padding:0;background:var(--paper);color:var(--ink);width:min(660px,calc(100% - 32px));max-height:90svh;overflow-y:auto;box-shadow:0 25px 100px #0003}
+.finder::backdrop{background:#2b251fc4;backdrop-filter:blur(5px)}
+.finder-content{padding:55px}
+.finder-close{position:absolute;top:12px;right:13px;width:44px;height:44px;cursor:pointer;font-size:28px;font-weight:300;background:none;color:var(--ink);border:0}
+.finder-eyebrow{font-size:9px;text-transform:uppercase;letter-spacing:.19em;color:var(--copper);margin-bottom:16px}
+.finder h2{font-size:46px;line-height:1.06;outline:none;max-width:490px;margin:26px 0 18px}
+.finder-progress{height:2px;background:var(--line);margin:20px 0 25px}
+.finder-progress span{height:100%;background:var(--copper);display:block;transition:width .3s}
+.finder-desc{font-size:13px;line-height:1.85;color:var(--muted);margin-bottom:25px}
+.finder-choices{display:grid;gap:11px}
+.finder-choice{display:flex;align-items:center;justify-content:space-between;gap:20px;border:1px solid var(--line);background:transparent;padding:17px 19px;text-align:left;font:13px/1.65 'Jost',sans-serif;color:var(--ink);cursor:pointer;transition:background .2s,border-color .2s}
+
+.finder-choice:hover,.finder-choice[aria-pressed=true]{background:#eee6dc;border-color:var(--copper)}
+.finder-back,.finder-restart{font:12px 'Jost',sans-serif;padding:20px 0 0;border:0;background:none;text-decoration:underline;text-underline-offset:4px;color:var(--muted);cursor:pointer}
+.finder-price{font:40px 'Cormorant Garamond',serif;margin-bottom:20px;color:var(--copper)}
+.finder-scope{font-size:11px;color:var(--muted);line-height:1.8;border-top:1px solid var(--line);padding-top:18px;margin-bottom:25px}
+.finder-link{display:block;text-align:center;background:var(--ink);color:var(--paper);font-size:10px;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;padding:18px 20px;transition:background .2s}
+.finder-link:hover{background:var(--copper)}
+.endnote a{text-decoration:underline;text-underline-offset:3px}
+@media(max-width:1050px){nav .preview{display:none}.navlinks{gap:18px}}
+@media(max-width:760px){.navlinks a{display:none}.navlinks{gap:0}.nav-finder{font-size:9px;padding:10px}.collection-note{display:block}.collection-note .scope{margin-bottom:15px}.finder-content{padding:45px 24px 30px}.finder h2{font-size:38px}.finder-choice{font-size:13px;padding:15px}.finder-price{font-size:36px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+@media print{.nav-finder,.finder-text,.finder{display:none!important}.cover-inner>*:not(.cover-title),.cover-title>*,.intro-grid>*,.comparison a,.photo img,.package-content>*,.addons-head>*,.addon-group,.closing-content>*{opacity:1!important;visibility:visible!important;transform:none!important}}
+
+/* Restored rounded photo card, with Irene's selected reception background. */
+.booking-wrap{background:var(--paper);padding:72px 4% 82px;margin-top:24px}
+.booking-card{position:relative;isolation:isolate;overflow:hidden;border-radius:38px;min-height:560px;display:grid;place-items:center;box-shadow:0 26px 48px -20px #2b251f55;background:var(--ink);color:var(--paper)}
+.booking-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 48%;z-index:-2}
+.booking-card::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#241e19a6,#241e19c9);z-index:-1}
+.booking-content{text-align:center;display:flex;flex-direction:column;align-items:center;padding:65px 30px;max-width:950px}
+.booking-badge{border:1px solid #F7F4EE5c;background:#F7F4EE13;border-radius:999px;padding:9px 18px;display:flex;align-items:center;gap:9px;font-size:9px;font-weight:500;letter-spacing:.25em;text-transform:uppercase;margin-bottom:32px}
+.booking-badge>span{width:6px;height:6px;border-radius:50%;background:#d2ad83}
+.booking-content h2{font-size:clamp(46px,5.6vw,80px);line-height:1.07;letter-spacing:-.03em}
+.booking-content h2 em{color:#dfb59a}
+.booking-content p{font-size:14px;line-height:1.9;color:#f0e8dece;margin:27px 0 34px}
+.booking-button{display:inline-flex;gap:32px;align-items:center;justify-content:center;padding:21px 32px;border:1px solid var(--paper);border-radius:999px;background:var(--paper);color:var(--ink);text-decoration:none;font-size:11px;font-weight:500;letter-spacing:.17em;text-transform:uppercase;transition:background .25s,color .25s,transform .25s}
+.booking-button span{font-size:22px;font-weight:300;line-height:1;transition:transform .25s}
+.booking-button:hover{background:#e9d7c9;border-color:#e9d7c9;transform:translateY(-2px)}
+.booking-button:hover span{transform:translateX(4px)}
+#venue .photo img{object-position:center 42%}
+#partial .photo img{object-position:center 57%}
+.closing img{object-position:center 40%}
+@media(max-width:760px){.booking-wrap{padding:40px 5% 50px;margin-top:12px}.booking-card{border-radius:25px;min-height:510px}.booking-content{padding:45px 20px}.booking-content h2{font-size:40px}.booking-badge{font-size:8px;margin-bottom:30px}.booking-content p{font-size:13px;margin:25px 0 30px}.booking-button{padding:19px 22px;font-size:9px;gap:18px;letter-spacing:.14em}.booking-image{object-position:45% center}#partial .photo img{object-position:center 58%}.closing img{object-position:center 34%}}
+@media(prefers-reduced-motion:reduce){.booking-button,.booking-button span{transition:none}.booking-button:hover,.booking-button:hover span{transform:none}}
+@media print{.booking-wrap{padding:15mm 0;margin:0;break-inside:avoid;break-before:page}.booking-card{min-height:190mm;box-shadow:none;print-color-adjust:exact}.booking-content>*{opacity:1!important;visibility:visible!important;transform:none!important}}
+
+.cover-photo{position:absolute;inset:0;display:block;overflow:hidden}.cover-photo img{width:100%;height:100%;position:absolute;object-fit:cover;object-position:center}
+
+@media(max-width:760px){.cover-title>.eyebrow{display:none}}
