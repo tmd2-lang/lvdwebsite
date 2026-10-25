@@ -7,11 +7,13 @@ import { getDeletedImagesForClient, getImagesForClient, withSignedUrls } from "@
 import { getTasksForClient } from "@/lib/task-data";
 import { getChecklistRows } from "@/lib/checklist-data";
 import { buildChecklist } from "@/lib/checklist-view";
+import { getBudget } from "@/lib/budget-data";
+import { EMPTY_SETUP } from "@/lib/budget-view";
 import ClientWorkspace from "./ClientWorkspace";
 
 export const dynamic = "force-dynamic";
 
-const WORKSPACE_TABS = ["overview", "checklist", "tasks", "invoices", "documents", "images", "access"] as const;
+const WORKSPACE_TABS = ["overview", "checklist", "budget", "tasks", "invoices", "documents", "images", "access"] as const;
 type WorkspaceTab = (typeof WORKSPACE_TABS)[number];
 
 export default async function ClientDetailPage({
@@ -59,5 +61,12 @@ export default async function ClientDetailPage({
   const checklist = buildChecklist(client, checklistLoad.rows);
   const checklistError = checklistLoad.error;
 
-  return <ClientWorkspace client={client} members={members} invoices={invoices} documents={documents} removedDocuments={removedDocuments} images={images} removedImages={removedImages} tasks={tasks} checklist={checklist} checklistError={checklistError} initialTab={initialTab} />;
+  const budgetLoad = await getBudget(client.id)
+    .then((budget) => ({ budget, error: "" }))
+    .catch((error: unknown) => ({
+      budget: { setup: EMPTY_SETUP, lines: [], payments: [] },
+      error: error instanceof Error ? error.message : "Could not load the budget.",
+    }));
+
+  return <ClientWorkspace client={client} members={members} invoices={invoices} documents={documents} removedDocuments={removedDocuments} images={images} removedImages={removedImages} tasks={tasks} checklist={checklist} checklistError={checklistError} budget={budgetLoad.budget} budgetError={budgetLoad.error} initialTab={initialTab} />;
 }

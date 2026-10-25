@@ -19,18 +19,21 @@ import ImagePanel from "./ImagePanel";
 import TaskPanel from "./TaskPanel";
 import ChecklistPanel from "./ChecklistPanel";
 import type { ChecklistItem } from "@/lib/checklist-view";
+import BudgetPanel from "./BudgetPanel";
+import type { ClientBudget } from "@/lib/budget-data";
 import type { ClientTask } from "@/lib/task-view";
 import InviteForm from "./InviteForm";
 import MemberList from "./MemberList";
 import styles from "../../portal-admin.module.css";
 
-type WorkspaceTab = "overview" | "checklist" | "tasks" | "invoices" | "documents" | "images" | "access";
+type WorkspaceTab = "overview" | "checklist" | "budget" | "tasks" | "invoices" | "documents" | "images" | "access";
 
 // Tasks is left out of the tab bar: the Checklist replaces it. The panel still
 // opens at ?tab=tasks in case anything there is needed before it is removed.
 const tabs: { id: WorkspaceTab; label: string }[] = [
   { id: "overview", label: "Overview" },
   { id: "checklist", label: "Checklist" },
+  { id: "budget", label: "Budget" },
   { id: "invoices", label: "Invoices" },
   { id: "documents", label: "Documents" },
   { id: "images", label: "Images" },
@@ -46,7 +49,7 @@ function initials(client: PortalClient) {
   return [client.partner_one_name, client.partner_two_name].filter(Boolean).map((name) => name!.trim()[0]?.toUpperCase()).join("").slice(0, 2);
 }
 
-export default function ClientWorkspace({ client, members, invoices, documents, removedDocuments, images, removedImages, tasks, checklist, checklistError, initialTab = "overview" }: { client: PortalClient; members: ClientMember[]; invoices: Invoice[]; documents: ClientDocument[]; removedDocuments: ClientDocument[]; tasks: ClientTask[]; checklist: ChecklistItem[]; checklistError?: string; images: ViewableImage[]; removedImages: ViewableImage[]; initialTab?: WorkspaceTab }) {
+export default function ClientWorkspace({ client, members, invoices, documents, removedDocuments, images, removedImages, tasks, checklist, checklistError, budget, budgetError, initialTab = "overview" }: { client: PortalClient; members: ClientMember[]; invoices: Invoice[]; documents: ClientDocument[]; removedDocuments: ClientDocument[]; tasks: ClientTask[]; checklist: ChecklistItem[]; checklistError?: string; budget: ClientBudget; budgetError?: string; images: ViewableImage[]; removedImages: ViewableImage[]; initialTab?: WorkspaceTab }) {
   const [tab, setTabState] = useState<WorkspaceTab>(initialTab);
 
   /**
@@ -139,6 +142,8 @@ export default function ClientWorkspace({ client, members, invoices, documents, 
         {tab === "documents" && <DocumentPanel clientId={client.id} documents={documents} removedDocuments={removedDocuments} />}
 
         {tab === "checklist" && <ChecklistPanel clientId={client.id} eventDate={client.event_date} initialItems={checklist} loadError={checklistError} />}
+
+        {tab === "budget" && <BudgetPanel clientId={client.id} designBooked={Boolean(client.design_tier)} guestCount={parseInt(client.guest_count ?? "", 10) || null} setup={budget.setup} lines={budget.lines} payments={budget.payments} loadError={budgetError} />}
 
         {tab === "tasks" && <TaskPanel clientId={client.id} tasks={tasks} />}
 

@@ -722,3 +722,97 @@
   .checklistRow { grid-template-columns: minmax(0, 1fr) auto; }
   .checklistRow > select { grid-column: 1 / -1; width: auto; justify-self: start; }
 }
+
+/* Client budget -------------------------------------------------------------- */
+
+.budgetStats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.budgetStats > div:nth-child(4) { border-left: 0; }
+.budgetStats > div:nth-child(n + 4) { border-top: 1px solid #ece6dc; }
+.budgetStats strong { font-size: 1.6rem; }
+.budgetError { margin: 1rem 1.5rem 0; }
+
+.budgetSetup { display: flex; flex-wrap: wrap; align-items: flex-end; gap: .9rem; border-bottom: 1px solid #e6dfd5; padding: 1.1rem 1.5rem; }
+.budgetSetup label,
+.budgetForm label,
+.budgetGrid3 label,
+.budgetGrid4 label { display: grid; gap: .35rem; min-width: 0; }
+.budgetSetup label { flex: 0 1 220px; }
+.budgetSetup span,
+.budgetGrid3 label span,
+.budgetGrid4 label span { color: #4e4942; font-size: .62rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.budgetSetup input,
+.budgetGrid3 :is(input, select),
+.budgetGrid4 :is(input, select) { min-height: 42px; width: 100%; border: 1px solid #d8d0c3; border-radius: 3px; padding: .45rem .65rem; background: #fff; font: inherit; font-size: .74rem; }
+.budgetSetup button,
+.budgetGrid4 > button,
+.budgetPrompt button { min-height: 42px; border: 1px solid #201d19; border-radius: 3px; padding: 0 1.1rem; background: #201d19; color: #fbf8f2; font: inherit; font-size: .6rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
+.budgetSetup button:disabled,
+.budgetGrid4 > button:disabled,
+.budgetPrompt button:disabled { opacity: .6; cursor: progress; }
+
+.budgetSection + .budgetSection { border-top: 1px solid #e6dfd5; }
+.budgetSection > header { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 1.1rem 1.5rem .5rem; background: #faf6ef; }
+.budgetSection > header h3 { font-family: var(--font-bodoni); font-size: 1.15rem; font-weight: 500; }
+.budgetSection > header span { color: #8a8177; font-size: .62rem; font-weight: 700; letter-spacing: .08em; }
+.budgetEmpty { padding: 1rem 1.5rem 1.3rem; color: #665f56; font-size: .68rem; }
+
+.budgetPrompt { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem; margin: .9rem 1.5rem; border: 1px dashed #c5b496; border-radius: 5px; padding: .85rem 1rem; background: #fffdfa; }
+.budgetPrompt p { flex: 1 1 260px; color: #5e4a28; font-size: .68rem; line-height: 1.5; }
+
+.budgetLine { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: start; gap: 1rem; }
+.budgetLine > button,
+.budgetPaymentActions button { border: 0; padding: .4rem .65rem; background: transparent; color: #71582e; font: inherit; font-size: .62rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.budgetFigures { display: flex; gap: 1.2rem; }
+.budgetFigures div { display: grid; gap: .1rem; text-align: right; }
+.budgetFigures dt { color: #8a8177; font-size: .55rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.budgetFigures dd { color: #312d27; font-size: .76rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.budgetForm { display: grid; gap: .8rem; }
+.budgetGrid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
+.budgetGrid4 { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, .8fr) auto; align-items: end; gap: .8rem; }
+.budgetAddLine { border-top: 1px solid #ece6dc; padding: 1rem 1.5rem 1.3rem; }
+.budgetDanger { border: 0 !important; background: transparent !important; color: #9a5a4a !important; padding: 0 !important; letter-spacing: 0 !important; text-transform: none !important; font-size: .64rem !important; }
+.budgetSecondary { justify-self: start; min-height: 38px; border: 1px solid #c5b496; border-radius: 3px; padding: 0 .9rem; background: #f6f1e7; color: #5e4a28; font: inherit; font-size: .62rem; font-weight: 700; cursor: pointer; }
+
+.budgetLinePayments { display: grid; gap: .6rem; border-top: 1px dashed #e1d9cd; padding-top: .8rem; }
+.budgetLinePayments h4 { color: #4e4942; font-size: .62rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.budgetLinePayments > p,
+.budgetLinePayments li { color: #665f56; font-size: .66rem; line-height: 1.6; }
+.budgetLinePayments ul { padding-left: 1rem; }
+
+.budgetPayment { display: grid; grid-template-columns: 120px minmax(0, 1fr) auto; align-items: start; gap: 1rem; }
+.budgetPill { display: inline-flex; align-items: center; justify-content: center; cursor: default; }
+.budgetPaymentActions { display: flex; gap: .2rem; }
+
+.budgetTableWrap { overflow-x: auto; padding: .4rem 1.5rem 1.3rem; }
+.budgetTable { width: 100%; min-width: 640px; border-collapse: collapse; font-size: .68rem; }
+.budgetTable th,
+.budgetTable td { border-bottom: 1px solid #ece6dc; padding: .55rem .5rem; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.budgetTable thead th { color: #71582e; font-size: .55rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.budgetTable th:first-child { text-align: left; }
+.budgetTable tbody th { color: #312d27; font-weight: 700; }
+.budgetTable input { width: 4.2rem; min-height: 32px; border: 1px solid #d8d0c3; border-radius: 3px; padding: .2rem .4rem; background: #fff; font: inherit; text-align: right; }
+
+@media (max-width: 900px) {
+  .budgetStats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .budgetStats > div:nth-child(4) { border-left: 1px solid #ece6dc; }
+  .budgetStats > div:nth-child(odd) { border-left: 0; }
+  .budgetStats > div:nth-child(n + 3) { border-top: 1px solid #ece6dc; }
+  .budgetGrid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .budgetGrid4 > button { grid-column: 1 / -1; }
+}
+
+@media (max-width: 620px) {
+  .budgetSetup,
+  .budgetAddLine,
+  .budgetSection > header,
+  .budgetTableWrap,
+  .budgetEmpty { padding-left: 1.15rem; padding-right: 1.15rem; }
+  .budgetPrompt { margin-left: 1.15rem; margin-right: 1.15rem; }
+  .budgetLine { grid-template-columns: minmax(0, 1fr) auto; }
+  .budgetFigures { grid-column: 1 / -1; grid-row: 2; justify-content: flex-start; }
+  .budgetFigures div { text-align: left; }
+  .budgetGrid3 { grid-template-columns: 1fr; }
+  .budgetPayment { grid-template-columns: minmax(0, 1fr) auto; }
+  .budgetPill { grid-column: 1 / -1; justify-self: start; width: auto; }
+}
