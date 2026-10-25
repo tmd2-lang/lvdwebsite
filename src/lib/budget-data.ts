@@ -1,3 +1,7 @@
+import { getWaveInvoices } from "@/lib/wave-data";
+import { waveBudget } from "@/lib/wave-budget";
+import { getClientById } from "@/lib/client-data";
+import { studioToday } from "@/lib/calendar-view";
 import {
   EMPTY_SETUP,
   type BudgetLine,
@@ -56,20 +60,23 @@ export async function getBudget(clientId: string): Promise<ClientBudget> {
   const setup = setupRows[0]
     ? { ...setupRows[0], approved_cents: Number(setupRows[0].approved_cents), contingency_percent: Number(setupRows[0].contingency_percent) }
     : EMPTY_SETUP;
+  const [wave,client] = await Promise.all([getWaveInvoices(clientId), getClientById(clientId)]);
+  const imported = waveBudget(wave, client?.event_date ?? null, studioToday());
+  const liveIds = new Set(lines.filter(line => line.status !== "canceled").map(line => line.id));
   return {
     setup,
     // bigint columns can arrive as strings; the math needs numbers.
-    lines: lines.map((line) => ({
+    lines: [...lines.map((line) => ({
       ...line,
       estimated_cents: Number(line.estimated_cents),
       contracted_cents: Number(line.contracted_cents),
       changes_cents: Number(line.changes_cents),
-    })),
-    payments: payments.map((payment) => ({
+    })), ...imported.lines],
+    payments: [...payments.filter(payment => liveIds.has(payment.line_id)).map((payment) => ({
       ...payment,
       amount_cents: Number(payment.amount_cents),
       paid_cents: Number(payment.paid_cents),
-    })),
+    })), ...imported.payments],
   };
 }
 

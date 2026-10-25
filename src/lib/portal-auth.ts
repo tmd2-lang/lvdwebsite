@@ -95,28 +95,21 @@ export async function hasPortalRefreshToken() {
  * comes from a client_users row, never from the URL or anything the browser
  * sends. Every portal page must go through here.
  */
-async function getMembershipForUser(userId: string): Promise<{ client: PortalClient; relationship: string } | null> {
+export async function getPortalMemberships(userId: string): Promise<{ client: PortalClient; relationship: string }[]> {
   const config = serviceConfig();
-  if (!config) return null;
-
-  const response = await fetch(
-    `${config.url}/rest/v1/client_users?select=relationship,clients(*)&user_id=eq.${encodeURIComponent(userId)}&limit=1`,
-    {
-      headers: { apikey: config.serviceRoleKey, Authorization: `Bearer ${config.serviceRoleKey}` },
-      cache: "no-store",
-    },
-  );
-
-  if (!response.ok) {
-    console.error("Portal client lookup failed:", await response.text().catch(() => ""));
-    return null;
-  }
-
-  const rows = (await response.json().catch(() => null)) as { clients?: PortalClient | null; relationship?: string }[] | null;
-  const row = rows?.[0];
-  return row?.clients ? { client: row.clients, relationship: row.relationship || "guest" } : null;
+  if (!config) return [];
+  const response = await fetch(`${config.url}/rest/v1/client_users?select=relationship,clients(*)&user_id=eq.${encodeURIComponent(userId)}&order=client_id.asc&limit=500`, {
+    headers: { apikey: config.serviceRoleKey, Authorization: `Bearer ${config.serviceRoleKey}` }, cache: "no-store",
+  });
+  if (!response.ok) throw new Error("Your celebration access could not be loaded.");
+  const rows = await response.json() as { clients: PortalClient | null; relationship: string }[];
+  return rows.flatMap(row => row.clients ? [{ client: row.clients, relationship: row.relationship || "guest" }] : []);
 }
-
+async function getMembershipForUser(userId: string) {
+  const memberships = await getPortalMemberships(userId);
+  const selected = (await cookies()).get("lvd_portal_event")?.value;
+  return memberships.find(membership => membership.client.id === selected) ?? memberships[0] ?? null;
+}
 export async function getClientForUser(userId: string): Promise<PortalClient | null> {
   return (await getMembershipForUser(userId))?.client ?? null;
 }
@@ -130,10 +123,11 @@ export async function getPortalSession() {
   const user = await getPortalUser();
   if (!user) return null;
 
-  const membership = await getMembershipForUser(user.id);
+  const memberships = await getPortalMemberships(user.id);
+  const selected = (await cookies()).get("lvd_portal_event")?.value;
+  const membership = memberships.find(row => row.client.id === selected) ?? memberships[0];
   if (!membership) return null;
-
-  return { user, ...membership };
+  return { user, ...membership, memberships };
 }
 
 export function safePortalReturnPath(value: string | null) {

@@ -1118,3 +1118,6 @@
   .profileNote { padding: 0 1.2rem 1.2rem; }
   .documentGrid { gap: .9rem; }
 }
+
+.eventPicker { display:flex; gap:12px; align-items:center; flex-wrap:wrap; padding:16px clamp(20px,4vw,60px); border-bottom:1px solid #d8cdbb; background:#f4f0e7; }
+.eventPicker select, .eventPicker button { min-height:44px; max-width:100%; padding:8px 12px; border:1px solid #cbbda4; background:#fffdfa; color:#302c27; }

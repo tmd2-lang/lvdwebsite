@@ -1,3 +1,4 @@
+import { getWaveInvoices } from "@/lib/wave-data";
 import { NextResponse } from "next/server";
 import { canManageClientPortal, getAdminUser } from "@/lib/admin-auth";
 import { getClientById } from "@/lib/client-data";
@@ -129,6 +130,11 @@ export async function POST(request: Request) {
     const client = await getClientById(typeof body.clientId === "string" ? body.clientId : "");
     if (!client) return NextResponse.json({ error: "That celebration no longer exists." }, { status: 404 });
     const by = user.email;
+    if (Object.values(body).some(value => typeof value === "string" && value.startsWith("wave:"))) throw new InputError("Wave lines and payments are read-only. Update the invoice in Wave.");
+    if (["addLine", "updateLine", "lvdLines"].includes(String(body.action))) {
+      const wave = await getWaveInvoices(client.id);
+      if (wave.length && (body.action === "lvdLines" || body.side === "lvd_planning" || body.side === "lvd_design")) throw new InputError("This event uses Wave for LVD charges. Edit those invoice lines in Wave.");
+    }
 
     switch (body.action) {
       case "setup": {

@@ -229,6 +229,7 @@ export default function BudgetPanel({
         <div><p className={styles.eyebrow}>Client budget</p><h2>Budget</h2></div>
       </div>
 
+      {lines.some(line => line.id.startsWith("wave:")) && <p>Wave lines and installment allocations are read-only. Update the invoice in Wave, then refresh under <a href="/admin/portal/wave">Wave invoice sync</a>.</p>}
       <div className={`${styles.checklistSummary} ${styles.budgetStats}`}>
         {stats.map((stat) => (
           <div key={stat.label}>
@@ -266,7 +267,7 @@ export default function BudgetPanel({
               <li key={line.id} className={line.status === "canceled" ? styles.taskDone : undefined}>
                 <div className={styles.budgetLine}>
                   <div className={styles.checklistText}>
-                    <strong>{line.vendor}</strong>
+                    <strong>{line.vendor}</strong>{line.wave_url && <a href={line.wave_url} target="_blank" rel="noreferrer">Open Wave invoice →</a>}
                     <small>
                       {line.category} · {LINE_STATUS_LABELS[line.status]}
                       {isLvdSide(line.side) ? <em className={styles.checklistTag}>{BUDGET_SIDE_LABELS[line.side]}</em> : ` · ${BUDGET_SIDE_LABELS[line.side]}`}
@@ -278,8 +279,8 @@ export default function BudgetPanel({
                     <div><dt>Paid</dt><dd>{money(paid)}</dd></div>
                     <div><dt>Left</dt><dd>{money(Math.max(forecast - paid, 0))}</dd></div>
                   </dl>
-                  <button type="button" onClick={() => setEditingLine((current) => (current === line.id ? "" : line.id))} aria-expanded={editingLine === line.id}>
-                    {editingLine === line.id ? "Close" : "Edit"}
+                  <button disabled={line.id.startsWith("wave:")} type="button" onClick={() => setEditingLine((current) => (current === line.id ? "" : line.id))} aria-expanded={editingLine === line.id}>
+                    {line.id.startsWith("wave:") ? "Wave · read-only" : editingLine === line.id ? "Close" : "Edit"}
                   </button>
                 </div>
 
@@ -374,13 +375,13 @@ export default function BudgetPanel({
                       {status !== "paid" && status !== "waived" && (
                         <button
                           type="button"
-                          disabled={busy === payment.id}
+                          disabled={payment.id.startsWith("wave:") || busy === payment.id}
                           onClick={() => void run(payment.id, "updatePayment", { paymentId: payment.id, paid_cents: payment.amount_cents, paid_on: todayIso() })}
                         >
                           Mark paid
                         </button>
                       )}
-                      <button type="button" onClick={() => setEditingPayment((current) => (current === payment.id ? "" : payment.id))} aria-expanded={editingPayment === payment.id}>
+                      <button disabled={payment.id.startsWith("wave:")} type="button" onClick={() => setEditingPayment((current) => (current === payment.id ? "" : payment.id))} aria-expanded={editingPayment === payment.id}>
                         {editingPayment === payment.id ? "Close" : "Edit"}
                       </button>
                     </div>

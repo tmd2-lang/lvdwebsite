@@ -8,5 +8,6 @@ export async function POST() {
   const response = NextResponse.json({ ok: true });
   response.cookies.set(PORTAL_ACCESS_COOKIE, "", portalCookieOptions(0));
   response.cookies.set(PORTAL_REFRESH_COOKIE, "", portalCookieOptions(0));
+  response.cookies.set("lvd_portal_event", "", portalCookieOptions(0));
   return response;
 }

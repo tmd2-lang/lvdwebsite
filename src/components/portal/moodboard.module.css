@@ -18,3 +18,5 @@
 .approval input[type=checkbox], .choices input[type=checkbox] { width:22px; height:22px; min-height:22px; min-width:22px; flex:0 0 22px; padding:0; vertical-align:middle; }
 .editor fieldset { min-width:0; border:1px solid #ddd1bc; padding:20px; border-radius:6px; }
 .editor textarea:focus-visible { outline:2px solid #9a7840; outline-offset:3px; }
+
+.editor input[type=checkbox] { width:22px; min-width:22px; min-height:22px; height:22px; vertical-align:middle; }

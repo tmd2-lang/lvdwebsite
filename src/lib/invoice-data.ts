@@ -1,3 +1,8 @@
+import { getWaveInvoices } from "@/lib/wave-data";
+import { waveInvoiceAdapter } from "@/lib/wave-invoice-adapter";
+import { waveIsBillable } from "@/lib/wave-view";
+import { getClientById } from "@/lib/client-data";
+import { studioToday } from "@/lib/calendar-view";
 import type { Invoice, InvoiceStatus } from "@/lib/invoice-types";
 
 function databaseConfig() {
@@ -47,12 +52,8 @@ export async function getInvoices(): Promise<Invoice[]> {
 
 /** Every invoice for one celebration, newest issue date first. */
 export async function getInvoicesForClient(clientId: string): Promise<Invoice[]> {
-  const { url } = databaseConfig();
-  const response = await fetch(
-    `${url}/rest/v1/invoices?select=${SELECT}&client_id=eq.${encodeURIComponent(clientId)}&order=issued_on.desc`,
-    { headers: databaseHeaders(), cache: "no-store" },
-  );
-  return sortItems(await responseJson<Invoice[]>(response, "Could not load invoices."));
+  const [rows,client] = await Promise.all([getWaveInvoices(clientId),getClientById(clientId)]);
+  return rows.filter(waveIsBillable).map(row => waveInvoiceAdapter(row,client?.event_date ?? null,studioToday()));
 }
 
 /**
@@ -62,13 +63,7 @@ export async function getInvoicesForClient(clientId: string): Promise<Invoice[]>
  * client cannot open someone else's invoice by guessing its address.
  */
 export async function getInvoiceForClient(invoiceId: string, clientId: string): Promise<Invoice | null> {
-  const { url } = databaseConfig();
-  const response = await fetch(
-    `${url}/rest/v1/invoices?select=${SELECT}&id=eq.${encodeURIComponent(invoiceId)}&client_id=eq.${encodeURIComponent(clientId)}&limit=1`,
-    { headers: databaseHeaders(), cache: "no-store" },
-  );
-  const rows = sortItems(await responseJson<Invoice[]>(response, "Could not load that invoice."));
-  return rows[0] || null;
+  return (await getInvoicesForClient(clientId)).find(invoice => invoice.id === invoiceId) ?? null;
 }
 
 export type NewInvoiceInput = {

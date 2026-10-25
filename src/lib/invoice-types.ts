@@ -20,6 +20,11 @@ export type InvoiceItem = {
 };
 
 export type Invoice = {
+  wave_total?: number;
+  wave_paid?: number;
+  wave_balance?: number;
+  wave_next?: number;
+  wave_status?: string;
   id: string;
   created_at: string;
   updated_at: string;
@@ -48,17 +53,19 @@ export function money(cents: number) {
 }
 
 export function invoiceTotal(invoice: Invoice) {
+  if (invoice.wave_total !== undefined) return invoice.wave_total;
   return invoice.invoice_items.reduce((sum, item) => sum + item.amount_cents, 0);
 }
 
 export function invoicePaid(invoice: Invoice) {
+  if (invoice.wave_paid !== undefined) return invoice.wave_paid;
   return invoice.invoice_items
     .filter((item) => item.paid)
     .reduce((sum, item) => sum + item.amount_cents, 0);
 }
 
 export function invoiceOutstanding(invoice: Invoice) {
-  return invoiceTotal(invoice) - invoicePaid(invoice);
+  return invoice.wave_balance ?? (invoiceTotal(invoice) - invoicePaid(invoice));
 }
 
 /** Totals across every invoice for one celebration. */
@@ -66,5 +73,5 @@ export function celebrationTotals(invoices: Invoice[]) {
   const billable = invoices.filter((invoice) => invoice.status !== "draft" && invoice.status !== "void");
   const total = billable.reduce((sum, invoice) => sum + invoiceTotal(invoice), 0);
   const paid = billable.reduce((sum, invoice) => sum + invoicePaid(invoice), 0);
-  return { total, paid, remaining: total - paid, count: billable.length };
+  return { total, paid, remaining: billable.reduce((sum, invoice) => sum + invoiceOutstanding(invoice), 0), count: billable.length };
 }

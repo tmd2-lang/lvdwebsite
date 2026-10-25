@@ -92,6 +92,7 @@ export type BudgetSetup = {
 };
 
 export type BudgetLine = {
+  wave_url?: string | null;
   id: string;
   client_id: string;
   category: string;

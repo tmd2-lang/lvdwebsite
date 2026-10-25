@@ -136,7 +136,7 @@ export default function ClientWorkspace({ client, members, invoices, documents, 
               <aside className={styles.workspaceCard}>
                 <div className={styles.workspaceCardHeader}><div><p className={styles.eyebrow}>Next steps</p><h2>Client Actions</h2></div></div>
                 <div className={styles.workspaceActions}>
-                  <Link href={`/admin/portal/clients/${client.id}/invoices/new`}><span>01</span><div><strong>Create an invoice</strong><small>Add itemized charges and a payment link.</small></div><i>→</i></Link>
+                  <Link href="/admin/portal/wave"><span>01</span><div><strong>Wave invoice sync</strong><small>Match Wave invoices and view payment status.</small></div><i>→</i></Link>
                   <button type="button" onClick={() => setTab("documents")}><span>02</span><div><strong>Upload documents</strong><small>Add contracts, plans, and proposals.</small></div><i>→</i></button>
                   <button type="button" onClick={() => setTab("access")}><span>03</span><div><strong>Invite to portal</strong><small>Send secure access to this celebration.</small></div><i>→</i></button>
                 </div>
@@ -147,8 +147,8 @@ export default function ClientWorkspace({ client, members, invoices, documents, 
         )}
 
         {tab === "invoices" && <section className={styles.workspaceCard}>
-          <div className={styles.workspaceCardHeader}><div><p className={styles.eyebrow}>Financials</p><h2>Client Invoices</h2></div><Link href={`/admin/portal/clients/${client.id}/invoices/new`}>Create invoice</Link></div>
-          {invoices.length === 0 ? <div className={styles.workspaceEmpty}><span>＋</span><h3>No invoices yet.</h3><p>Create the first itemized invoice for this client.</p></div> : <ul className={styles.invoiceRows}>{invoices.map((invoice) => <li key={invoice.id}><div className={styles.invoiceRowName}><strong>{invoice.name}</strong><small>{invoice.reference}{invoice.phase ? ` · ${invoice.phase}` : ""}</small></div><span className={styles.invoiceRowAmount}>{money(invoiceTotal(invoice))}</span><span className={`${styles.invoiceRowStatus} ${invoiceOutstanding(invoice) === 0 ? styles.invoiceRowPaid : ""}`}>{invoiceOutstanding(invoice) === 0 ? "Paid" : INVOICE_STATUS_LABELS[invoice.status]}</span></li>)}</ul>}
+          <div className={styles.workspaceCardHeader}><div><p className={styles.eyebrow}>Financials</p><h2>Client Invoices</h2></div><Link href="/admin/portal/wave">Wave invoice sync</Link></div>
+          {invoices.length === 0 ? <div className={styles.workspaceEmpty}><span>＋</span><h3>No invoices yet.</h3><p>Connect Wave and match this client’s invoices to their event.</p></div> : <ul className={styles.invoiceRows}>{invoices.map((invoice) => <li key={invoice.id}><div className={styles.invoiceRowName}><strong>{invoice.name}</strong><small>{invoice.reference}{invoice.phase ? ` · ${invoice.phase}` : ""}</small></div><span className={styles.invoiceRowAmount}>{money(invoiceTotal(invoice))}</span><span className={`${styles.invoiceRowStatus} ${invoiceOutstanding(invoice) === 0 ? styles.invoiceRowPaid : ""}`}>{invoiceOutstanding(invoice) === 0 ? "Paid" : (invoice.wave_status ?? INVOICE_STATUS_LABELS[invoice.status])}</span></li>)}</ul>}
         </section>}
 
         {tab === "documents" && <DocumentPanel clientId={client.id} documents={documents} removedDocuments={removedDocuments} />}

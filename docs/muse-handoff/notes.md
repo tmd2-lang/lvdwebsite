@@ -14,7 +14,7 @@ Written for Irene's Muse, from TJ's side, so it can see what has been built from
 | 3 | Event-day Timeline tab | **Live, including confirmed couple sharing.** Specialty sheets and vendor extracts remain. |
 | 4 | Guests, RSVP & Hospitality tab | **Live, including couple view/edit.** Public online RSVPs remain later. |
 | 5 | Inquiry → client conversion | **Live.** Auto-acknowledgment email and sorting inquiries by value not built yet. |
-| 6 | 40/30/30 invoice schedule | **Decision settled: Wave remains the invoice system.** Wave sync is next; integration is not built. |
+| 6 | 40/30/30 invoice schedule | **Built for account setup.** Read-only OAuth, matching, installment sync and TEST preview implemented; live Wave authorization/verification outstanding. |
 | 7 | Studio calendar + alerts | **Deployed and verified.** Month/agenda, filters, in-portal alerts. Email reminders not built. |
 | 8 | Team logins + roles | **Deferred by TJ.** Detailed team roles, per-client assignments and My tasks are not built. Existing owner/planner/inquiry-staff access remains. |
 | 9 | Documents / images finishing | **Deployed and verified; SQL active.** Default documents, Design album links, photographer gallery + checklist sync. Versioned couple approval flow implemented; deployment in progress. |
@@ -32,11 +32,43 @@ Written for Irene's Muse, from TJ's side, so it can see what has been built from
 
 ## Still to build
 
-Wave invoice integration (Build 6); team roles/assignments/My tasks (Build 8, deferred by TJ). Public guest RSVPs remain later. Earlier second-pass items (budget change log/comparison/export, timeline specialty sheets/vendor extracts/checklist links, calendar email reminders, inquiry auto-acknowledgment) are not included in the current release. Build 10 remains skipped.
+Wave developer app setup, authorization and live invoice validation (Build 6); team roles/assignments/My tasks (Build 8, deferred by TJ). Public guest RSVPs remain later. Earlier second-pass items (budget change log/comparison/export, timeline specialty sheets/vendor extracts/checklist links, calendar email reminders, inquiry auto-acknowledgment) are not included in the current release. Build 10 remains skipped.
 
 ---
 
 ## Log
+
+### Oct 25, 2026: Build 6 prepared without Wave credentials
+
+**Implemented:** owner-only read-only OAuth setup with state bound to the signed-in owner, exact business-name verification and pinned business ID, encrypted tokens stored in private Supabase tables, refresh handling and a sync lease. Requested scopes are business/customer/invoice/product read only; the Wave client refuses mutation queries. No passwords or real credentials were provided. Source is `wave-api.ts`, `wave-data.ts`, `wave-db.ts`, `wave-view.ts`, with admin connection/callback/sync routes and a secret-protected cron.
+
+**Studio screen:** Invoices opens Wave invoice sync. Explicit invoice → event client record → Planning or Design & Floral mapping, actual signing date and signed-agreement verification. Matching email is a suggestion; it never silently assigns invoices. Clear mapping is reversible and does not alter Wave. Complete invoice-set review gates automatic checklist updates; newly discovered billable customer invoices invalidate that review. Remaining unmapped billable invoices for that customer block confirmation. Mapping and existing manual LVD Budget lines are guarded against duplicate charges; manually tracked history is not deleted automatically.
+
+**Money display:** USD invoice amounts, partial paid/balance, Wave payment links and 40/30/30 installment deadlines. Missing signing/event dates stay unknown. The single Wave invoice due date is not used as an installment substitute. Wave invoice items (including invoice-level adjustments) are read-only Budget projections with exact-cent allocations and invoice links; actual money changes happen in Wave. Canceled manual-line payments are excluded from active Budget totals. Daily/manual Wave refresh supplies Calendar deadlines. Overpayments retain a credit instead of showing a negative remaining balance. Installment allocations are not fabricated payment receipts.
+
+**Couple portal:** Invoices, Payments, detail links and Overview amounts use matched Wave records only. Draft/saved/unknown/missing and unsupported-currency invoices stay out of couple totals; studio sees rows for review. Last-sync time is shown. A person assigned to several event records has a server-validated event picker; this grants no new client access. Stored legacy portal invoices remain in the database, but their issuing route now returns an explicit refusal and creation pages redirect to Wave.
+
+**Milestones:** event-set confirmation and every mapped billable invoice must qualify. Retainer received is a separate displayed milestone, not an invented task. LVD-001 requires verified signature plus 40%; LVD-104 cumulative 70%; LVD-108 zero balance. Notes/owners/dates are preserved; only Wave-owned completions reopen after a reversal. Zero-dollar invoices do not satisfy payment milestones. LVD-105 flags overdue, 7-day late-fee review and 14-day pause-work review; nothing charges a fee, pauses work or auto-completes that task.
+
+**Refresh:** manual owner refresh and one daily Vercel cron at 12:00 UTC. No real-time webhook in this pass. All pages must fetch successfully before the complete snapshot is applied atomically. Failed fetches keep prior data. Tokens/authorization are not visible in the browser. No live Wave invoices have been read, imported, edited or issued.
+
+**TEST preview:** `/admin/portal/wave/demo` uses invented sample data, clearly labeled. Its buttons perform no network writes. Browser verified mapping interaction and phone layout. `/admin/portal/wave` shows honest setup readiness when credentials/storage are unavailable.
+
+**Validation:** all 101 tests passed, including isolated PostgreSQL migration run twice, atomic snapshots, access restrictions, duplicate Budget guards, set review, stale mapping, retained notes, refunds/reversals, exact cents/credits, OAuth state and event scoping. Production build, TypeScript and targeted lint passed. Migration `supabase/wave-schema.sql` handed to TJ for manual execution; The first pasted query contained both the old and replacement WHERE lines and failed. Codex replaced the Supabase editor contents with the raw tested file, verified an exact text match, and left Run to TJ. Release stays local until SQL is applied. Credentials and account authorization remain pending. Setup instructions: `docs/muse-handoff/wave-setup.md`. Per TJ, no deployment dashboard/alias verification will be performed by Codex.
+
+
+### Oct 25, 2026: Irene’s Build 6 Wave sync specification received
+
+Wave is read-only money source, connected by registered developer app/OAuth to **Lady Victoria Designs LLC**. Never create/edit invoices in Wave or issue competing portal invoices. Match customer name/email to a portal client, then explicitly map each invoice to one event and Planning or Design & Floral track. Ambiguous matches require studio review. Budget mirrors invoice lines without duplicating already-tracked expenses.
+
+All invoices use cumulative installment thresholds: 40% at signing, 70% at event minus 90 days, 100% at event minus 30 days. Wave’s one invoice due date does not represent the installment schedule; installment overdue uses event/signing dates and amount paid. This supersedes earlier notes proposing Wave due dates alone for overdue. Couples see Sent/awaiting payment, Partially paid, Paid in full, Past due; drafts stay private. Studio flags 5% after seven days and work pause after fourteen days; do not charge a fee or automatically pause work.
+
+Examples supplied by Irene, not independently read from Wave: #528 Asha Foster $12,000; #491 $13,880 total/$13,000 paid/$880 balance; #514 $650 overdue; Lola #491 traditional and #446 white wedding ($16,359); Ritwik separate $1,500 planning and $3,600 florals invoices. Do not create live financial records from these examples.
+
+Source checklist mapping verified: LVD-001 signed agreement + required first payment; LVD-104 second installment; LVD-105 late-fee/pause rules (flag only); LVD-108 final payment. “Retainer received” is a dependency label in the current template, not a separate task. Clarify whether a separate milestone is desired. Payment proves receipt, not signature; resolve signature evidence before automatically completing the combined LVD-001. Actual signing date is needed for retainer overdue; do not silently substitute invoice creation or booking date. Across multiple invoices for an event, payment milestones must not complete from only one paid invoice while another applicable invoice remains below its threshold.
+
+Wave’s current OAuth documentation requires an active Pro or Wave Advisor subscription for the authorized business. Remaining access setup: register application, configure callback/client credentials securely, verify subscription and authorize the exact business. Business ID must be pinned after verification; name/email are matching suggestions, not sufficient to silently choose event/track. Build 6 code is not implemented yet.
+
 
 ### Oct 25, 2026: Build 9 moodboard approvals
 

@@ -1,3 +1,4 @@
+import styles from "../portal.module.css";
 import { redirect } from "next/navigation";
 import ClientPortalShell from "@/components/portal/ClientPortalShell";
 import { getPortalSession } from "@/lib/portal-auth";
@@ -34,6 +35,7 @@ export default async function ClientPortalLayout({ children }: { children: React
       viewerName={viewerName}
       viewerInitials={viewerName ? viewerName.trim().slice(0, 1).toUpperCase() : ""}
     >
+      {session.memberships.length > 1 && <form className={styles.eventPicker} action="/api/portal/event" method="post"><label htmlFor="portal-event">Your celebration</label><select id="portal-event" name="clientId" defaultValue={client.id}>{session.memberships.map(membership => <option key={membership.client.id} value={membership.client.id}>{membership.client.display_name} · {eventLabel(membership.client.event_date)}</option>)}</select><button type="submit">Open event</button></form>}
       {children}
     </ClientPortalShell>
   );

@@ -120,7 +120,7 @@ test('client, track, owner, type and case-insensitive search filters intersect',
 });
 
 function dataLoader(handler) {
-  return load('src/lib/calendar-data.ts', {}, { fetch: handler, process: { env: { NEXT_PUBLIC_SUPABASE_URL: 'https://example.test', SUPABASE_SERVICE_ROLE_KEY: 'test-only' } } });
+  return load('src/lib/calendar-data.ts', { '@/lib/wave-data': { getWaveInvoices: async () => [] } }, { fetch: handler, process: { env: { NEXT_PUBLIC_SUPABASE_URL: 'https://example.test', SUPABASE_SERVICE_ROLE_KEY: 'test-only' } } });
 }
 function response(rows, range = `0-${rows.length - 1}/${rows.length}`) {
   return { ok: true, json: async () => rows, headers: { get: () => range } };

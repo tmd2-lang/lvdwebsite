@@ -31,12 +31,14 @@ export default async function PortalOverviewPage() {
   const { user, client } = session;
   const countdown = daysUntil(client.event_date);
 
-  const invoices = (await getInvoicesForClient(client.id).catch(() => []))
+  const invoiceResult = await getInvoicesForClient(client.id).then(invoices => ({ invoices, error: false })).catch(() => ({ invoices: [], error: true }));
+  const invoiceError = invoiceResult.error;
+  const invoices = invoiceResult.invoices
     .filter((invoice) => invoice.status !== "draft" && invoice.status !== "void");
   const documents = await getDocumentsForClient(client.id).catch(() => []);
 
   const totals = celebrationTotals(invoices);
-  const percentPaid = totals.total > 0 ? (totals.paid / totals.total) * 100 : 0;
+  const percentPaid = totals.total > 0 ? Math.min(100, (totals.paid / totals.total) * 100) : 0;
   const recent = invoices.slice(0, 3);
   const nextDue = invoices.find((invoice) => invoiceOutstanding(invoice) > 0);
 
@@ -58,7 +60,7 @@ export default async function PortalOverviewPage() {
         )}
       </section>
 
-      {totals.count > 0 ? (
+      {invoiceError ? <p role="alert">Your invoice status could not be loaded. Please refresh or contact the studio.</p> : totals.count > 0 ? (
         <section className={styles.balanceCard} aria-labelledby="balance-title">
           <div className={styles.balanceLead}>
             <p>Celebration investment</p>
@@ -74,7 +76,7 @@ export default async function PortalOverviewPage() {
           {nextDue && (
             <div className={styles.nextPayment}>
               <span>Next payment</span>
-              <strong>{money(invoiceOutstanding(nextDue))}</strong>
+              <strong>{money(nextDue.wave_next ?? invoiceOutstanding(nextDue))}</strong>
               <p>{nextDue.name}{nextDue.due_on ? ` · Due ${shortDate(nextDue.due_on)}` : ""}</p>
               <Link href={`/portal/invoices/${nextDue.id}`}>Review balance <i aria-hidden="true">→</i></Link>
             </div>
@@ -99,7 +101,7 @@ export default async function PortalOverviewPage() {
             <Link href="/portal/invoices">View all <span aria-hidden="true">→</span></Link>
           </div>
           {recent.length === 0 ? (
-            <p className={styles.panelEmpty}>Nothing has been billed yet.</p>
+            <p className={styles.panelEmpty}>{invoiceError ? "Invoice status is temporarily unavailable." : "Nothing has been billed yet."}</p>
           ) : (
             <div className={styles.invoiceList}>
               {recent.map((invoice, index) => {
@@ -113,7 +115,7 @@ export default async function PortalOverviewPage() {
                     </div>
                     <b>{money(invoiceTotal(invoice))}</b>
                     <span className={outstanding === 0 ? styles.statusPaid : styles.statusDue}>
-                      {outstanding === 0 ? "Paid" : nextDueLabel(invoice.due_on)}
+                      {invoice.wave_status ?? (outstanding === 0 ? "Paid" : nextDueLabel(invoice.due_on))}
                     </span>
                   </Link>
                 );
