@@ -30,6 +30,21 @@ export default function DocumentPanel({
   // trash view is only ever active while there is something in it.
   const inTrash = showRemoved && removedDocuments.length > 0;
 
+  async function addStandards() {
+    setBusy(true); setError(""); setMessage("");
+    try {
+      const response = await fetch("/api/admin/client-resources", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ clientId, action: "attach_defaults" }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Could not add standard documents.");
+      setMessage("Standard documents added. Existing documents and removed copies were left unchanged.");
+      router.refresh();
+    } catch (caught) { setError(caught instanceof Error ? caught.message : "Could not add standard documents."); }
+    finally { setBusy(false); }
+  }
+
   async function upload(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
@@ -148,6 +163,11 @@ export default function DocumentPanel({
         )}
       </div>
 
+      {!inTrash && <div className={styles.checklistNotice}>
+        <p>New clients receive the welcome packet and their planning guide automatically. Add missing defaults to this client without duplicating existing documents.</p>
+        <button type="button" disabled={busy} onClick={() => void addStandards()}>{busy ? "Working…" : "Add standard documents"}</button>
+      </div>}
+
       {undoable && (
         <div className={styles.undoBar} role="status">
           <span>&ldquo;{undoable.name}&rdquo; removed.</span>
@@ -162,7 +182,7 @@ export default function DocumentPanel({
             <li key={document.id}>
               <div>
                 <strong>{document.name}</strong>
-                <small>{document.category} · {readableSize(document.size_bytes)}</small>
+                <small>{document.category} · {document.standard_key ? document.standard_key === "planning_guide" ? "Online guide" : "PDF" : readableSize(document.size_bytes)}</small>
               </div>
               <button type="button" onClick={() => void restore(document.id, document.name)}>Restore</button>
               <button
@@ -185,7 +205,7 @@ export default function DocumentPanel({
             <li key={document.id}>
               <div>
                 <strong>{document.name}</strong>
-                <small>{document.category} · {readableSize(document.size_bytes)}{document.note ? ` · ${document.note}` : ""}</small>
+                <small>{document.category} · {document.standard_key ? document.standard_key === "planning_guide" ? "Online guide" : "PDF" : readableSize(document.size_bytes)}{document.note ? ` · ${document.note}` : ""}</small>
               </div>
               <div className={styles.documentRowActions}>
                 <a

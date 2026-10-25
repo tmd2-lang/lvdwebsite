@@ -14,10 +14,10 @@ Written for Irene's Muse, from TJ's side, so it can see what has been built from
 | 3 | Event-day Timeline tab | **Live (studio only).** Specialty sheets, vendor extracts and sharing with the couple not built yet. |
 | 4 | Guests, RSVP & Hospitality tab | **Live (studio only).** Online RSVPs and the couple's own view not built yet. |
 | 5 | Inquiry → client conversion | **Live.** Auto-acknowledgment email and sorting inquiries by value not built yet. |
-| 6 | 40/30/30 invoice schedule | Not started |
-| 7 | Studio calendar + alerts | Not started |
-| 8 | Team logins + roles | Not started |
-| 9 | Documents / images finishing | Not started |
+| 6 | 40/30/30 invoice schedule | **On hold.** Waiting on Irene's Wave-versus-portal decision. Budget scheduling exists; invoice integration is not built. |
+| 7 | Studio calendar + alerts | **Implemented and tested locally.** Month/agenda, filters, in-portal alerts. Deployment pending; email reminders not built. |
+| 8 | Team logins + roles | **Deferred by TJ.** Detailed team roles, per-client assignments and My tasks are not built. Existing owner/planner/inquiry-staff access remains. |
+| 9 | Documents / images finishing | **Implemented and verified locally; SQL active.** Default documents, Design album links, photographer gallery + checklist sync. Deployment pending; couple approval flow still deferred. |
 | 10 | Marketing dashboard data | **Skipped for now.** Only studio owners can open those pages, so nobody outside the studio sees the unfinished parts. |
 
 ## Waiting on Irene
@@ -27,10 +27,59 @@ Written for Irene's Muse, from TJ's side, so it can see what has been built from
 3. **When should the couple see their timeline?** The "What the couple would see" filter is ready (Client Facing + Guest Facing cues only). Sharing it in their portal waits on the same decision as items 1 and 2.
 4. **Should couples see and edit their guest list in their portal?** The brief says the couple sees their own list. Online RSVPs would also need building. Studio-only for now.
 5. **Booking date.** Some tasks are timed from booking ("Within 1 business day", "Immediately after booking"), not from the wedding. The portal does not record a booking date yet, so those tasks have no suggested due date. Adding a "Booked on" field to each client would fix it. Low priority.
+6. **Invoice system of record:** keep Wave and integrate its links/paid status, or move invoicing into the portal? Build 6 waits for this decision; the existing Budget 40/30/30 schedule is not invoice/payment-provider integration.
+7. **Moodboard approvals:** who can approve, whether one or both partners must approve, and which revisions require a new approval? Design album links are built; the approval/revision workflow is not.
 
 ---
 
 ## Log
+
+### Oct 25, 2026: Audit PDF removed at TJ's request
+
+Moved Tanah & Kaisa's pre-existing `Sep 2 LVD Audit.pdf` to Removed through the normal document controls. This is a recoverable soft removal, not a storage purge. The Welcome & Onboarding Packet and Planning Investment Guide remain attached for ongoing use.
+
+### Oct 25, 2026: Standard documents retained on Tanah & Kaisa
+
+After the verification cleanup, the walkthrough showed only Tanah & Kaisa's pre-existing `Sep 2 LVD Audit.pdf`, which confused TJ. Used the real **Add standard documents** action to attach the Welcome & Onboarding Packet and Planning Investment Guide to this existing client for ongoing use, verified both in the interface, and left them in place. These are now real client resources, not disposable test records. The audit PDF was already present before Build 9 and remains untouched; its original purpose/uploader was not investigated.
+
+### Oct 25, 2026: Build 9, Client documents and post-event resources (local implementation)
+
+**Defaults confirmed by TJ:** use the existing welcome PDF from `docs/onboarding-packet/lady-victoria-client-welcome-packet.pdf` and the website's current `/planning-guide`. The PDF is copied unchanged into `src/assets/client-documents/welcome-packet.pdf` so it ships with the app; both authenticated document routes include it in their production file traces. The source PDF remains unchanged.
+
+**Standard documents:** `supabase/client-resources-schema.sql` adds a source key to the existing Documents records, preserves the four document categories, and installs a new-client trigger. New clients receive a Welcome & Onboarding Packet reference and planning clients receive a Planning Investment Guide reference in their Documents list. Every current client has a planning package. Existing clients are not silently backfilled; **Add standard documents** in their Documents tab explicitly fills missing defaults. The unique client/source key prevents duplicates and repeat calls respect soft-removal. Removing/restoring standards uses the existing document controls. Standards do not have private storage objects, so purging one never deletes the shared PDF. The welcome PDF still requires a scoped document record and an authenticated studio or client session; the guide opens the existing shared-by-link page. Uploaded documents keep their existing signed-storage download path.
+
+**Photographer gallery:** a studio-only field in the client's Overview stores the full HTTPS gallery address for later portfolio/website work. It is intentionally in a separate, RLS-protected `client_post_event` table because client-portal sessions read the `clients` row with `select=*`. The couple is never sent this gallery record. Saving a link and completing checklist task LVD-116 happen in one database function/transaction; existing owner, due date and notes are preserved. Clearing a link undoes only an unchanged automatic completion: it restores the earlier task status or removes an override created by this feature. A task already complete, or manually edited after the automatic completion, is left intact. Saving does not fetch gallery contents or publish photographs.
+
+**Design/moodboard organization:** design clients open Images on Design and get a moodboard area linked to that album. Moodboard checklist tasks LVD-101 and LVD-102 open Design and preset the upload album. LVD-116 opens Overview, where the gallery field lives. Client-facing approval, revision history and automatic moodboard completion are deferred pending Irene's decision.
+
+**Files:** `client-resources-view.ts` contains shared types and gallery validation; `client-resources-data.ts` makes server-only reads/RPC calls; `/api/admin/client-resources` validates owner/planner access, client existence and input, and takes the actor only from the session. `PostEventPanel.tsx` renders the gallery field. The existing Documents/Images/Checklist panels and document download routes are extended in place.
+
+**Verified so far:** production build, TypeScript and targeted lint; welcome PDF byte-for-byte match and presence in both deployment traces; 82 automated tests passed with the temporary PostgreSQL/WASM test runtime (including both SQL integration suites). The new integration test applies the migration twice, exercises automatic/deduplicated defaults and soft removal, verifies source constraints, tests gallery completion/clear/manual-edit preservation and rollback on invalid links, and verifies private role restrictions. Route tests check authorization before reads/writes, client-scoped document lookup, fixed default destinations and session-derived actor identity. Browser verified the existing client workspace, default-document action, moodboard-to-Design navigation/upload preset, and migration-not-installed handling.
+
+**SQL activated and end-to-end verification complete:** TJ ran `supabase/client-resources-schema.sql` in Supabase SQL editor and Codex confirmed the new table/functions were active. On Tanah & Kaisa, snapshotted the existing records, attached the two defaults through the real Documents button, repeated the action and confirmed exactly one of each, then saved `https://example.com/TEST-build-9-gallery` through Overview. Confirmed the stored link and LVD-116 Complete in both the database and Checklist UI. Cleared it through the same form and verified the automatically created task override was removed, restoring the original task state. The welcome route returned HTTP 200, `application/pdf`, and `private, no-store` (the embedded browser's PDF preview itself remained blank); the guide opened the existing Planning Investment Guide page. A disposable TEST client received both documents automatically on insertion, and repeated attachment did not duplicate them. The new Overview/Documents controls were checked at 390px with no horizontal overflow.
+
+**Cleanup:** removed only the document references added during verification, the newly created empty post-event test record, and the disposable TEST client (with its two references). Checked that Tanah & Kaisa's original document IDs and gallery-request task state matched the snapshot. No original files, client details, or images were changed, and no emails or gallery photographs were sent/published. Existing clients still need an explicit Add standard documents action when the studio wants those defaults kept. Code remains local: nothing in this entry has been committed, pushed or deployed by Codex.
+
+### Oct 25, 2026: Build 7, Studio calendar and deadline alerts (local implementation)
+
+**What the studio can open locally now.** A **Calendar** entry in the portal sidebar and mobile navigation, at `/admin/portal/calendar`. It brings together every non-archived client's wedding date, open checklist deadlines, and unpaid Budget payments. Owners and planners can open it. Inquiry-only staff are redirected before any calendar records are fetched; couples have no access to this studio page.
+
+- **Month view:** Monday-first calendar, previous/next month, month picker and Today. On larger screens each day previews up to three items with a more button. On a phone it shows counts and type indicators; tapping a day opens that day's list below. The selected day also works in Agenda.
+- **Agenda:** dated items for the chosen month, with client, task title or payment, track, task owner, status and suggested-date label. Each item opens the client's Overview, Checklist or Budget tab. Lists over 40 items have a Show more button.
+- **Filters:** client, track (Planning Core / Design & Floral / Shared & Other), task owner, item type and search. Wedding dates and payments have no task owner; payer is not treated as an assigned team member. Filters apply to the calendar, agenda, undated list and alert counts together.
+- **Three clickable alerts:** overdue tasks and payments, due this week (today through Sunday), and waiting on couple approval. Alerts span all dates, independent of the month selected. An approval alert requires both the template's approval flag and the task's Waiting on client status; merely requiring an eventual approval does not trigger it. Undated approvals are included.
+- **One source for dates:** checklist dates reuse `buildChecklist` and `effectiveDue`, including wedding-relative suggestions and manual overrides. Nothing is written into a separate calendar. Open tasks with no date are listed in a collapsible section, with links to set their dates in the source workspace.
+- **Payments:** read from the existing Budget schedule, with the outstanding balance shown. Fully paid, waived, orphaned payments and payments on canceled lines are excluded. Disputed payments remain visible in the schedule but do not trigger automatic overdue/due-this-week alerts. Past wedding dates remain available as history and never count as overdue.
+- **Date boundaries:** studio Today and alert boundaries explicitly use `America/New_York`, independent of the host timezone. Dates render as calendar days rather than shifting through UTC. The day updates every minute while open.
+- **Refresh:** Refresh schedule fetches current source records. Editing still happens in the client workspace; refresh the calendar after edits. No email, invoice issuance, late-fee charging, reminders sent to clients, or Wave integration was added.
+
+**Implementation:** `src/lib/calendar-data.ts` reads minimal fields from the existing clients/checklist/budget tables, with pagination past database row caps. Studio notes and guest details are not fetched. `src/lib/calendar-view.ts` holds the shared aggregation, date and filter logic. `src/app/admin/portal/calendar/` contains the authenticated page, interactive panel and styles. There is **no new SQL migration and no save route** because this build only reads existing records. Partial read failures show an explicit incomplete-schedule warning; a failed checklist load never manufactures a fresh list of unfinished template tasks.
+
+**Tested:** production build, TypeScript, targeted lint, and 11 automated calendar tests (plus the existing suite: 75 passed, 1 existing SQL integration test skipped). Tests cover source merging, suggested versus manual dates, archived/complete/N/A exclusions, partial and waived/canceled/disputed payments, approval gating, intersecting filters, date/week/year/DST boundaries, pagination, incomplete loads, and unauthenticated/inquiry-staff access denial before reads. Browser checked at desktop (1280px), phone (390px), and the normal narrow browser panel: month/agenda, day selection, wedding dates, owner/track/type/client/search filters, correct source-tab navigation, no phone horizontal overflow, and no console errors.
+
+**Tanah & Kaisa TEST verification:** inserted two new checklist overrides (only tasks with no existing saved row) and a clearly labeled TEST budget line/payment. Verified an overdue task, an approval due today, a $1,000 payment with $250 recorded paid showing $750 remaining, then used the real Budget Mark paid action and Checklist Complete action and verified both dropped out of their calendar alerts. Removed the exact test override rows and budget line/payment afterwards, confirmed their removal, and left all pre-existing client records unchanged.
+
+**Still separate:** Build 6 waits on Irene's Wave-versus-portal decision. Email reminders, per-person notification preferences, external calendar sync, and future per-client team assignments are not part of this first calendar version. The existing records include past weddings with unfinished template tasks, so suggested historical deadlines contribute to the overdue count until the studio completes or marks those tasks not applicable. This entry records a local implementation; it has not been committed, pushed or deployed by Codex.
 
 ### Oct 25, 2026: Build 5, Convert an inquiry to a client
 

@@ -12,6 +12,10 @@ const supabaseSiteImages = process.env.NEXT_PUBLIC_SUPABASE_URL
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["127.0.0.1", "192.168.12.183", "10.225.16.51"],
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
+  outputFileTracingIncludes: {
+    "/api/admin/documents/*": ["./src/assets/client-documents/welcome-packet.pdf"],
+    "/api/portal/documents/*": ["./src/assets/client-documents/welcome-packet.pdf"],
+  },
   images: {
     remotePatterns: [
       {

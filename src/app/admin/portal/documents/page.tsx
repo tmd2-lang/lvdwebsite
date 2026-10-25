@@ -40,7 +40,7 @@ export default async function DocumentsPage() {
                 <div><strong>{document.name}</strong><small>{new Date(document.created_at).toLocaleDateString("en-US")}</small></div>
                 <span>{clientNames.get(document.client_id) || "Client record"}</span>
                 <span>{document.category}</span>
-                <b>{readableSize(document.size_bytes)}</b>
+                <b>{document.standard_key ? document.standard_key === "planning_guide" ? "Online guide" : "PDF" : readableSize(document.size_bytes)}</b>
               </Link>
             ))}
           </div>

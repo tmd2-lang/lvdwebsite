@@ -12,6 +12,7 @@ const portalNavigation = [
   { number: "04", label: "Documents", href: "/admin/portal/documents" },
   { number: "05", label: "Images", href: "/admin/portal/images" },
   { number: "06", label: "Inquiries", href: "/admin/portal/inquiries" },
+  { number: "07", label: "Calendar", href: "/admin/portal/calendar" },
 ] as const;
 
 function firstName(user: AdminUser) {

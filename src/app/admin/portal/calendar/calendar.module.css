@@ -1,0 +1,116 @@
+.page { max-width: 1600px; margin: 0 auto; padding: clamp(1.4rem,3.5vw,3.5rem); color: #302c27; }
+.page button, .page input, .page select { font: inherit; }
+.page button { min-height: 42px; border: 1px solid #d4cabd; border-radius: 4px; padding: .5rem .85rem; background: #fffdfa; color: #302c27; cursor: pointer; font-size: .78rem; }
+.page button:hover { border-color: #8d6e3a; background: #f7f1e6; }
+.page button:disabled { opacity: .6; cursor: wait; }
+.page :is(button, select, input, a, summary):focus-visible { outline: 2px solid #8d6e3a; outline-offset: 3px; }
+.header { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-bottom: 1.8rem; }
+.eyebrow { font-size: .65rem; color: #8d6e3a; letter-spacing: .16em; text-transform: uppercase; font-weight: 700; }
+.header h1 { margin: .5rem 0; font-family: var(--font-bodoni); font-size: clamp(2.7rem,4.5vw,4.7rem); line-height: 1; font-weight: 400; letter-spacing: -.04em; }
+.header p:last-child { color: #665f56; font-size: .85rem; line-height: 1.6; }
+.header button { flex-shrink: 0; }
+.warning { border: 1px solid #c9a788; background: #fff2e4; padding: 1rem; margin-bottom: 1rem; font-size: .85rem; line-height: 1.6; }
+.alerts { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: .8rem; }
+.alerts button { display: grid; grid-template-columns: 1fr auto; text-align: left; gap: .5rem; padding: 1rem 1.2rem; min-height: 115px; }
+.alerts button[aria-pressed="true"] { border-color: #8d6e3a; background: #f0e6d4; box-shadow: inset 0 0 0 1px #8d6e3a; }
+.alerts span { font-size: .8rem; line-height: 1.5; }
+.alerts strong { font-family: var(--font-bodoni); font-size: 2.2rem; font-weight: 400; grid-row: span 2; align-self: center; }
+.alerts small { color: #665f56; font-size: .7rem; }
+.red { color: #a1362b; }
+.caption { color: #6f665a; font-size: .72rem; line-height: 1.6; margin: .7rem 0 1.5rem; }
+.filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: .8rem; margin-bottom: 1.4rem; }
+.filters label { display: grid; gap: .4rem; flex: 1 1 135px; font-size: .72rem; color: #665f56; }
+.filters select, .filters input, .monthLabel input { width: 100%; min-width: 0; min-height: 42px; border: 1px solid #d4cabd; border-radius: 4px; padding: .6rem; background: #fffdfa; color: #302c27; font-size: .8rem; }
+.filters .search { flex-basis: 200px; }
+.schedule { border: 1px solid #d9d1c5; border-radius: 7px; background: #fffdfa; overflow: hidden; }
+.toolbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.1rem; flex-wrap: wrap; }
+.monthControls { display: flex; align-items: flex-end; flex-wrap: wrap; gap: .4rem; }
+.monthLabel { font-size: .7rem; display: grid; gap: .25rem; color: #665f56; }
+.monthLabel input { max-width: 190px; }
+.viewButtons { display: flex; gap: .3rem; align-self: flex-end; }
+.viewButtons button[aria-pressed="true"] { background: #302c27; color: #fffdfa; border-color: #302c27; }
+.legend { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; font-size: .7rem; padding: 0 1.1rem 1.1rem; }
+.legend > span { padding: .25rem .5rem; border-radius: 3px; }
+.legend > span:last-child { color: #665f56; padding-left: 0; line-height: 1.5; }
+.grid { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); border-top: 1px solid #d9d1c5; }
+.weekday { padding: .7rem .35rem; text-align: center; font-size: .72rem; color: #665f56; border-bottom: 1px solid #d9d1c5; }
+.cell { min-width: 0; min-height: 140px; padding: .3rem; border-right: 1px solid #e7e0d5; border-bottom: 1px solid #e7e0d5; }
+.cell:nth-child(7n) { border-right: 0; }
+.outside { background: #f5f2ec; }
+.outside .dayButton { color: #7c7468; }
+.today .dayButton time { background: #302c27; color: #fffdfa; border-radius: 50%; padding: .3rem; }
+.selected { background: #f5ecdc; box-shadow: inset 0 0 0 2px #9a7840; }
+.cell .dayButton { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: .2rem .35rem; border: 0; background: transparent; }
+.dayButton small { font-size: .65rem; color: #665f56; }
+.dayButton time { min-width: 27px; text-align: center; }
+.previews { display: grid; gap: .25rem; }
+.previews a { display: grid; gap: .15rem; padding: .3rem; border-radius: 3px; text-decoration: none; font-size: .66rem; }
+.previews a b, .previews a span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.previews a:hover { outline: 1px solid currentColor; }
+.previews button { font-size: .68rem; min-height: 30px; padding: .2rem; }
+.wedding { background: #eadcc1; color: #684d20; }
+.task { background: #e8eee4; color: #3f5735; }
+.payment { background: #e7e8f0; color: #474d77; }
+.dots { display: none; }
+.listHeading { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem; padding: 1.2rem; border-bottom: 1px solid #e7e0d5; }
+.listHeading h2 { font-family: var(--font-bodoni); font-weight: 400; font-size: 1.65rem; line-height: 1.2; }
+.listHeading > span { color: #665f56; font-size: .75rem; }
+.listHeading button { margin-left: auto; }
+.list { list-style: none; padding: 0; margin: 0; }
+.entry { display: grid; grid-template-columns: 125px minmax(0,1fr) auto; gap: 1rem; align-items: center; padding: 1.2rem; border-bottom: 1px solid #eee8de; }
+.entry:last-child { border-bottom: 0; }
+.entryDate { display: grid; justify-items: start; gap: .4rem; font-size: .72rem; }
+.entryDate > span:first-child { padding: .2rem .5rem; border-radius: 3px; font-size: .65rem; }
+.entryDate b { color: #a1362b; font-weight: 600; }
+.entry > a { display: grid; gap: .35rem; color: #302c27; text-decoration: none; min-width: 0; overflow-wrap: anywhere; }
+.entry > a:hover strong { text-decoration: underline; text-underline-offset: 3px; }
+.entry > a strong { font-size: .86rem; font-weight: 600; line-height: 1.55; }
+.entry > a span { color: #70572d; font-size: .8rem; }
+.entry > a small { font-size: .72rem; color: #665f56; line-height: 1.6; }
+.entryEnd { display: grid; justify-items: end; gap: .5rem; font-size: .8rem; }
+.entryEnd strong { text-align: right; }
+.entryEnd small { display: block; color: #665f56; font-size: .65rem; font-weight: 400; margin-top: .2rem; }
+.entryEnd a { color: #70572d; min-height: 38px; display: flex; align-items: center; gap: .4rem; }
+.approvalTag { color: #865418; font-size: .65rem; }
+.empty { padding: 2.5rem 1.2rem; color: #665f56; font-size: .85rem; line-height: 1.6; }
+.page .showMore { margin: 1rem; }
+.undated { margin-top: 1.2rem; border: 1px solid #d9d1c5; border-radius: 7px; background: #fffdfa; }
+.undated summary { padding: 1.1rem; font-size: .85rem; cursor: pointer; }
+.undated > p { padding: 0 1.1rem 1rem; font-size: .78rem; color: #665f56; line-height: 1.6; }
+.footer { margin-top: 1rem; font-size: .72rem; color: #665f56; line-height: 1.7; }
+@media (max-width: 1000px) {
+  .header { align-items: flex-start; flex-direction: column; }
+  .alerts { grid-template-columns: 1fr; gap: .4rem; }
+  .alerts button { min-height: 80px; padding: .8rem 1rem; }
+  .cell { min-height: 100px; }
+  .previews { display: none; }
+  .dots { display: flex; gap: 4px; justify-content: center; margin-top: .5rem; }
+  .dots i { width: 7px; height: 7px; border-radius: 50%; border: 1px solid currentColor; }
+  .entry { grid-template-columns: 105px minmax(0,1fr); gap: .7rem; }
+  .entryEnd { grid-column: 2; justify-items: start; display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .entryEnd strong { text-align: left; }
+}
+@media (max-width: 620px) {
+  .page { padding: 1.8rem 1rem; }
+  .alerts { grid-template-columns: 1fr; gap: .4rem; }
+  .alerts button { min-height: 80px; padding: .8rem 1rem; }
+  .filters { gap: .7rem; }
+  .filters label { flex-basis: calc(50% - .7rem); min-width: 0; }
+  .filters .search { flex-basis: 100%; }
+  .toolbar { padding: .8rem; }
+  .monthControls { gap: .25rem; }
+  .monthControls > button { padding: .5rem .65rem; }
+  .monthLabel input { width: 145px; }
+  .cell { min-height: 72px; padding: .15rem; }
+  .weekday { font-size: .65rem; }
+  .cell .dayButton { padding: .2rem 0; flex-direction: column; gap: .15rem; }
+  .dayButton small { min-height: .8rem; }
+  .dots { margin-top: .1rem; gap: 3px; }
+  .dots i { width: 5px; height: 5px; }
+  .listHeading { padding: 1rem; gap: .6rem; }
+  .listHeading h2 { font-size: 1.4rem; }
+  .listHeading button { margin-left: 0; }
+  .entry { padding: 1rem; grid-template-columns: 1fr; }
+  .entryDate { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+  .entryEnd { grid-column: 1; }
+}

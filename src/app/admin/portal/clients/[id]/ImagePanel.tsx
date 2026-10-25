@@ -32,16 +32,20 @@ export default function ImagePanel({
   clientId,
   images,
   removedImages,
+  designBooked = false,
+  initialAlbum = "All",
 }: {
   clientId: string;
   images: ViewableImage[];
   removedImages: ViewableImage[];
+  designBooked?: boolean;
+  initialAlbum?: string;
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const [album, setAlbum] = useState<string>("All");
+  const [album, setAlbum] = useState<string>(initialAlbum);
   // Two-step delete instead of window.confirm(): embedded browsers suppress the
   // native dialog and silently return false, so the click did nothing at all.
   const [confirming, setConfirming] = useState<string>("");
@@ -215,6 +219,12 @@ export default function ImagePanel({
         </div>
       </div>
 
+      {designBooked && !inTrash && <div className={styles.checklistNotice}>
+        <strong>Moodboard & design direction</strong>
+        <p>Keep moodboards in the Design album. Uploading a board does not record client approval.</p>
+        <button type="button" onClick={() => setAlbum("Design")}>Open Design album ({images.filter((image) => image.album === "Design").length})</button>
+      </div>}
+
       {undoable && (
         <div className={styles.undoBar} role="status">
           <span>&ldquo;{undoable.name}&rdquo; removed.</span>
@@ -290,7 +300,7 @@ export default function ImagePanel({
           </label>
           <label>
             <span>Album</span>
-            <select name="album" defaultValue="Inspiration" disabled={busy}>
+            <select name="album" key={album} defaultValue={album === "Design" ? "Design" : "Inspiration"} disabled={busy}>
               {IMAGE_ALBUMS.map((name) => <option key={name}>{name}</option>)}
             </select>
           </label>

@@ -1,0 +1,15 @@
+.card { margin-top: 1rem; border: 1px solid #d9d1c5; border-radius: 7px; padding: clamp(1.1rem,2.5vw,2rem); background: #fffdfa; scroll-margin-top: 1rem; }
+.eyebrow { color: #8d6e3a; font-size: .65rem; text-transform: uppercase; letter-spacing: .12em; }
+.card h2 { font-family: var(--font-bodoni); font-size: 1.8rem; font-weight: 400; margin: .3rem 0 .7rem; }
+.card p { color: #665f56; font-size: .8rem; line-height: 1.7; }
+.card form { margin-top: 1rem; }
+.card label { display: block; font-size: .78rem; margin-bottom: .4rem; }
+.row { display: flex; flex-wrap: wrap; gap: .6rem; }
+.row input { flex: 1 1 260px; min-width: 0; min-height: 44px; border: 1px solid #d4cabd; border-radius: 4px; padding: .7rem; font: inherit; font-size: .85rem; }
+.row button { min-height: 44px; border: 1px solid #302c27; border-radius: 4px; padding: .7rem 1rem; background: #302c27; color: #fffdfa; font: inherit; font-size: .8rem; cursor: pointer; }
+.row button:disabled { opacity: .5; cursor: default; }
+.card a { display: inline-block; margin-top: .7rem; color: #70572d; font-size: .8rem; }
+.card .hint { font-size: .72rem; margin-top: .5rem; }
+.card .error { color: #9f3025; margin-top: .7rem; }
+.card .success { color: #3f6036; margin-top: .7rem; }
+.card :is(input, button, a):focus-visible { outline: 2px solid #8d6e3a; outline-offset: 3px; }

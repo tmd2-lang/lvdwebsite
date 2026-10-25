@@ -28,8 +28,8 @@ export default async function PortalDocumentsPage() {
           name: document.name,
           category: document.category,
           note: document.note,
-          size: readableSize(document.size_bytes),
-          format: (document.name.split(".").pop() || "FILE").toUpperCase().slice(0, 4),
+          size: document.standard_key ? document.standard_key === "planning_guide" ? "Online guide" : "Welcome packet" : readableSize(document.size_bytes),
+          format: document.standard_key ? document.standard_key === "planning_guide" ? "WEB" : "PDF" : (document.name.split(".").pop() || "FILE").toUpperCase().slice(0, 4),
           updated: new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" })
             .format(new Date(document.created_at)),
         }))}

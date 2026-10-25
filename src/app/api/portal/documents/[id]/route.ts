@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getDocumentForClient, signedDocumentUrl } from "@/lib/document-data";
 import { getPortalSession } from "@/lib/portal-auth";
+import { isStandardDocumentKey } from "@/lib/client-resources-view";
+import { standardDocumentResponse } from "@/lib/standard-document-response";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -20,6 +22,8 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
   const document = await getDocumentForClient(id, session.client.id);
   if (!document) return NextResponse.json({ error: "That document could not be found." }, { status: 404 });
 
+  if (isStandardDocumentKey(document.standard_key)) return standardDocumentResponse(document.standard_key, request.url);
+  if (!document.storage_path) return NextResponse.json({ error: "That file is unavailable." }, { status: 404 });
   const url = await signedDocumentUrl(document.storage_path);
   if (!url) return NextResponse.json({ error: "That file could not be opened right now." }, { status: 502 });
 

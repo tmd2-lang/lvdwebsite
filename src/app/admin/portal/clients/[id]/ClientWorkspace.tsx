@@ -29,6 +29,8 @@ import type { ClientTask } from "@/lib/task-view";
 import InviteForm from "./InviteForm";
 import MemberList from "./MemberList";
 import styles from "../../portal-admin.module.css";
+import PostEventPanel from "./PostEventPanel";
+import type { ClientPostEvent } from "@/lib/client-resources-view";
 
 type WorkspaceTab = "overview" | "checklist" | "budget" | "timeline" | "guests" | "tasks" | "invoices" | "documents" | "images" | "access";
 
@@ -55,8 +57,9 @@ function initials(client: PortalClient) {
   return [client.partner_one_name, client.partner_two_name].filter(Boolean).map((name) => name!.trim()[0]?.toUpperCase()).join("").slice(0, 2);
 }
 
-export default function ClientWorkspace({ client, members, invoices, documents, removedDocuments, images, removedImages, tasks, checklist, checklistError, budget, budgetError, timeline, timelineError, guests, guestsError, initialTab = "overview" }: { client: PortalClient; members: ClientMember[]; invoices: Invoice[]; documents: ClientDocument[]; removedDocuments: ClientDocument[]; tasks: ClientTask[]; checklist: ChecklistItem[]; checklistError?: string; budget: ClientBudget; budgetError?: string; timeline: TimelineDoc; timelineError?: string; guests: ClientGuests; guestsError?: string; images: ViewableImage[]; removedImages: ViewableImage[]; initialTab?: WorkspaceTab }) {
+export default function ClientWorkspace({ client, members, invoices, documents, removedDocuments, images, removedImages, tasks, checklist, checklistError, budget, budgetError, timeline, timelineError, guests, guestsError, postEvent, postEventError, initialTab = "overview" }: { client: PortalClient; members: ClientMember[]; invoices: Invoice[]; documents: ClientDocument[]; removedDocuments: ClientDocument[]; tasks: ClientTask[]; checklist: ChecklistItem[]; checklistError?: string; budget: ClientBudget; budgetError?: string; timeline: TimelineDoc; timelineError?: string; guests: ClientGuests; guestsError?: string; postEvent: ClientPostEvent | null; postEventError?: string; images: ViewableImage[]; removedImages: ViewableImage[]; initialTab?: WorkspaceTab }) {
   const [tab, setTabState] = useState<WorkspaceTab>(initialTab);
+  const [imageAlbum, setImageAlbum] = useState(client.design_tier ? "Design" : "All");
 
   /**
    * The open tab lives in the address as well as in state. Sending an invite
@@ -137,6 +140,7 @@ export default function ClientWorkspace({ client, members, invoices, documents, 
                 </div>
               </aside>
             </div>
+            <PostEventPanel clientId={client.id} initial={postEvent} loadError={postEventError} />
           </>
         )}
 
@@ -147,7 +151,7 @@ export default function ClientWorkspace({ client, members, invoices, documents, 
 
         {tab === "documents" && <DocumentPanel clientId={client.id} documents={documents} removedDocuments={removedDocuments} />}
 
-        {tab === "checklist" && <ChecklistPanel clientId={client.id} eventDate={client.event_date} initialItems={checklist} loadError={checklistError} />}
+        {tab === "checklist" && <ChecklistPanel clientId={client.id} eventDate={client.event_date} initialItems={checklist} loadError={checklistError} onOpenDesign={() => { setImageAlbum("Design"); setTab("images"); }} onOpenGallery={() => setTab("overview")} />}
 
         {tab === "budget" && <BudgetPanel clientId={client.id} designBooked={Boolean(client.design_tier)} guestCount={parseInt(client.guest_count ?? "", 10) || null} setup={budget.setup} lines={budget.lines} payments={budget.payments} loadError={budgetError} />}
 
@@ -157,7 +161,7 @@ export default function ClientWorkspace({ client, members, invoices, documents, 
 
         {tab === "tasks" && <TaskPanel clientId={client.id} tasks={tasks} />}
 
-        {tab === "images" && <ImagePanel clientId={client.id} images={images} removedImages={removedImages} />}
+        {tab === "images" && <ImagePanel clientId={client.id} images={images} removedImages={removedImages} designBooked={Boolean(client.design_tier)} initialAlbum={imageAlbum} />}
 
         {tab === "access" && <section className={styles.workspaceCard}>
           <div className={styles.workspaceCardHeader}><div><p className={styles.eyebrow}>Private portal</p><h2>Who Can Sign In</h2></div></div>

@@ -1,3 +1,5 @@
+import type { StandardDocumentKey } from "@/lib/client-resources-view";
+
 export const DOCUMENT_BUCKET = "client-documents";
 
 export const DOCUMENT_CATEGORIES = ["Contracts", "Design", "Planning", "Invoices"] as const;
@@ -10,7 +12,9 @@ export type ClientDocument = {
   name: string;
   category: DocumentCategory;
   note: string | null;
-  storage_path: string;
+  storage_path: string | null;
+  /** Fixed studio resource; resolved by an authenticated route, not a storage URL. */
+  standard_key?: StandardDocumentKey | null;
   content_type: string | null;
   size_bytes: number;
   /** Null means live. Set means removed but recoverable. */
@@ -214,7 +218,7 @@ export async function purgeDocument(documentId: string): Promise<void> {
     `${url}/rest/v1/documents?select=storage_path&id=eq.${encodeURIComponent(documentId)}&limit=1`,
     { headers: databaseHeaders(), cache: "no-store" },
   );
-  const rows = await responseJson<{ storage_path: string }[]>(lookup, "Could not find that document.");
+  const rows = await responseJson<{ storage_path: string | null }[]>(lookup, "Could not find that document.");
   const path = rows[0]?.storage_path;
 
   if (path) {

@@ -14,6 +14,7 @@ import { starterTimeline } from "@/lib/timeline-view";
 import { getGuests } from "@/lib/guests-data";
 import { EMPTY_SETTINGS } from "@/lib/guests-view";
 import ClientWorkspace from "./ClientWorkspace";
+import { getClientPostEvent } from "@/lib/client-resources-data";
 
 export const dynamic = "force-dynamic";
 
@@ -87,5 +88,9 @@ export default async function ClientDetailPage({
       error: error instanceof Error ? error.message : "Could not load the guest list.",
     }));
 
-  return <ClientWorkspace client={client} members={members} invoices={invoices} documents={documents} removedDocuments={removedDocuments} images={images} removedImages={removedImages} tasks={tasks} checklist={checklist} checklistError={checklistError} budget={budgetLoad.budget} budgetError={budgetLoad.error} timeline={timelineLoad.timeline} timelineError={timelineLoad.error} guests={guestsLoad.guests} guestsError={guestsLoad.error} initialTab={initialTab} />;
+  const postEventLoad = await getClientPostEvent(client.id)
+    .then((postEvent) => ({ postEvent, error: "" }))
+    .catch((error: unknown) => ({ postEvent: null, error: error instanceof Error ? error.message : "Could not load post-event resources." }));
+
+  return <ClientWorkspace client={client} members={members} invoices={invoices} documents={documents} removedDocuments={removedDocuments} images={images} removedImages={removedImages} tasks={tasks} checklist={checklist} checklistError={checklistError} budget={budgetLoad.budget} budgetError={budgetLoad.error} timeline={timelineLoad.timeline} timelineError={timelineLoad.error} guests={guestsLoad.guests} guestsError={guestsLoad.error} postEvent={postEventLoad.postEvent} postEventError={postEventLoad.error} initialTab={initialTab} />;
 }

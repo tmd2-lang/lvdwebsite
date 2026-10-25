@@ -52,11 +52,15 @@ export default function ChecklistPanel({
   eventDate,
   initialItems,
   loadError,
+  onOpenDesign,
+  onOpenGallery,
 }: {
   clientId: string;
   eventDate: string | null;
   initialItems: ChecklistItem[];
   loadError?: string;
+  onOpenDesign?: () => void;
+  onOpenGallery?: () => void;
 }) {
   const router = useRouter();
   const [items, setItems] = useState(initialItems);
@@ -224,6 +228,8 @@ export default function ChecklistPanel({
                         {item.priority === "High" && <em className={styles.checklistTag}>High</em>}
                       </small>
                       {item.notes && editing !== item.id && <p className={styles.checklistNote}>{item.notes}</p>}
+                      {["LVD-101", "LVD-102"].includes(item.id) && onOpenDesign && <button type="button" onClick={onOpenDesign}>Open Design album</button>}
+                      {item.id === "LVD-116" && onOpenGallery && <button type="button" onClick={onOpenGallery}>Open photographer gallery field</button>}
                     </div>
                     <button type="button" onClick={() => setEditing((current) => (current === item.id ? "" : item.id))} aria-expanded={editing === item.id}>
                       {editing === item.id ? "Close" : "Edit"}
