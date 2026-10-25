@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { FormEvent, useMemo, useState } from "react";
 import {
   CHECKLIST_OWNERS,
@@ -57,6 +58,7 @@ export default function ChecklistPanel({
   initialItems: ChecklistItem[];
   loadError?: string;
 }) {
+  const router = useRouter();
   const [items, setItems] = useState(initialItems);
   const [track, setTrack] = useState<TrackFilter>("all");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("open");
@@ -106,6 +108,9 @@ export default function ChecklistPanel({
           updatedAt: row.updated_at,
         }
         : entry));
+      // Keep the page's copy current too, so switching tabs and back does
+      // not reopen the checklist from before this save.
+      router.refresh();
       return true;
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Could not save that task.");

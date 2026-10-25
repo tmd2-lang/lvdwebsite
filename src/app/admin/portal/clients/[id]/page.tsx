@@ -9,11 +9,13 @@ import { getChecklistRows } from "@/lib/checklist-data";
 import { buildChecklist } from "@/lib/checklist-view";
 import { getBudget } from "@/lib/budget-data";
 import { EMPTY_SETUP } from "@/lib/budget-view";
+import { getTimeline } from "@/lib/timeline-data";
+import { starterTimeline } from "@/lib/timeline-view";
 import ClientWorkspace from "./ClientWorkspace";
 
 export const dynamic = "force-dynamic";
 
-const WORKSPACE_TABS = ["overview", "checklist", "budget", "tasks", "invoices", "documents", "images", "access"] as const;
+const WORKSPACE_TABS = ["overview", "checklist", "budget", "timeline", "tasks", "invoices", "documents", "images", "access"] as const;
 type WorkspaceTab = (typeof WORKSPACE_TABS)[number];
 
 export default async function ClientDetailPage({
@@ -68,5 +70,13 @@ export default async function ClientDetailPage({
       error: error instanceof Error ? error.message : "Could not load the budget.",
     }));
 
-  return <ClientWorkspace client={client} members={members} invoices={invoices} documents={documents} removedDocuments={removedDocuments} images={images} removedImages={removedImages} tasks={tasks} checklist={checklist} checklistError={checklistError} budget={budgetLoad.budget} budgetError={budgetLoad.error} initialTab={initialTab} />;
+  // A client nobody has edited yet starts from the starter template.
+  const timelineLoad = await getTimeline(client.id)
+    .then((saved) => ({ timeline: saved ?? starterTimeline(client), error: "" }))
+    .catch((error: unknown) => ({
+      timeline: starterTimeline(client),
+      error: error instanceof Error ? error.message : "Could not load the timeline.",
+    }));
+
+  return <ClientWorkspace client={client} members={members} invoices={invoices} documents={documents} removedDocuments={removedDocuments} images={images} removedImages={removedImages} tasks={tasks} checklist={checklist} checklistError={checklistError} budget={budgetLoad.budget} budgetError={budgetLoad.error} timeline={timelineLoad.timeline} timelineError={timelineLoad.error} initialTab={initialTab} />;
 }

@@ -816,3 +816,73 @@
   .budgetPayment { grid-template-columns: minmax(0, 1fr) auto; }
   .budgetPill { grid-column: 1 / -1; justify-self: start; width: auto; }
 }
+
+/* Event-day timeline --------------------------------------------------------- */
+
+.timelineStatusBar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .7rem; border-bottom: 1px solid #e6dfd5; padding: .8rem 1.5rem; background: #faf6ef; }
+.timelineStatusBar p { color: #665f56; font-size: .66rem; line-height: 1.5; }
+.timelineStatusBar > div { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem; }
+.timelineReload { border: 0; background: transparent; color: #7d3a2a; font: inherit; font-weight: 700; text-decoration: underline; cursor: pointer; }
+
+.timelineRows > li { scroll-margin-top: 1rem; }
+.timelineRow { display: grid; grid-template-columns: 88px minmax(0, 1fr) auto; align-items: start; gap: 1rem; }
+.timelineRow time { display: grid; gap: .15rem; justify-items: start; }
+.timelineRow time b { color: #312d27; font-size: .8rem; font-variant-numeric: tabular-nums; }
+.timelineRow time small { color: #8a8177; font-size: .6rem; }
+.timelineRow time em { margin-left: 0; }
+.timelineRow a { color: #71582e; }
+.timelineRowEnd { display: flex; align-items: center; gap: .4rem; }
+.timelineRowEnd .budgetPill { width: auto; padding: .2rem .7rem; white-space: nowrap; }
+.timelineRowEnd button { border: 0; padding: .4rem .65rem; background: transparent; color: #71582e; font: inherit; font-size: .62rem; font-weight: 700; cursor: pointer; }
+.timelineNow { background: #f6f1e7; box-shadow: inset 3px 0 0 #9a7840; }
+
+.timelineAdd { margin: 1rem 1.5rem 1.3rem; }
+
+.timelineEditor { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.timelineEditor label { display: grid; gap: .35rem; min-width: 0; }
+.timelineEditor label span { color: #4e4942; font-size: .62rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.timelineEditor :is(input, select, textarea) { min-height: 40px; width: 100%; border: 1px solid #d8d0c3; border-radius: 3px; padding: .45rem .6rem; background: #fff; font: inherit; font-size: .72rem; }
+.timelineEditor textarea { resize: vertical; }
+.timelineWide { grid-column: span 2; }
+.timelineEditor > .uploadActions { grid-column: 1 / -1; }
+.timelineEditorLeft { display: flex; align-items: center; gap: 1rem; }
+.timelineOverview { margin: 0; border-top: 0; padding: 1.2rem 1.5rem 1.4rem; }
+
+.timelineBrief { padding: 1.1rem 1.5rem 1.5rem; }
+.timelineBriefActions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem; margin-bottom: 1rem; }
+.timelineBriefActions p { flex: 1 1 260px; color: #665f56; font-size: .66rem; line-height: 1.5; }
+.timelinePrint { border: 1px solid #e1d9cd; border-radius: 5px; padding: 1.4rem; background: #fff; }
+.timelinePrint header p { color: #9a7840; font-size: .58rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.timelinePrint h3 { margin-top: .3rem; font-family: var(--font-bodoni); font-size: 1.6rem; font-weight: 500; }
+.timelinePrint dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem 1.4rem; margin-top: 1rem; }
+.timelinePrint dt { color: #8a8177; font-size: .55rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.timelinePrint dd { color: #312d27; font-size: .72rem; white-space: pre-wrap; }
+.timelinePrint h4 { margin-top: 1.3rem; border-bottom: 1px solid #211e1a; padding-bottom: .3rem; font-family: var(--font-bodoni); font-size: 1rem; font-weight: 500; }
+.timelinePrint table { width: 100%; border-collapse: collapse; font-size: .7rem; }
+.timelinePrint th,
+.timelinePrint td { border-bottom: 1px solid #ece6dc; padding: .4rem .3rem; text-align: left; vertical-align: top; }
+.timelinePrint th { width: 22%; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 900px) {
+  .timelineEditor { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 620px) {
+  .timelineStatusBar,
+  .timelineBrief { padding-left: 1.15rem; padding-right: 1.15rem; }
+  .timelineOverview { padding-left: 1.15rem; padding-right: 1.15rem; }
+  .timelineAdd { margin-left: 1.15rem; margin-right: 1.15rem; }
+  .timelineRow { grid-template-columns: 64px minmax(0, 1fr); gap: .8rem; }
+  .timelineRowEnd { grid-column: 2; justify-content: flex-start; }
+  .timelineRowEnd button { padding-left: 0; }
+  .timelineEditor { grid-template-columns: 1fr; }
+  .timelineWide { grid-column: auto; }
+  .timelinePrint dl { grid-template-columns: 1fr; }
+}
+
+/* Printing the brief prints only the brief. */
+@media print {
+  body * { visibility: hidden; }
+  .timelinePrint, .timelinePrint * { visibility: visible; }
+  .timelinePrint { position: absolute; inset: 0 auto auto 0; width: 100%; border: 0; padding: 0; }
+}

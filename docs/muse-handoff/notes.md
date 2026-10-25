@@ -11,7 +11,7 @@ Written for Irene's Muse, from TJ's side, so it can see what has been built from
 | 1 | Planning Checklist tab | **Live (studio only).** Couple view not built yet. |
 | 1b | Checklist replaces the old Tasks tab | **Done.** Tasks is hidden, not deleted. |
 | 2 | Budget tab | **Live (studio only).** Change log, vendor comparison and export not built yet. |
-| 3 | Event-day Timeline tab | Not started |
+| 3 | Event-day Timeline tab | **Live (studio only).** Specialty sheets, vendor extracts and sharing with the couple not built yet. |
 | 4 | Guests, RSVP & Hospitality tab | Not started |
 | 5 | Inquiry → client conversion | Not started |
 | 6 | 40/30/30 invoice schedule | Not started |
@@ -24,11 +24,36 @@ Written for Irene's Muse, from TJ's side, so it can see what has been built from
 
 1. **What should couples see from the checklist?** Our working suggestion: tasks owned by "Client" plus tasks marked "Couple approves", with status and due date. Studio notes and floral production detail never shown. Until she answers, the checklist is studio-only.
 2. **Should couples see their budget?** Same question as the checklist. Studio-only for now.
-3. **Booking date.** Some tasks are timed from booking ("Within 1 business day", "Immediately after booking"), not from the wedding. The portal does not record a booking date yet, so those tasks have no suggested due date. Adding a "Booked on" field to each client would fix it. Low priority.
+3. **When should the couple see their timeline?** The "What the couple would see" filter is ready (Client Facing + Guest Facing cues only). Sharing it in their portal waits on the same decision as items 1 and 2.
+4. **Booking date.** Some tasks are timed from booking ("Within 1 business day", "Immediately after booking"), not from the wedding. The portal does not record a booking date yet, so those tasks have no suggested due date. Adding a "Booked on" field to each client would fix it. Low priority.
 
 ---
 
 ## Log
+
+### Oct 25, 2026: Build 3, Event-Day Timeline tab is live (studio only)
+
+**What the studio sees now.** Every client record has a **Timeline** tab, after Budget, built from `timeline-tracker.html`, `timeline-data.json` and `TIMELINE-INTEGRATION.md`. It has six views:
+
+- **Run of show:** the 27 seeded cues, in time order. The day runs past midnight, so 12:45 AM sorts after the evening, not first. Each cue shows its time, activity, phase, location, owner, a Critical tag, who sees it, its track, and its status. Every field from the package can be edited; cues can be added and removed. Filters: studio view (everything), "What the couple would see" (Client Facing + Guest Facing only: 11 of the 27 seeded cues), vendor-facing cues, and by track.
+- **On the wedding day itself,** the current cue is marked **Now** and the next one **Next**, from the phone's clock, refreshed every minute.
+- **Production:** the 8 seeded blocks with crew, count, equipment, ready-by and the quality check (Pending / Passed / Corrected).
+- **Vendors:** the call sheet (company, type from the 16 vendor types, on-site lead, mobile, email, arrival, ready by, departure/strike, loading/parking, setup location, power, meals). Phone numbers tap to call.
+- **Crew:** LVD's own team (name, role, call time, out time, meal, mobile).
+- **Overview:** the command facts from `overview_fields`, pre-filled from the client record where we have it (couple, wedding date, venue). Version is not typed by hand; the portal keeps it.
+- **Print brief:** generated from the overview, the Critical cues, the vendor contacts and the crew, with the version number on top. The Print button prints only the brief.
+
+**The version rule, as written in the package:** "Confirm all" marks every Draft, Pending Confirmation and Changed cue and block as Confirmed. Confirming does not change the version. After that, editing a Confirmed cue or block flips it to **Changed** and bumps the version by one (removing a confirmed one bumps it too). Tested: one edit after confirming moved Version 1 to Version 2 and flipped only that cue.
+
+**Two people at once:** if someone saves after you opened the timeline, your save is refused with "Someone else changed this timeline since you opened it. Reload…", so nobody's work is quietly overwritten.
+
+**Storage:** one timeline per client. A client nobody has touched shows the starter template; the first save stores it. "Start over" (two taps) puts a client back to the template.
+
+**Not built yet:** the specialty sheets (Beauty & Preparation, Transportation, Ceremony Cues, Reception Run of Show, VIP & Property, Incident & Change Log), per-vendor extracts sent to vendors, sharing the client view in the couple's portal, and linking checklist tasks (LVD-061, 068, 076, 077, 085, 089, 090, 091) to the timeline. Overview times are free text for now.
+
+**Also fixed along the way:** on the Checklist and Timeline tabs, switching to another tab and back could show the screen from before your last save. It now always shows the latest.
+
+**Tested:** first save, editing a cue, Confirm all, the version bump, adding a vendor and a crew member, saving the overview, a clash between two editors, the couple view, the print brief, switching tabs and back, and every view at phone width. All test data was removed afterwards.
 
 ### Oct 25, 2026: Build 2, Budget tab is live (studio only)
 
