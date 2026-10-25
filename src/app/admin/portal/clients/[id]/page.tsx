@@ -5,11 +5,13 @@ import { getInvoicesForClient } from "@/lib/invoice-data";
 import { getDeletedDocumentsForClient, getDocumentsForClient } from "@/lib/document-data";
 import { getDeletedImagesForClient, getImagesForClient, withSignedUrls } from "@/lib/image-data";
 import { getTasksForClient } from "@/lib/task-data";
+import { getChecklistRows } from "@/lib/checklist-data";
+import { buildChecklist } from "@/lib/checklist-view";
 import ClientWorkspace from "./ClientWorkspace";
 
 export const dynamic = "force-dynamic";
 
-const WORKSPACE_TABS = ["overview", "tasks", "invoices", "documents", "images", "access"] as const;
+const WORKSPACE_TABS = ["overview", "checklist", "tasks", "invoices", "documents", "images", "access"] as const;
 type WorkspaceTab = (typeof WORKSPACE_TABS)[number];
 
 export default async function ClientDetailPage({
@@ -46,5 +48,16 @@ export default async function ClientDetailPage({
     getTasksForClient(client.id).catch(() => []),
   ]);
 
-  return <ClientWorkspace client={client} members={members} invoices={invoices} documents={documents} removedDocuments={removedDocuments} images={images} removedImages={removedImages} tasks={tasks} initialTab={initialTab} />;
+  // The checklist still renders from the template if its table is missing,
+  // with the reason shown, so the studio can see it before setup is done.
+  const checklistLoad = await getChecklistRows(client.id)
+    .then((rows) => ({ rows, error: "" }))
+    .catch((error: unknown) => ({
+      rows: [],
+      error: error instanceof Error ? error.message : "Could not load the planning checklist.",
+    }));
+  const checklist = buildChecklist(client, checklistLoad.rows);
+  const checklistError = checklistLoad.error;
+
+  return <ClientWorkspace client={client} members={members} invoices={invoices} documents={documents} removedDocuments={removedDocuments} images={images} removedImages={removedImages} tasks={tasks} checklist={checklist} checklistError={checklistError} initialTab={initialTab} />;
 }

@@ -656,3 +656,69 @@
   .documentRowActions a,
   .documentRowActions button { justify-content: center; text-align: center; }
 }
+
+/* Planning checklist --------------------------------------------------------- */
+
+.checklistSummary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid #e6dfd5; }
+.checklistSummary > div { display: grid; align-content: start; gap: .3rem; padding: 1.2rem 1.5rem; }
+.checklistSummary > div + div { border-left: 1px solid #ece6dc; }
+.checklistSummary span { color: #71582e; font-size: .6rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.checklistSummary strong { font-family: var(--font-bodoni); font-size: 1.9rem; font-weight: 400; }
+.checklistSummary small { color: #665f56; font-size: .65rem; line-height: 1.45; }
+.checklistBar { display: block; height: 4px; margin-top: .35rem; overflow: hidden; border-radius: 99px; background: #ece6dc; }
+.checklistBar b { display: block; height: 100%; background: #9a7840; transition: width 240ms ease; }
+
+.checklistNotice { margin: 1rem 1.5rem 0; border-left: 2px solid #c5b496; padding: .6rem .85rem; background: #f6f1e7; color: #5e4a28; font-size: .68rem; }
+
+.checklistControls { display: flex; flex-wrap: wrap; gap: .7rem; padding: 1rem 1.5rem; }
+.checklistControls input,
+.checklistControls select { min-height: 40px; border: 1px solid #d8d0c3; border-radius: 3px; padding: .45rem .7rem; background: #fff; font: inherit; font-size: .72rem; }
+.checklistControls input { flex: 1 1 240px; }
+.checklistPhase + .checklistPhase,
+.checklistControls + .checklistPhase,
+.formError + .checklistPhase { border-top: 1px solid #e6dfd5; }
+.checklistControls ~ .formError { margin: 0 1.5rem 1rem; }
+
+.checklistPhase > header { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 1.1rem 1.5rem .4rem; background: #faf6ef; }
+.checklistPhase h3 { font-family: var(--font-bodoni); font-size: 1.15rem; font-weight: 500; }
+.checklistPhase > header span { color: #8a8177; font-size: .62rem; font-weight: 700; letter-spacing: .08em; white-space: nowrap; }
+
+.checklistRows { display: grid; padding: 0; list-style: none; }
+.checklistRows > li { padding: .85rem 1.5rem; }
+.checklistRows > li + li { border-top: 1px solid #ece6dc; }
+.checklistRow { display: grid; grid-template-columns: 150px minmax(0, 1fr) auto; align-items: start; gap: 1rem; }
+.checklistRow > button { border: 0; padding: .4rem .65rem; background: transparent; color: #71582e; font: inherit; font-size: .62rem; font-weight: 700; cursor: pointer; }
+.checklistText { display: grid; gap: .25rem; }
+.checklistText strong { color: #312d27; font-size: .76rem; font-weight: 700; line-height: 1.4; }
+.checklistText small { color: #8a8177; font-size: .63rem; line-height: 1.5; }
+.checklistLate { color: #9c4a37; font-weight: 700; }
+.checklistTag { display: inline-block; margin-left: .4rem; border: 1px solid #ddd2bf; border-radius: 99px; padding: 0 .45rem; color: #71582e; font-size: .55rem; font-style: normal; font-weight: 700; letter-spacing: .04em; }
+.checklistNote { color: #4e4942; font-size: .66rem; line-height: 1.5; white-space: pre-wrap; }
+
+.checklistStatus { min-height: 34px; width: 100%; border: 1px solid #d8d0c3; border-radius: 99px; padding: .25rem .6rem; background: #fff; color: #4e4942; font: inherit; font-size: .62rem; font-weight: 700; cursor: pointer; }
+.checklistStatusProgress { border-color: #c5b496; background: #f6f1e7; color: #5e4a28; }
+.checklistStatusWaiting { border-color: #c9c2d9; background: #f2f0f7; color: #4b4366; }
+.checklistStatusRisk { border-color: #d9a99c; background: #f6e9e5; color: #7d3a2a; }
+.checklistStatusDone { border-color: #211e1a; background: #211e1a; color: #fffdf9; }
+.checklistStatusNa { border-style: dashed; color: #9a938a; }
+
+.checklistEditor { display: grid; gap: .8rem; margin: .9rem 0 .2rem; border-top: 1px dashed #e1d9cd; padding-top: .9rem; }
+.checklistEditor > p { color: #8a8177; font-size: .62rem; }
+.checklistNotesField { display: grid; gap: .35rem; }
+.checklistNotesField span { color: #4e4942; font-size: .64rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.checklistNotesField textarea { border: 1px solid #d8d0c3; border-radius: 3px; padding: .55rem .7rem; background: #fff; font: inherit; font-size: .74rem; resize: vertical; }
+
+@media (max-width: 900px) {
+  .checklistSummary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .checklistSummary > div:nth-child(3) { border-left: 0; }
+  .checklistSummary > div:nth-child(n + 3) { border-top: 1px solid #ece6dc; }
+}
+
+@media (max-width: 620px) {
+  .checklistSummary > div { padding: 1rem 1.15rem; }
+  .checklistControls,
+  .checklistPhase > header,
+  .checklistRows > li { padding-left: 1.15rem; padding-right: 1.15rem; }
+  .checklistRow { grid-template-columns: minmax(0, 1fr) auto; }
+  .checklistRow > select { grid-column: 1 / -1; width: auto; justify-self: start; }
+}

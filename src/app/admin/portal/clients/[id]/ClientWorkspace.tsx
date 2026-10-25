@@ -17,15 +17,18 @@ import type { ViewableImage } from "@/lib/image-view";
 import DocumentPanel from "./DocumentPanel";
 import ImagePanel from "./ImagePanel";
 import TaskPanel from "./TaskPanel";
+import ChecklistPanel from "./ChecklistPanel";
+import type { ChecklistItem } from "@/lib/checklist-view";
 import type { ClientTask } from "@/lib/task-view";
 import InviteForm from "./InviteForm";
 import MemberList from "./MemberList";
 import styles from "../../portal-admin.module.css";
 
-type WorkspaceTab = "overview" | "tasks" | "invoices" | "documents" | "images" | "access";
+type WorkspaceTab = "overview" | "checklist" | "tasks" | "invoices" | "documents" | "images" | "access";
 
 const tabs: { id: WorkspaceTab; label: string }[] = [
   { id: "overview", label: "Overview" },
+  { id: "checklist", label: "Checklist" },
   { id: "tasks", label: "Tasks" },
   { id: "invoices", label: "Invoices" },
   { id: "documents", label: "Documents" },
@@ -42,7 +45,7 @@ function initials(client: PortalClient) {
   return [client.partner_one_name, client.partner_two_name].filter(Boolean).map((name) => name!.trim()[0]?.toUpperCase()).join("").slice(0, 2);
 }
 
-export default function ClientWorkspace({ client, members, invoices, documents, removedDocuments, images, removedImages, tasks, initialTab = "overview" }: { client: PortalClient; members: ClientMember[]; invoices: Invoice[]; documents: ClientDocument[]; removedDocuments: ClientDocument[]; tasks: ClientTask[]; images: ViewableImage[]; removedImages: ViewableImage[]; initialTab?: WorkspaceTab }) {
+export default function ClientWorkspace({ client, members, invoices, documents, removedDocuments, images, removedImages, tasks, checklist, checklistError, initialTab = "overview" }: { client: PortalClient; members: ClientMember[]; invoices: Invoice[]; documents: ClientDocument[]; removedDocuments: ClientDocument[]; tasks: ClientTask[]; checklist: ChecklistItem[]; checklistError?: string; images: ViewableImage[]; removedImages: ViewableImage[]; initialTab?: WorkspaceTab }) {
   const [tab, setTabState] = useState<WorkspaceTab>(initialTab);
 
   /**
@@ -133,6 +136,8 @@ export default function ClientWorkspace({ client, members, invoices, documents, 
         </section>}
 
         {tab === "documents" && <DocumentPanel clientId={client.id} documents={documents} removedDocuments={removedDocuments} />}
+
+        {tab === "checklist" && <ChecklistPanel clientId={client.id} eventDate={client.event_date} initialItems={checklist} loadError={checklistError} />}
 
         {tab === "tasks" && <TaskPanel clientId={client.id} tasks={tasks} />}
 
