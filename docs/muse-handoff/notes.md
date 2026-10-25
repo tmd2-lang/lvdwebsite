@@ -8,11 +8,11 @@ Written for Irene's Muse, from TJ's side, so it can see what has been built from
 
 | Build | What it is | Status |
 |---|---|---|
-| 1 | Planning Checklist tab | **Couple view implemented; release verification in progress.** Studio checklist remains the source. |
+| 1 | Planning Checklist tab | **Live, including couple view.** Studio checklist remains the source. |
 | 1b | Checklist replaces the old Tasks tab | **Done.** Tasks is hidden, not deleted. |
 | 2 | Budget tab | **Live (studio only).** Change log, vendor comparison and export not built yet. |
-| 3 | Event-day Timeline tab | **Couple sharing implemented; release verification in progress.** Specialty sheets and vendor extracts remain. |
-| 4 | Guests, RSVP & Hospitality tab | **Couple view/edit implemented; release verification in progress.** Public online RSVPs remain later. |
+| 3 | Event-day Timeline tab | **Live, including confirmed couple sharing.** Specialty sheets and vendor extracts remain. |
+| 4 | Guests, RSVP & Hospitality tab | **Live, including couple view/edit.** Public online RSVPs remain later. |
 | 5 | Inquiry → client conversion | **Live.** Auto-acknowledgment email and sorting inquiries by value not built yet. |
 | 6 | 40/30/30 invoice schedule | **Decision settled: Wave remains the invoice system.** Wave sync is next; integration is not built. |
 | 7 | Studio calendar + alerts | **Deployed and verified.** Month/agenda, filters, in-portal alerts. Email reminders not built. |
@@ -52,7 +52,7 @@ Studio records have **Preview couple portal** with read-only Checklist/Guests/Ti
 
 **Migration:** `supabase/couple-planning-schema.sql`, applied by TJ (reported “ran it”). Adds optional booking date, timeline confirmation metadata/guard and service-only guest mutation RPC. Repeatable; no existing clients/timelines backfilled or published.
 
-**Validation:** production build, TypeScript, targeted lint; all 88 automated tests pass including real PostgreSQL/WASM migration twice, privacy projections, session scoping/actor, membership restrictions, guest merge/conflict/locked-count audit, timeline withdrawal and date arithmetic. The existing resource test's simulated clock now advances monotonically to avoid same-millisecond WASM timestamps hiding a manual edit. Browser verified Tanah & Kaisa’s filtered checklist, empty guest list and unpublished timeline state. Live migration checks passed (booking/confirmation columns and installed guest RPC, without writing client data). Deployment verification is being completed. Automated guest writes use an isolated database; no real guest records were added.
+**Validation:** production build, TypeScript, targeted lint; all 88 automated tests pass including real PostgreSQL/WASM migration twice, privacy projections, session scoping/actor, membership restrictions, guest merge/conflict/locked-count audit, timeline withdrawal and date arithmetic. The existing resource test's simulated clock now advances monotonically to avoid same-millisecond WASM timestamps hiding a manual edit. Browser verified Tanah & Kaisa’s filtered checklist, empty guest list and unpublished timeline state. Live migration checks passed (booking/confirmation columns and installed guest RPC, without writing client data). Release `41b50ac` pushed to main; Vercel reported success. Authenticated production preview verified the filtered checklist, empty guest state and withheld unpublished timeline. Actual couple-session guest writes were verified by route and isolated SQL tests, not by adding records to a real couple’s production list. Automated guest writes use an isolated database; no real guest records were added.
 
 
 ### Oct 25, 2026: Builds 7 and 9 deployed to production

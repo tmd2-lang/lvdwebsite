@@ -33,29 +33,23 @@ This supplements the earlier notes covering Builds 1–4. Keep their unfinished 
 
 Builds 7 and 9 are committed, pushed and deployed to the production website in release `e4b55e9`. Vercel reported success. Authenticated live checks confirmed Calendar, standard document links, gallery-field readiness and the exact welcome PDF download. The Build 9 SQL is active. Production build, TypeScript, targeted lint, desktop/phone checks and all 82 automated tests passed, including isolated PostgreSQL integration tests.
 
+## Irene's decisions applied — couple planning release
+
+Release `41b50ac` is deployed. TJ applied `supabase/couple-planning-schema.sql`; live checks confirm the columns and private guest-edit function. Production build, TypeScript, targeted lint and all 88 automated tests pass, including isolated PostgreSQL integration tests.
+
+- **Booked on:** optional actual booking date in client create/edit/Overview. Booking-relative deadlines now use it; business days skip weekends. Unknown dates stay blank. Kickoff-relative deadlines remain manual.
+- **Checklist:** the couple sees Client-owned tasks and approval items with status/due date. Studio notes and floral production details are excluded on the server. This is viewing, not approval capture.
+- **Guests:** the couple can add/edit/remove their own guests and households, including contact/address, RSVP, meals/access and travel. Studio seating remains read-only. Changes preserve internal notes and log relevant changes after final counts are locked; stale edits are rejected. Other existing invited family/guest memberships are read-only.
+- **Timeline:** shared only after Confirm & share with couple, with Client Facing and Guest Facing cues. Drafts, internal notes, production, vendors and crew stay private. Editing withdraws sharing until reconfirmed. Existing timelines were not auto-published.
+- **Budget:** remains studio-only.
+- **Preview:** each studio client record has Preview couple portal, with the same filtered Checklist/Guests/Timeline and editing disabled.
+
 ## What remains
 
-1. **Apply Irene's couple-visibility and timeline-sharing decisions:** Muse says these are already answered in her email. TJ/Codex still need the actual email contents to implement them.
-2. **Build 6 — invoices:** waiting on Irene's Wave-versus-portal decision. The Budget can already make 40/30/30 payment schedules, but invoice/payment-link integration, paid-status syncing, automatic payment-task completion, late-fee and pause-work handling remain.
-3. **Build 8 — team access:** deferred by TJ. Detailed staff roles, per-client assignments and a My tasks view remain. Basic owner/planner/inquiry-staff access already exists.
-4. **Build 9 approval work:** couple-facing moodboard approval, who approved which version and when, and reapproval after changes.
-5. **Couple-facing views:** Checklist, Budget, Timeline and Guests remain studio-only, pending Irene's visibility/editing decisions. Existing document/image sharing is separate from these unfinished views.
-6. **Earlier-build second passes:**
-   - Checklist: custom client tasks, exports, and a booking-date field for booking-relative deadlines.
-   - Budget: Change & Approval Log, Vendor Comparison, print/export and invoice connections.
-   - Timeline: specialty sheets, per-vendor extracts/sharing, couple distribution and remaining checklist links.
-   - Guests: online RSVPs plus studio confirmation, couple access/editing, thank-you-list printing, remaining checklist links and logging unseating when a whole table is removed.
-   - Shared counts: connect the locked final guest count to Budget per-guest calculations and the Timeline's locked count, as requested in the original brief.
-   - Inquiries: acknowledgment email and additional value/date sorting/filtering.
-7. **Build 10 — marketing:** deliberately skipped for now. Its unfinished pages remain owner-only; data integration/upload processing is still outstanding.
+1. **Build 6 — Wave sync:** decision settled. Wave alone issues invoices. Portal Budget lines need Wave invoice links, pulled payment status, Wave payment links, automatic payment-task completion and overdue flags from Wave due dates. No portal invoice issuing.
+2. **Remaining Build 9 — moodboard approvals:** implement either partner's explicit approval, record who/when/version, and require reapproval for palette, furniture/inventory, floral or price changes. Production details within the approved design do not require reapproval. No approval inferred from silence or read messages.
+3. **Build 8 — team access:** deferred by TJ. Detailed roles, per-client assignments and My tasks remain.
+4. **Earlier-build second passes:** checklist custom tasks/exports; Budget Change & Approval Log, comparison/export and remaining overdue handling; timeline specialty sheets/vendor extracts/checklist links; public online RSVPs with studio confirmation, thank-you printing and remaining guest checklist links; shared locked guest counts across Budget/Timeline; inquiry acknowledgment email and value/date sorting. Calendar email reminders/external sync remain later.
+5. **Build 10 — marketing:** skipped for now; unfinished pages remain owner-only.
 
-## Decisions and instructions to collect
-
-- Keep Wave as the invoice system of record, or move invoicing into the portal?
-- Checklist: should couples see their own tasks plus approval tasks, with status/due dates and no internal notes?
-- Budget: should couples see it, and which amounts/fields?
-- Timeline: when should the couple receive it, and should distribution require a confirmed version?
-- Guests: may couples view/edit their list, and which fields? Should online replies require studio confirmation before affecting counts?
-- Moodboards: who approves, is one partner's approval sufficient, and which changes require a new approval?
-
-Muse's latest recommendations are to keep Wave as the sole invoice system of record and accept one partner's explicit moodboard approval, requiring reapproval for changes to palette, furniture/inventory, floral selections or price. Production details within the approved design would not require reapproval. Confirm Irene's acceptance before implementing these recommendations. Couple visibility and timeline-sharing decisions were reportedly sent already; obtain that email rather than asking her to decide again. Team access can wait as TJ requested.
+No further Irene decision is needed for the rules above; her two emails supplied by TJ are authoritative. The full ledger is in `notes.md`.
