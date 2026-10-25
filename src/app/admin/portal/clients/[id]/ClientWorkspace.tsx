@@ -26,10 +26,11 @@ import styles from "../../portal-admin.module.css";
 
 type WorkspaceTab = "overview" | "checklist" | "tasks" | "invoices" | "documents" | "images" | "access";
 
+// Tasks is left out of the tab bar: the Checklist replaces it. The panel still
+// opens at ?tab=tasks in case anything there is needed before it is removed.
 const tabs: { id: WorkspaceTab; label: string }[] = [
   { id: "overview", label: "Overview" },
   { id: "checklist", label: "Checklist" },
-  { id: "tasks", label: "Tasks" },
   { id: "invoices", label: "Invoices" },
   { id: "documents", label: "Documents" },
   { id: "images", label: "Images" },
