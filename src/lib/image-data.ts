@@ -219,12 +219,17 @@ export async function getDeletedImagesForClient(clientId: string): Promise<Clien
  */
 export async function purgeImage(imageId: string): Promise<void> {
   const { url, serviceRoleKey } = databaseConfig();
+  const retained = await fetch(`${url}/rest/v1/client_moodboard_versions?select=id&images=cs.${encodeURIComponent(JSON.stringify([{ id: imageId }]))}&limit=1`, { headers: databaseHeaders(), cache: "no-store" });
+  if (!retained.ok) throw new Error("Could not verify moodboard history. The image was not permanently deleted.");
+  if (((await retained.json()) as unknown[]).length) throw new Error("This image is retained in moodboard history. It can be removed from the library, but not permanently deleted.");
+
 
   const lookup = await fetch(
-    `${url}/rest/v1/client_images?select=storage_path&id=eq.${encodeURIComponent(imageId)}&limit=1`,
+    `${url}/rest/v1/client_images?select=storage_path,album&id=eq.${encodeURIComponent(imageId)}&limit=1`,
     { headers: databaseHeaders(), cache: "no-store" },
   );
-  const rows = await responseJson<{ storage_path: string }[]>(lookup, "Could not find that image.");
+  const rows = await responseJson<{ storage_path: string; album: string }[]>(lookup, "Could not find that image.");
+  if (rows[0]?.album === "Design") throw new Error("Design images are retained for moodboard history. Use Remove instead of permanent deletion.");
   const path = rows[0]?.storage_path;
 
   if (path) {

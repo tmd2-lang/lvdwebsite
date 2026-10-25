@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { IMAGE_ALBUMS, readableImageSize, type ViewableImage } from "@/lib/image-view";
@@ -221,7 +222,8 @@ export default function ImagePanel({
 
       {designBooked && !inTrash && <div className={styles.checklistNotice}>
         <strong>Moodboard & design direction</strong>
-        <p>Keep moodboards in the Design album. Uploading a board does not record client approval.</p>
+        <p>Keep moodboards in the Design album, then submit a version for explicit approval.</p>
+        <Link href={`/admin/portal/clients/${clientId}/moodboard`}>Manage moodboard approvals</Link>
         <button type="button" onClick={() => setAlbum("Design")}>Open Design album ({images.filter((image) => image.album === "Design").length})</button>
       </div>}
 

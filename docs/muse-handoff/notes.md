@@ -17,7 +17,7 @@ Written for Irene's Muse, from TJ's side, so it can see what has been built from
 | 6 | 40/30/30 invoice schedule | **Decision settled: Wave remains the invoice system.** Wave sync is next; integration is not built. |
 | 7 | Studio calendar + alerts | **Deployed and verified.** Month/agenda, filters, in-portal alerts. Email reminders not built. |
 | 8 | Team logins + roles | **Deferred by TJ.** Detailed team roles, per-client assignments and My tasks are not built. Existing owner/planner/inquiry-staff access remains. |
-| 9 | Documents / images finishing | **Deployed and verified; SQL active.** Default documents, Design album links, photographer gallery + checklist sync. Couple approval flow still deferred. |
+| 9 | Documents / images finishing | **Deployed and verified; SQL active.** Default documents, Design album links, photographer gallery + checklist sync. Versioned couple approval flow implemented; deployment in progress. |
 | 10 | Marketing dashboard data | **Skipped for now.** Only studio owners can open those pages, so nobody outside the studio sees the unfinished parts. |
 
 ## Irene's confirmed decisions (emails supplied by TJ, Oct 25)
@@ -32,11 +32,26 @@ Written for Irene's Muse, from TJ's side, so it can see what has been built from
 
 ## Still to build
 
-Wave invoice integration (Build 6); explicit moodboard approval/revision workflow (remaining Build 9); team roles/assignments/My tasks (Build 8, deferred by TJ). Public guest RSVPs remain later. Earlier second-pass items (budget change log/comparison/export, timeline specialty sheets/vendor extracts/checklist links, calendar email reminders, inquiry auto-acknowledgment) are not included in the current release. Build 10 remains skipped.
+Wave invoice integration (Build 6); team roles/assignments/My tasks (Build 8, deferred by TJ). Public guest RSVPs remain later. Earlier second-pass items (budget change log/comparison/export, timeline specialty sheets/vendor extracts/checklist links, calendar email reminders, inquiry auto-acknowledgment) are not included in the current release. Build 10 remains skipped.
 
 ---
 
 ## Log
+
+### Oct 25, 2026: Build 9 moodboard approvals
+
+**Irene’s rule implemented:** either Client or Partner membership may explicitly approve; one is sufficient. Family/Guest members cannot approve. The checkbox and approval action identify the exact version; API derives client/user/name from the portal session and SQL rechecks membership and latest version. Viewing, messages and silence never count. Name/time/version are retained, with previous versions and their approvals available in history.
+
+**Studio workflow:** Images → Manage moodboard approvals. Upload/select visible Design images, enter palette, furniture/inventory, florals, price/scope and a couple-facing change summary, then Share version for approval. Each submission is a new saved snapshot. Design changes must go through a new version, requiring reapproval; image library uploads/removals do not silently change previously submitted snapshots. Studio-only production notes are separate and do not require approval or change the version. No automatic email is sent.
+
+**Checklist:** LVD-101 is the moodboard task. Publishing sets it Waiting on client; explicit approval completes it atomically while preserving owner/date/notes. LVD-102 is custom renderings and is untouched. The initial SQL handoff mistakenly named 102; corrected before any board was submitted and TJ was asked to rerun the corrected repeatable migration.
+
+**History/files:** snapshot image paths and captions are retained and signed privately. Design images can be soft-removed/restored but permanent purge is refused, preventing loss of signed-off images. Approval data is server-projected without storage paths, user IDs, studio actors or production notes. No existing gallery images are auto-submitted or approved. Studio has a read-only Moodboard couple preview.
+
+**Migration:** `supabase/moodboard-schema.sql`, manual execution by TJ; contains private RLS tables, service-only publishing/approval functions, and retained-image guard. Existing client images/checklist schemas are prerequisites.
+
+**Checks:** production build and targeted lint passed; all 91 tests passed, including isolated PostgreSQL integration tests for repeatable migration, no inferred approval, either-partner approval, idempotence, cross-client and stale-version rejection, checklist sync, retained history, production-note isolation and role restrictions. Browser verified the studio editor on desktop/phone, empty moodboard state and missing-setup handling. TJ applied the migration and then the short `moodboard-checklist-fix.sql` after a full-script retry reported a syntax error. Live checks verify all three tables and both functions are installed. Deployment verification is in progress. No real client board/approval was created for testing.
+
 
 ### Oct 25, 2026: Irene's approved couple planning views and Booked on
 
