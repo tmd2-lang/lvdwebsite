@@ -12,7 +12,7 @@ This supplements the earlier notes covering Builds 1–4. Keep their unfinished 
 - Conversion deliberately does not change the inquiry to Booked, because that is a separate studio action tied to advertising tracking.
 - Still missing: automatic inquiry acknowledgment email and the extra sorting/filtering by inquiry value/date described in the brief.
 
-### Build 7 — Studio calendar and alerts are built and tested locally
+### Build 7 — Studio calendar and alerts are deployed
 
 - One studio-wide calendar combines wedding dates, open checklist deadlines and unpaid Budget payment dates.
 - Month and agenda views; filters for client, service track, task owner, item type and search. Each item links to its source workspace.
@@ -21,7 +21,7 @@ This supplements the earlier notes covering Builds 1–4. Keep their unfinished 
 - Completed tasks, paid/waived payments and canceled budget lines are excluded. Suggested deadlines from unfinished historical client records can contribute to the overdue count.
 - Studio access only. Email reminders, external calendar sync and per-person notification settings are not built. Payments come from Budget; this does not integrate Wave or issue invoices.
 
-### Build 9 — Documents and gallery workflow are built and tested locally
+### Build 9 — Documents and gallery workflow are deployed
 
 - New clients receive the chosen Welcome & Onboarding Packet PDF and planning clients receive the existing website Planning Investment Guide. Existing clients have an explicit Add standard documents action; it does not duplicate documents or restore intentionally removed ones.
 - Design clients get a moodboard area in Images/Design. Moodboard checklist tasks open the Design album and preset uploads to that album.
@@ -31,11 +31,11 @@ This supplements the earlier notes covering Builds 1–4. Keep their unfinished 
 
 ## Release status
 
-Builds 7 and 9 are verified in the local portal. Their code has not yet been committed, pushed or deployed. The active Build 9 SQL is not a substitute for deploying its matching application code. Production build, TypeScript, targeted lint, desktop/phone checks and all 82 automated tests passed, including isolated PostgreSQL integration tests.
+Builds 7 and 9 are committed, pushed and deployed to the production website in release `e4b55e9`. Vercel reported success. Authenticated live checks confirmed Calendar, standard document links, gallery-field readiness and the exact welcome PDF download. The Build 9 SQL is active. Production build, TypeScript, targeted lint, desktop/phone checks and all 82 automated tests passed, including isolated PostgreSQL integration tests.
 
 ## What remains
 
-1. **Release Builds 7 and 9:** review, commit, push, deploy, and check the live site.
+1. **Apply Irene's couple-visibility and timeline-sharing decisions:** Muse says these are already answered in her email. TJ/Codex still need the actual email contents to implement them.
 2. **Build 6 — invoices:** waiting on Irene's Wave-versus-portal decision. The Budget can already make 40/30/30 payment schedules, but invoice/payment-link integration, paid-status syncing, automatic payment-task completion, late-fee and pause-work handling remain.
 3. **Build 8 — team access:** deferred by TJ. Detailed staff roles, per-client assignments and a My tasks view remain. Basic owner/planner/inquiry-staff access already exists.
 4. **Build 9 approval work:** couple-facing moodboard approval, who approved which version and when, and reapproval after changes.
@@ -49,7 +49,7 @@ Builds 7 and 9 are verified in the local portal. Their code has not yet been com
    - Inquiries: acknowledgment email and additional value/date sorting/filtering.
 7. **Build 10 — marketing:** deliberately skipped for now. Its unfinished pages remain owner-only; data integration/upload processing is still outstanding.
 
-## Decisions needed from Irene
+## Decisions and instructions to collect
 
 - Keep Wave as the invoice system of record, or move invoicing into the portal?
 - Checklist: should couples see their own tasks plus approval tasks, with status/due dates and no internal notes?
@@ -58,4 +58,4 @@ Builds 7 and 9 are verified in the local portal. Their code has not yet been com
 - Guests: may couples view/edit their list, and which fields? Should online replies require studio confirmation before affecting counts?
 - Moodboards: who approves, is one partner's approval sufficient, and which changes require a new approval?
 
-The main immediate dependencies are deployment and the invoice/visibility/approval decisions. Team access can wait as TJ requested.
+Muse's latest recommendations are to keep Wave as the sole invoice system of record and accept one partner's explicit moodboard approval, requiring reapproval for changes to palette, furniture/inventory, floral selections or price. Production details within the approved design would not require reapproval. Confirm Irene's acceptance before implementing these recommendations. Couple visibility and timeline-sharing decisions were reportedly sent already; obtain that email rather than asking her to decide again. Team access can wait as TJ requested.

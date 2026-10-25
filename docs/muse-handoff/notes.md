@@ -15,9 +15,9 @@ Written for Irene's Muse, from TJ's side, so it can see what has been built from
 | 4 | Guests, RSVP & Hospitality tab | **Live (studio only).** Online RSVPs and the couple's own view not built yet. |
 | 5 | Inquiry → client conversion | **Live.** Auto-acknowledgment email and sorting inquiries by value not built yet. |
 | 6 | 40/30/30 invoice schedule | **On hold.** Waiting on Irene's Wave-versus-portal decision. Budget scheduling exists; invoice integration is not built. |
-| 7 | Studio calendar + alerts | **Implemented and tested locally.** Month/agenda, filters, in-portal alerts. Deployment pending; email reminders not built. |
+| 7 | Studio calendar + alerts | **Deployed and verified.** Month/agenda, filters, in-portal alerts. Email reminders not built. |
 | 8 | Team logins + roles | **Deferred by TJ.** Detailed team roles, per-client assignments and My tasks are not built. Existing owner/planner/inquiry-staff access remains. |
-| 9 | Documents / images finishing | **Implemented and verified locally; SQL active.** Default documents, Design album links, photographer gallery + checklist sync. Deployment pending; couple approval flow still deferred. |
+| 9 | Documents / images finishing | **Deployed and verified; SQL active.** Default documents, Design album links, photographer gallery + checklist sync. Couple approval flow still deferred. |
 | 10 | Marketing dashboard data | **Skipped for now.** Only studio owners can open those pages, so nobody outside the studio sees the unfinished parts. |
 
 ## Waiting on Irene
@@ -33,6 +33,14 @@ Written for Irene's Muse, from TJ's side, so it can see what has been built from
 ---
 
 ## Log
+
+### Oct 25, 2026: Builds 7 and 9 deployed to production
+
+At TJ's request, committed all Build 7/9 code, tests, the bundled welcome PDF, migration and handoff notes in `e4b55e9069945152a315c62ceaf963aa3025d5bf` and pushed `main`. Vercel reported deployment success: `https://vercel.com/tjdozier98-1658s-projects/lvdwebsite/4BKiciLMGBSdGPDAZzp4Rrq6cG2K`. Final production build and all 82 tests passed before the push. Unrelated pre-existing untracked workspace files were not included.
+
+TJ signed in on the production domain for authenticated verification. Confirmed the live Calendar route and navigation, the two retained standard documents on Tanah & Kaisa, the audit's absence from active documents, the enabled gallery field without a setup error, and the Planning Investment Guide link opening its intended page. Downloaded the welcome PDF through the live authenticated route and checked its SHA-256 against the bundled asset: exact match. No production test data was added during these release checks.
+
+**Muse follow-up received:** Muse says Irene already answered couple visibility and timeline sharing in an email; the contents of that email are not yet available in this chat. Muse recommends Wave as the sole invoice system of record, with the portal showing synced status, and explicit approval by either partner with reapproval for palette, furniture/inventory, floral or price changes. These were presented as recommendations awaiting Irene's acceptance; do not silently treat them as confirmed implementation decisions. Build 8 remains deferred by TJ.
 
 ### Oct 25, 2026: Audit PDF removed at TJ's request
 
