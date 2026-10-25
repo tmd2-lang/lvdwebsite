@@ -11,7 +11,18 @@ import {
 } from "@/lib/client-types";
 import styles from "../../portal-admin.module.css";
 
-export default function NewClientForm() {
+export type ClientPrefill = {
+  partnerOneName: string;
+  partnerTwoName: string;
+  email: string;
+  phone: string;
+  eventDate: string;
+  venue: string;
+  guestCount: string;
+  notes: string;
+};
+
+export default function NewClientForm({ leadId, prefill }: { leadId?: string; prefill?: ClientPrefill }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -38,13 +49,22 @@ export default function NewClientForm() {
           planningPackage: data.get("planningPackage"),
           designTier: data.get("designTier"),
           notes: data.get("notes"),
+          leadId: leadId ?? "",
         }),
       });
 
       const result = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(result.error || "Could not save this client.");
+      if (!response.ok) {
+        // Someone converted this inquiry first: open their client instead.
+        if (response.status === 409 && result.clientId) {
+          router.push(`/admin/portal/clients/${result.clientId}`);
+          return;
+        }
+        throw new Error(result.error || "Could not save this client.");
+      }
 
-      router.push("/admin/portal/clients");
+      // A converted inquiry goes straight to its new client, ready to plan.
+      router.push(leadId && result.client?.id ? `/admin/portal/clients/${result.client.id}?tab=checklist` : "/admin/portal/clients");
       router.refresh();
     } catch (submitError) {
       setBusy(false);
@@ -59,21 +79,21 @@ export default function NewClientForm() {
         <div className={styles.formRow}>
           <label>
             <span>First name<b aria-hidden="true">*</b></span>
-            <input name="partnerOneName" required autoComplete="off" placeholder="Amara" />
+            <input name="partnerOneName" required autoComplete="off" placeholder="Amara" defaultValue={prefill?.partnerOneName} />
           </label>
           <label>
             <span>Partner&rsquo;s name</span>
-            <input name="partnerTwoName" autoComplete="off" placeholder="Julien" />
+            <input name="partnerTwoName" autoComplete="off" placeholder="Julien" defaultValue={prefill?.partnerTwoName} />
           </label>
         </div>
         <div className={styles.formRow}>
           <label>
             <span>Email</span>
-            <input name="email" type="email" autoComplete="off" placeholder="amara@example.com" />
+            <input name="email" type="email" autoComplete="off" placeholder="amara@example.com" defaultValue={prefill?.email} />
           </label>
           <label>
             <span>Phone</span>
-            <input name="phone" type="tel" autoComplete="off" />
+            <input name="phone" type="tel" autoComplete="off" defaultValue={prefill?.phone} />
           </label>
         </div>
       </fieldset>
@@ -83,18 +103,18 @@ export default function NewClientForm() {
         <div className={styles.formRow}>
           <label>
             <span>Event date</span>
-            <input name="eventDate" type="date" />
+            <input name="eventDate" type="date" defaultValue={prefill?.eventDate} />
             <small>Leave empty if the date is still open.</small>
           </label>
           <label>
             <span>Guest count</span>
-            <input name="guestCount" autoComplete="off" placeholder="150" />
+            <input name="guestCount" autoComplete="off" placeholder="150" defaultValue={prefill?.guestCount} />
           </label>
         </div>
         <div className={styles.formRow}>
           <label>
             <span>Venue</span>
-            <input name="venue" autoComplete="off" placeholder="Meridian House" />
+            <input name="venue" autoComplete="off" placeholder="Meridian House" defaultValue={prefill?.venue} />
           </label>
           <label>
             <span>City or area</span>
@@ -127,7 +147,7 @@ export default function NewClientForm() {
         </div>
         <label className={styles.fullWidth}>
           <span>Notes</span>
-          <textarea name="notes" rows={3} placeholder="Anything the team should know." />
+          <textarea name="notes" rows={prefill?.notes ? 6 : 3} placeholder="Anything the team should know." defaultValue={prefill?.notes} />
         </label>
       </fieldset>
 
@@ -136,7 +156,7 @@ export default function NewClientForm() {
       <div className={styles.formActions}>
         <Link href="/admin/portal/clients">Cancel</Link>
         <button type="submit" disabled={busy}>
-          {busy ? "Saving…" : "Create client"}
+          {busy ? "Saving…" : leadId ? "Make them a client" : "Create client"}
           <span aria-hidden="true">{busy ? "" : "→"}</span>
         </button>
       </div>

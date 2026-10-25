@@ -70,6 +70,8 @@ export type NewClientInput = {
   planningPackage: PlanningPackageId;
   designTier?: DesignTierId | null;
   notes?: string;
+  /** The inquiry this client was converted from, if any. */
+  leadId?: string | null;
 };
 
 export type UpdateClientInput = NewClientInput & {

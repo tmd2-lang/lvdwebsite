@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { canManageClientPortal, getAdminUser } from "@/lib/admin-auth";
-import { createClient } from "@/lib/client-data";
+import { getLeadForConversion } from "@/lib/admin-data";
+import { createClient, getClientByLeadId } from "@/lib/client-data";
 import {
   DESIGN_TIER_IDS,
   PLANNING_PACKAGE_IDS,
@@ -44,6 +45,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Enter the event date as a calendar date." }, { status: 400 });
     }
 
+    // Converting an inquiry: it must exist, and must not already be a client.
+    const leadId = text(body.leadId);
+    if (leadId) {
+      if (!(await getLeadForConversion(leadId))) {
+        return NextResponse.json({ error: "That inquiry no longer exists." }, { status: 404 });
+      }
+      const existing = await getClientByLeadId(leadId);
+      if (existing) {
+        return NextResponse.json({ error: `This inquiry is already a client: ${existing.display_name}.`, clientId: existing.id }, { status: 409 });
+      }
+    }
+
     const client = await createClient({
       partnerOneName,
       partnerTwoName: text(body.partnerTwoName),
@@ -56,6 +69,7 @@ export async function POST(request: Request) {
       planningPackage,
       designTier: (designTierValue as DesignTierId) || null,
       notes: text(body.notes),
+      leadId: leadId || null,
     });
 
     return NextResponse.json({ client });

@@ -611,6 +611,10 @@ export default function InquiriesDashboard({
                       </a>
                     )}
                     {selected.phone && <a href={`tel:${selected.phone.replace(/[^+\d]/g, "")}`}>Call</a>}
+                    {/* Owners and planners can turn an inquiry into a client. If it already is one, the page opens that client instead. */}
+                    {(user.role === "owner" || user.role === "planner") && (
+                      <a href={`/admin/portal/clients/new?lead=${selected.id}`}>Convert to client</a>
+                    )}
                   </section>
 
                   <section className={styles.detailSection}>

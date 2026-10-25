@@ -63,6 +63,21 @@ const SALES_FIELDS = ["consult_outcome", "consult_outcome_at", "fit", "fit_at", 
   "sales_outcome", "booked_amount", "sales_outcome_at", "lost_reason", "lost_note"];
 
 /** Ad attribution is only selected for marketing viewers (see marketing-access.ts). */
+export type LeadForConversion = Pick<AdminLead,
+  "id" | "name" | "email" | "phone" | "celebration_type" | "event_date" | "date_undecided" | "venue" | "guest_count" | "services" | "vision" | "investment">;
+
+/** Just the fields a new client record is filled from. */
+export async function getLeadForConversion(id: string): Promise<LeadForConversion | null> {
+  if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
+  const { url } = databaseConfig();
+  const response = await fetch(
+    `${url}/rest/v1/leads?select=id,name,email,phone,celebration_type,event_date,date_undecided,venue,guest_count,services,vision,investment&id=eq.${encodeURIComponent(id)}&limit=1`,
+    { headers: databaseHeaders(), cache: "no-store" },
+  );
+  const rows = await responseJson<LeadForConversion[]>(response);
+  return rows[0] ?? null;
+}
+
 export async function getAdminLeads({ includeMarketing = false } = {}): Promise<AdminLead[]> {
   const { url } = databaseConfig();
   const leadFields = [

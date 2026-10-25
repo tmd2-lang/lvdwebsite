@@ -55,6 +55,17 @@ export async function getClientById(id: string): Promise<PortalClient | null> {
   return rows[0] || null;
 }
 
+/** The client already made from an inquiry, so it is never converted twice. */
+export async function getClientByLeadId(leadId: string): Promise<PortalClient | null> {
+  const { url } = databaseConfig();
+  const response = await fetch(
+    `${url}/rest/v1/clients?select=*&lead_id=eq.${encodeURIComponent(leadId)}&limit=1`,
+    { headers: databaseHeaders(), cache: "no-store" },
+  );
+  const rows = await responseJson<PortalClient[]>(response, "Could not check for an existing client.");
+  return rows[0] ?? null;
+}
+
 export async function countClients(): Promise<number> {
   const { url } = databaseConfig();
   const response = await fetch(
@@ -85,6 +96,7 @@ export async function createClient(input: NewClientInput): Promise<PortalClient>
     planning_package: input.planningPackage,
     design_tier: input.designTier || null,
     notes: trimmedOrNull(input.notes),
+    lead_id: input.leadId || null,
   };
 
   const response = await fetch(`${url}/rest/v1/clients`, {

@@ -13,12 +13,12 @@ Written for Irene's Muse, from TJ's side, so it can see what has been built from
 | 2 | Budget tab | **Live (studio only).** Change log, vendor comparison and export not built yet. |
 | 3 | Event-day Timeline tab | **Live (studio only).** Specialty sheets, vendor extracts and sharing with the couple not built yet. |
 | 4 | Guests, RSVP & Hospitality tab | **Live (studio only).** Online RSVPs and the couple's own view not built yet. |
-| 5 | Inquiry → client conversion | Not started |
+| 5 | Inquiry → client conversion | **Live.** Auto-acknowledgment email and sorting inquiries by value not built yet. |
 | 6 | 40/30/30 invoice schedule | Not started |
 | 7 | Studio calendar + alerts | Not started |
 | 8 | Team logins + roles | Not started |
 | 9 | Documents / images finishing | Not started |
-| 10 | Marketing dashboard data | Not started |
+| 10 | Marketing dashboard data | **Skipped for now.** Only studio owners can open those pages, so nobody outside the studio sees the unfinished parts. |
 
 ## Waiting on Irene
 
@@ -31,6 +31,24 @@ Written for Irene's Muse, from TJ's side, so it can see what has been built from
 ---
 
 ## Log
+
+### Oct 25, 2026: Build 5, Convert an inquiry to a client
+
+**What the studio sees now.** On any inquiry, owners and planners get a **Convert to client** button next to Email and Call. (Inquiry staff do not, since they cannot create clients.)
+
+- It opens the New Client form **already filled in from the inquiry**: names (a name like "Valentina & Marco" is split into the two partners), email, phone, wedding date (left empty if their date was undecided), venue and guest count. The notes are pre-filled with what they asked about, their budget range and their vision, so that context travels with the client.
+- The studio checks the details, **chooses the planning package and design tier**, and saves. The inquiry form only asks about design services and a budget range, which do not map reliably to a package, so the person converting chooses.
+- Saving goes **straight to the new client's Checklist**, with the right tracks already on (a design tier switches on the Design & Floral track).
+- **The client stays linked to the inquiry.** Pressing Convert on an inquiry that is already a client just opens that client; it can never be converted twice.
+- **Duplicate check:** if an existing client already has the same email (ignoring capitals) or the same phone number, the form shows "Possible duplicate" with a link to that client before anything is saved.
+
+**Deliberately not done:** converting does **not** change the inquiry's status. Moving an inquiry to "Booked" sends a booking signal to Meta for ad tracking, so that stays a deliberate click by the studio.
+
+**Not built yet (from the brief):** the automatic "we got your inquiry" email to new leads, and extra sortable fields on the inquiry list (by value and date).
+
+**On Build 10 (marketing):** the unfinished marketing pages are owner-only. Couples, planners and inquiry staff cannot open them, so we are leaving them as they are.
+
+**Tested:** the button on a test inquiry, every pre-filled field, saving with a design tier, landing on the Checklist with both tracks, pressing Convert a second time (opens the existing client), a second save refused, the duplicate warning, and the plain New Client form unchanged. The test inquiries and test client were removed afterwards.
 
 ### Oct 25, 2026: Build 4, Guests, RSVP & Hospitality tab is live (studio only)
 
