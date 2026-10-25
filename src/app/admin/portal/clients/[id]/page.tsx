@@ -11,11 +11,13 @@ import { getBudget } from "@/lib/budget-data";
 import { EMPTY_SETUP } from "@/lib/budget-view";
 import { getTimeline } from "@/lib/timeline-data";
 import { starterTimeline } from "@/lib/timeline-view";
+import { getGuests } from "@/lib/guests-data";
+import { EMPTY_SETTINGS } from "@/lib/guests-view";
 import ClientWorkspace from "./ClientWorkspace";
 
 export const dynamic = "force-dynamic";
 
-const WORKSPACE_TABS = ["overview", "checklist", "budget", "timeline", "tasks", "invoices", "documents", "images", "access"] as const;
+const WORKSPACE_TABS = ["overview", "checklist", "budget", "timeline", "guests", "tasks", "invoices", "documents", "images", "access"] as const;
 type WorkspaceTab = (typeof WORKSPACE_TABS)[number];
 
 export default async function ClientDetailPage({
@@ -78,5 +80,12 @@ export default async function ClientDetailPage({
       error: error instanceof Error ? error.message : "Could not load the timeline.",
     }));
 
-  return <ClientWorkspace client={client} members={members} invoices={invoices} documents={documents} removedDocuments={removedDocuments} images={images} removedImages={removedImages} tasks={tasks} checklist={checklist} checklistError={checklistError} budget={budgetLoad.budget} budgetError={budgetLoad.error} timeline={timelineLoad.timeline} timelineError={timelineLoad.error} initialTab={initialTab} />;
+  const guestsLoad = await getGuests(client.id)
+    .then((guests) => ({ guests, error: "" }))
+    .catch((error: unknown) => ({
+      guests: { records: [], settings: EMPTY_SETTINGS },
+      error: error instanceof Error ? error.message : "Could not load the guest list.",
+    }));
+
+  return <ClientWorkspace client={client} members={members} invoices={invoices} documents={documents} removedDocuments={removedDocuments} images={images} removedImages={removedImages} tasks={tasks} checklist={checklist} checklistError={checklistError} budget={budgetLoad.budget} budgetError={budgetLoad.error} timeline={timelineLoad.timeline} timelineError={timelineLoad.error} guests={guestsLoad.guests} guestsError={guestsLoad.error} initialTab={initialTab} />;
 }

@@ -12,7 +12,7 @@ Written for Irene's Muse, from TJ's side, so it can see what has been built from
 | 1b | Checklist replaces the old Tasks tab | **Done.** Tasks is hidden, not deleted. |
 | 2 | Budget tab | **Live (studio only).** Change log, vendor comparison and export not built yet. |
 | 3 | Event-day Timeline tab | **Live (studio only).** Specialty sheets, vendor extracts and sharing with the couple not built yet. |
-| 4 | Guests, RSVP & Hospitality tab | Not started |
+| 4 | Guests, RSVP & Hospitality tab | **Live (studio only).** Online RSVPs and the couple's own view not built yet. |
 | 5 | Inquiry → client conversion | Not started |
 | 6 | 40/30/30 invoice schedule | Not started |
 | 7 | Studio calendar + alerts | Not started |
@@ -25,11 +25,39 @@ Written for Irene's Muse, from TJ's side, so it can see what has been built from
 1. **What should couples see from the checklist?** Our working suggestion: tasks owned by "Client" plus tasks marked "Couple approves", with status and due date. Studio notes and floral production detail never shown. Until she answers, the checklist is studio-only.
 2. **Should couples see their budget?** Same question as the checklist. Studio-only for now.
 3. **When should the couple see their timeline?** The "What the couple would see" filter is ready (Client Facing + Guest Facing cues only). Sharing it in their portal waits on the same decision as items 1 and 2.
-4. **Booking date.** Some tasks are timed from booking ("Within 1 business day", "Immediately after booking"), not from the wedding. The portal does not record a booking date yet, so those tasks have no suggested due date. Adding a "Booked on" field to each client would fix it. Low priority.
+4. **Should couples see and edit their guest list in their portal?** The brief says the couple sees their own list. Online RSVPs would also need building. Studio-only for now.
+5. **Booking date.** Some tasks are timed from booking ("Within 1 business day", "Immediately after booking"), not from the wedding. The portal does not record a booking date yet, so those tasks have no suggested due date. Adding a "Booked on" field to each client would fix it. Low priority.
 
 ---
 
 ## Log
+
+### Oct 25, 2026: Build 4, Guests, RSVP & Hospitality tab is live (studio only)
+
+**What the studio sees now.** Every client record has a **Guests** tab, after Timeline, built from `guests-tracker.html`, `guests-data.json` and `GUESTS-INTEGRATION.md`.
+
+**One record per guest, as the package asked.** Every workbook sheet is now a filtered view of the same records, so counts cannot drift:
+
+- **Guests:** the full list, searchable.
+- **RSVP follow-up:** Awaiting Response, plus anyone marked Follow-Up Needed or Contacted, with source, last outreach and method.
+- **Meals & access:** attending guests only: meal, dietary, allergen, accessibility, highchair, table.
+- **Events:** a tick-box grid of guests against the events this celebration has (chosen under Setup & events from the package's 8 events), with a total per event.
+- **Travel & hotels:** guests with a hotel status, a shuttle or VIP vehicle, or an arrival date.
+- **Seating:** tables with type, zone and capacity; seated and open counts are worked out from the guests, never typed. A table over capacity shows in red. Removing a table unseats its guests.
+- **Households:** formal name, primary contact, full mailing address, invitation status, and the guests in each.
+- **Caterer handoff:** attending guests only, with meal, dietary, severe allergy, allergen, accessibility, highchair and table. Nothing else (no phones, emails or addresses). It downloads as a CSV or prints, and it is labeled "Final count (locked)" once counts are locked. The CSV is protected so a spreadsheet will not run anything typed into a cell.
+
+**The guest record** has every field from the package: identity and household, side, type, VIP, relationship, contact; invitation, RSVP, RSVP date, Response Source, plus-one; meal, dietary, severe allergy, allergen, accessibility, mobility, sensory, service animal, highchair; table; per-event attendance; arrival, flight, departure, hotel, property, room, transport, route, welcome gift and delivery; follow-up status, last outreach, method; gift received, thank-you sent; notes.
+
+**Top numbers (the exception-led dashboard):** guests, attending, awaiting response, declined, children attending, severe allergies, attending with no meal, attending with no seat, hotel pending, needs shuttle, follow-ups open, highchairs. Problems show in red.
+
+**Counts Locked:** a Lock counts button. While locked, changes still save, but any change to an **attending** guest's RSVP, meal, seat, severe allergy, allergen, dietary or highchair (or adding or removing an attending guest) is written to a "changes since counts were locked" log with who, when, and from → to. Tested: changing a locked guest's meal was logged; editing a phone number on a guest who is not attending was not.
+
+**Setup & events:** RSVP deadline, invitation capacity, venue capacity, lead planner, caterer final count due, and which events this celebration has. Couple, date and venue come from the client record.
+
+**Not built yet:** online RSVPs from the couple's guests (and the "studio confirms an online reply before it counts" step), the couple seeing their own list in their portal, printing the thank-you list, and linking checklist tasks (LVD-010, 048, 058, 059, 060, 070, 073) to this tab. One small gap: unseating guests by removing a whole table is not written to the locked-counts log.
+
+**Tested:** adding a household, a table and four guests, every count, every view, ticking an event, a table over capacity, locking and the change log, the handoff contents, removing a table, reload, and every view at phone width. All test data was removed afterwards.
 
 ### Oct 25, 2026: Build 3, Event-Day Timeline tab is live (studio only)
 
