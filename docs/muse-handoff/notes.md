@@ -8,31 +8,52 @@ Written for Irene's Muse, from TJ's side, so it can see what has been built from
 
 | Build | What it is | Status |
 |---|---|---|
-| 1 | Planning Checklist tab | **Live (studio only).** Couple view not built yet. |
+| 1 | Planning Checklist tab | **Couple view implemented; release verification in progress.** Studio checklist remains the source. |
 | 1b | Checklist replaces the old Tasks tab | **Done.** Tasks is hidden, not deleted. |
 | 2 | Budget tab | **Live (studio only).** Change log, vendor comparison and export not built yet. |
-| 3 | Event-day Timeline tab | **Live (studio only).** Specialty sheets, vendor extracts and sharing with the couple not built yet. |
-| 4 | Guests, RSVP & Hospitality tab | **Live (studio only).** Online RSVPs and the couple's own view not built yet. |
+| 3 | Event-day Timeline tab | **Couple sharing implemented; release verification in progress.** Specialty sheets and vendor extracts remain. |
+| 4 | Guests, RSVP & Hospitality tab | **Couple view/edit implemented; release verification in progress.** Public online RSVPs remain later. |
 | 5 | Inquiry → client conversion | **Live.** Auto-acknowledgment email and sorting inquiries by value not built yet. |
-| 6 | 40/30/30 invoice schedule | **On hold.** Waiting on Irene's Wave-versus-portal decision. Budget scheduling exists; invoice integration is not built. |
+| 6 | 40/30/30 invoice schedule | **Decision settled: Wave remains the invoice system.** Wave sync is next; integration is not built. |
 | 7 | Studio calendar + alerts | **Deployed and verified.** Month/agenda, filters, in-portal alerts. Email reminders not built. |
 | 8 | Team logins + roles | **Deferred by TJ.** Detailed team roles, per-client assignments and My tasks are not built. Existing owner/planner/inquiry-staff access remains. |
 | 9 | Documents / images finishing | **Deployed and verified; SQL active.** Default documents, Design album links, photographer gallery + checklist sync. Couple approval flow still deferred. |
 | 10 | Marketing dashboard data | **Skipped for now.** Only studio owners can open those pages, so nobody outside the studio sees the unfinished parts. |
 
-## Waiting on Irene
+## Irene's confirmed decisions (emails supplied by TJ, Oct 25)
 
-1. **What should couples see from the checklist?** Our working suggestion: tasks owned by "Client" plus tasks marked "Couple approves", with status and due date. Studio notes and floral production detail never shown. Until she answers, the checklist is studio-only.
-2. **Should couples see their budget?** Same question as the checklist. Studio-only for now.
-3. **When should the couple see their timeline?** The "What the couple would see" filter is ready (Client Facing + Guest Facing cues only). Sharing it in their portal waits on the same decision as items 1 and 2.
-4. **Should couples see and edit their guest list in their portal?** The brief says the couple sees their own list. Online RSVPs would also need building. Studio-only for now.
-5. **Booking date.** Some tasks are timed from booking ("Within 1 business day", "Immediately after booking"), not from the wedding. The portal does not record a booking date yet, so those tasks have no suggested due date. Adding a "Booked on" field to each client would fix it. Low priority.
-6. **Invoice system of record:** keep Wave and integrate its links/paid status, or move invoicing into the portal? Build 6 waits for this decision; the existing Budget 40/30/30 schedule is not invoice/payment-provider integration.
-7. **Moodboard approvals:** who can approve, whether one or both partners must approve, and which revisions require a new approval? Design album links are built; the approval/revision workflow is not.
+- Couples see Client-owned checklist tasks and approval items, with status/due date; no studio notes or floral production details.
+- Working budget remains studio-only. Couple amounts owed will come from the Wave invoice schedule.
+- Only explicitly Confirmed timelines are shared, with Client Facing and Guest Facing cues. Drafts stay private.
+- Couples can view/edit their own guest list. Public guest RSVP intake and studio confirmation are a later pass.
+- Record actual Booked on dates; never infer them from account creation.
+- Wave is the sole home for money: issue invoices there; future portal sync links Budget lines to Wave invoices, reads payment status, sends payment links to Wave, completes payment tasks, and flags overdue from Wave due dates.
+- Either partner's explicit moodboard approval suffices, with who/when recorded. Reapproval for palette, furniture/inventory, florals or price; production details inside the approved design do not require it.
+
+## Still to build
+
+Wave invoice integration (Build 6); explicit moodboard approval/revision workflow (remaining Build 9); team roles/assignments/My tasks (Build 8, deferred by TJ). Public guest RSVPs remain later. Earlier second-pass items (budget change log/comparison/export, timeline specialty sheets/vendor extracts/checklist links, calendar email reminders, inquiry auto-acknowledgment) are not included in the current release. Build 10 remains skipped.
 
 ---
 
 ## Log
+
+### Oct 25, 2026: Irene's approved couple planning views and Booked on
+
+**Implementation:** client creation/edit and Overview now include an optional Booked on date. Booking-relative checklist suggestions use that date (business days skip weekends); saved manual due dates win. Kickoff-relative deadlines remain manual because no kickoff date is recorded. No historical booking dates were invented.
+
+Couple Checklist replaces the legacy Tasks page, showing only Client-owned tasks or approval items. Explicit Design & Floral decision items are allowed; recipes, rigging and production plans stay private even if a source approval flag is present. Server projections send only title, phase, status and dates; never notes, dependencies or actors. The working Budget remains studio-only. This is a viewing release, not a new approval-capture workflow.
+
+Couple Guests supports their own guests/households, contact/address, RSVP, meals/allergies/access and travel, with search/filter. Client and partner memberships can edit; other existing invited memberships are read-only. Seating assignments are visible but edited by the studio. Studio notes, response provenance, internal settings and locked-count exception logs are not sent. API derives client and actor from session; database merges patches without replacing private fields, rejects stale edits, validates own household references, and atomically logs final-count changes. This is couple-entered RSVP, not a public guest response form.
+
+Timeline requires a separate **Confirm & share with couple** action. Only Client Facing + Guest Facing cues appear; vendors, crew, production, internal notes and canceled cues stay out. Any subsequent save withdraws sharing pending confirmation again. The database fingerprints the confirmed content so old application writes also invalidate sharing. Existing timelines are not silently published.
+
+Studio records have **Preview couple portal** with read-only Checklist/Guests/Timeline, using the same server projections. Tanah & Kaisa has no guest rows currently, so its preview correctly starts empty.
+
+**Migration:** `supabase/couple-planning-schema.sql`, applied by TJ (reported “ran it”). Adds optional booking date, timeline confirmation metadata/guard and service-only guest mutation RPC. Repeatable; no existing clients/timelines backfilled or published.
+
+**Validation:** production build, TypeScript, targeted lint; all 88 automated tests pass including real PostgreSQL/WASM migration twice, privacy projections, session scoping/actor, membership restrictions, guest merge/conflict/locked-count audit, timeline withdrawal and date arithmetic. The existing resource test's simulated clock now advances monotonically to avoid same-millisecond WASM timestamps hiding a manual edit. Browser verified Tanah & Kaisa’s filtered checklist, empty guest list and unpublished timeline state. Live migration checks passed (booking/confirmation columns and installed guest RPC, without writing client data). Deployment verification is being completed. Automated guest writes use an isolated database; no real guest records were added.
+
 
 ### Oct 25, 2026: Builds 7 and 9 deployed to production
 

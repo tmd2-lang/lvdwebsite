@@ -1106,7 +1106,7 @@
 @media (max-width: 620px) {
   /* Tasks and Images brought the real portal to six destinations. */
   .mobileNavigation {
-    grid-template-columns: repeat(6, minmax(58px, 1fr));
+    grid-template-columns: repeat(8, minmax(68px, 1fr));
     overflow-x: auto;
   }
   .mobileNavigation a { font-size: .58rem; }

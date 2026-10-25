@@ -3,7 +3,7 @@ import { buildChecklist, effectiveDue, isOpen, CHECKLIST_STATUS_LABELS, type Che
 import { BUDGET_SIDE_LABELS, PAYMENT_TYPE_LABELS, paymentBalance, type BudgetLine, type BudgetPayment } from "@/lib/budget-view";
 import type { PortalClient } from "@/lib/client-types";
 
-export type CalendarClient = Pick<PortalClient, "id" | "display_name" | "event_date" | "design_tier" | "status">;
+export type CalendarClient = Pick<PortalClient, "id" | "display_name" | "event_date" | "booked_on" | "design_tier" | "status">;
 export type CalendarChecklistRow = Pick<ChecklistItemRow, "task_id" | "status" | "owner" | "due_on"> & { client_id: string };
 export type CalendarLine = Pick<BudgetLine, "id" | "client_id" | "side" | "vendor" | "description" | "status">;
 export type CalendarPayment = Pick<BudgetPayment, "id" | "client_id" | "line_id" | "payment_type" | "payer" | "due_on" | "amount_cents" | "paid_cents" | "manual_status">;

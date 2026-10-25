@@ -98,6 +98,7 @@ export default function ClientWorkspace({ client, members, invoices, documents, 
           </div>
         </div>
         <div className={styles.workspaceHeroActions}>
+          <Link href={`/admin/portal/clients/${client.id}/preview`}>Preview couple portal</Link>
           <Link href={`/admin/portal/clients/${client.id}/edit`}>Edit client</Link>
           <button type="button" onClick={() => setTab("access")}>Invite client</button>
         </div>
@@ -122,6 +123,7 @@ export default function ClientWorkspace({ client, members, invoices, documents, 
                 <div className={styles.workspaceCardHeader}><div><p className={styles.eyebrow}>Client record</p><h2>What They Booked</h2></div><Link href={`/admin/portal/clients/${client.id}/edit`}>Edit details</Link></div>
                 <dl className={styles.workspaceDetails}>
                   <div><dt>Planning package</dt><dd>{PLANNING_PACKAGE_LABELS[client.planning_package]}</dd></div>
+                  <div><dt>Booked on</dt><dd>{client.booked_on ? formatDate(client.booked_on) : "Not set"}</dd></div>
                   <div><dt>Design tier</dt><dd>{client.design_tier ? DESIGN_TIER_LABELS[client.design_tier] : "None"}</dd></div>
                   <div><dt>Guest count</dt><dd>{client.guest_count || "Not set"}</dd></div>
                   <div><dt>Email</dt><dd>{client.email || "Not set"}</dd></div>

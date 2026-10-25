@@ -83,6 +83,8 @@ export type CrewMember = {
 };
 
 export type TimelineDoc = {
+  confirmed_at?: string | null;
+  confirmed_by?: string | null;
   version: number;
   overview: Record<string, string>;
   cues: TimelineCue[];
@@ -164,13 +166,14 @@ export function applyVersionRule<T extends { ref: string; status: string }>(prev
   let bumped = false;
   const rows = next.map((row) => {
     const old = before.get(row.ref);
-    if (!old || old.status !== "Confirmed" || row.status !== "Confirmed") return row;
+    if (!old) { if (previous.some((item) => item.status === "Confirmed")) bumped = true; return row; }
+    if (old.status !== "Confirmed") return row;
     // Field by field: the database does not keep key order.
     const keys = new Set([...Object.keys(old), ...Object.keys(row)]);
-    const same = [...keys].every((key) => key === "status" || (old as Record<string, unknown>)[key] === (row as Record<string, unknown>)[key]);
+    const same = [...keys].every((key) => (old as Record<string, unknown>)[key] === (row as Record<string, unknown>)[key]);
     if (same) return row;
     bumped = true;
-    return { ...row, status: "Changed" };
+    return { ...row, status: row.status === "Confirmed" ? "Changed" : row.status };
   });
   // Removing a confirmed row is a change too.
   if (previous.some((row) => row.status === "Confirmed" && !next.some((other) => other.ref === row.ref))) bumped = true;

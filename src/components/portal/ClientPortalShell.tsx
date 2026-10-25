@@ -7,11 +7,13 @@ import styles from "@/app/portal/portal.module.css";
 
 const navigation = [
   { number: "01", label: "Overview", href: "/portal" },
-  { number: "02", label: "Tasks", href: "/portal/tasks" },
+  { number: "02", label: "Checklist", href: "/portal/tasks" },
   { number: "03", label: "Invoices", href: "/portal/invoices" },
   { number: "04", label: "Payments", href: "/portal/payments" },
   { number: "05", label: "Documents", href: "/portal/documents" },
   { number: "06", label: "Images", href: "/portal/images" },
+  { number: "07", label: "Guests", href: "/portal/guests" },
+  { number: "08", label: "Timeline", href: "/portal/timeline" },
 ];
 
 export default function ClientPortalShell({

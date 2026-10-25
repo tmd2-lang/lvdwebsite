@@ -31,7 +31,7 @@ async function responseJson<T>(response: Response, failure: string): Promise<T> 
   return payload as T;
 }
 
-const COLUMNS = "version,overview,cues,production,vendors,crew,updated_at,updated_by";
+const COLUMNS = "version,overview,cues,production,vendors,crew,confirmed_at,confirmed_by,updated_at,updated_by";
 
 /** The saved timeline, or null if nobody has edited this client's yet. */
 export async function getTimeline(clientId: string): Promise<TimelineDoc | null> {

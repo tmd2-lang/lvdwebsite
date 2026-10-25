@@ -47,6 +47,7 @@ export type PortalClient = {
   email: string | null;
   phone: string | null;
   event_date: string | null;
+  booked_on?: string | null;
   date_undecided: boolean;
   venue: string | null;
   location: string | null;
@@ -64,6 +65,7 @@ export type NewClientInput = {
   email?: string;
   phone?: string;
   eventDate?: string;
+  bookedOn?: string;
   venue?: string;
   location?: string;
   guestCount?: string;

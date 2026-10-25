@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { canManageClientPortal, getAdminUser } from "@/lib/admin-auth";
 import { getLeadForConversion } from "@/lib/admin-data";
 import { createClient, getClientByLeadId } from "@/lib/client-data";
+import { isPlanningDate } from "@/lib/planning-dates";
 import {
   DESIGN_TIER_IDS,
   PLANNING_PACKAGE_IDS,
@@ -41,9 +42,11 @@ export async function POST(request: Request) {
     }
 
     const eventDate = text(body.eventDate);
-    if (eventDate && !/^\d{4}-\d{2}-\d{2}$/.test(eventDate)) {
+    if (eventDate && !isPlanningDate(eventDate)) {
       return NextResponse.json({ error: "Enter the event date as a calendar date." }, { status: 400 });
     }
+    const bookedOn = body.bookedOn === undefined ? undefined : text(body.bookedOn);
+    if (bookedOn && !isPlanningDate(bookedOn)) return NextResponse.json({ error: "Enter a valid Booked on date." }, { status: 400 });
 
     // Converting an inquiry: it must exist, and must not already be a client.
     const leadId = text(body.leadId);
@@ -63,6 +66,7 @@ export async function POST(request: Request) {
       email: text(body.email),
       phone: text(body.phone),
       eventDate,
+      bookedOn,
       venue: text(body.venue),
       location: text(body.location),
       guestCount: text(body.guestCount),

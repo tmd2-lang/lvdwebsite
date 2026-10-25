@@ -109,7 +109,7 @@ test('SQL resources migration: repeatable, automatic/idempotent defaults, atomic
     await db.exec(`create role anon; create role authenticated; create role service_role;
       create schema auth; create table auth.users(id uuid primary key);
       create table public.leads(id uuid primary key);
-      create function public.set_updated_at() returns trigger language plpgsql as $$begin new.updated_at=clock_timestamp();return new;end;$$;`);
+      create function public.set_updated_at() returns trigger language plpgsql as $$begin new.updated_at=greatest(clock_timestamp(),old.updated_at + interval '1 millisecond');return new;end;$$;`);
     for (const file of ['clients-schema.sql', 'documents-schema.sql', 'documents-soft-delete.sql', 'checklist-schema.sql']) {
       await db.exec(fs.readFileSync('supabase/' + file, 'utf8').replace('create extension if not exists pgcrypto;', ''));
     }

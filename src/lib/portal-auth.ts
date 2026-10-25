@@ -95,12 +95,12 @@ export async function hasPortalRefreshToken() {
  * comes from a client_users row, never from the URL or anything the browser
  * sends. Every portal page must go through here.
  */
-export async function getClientForUser(userId: string): Promise<PortalClient | null> {
+async function getMembershipForUser(userId: string): Promise<{ client: PortalClient; relationship: string } | null> {
   const config = serviceConfig();
   if (!config) return null;
 
   const response = await fetch(
-    `${config.url}/rest/v1/client_users?select=clients(*)&user_id=eq.${encodeURIComponent(userId)}&limit=1`,
+    `${config.url}/rest/v1/client_users?select=relationship,clients(*)&user_id=eq.${encodeURIComponent(userId)}&limit=1`,
     {
       headers: { apikey: config.serviceRoleKey, Authorization: `Bearer ${config.serviceRoleKey}` },
       cache: "no-store",
@@ -112,8 +112,17 @@ export async function getClientForUser(userId: string): Promise<PortalClient | n
     return null;
   }
 
-  const rows = (await response.json().catch(() => null)) as { clients?: PortalClient | null }[] | null;
-  return rows?.[0]?.clients || null;
+  const rows = (await response.json().catch(() => null)) as { clients?: PortalClient | null; relationship?: string }[] | null;
+  const row = rows?.[0];
+  return row?.clients ? { client: row.clients, relationship: row.relationship || "guest" } : null;
+}
+
+export async function getClientForUser(userId: string): Promise<PortalClient | null> {
+  return (await getMembershipForUser(userId))?.client ?? null;
+}
+
+export function canEditGuestList(relationship: string) {
+  return relationship === "client" || relationship === "partner";
 }
 
 /** The signed-in client and their celebration, or null if either is missing. */
@@ -121,10 +130,10 @@ export async function getPortalSession() {
   const user = await getPortalUser();
   if (!user) return null;
 
-  const client = await getClientForUser(user.id);
-  if (!client) return null;
+  const membership = await getMembershipForUser(user.id);
+  if (!membership) return null;
 
-  return { user, client };
+  return { user, ...membership };
 }
 
 export function safePortalReturnPath(value: string | null) {

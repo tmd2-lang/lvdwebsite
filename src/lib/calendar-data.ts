@@ -28,7 +28,7 @@ async function allRows<T>(query: string): Promise<T[]> {
 
 /** Call only after canManageClientPortal; all current owners/planners share client access. */
 export async function getStudioCalendar(): Promise<CalendarData> {
-  const clients = await allRows<CalendarClient>("clients?select=id,display_name,event_date,design_tier,status&status=neq.archived&order=id.asc");
+  const clients = await allRows<CalendarClient>("clients?select=id,display_name,event_date,booked_on,design_tier,status&status=neq.archived&order=id.asc");
   if (!clients.length) return { clients, entries: [], warnings: [] };
   const [checklist, lines, payments] = await Promise.allSettled([
     allRows<CalendarChecklistRow>("client_checklist_items?select=client_id,task_id,status,owner,due_on&order=client_id.asc,task_id.asc"),

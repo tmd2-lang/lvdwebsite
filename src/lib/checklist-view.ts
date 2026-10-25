@@ -9,6 +9,7 @@
 
 import template from "@/data/planning-checklist.json";
 import type { PortalClient } from "@/lib/client-types";
+import { addBusinessDays, addPlanningDays } from "@/lib/planning-dates";
 
 export const CHECKLIST_TRACKS = ["Planning Core", "Design & Floral"] as const;
 export type ChecklistTrack = (typeof CHECKLIST_TRACKS)[number];
@@ -122,12 +123,23 @@ function addDays(date: string, days: number) {
  * Turns the template's timing ("9-7 months", "60-30 days", "3-4 weeks before
  * the event") into a date off the wedding day. A range counts down to its
  * nearer end, because that end is the real deadline. Timings tied to the
- * booking date rather than the wedding ("Within 1 business day") get no
- * suggestion, since we do not record when a client booked.
+ * booking date use Booked on when recorded. Kickoff-relative timings stay
+ * manual until the kickoff date is known.
  */
-export function suggestDue(task: Pick<ChecklistTemplateTask, "timing" | "phase">, eventDate: string | null): string | null {
-  if (!eventDate) return null;
+export function suggestDue(task: Pick<ChecklistTemplateTask, "timing" | "phase">, eventDate: string | null, bookedOn?: string | null): string | null {
   const timing = task.timing.toLowerCase();
+
+  if (task.phase === "Booking & Onboarding") {
+    if (!bookedOn) return null;
+    if (/^(immediately after booking|at booking)$/.test(timing)) return bookedOn;
+    const business = timing.match(/^within (\d+) business days?$/);
+    if (business) return addBusinessDays(bookedOn, Number(business[1]));
+    const weeks = timing.match(/^first (\d+) weeks?$/);
+    if (weeks) return addPlanningDays(bookedOn, Number(weeks[1]) * 7);
+    // A booking date is not a kickoff meeting date. These stay manually dated.
+    if (/kickoff/.test(timing)) return null;
+  }
+  if (!eventDate) return null;
 
   if (task.phase === "Post-Event") {
     if (/2 weeks after|10 business days/.test(timing)) return addDays(eventDate, 14);
@@ -154,7 +166,7 @@ export function suggestDue(task: Pick<ChecklistTemplateTask, "timing" | "phase">
 }
 
 export function buildChecklist(
-  client: Pick<PortalClient, "design_tier" | "event_date">,
+  client: Pick<PortalClient, "design_tier" | "event_date"> & Pick<PortalClient, "booked_on">,
   rows: ChecklistItemRow[],
 ): ChecklistItem[] {
   const saved = new Map(rows.map((row) => [row.task_id, row]));
@@ -170,7 +182,7 @@ export function buildChecklist(
       status: row?.status ?? (inScope ? "not_started" : "not_applicable"),
       assignedOwner: row?.owner || task.owner,
       dueOn: row?.due_on ?? null,
-      suggestedDue: suggestDue(task, client.event_date),
+      suggestedDue: suggestDue(task, client.event_date, client.booked_on),
       notes: row?.notes ?? "",
       updatedBy: row?.updated_by ?? null,
       updatedAt: row?.updated_at ?? null,

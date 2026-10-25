@@ -36,6 +36,7 @@ export default function EditClientForm({ client }: { client: PortalClient }) {
         body: JSON.stringify({
           partnerOneName: data.get("partnerOneName"), partnerTwoName: data.get("partnerTwoName"),
           email: data.get("email"), phone: data.get("phone"), eventDate: data.get("eventDate"),
+          bookedOn: data.get("bookedOn"),
           venue: data.get("venue"), location: data.get("location"), guestCount: data.get("guestCount"),
           planningPackage: data.get("planningPackage"), designTier: data.get("designTier"),
           status: data.get("status"), notes: data.get("notes"),
@@ -99,6 +100,7 @@ export default function EditClientForm({ client }: { client: PortalClient }) {
 
       <fieldset disabled={busy}>
         <legend>Portal setup</legend>
+        <label><span>Booked on</span><input name="bookedOn" type="date" defaultValue={client.booked_on || ""} /><small>Actual booking date for onboarding deadlines. Leave blank if unknown.</small></label>
         <div className={styles.formRow}>
           <label><span>Planning package</span><select name="planningPackage" defaultValue={client.planning_package}>{PLANNING_PACKAGE_IDS.map((id) => <option key={id} value={id}>{PLANNING_PACKAGE_LABELS[id]}</option>)}</select></label>
           <label><span>Design tier</span><select name="designTier" defaultValue={client.design_tier || ""}><option value="">None</option>{DESIGN_TIER_IDS.map((id) => <option key={id} value={id}>{DESIGN_TIER_LABELS[id]}</option>)}</select></label>

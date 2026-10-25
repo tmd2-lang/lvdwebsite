@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { canManageClientPortal, getAdminUser } from "@/lib/admin-auth";
 import { deleteClient, getClientById, updateClient } from "@/lib/client-data";
+import { isPlanningDate } from "@/lib/planning-dates";
 import {
   CLIENT_STATUSES,
   DESIGN_TIER_IDS,
@@ -36,7 +37,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     const status = text(body.status) as ClientStatus;
     if (!CLIENT_STATUSES.includes(status)) return NextResponse.json({ error: "Choose a valid client status." }, { status: 400 });
     const eventDate = text(body.eventDate);
-    if (eventDate && !/^\d{4}-\d{2}-\d{2}$/.test(eventDate)) return NextResponse.json({ error: "Enter the event date as a calendar date." }, { status: 400 });
+    if (eventDate && !isPlanningDate(eventDate)) return NextResponse.json({ error: "Enter the event date as a calendar date." }, { status: 400 });
+    const bookedOn = body.bookedOn === undefined ? undefined : text(body.bookedOn);
+    if (bookedOn && !isPlanningDate(bookedOn)) return NextResponse.json({ error: "Enter a valid Booked on date." }, { status: 400 });
 
     const client = await updateClient(id, {
       partnerOneName,
@@ -44,6 +47,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       email: text(body.email),
       phone: text(body.phone),
       eventDate,
+      bookedOn,
       venue: text(body.venue),
       location: text(body.location),
       guestCount: text(body.guestCount),

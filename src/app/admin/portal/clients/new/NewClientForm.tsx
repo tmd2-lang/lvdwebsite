@@ -43,6 +43,7 @@ export default function NewClientForm({ leadId, prefill }: { leadId?: string; pr
           email: data.get("email"),
           phone: data.get("phone"),
           eventDate: data.get("eventDate"),
+          bookedOn: data.get("bookedOn"),
           venue: data.get("venue"),
           location: data.get("location"),
           guestCount: data.get("guestCount"),
@@ -125,6 +126,7 @@ export default function NewClientForm({ leadId, prefill }: { leadId?: string; pr
 
       <fieldset disabled={busy}>
         <legend>What they booked</legend>
+        <label><span>Booked on</span><input name="bookedOn" type="date" /><small>Actual booking date. Leave blank if unknown; onboarding deadlines follow this date.</small></label>
         <div className={styles.formRow}>
           <label>
             <span>Planning package<b aria-hidden="true">*</b></span>

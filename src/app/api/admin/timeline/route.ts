@@ -186,6 +186,8 @@ export async function POST(request: Request) {
     }
 
     const next = {
+      confirmed_at: null as string | null,
+      confirmed_by: null as string | null,
       version: current.version,
       overview: current.overview,
       cues: current.cues,
@@ -216,6 +218,8 @@ export async function POST(request: Request) {
           list.map((row) => (UNCONFIRMED_STATUSES.includes(row.status) ? { ...row, status: "Confirmed" } : row));
         next.cues = confirm(current.cues);
         next.production = confirm(current.production);
+        next.confirmed_at = new Date().toISOString();
+        next.confirmed_by = user.email;
         break;
       }
       case "vendors":

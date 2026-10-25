@@ -16,7 +16,7 @@ export const MEALS = ["Standard", "Beef", "Chicken", "Fish", "Vegetarian", "Vega
 export const TRANSPORT = ["Not Required", "Needs Shuttle", "VIP Vehicle", "Self-Transport", "Pending"];
 export const HOTEL = ["Not Required", "Requested", "Booked", "Pending", "Other"];
 export const FOLLOW_STATUS = ["No Follow-Up", "Follow-Up Needed", "Contacted", "Resolved", "Exception Approved"];
-export const RESPONSE_SOURCE = ["Reply Card", "Online", "Phone", "Entered by Studio"];
+export const RESPONSE_SOURCE = ["Reply Card", "Online", "Phone", "Entered by Studio", "Entered by Couple"];
 export const EVENTS = ["Rehearsal", "Welcome Event", "Cultural / Religious Event", "Ceremony", "Cocktail Hour", "Reception", "After-Party", "Farewell Brunch"];
 export const TABLE_TYPES = ["Round", "Rectangle", "Head Table", "Sweetheart", "Family", "Kids", "Vendor", "Other"];
 export const SETUP_FIELDS = ["RSVP Deadline", "Invitation Capacity", "Venue Capacity", "Lead Planner", "Caterer Final Count Due"];
@@ -141,6 +141,7 @@ export const FIELDS_BY_KIND: Record<RecordKind, FieldDef[]> = {
 export type GuestData = Record<string, string | boolean | number | Record<string, boolean>>;
 
 export type GuestRecord = {
+  updated_at?: string;
   id: string;
   kind: RecordKind;
   data: GuestData;

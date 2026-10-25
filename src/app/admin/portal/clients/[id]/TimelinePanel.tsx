@@ -309,7 +309,8 @@ export default function TimelinePanel({
           {unconfirmed > 0 ? ` · ${unconfirmed} ${unconfirmed === 1 ? "item" : "items"} not confirmed` : " · Everything confirmed"}
         </p>
         <div>
-          {unconfirmed > 0 && <button type="button" className={styles.budgetSecondary} disabled={busy} onClick={confirmAll}>Confirm all</button>}
+          {(unconfirmed > 0 || !doc.confirmed_at) && <button type="button" className={styles.budgetSecondary} disabled={busy} onClick={confirmAll}>Confirm & share with couple</button>}
+          <span>{doc.confirmed_at ? "Confirmed · shared with couple" : "Studio draft · not shared"}</span>
           <button
             type="button"
             className={styles.budgetDanger}
