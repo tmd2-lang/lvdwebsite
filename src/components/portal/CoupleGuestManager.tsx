@@ -75,6 +75,11 @@ export default function CoupleGuestManager({ initial, readOnly = false }: { init
     <div className={styles.heading}><h2>Your guest list</h2><span className={styles.badge}>{guests.length} guests · {guests.filter((g) => text(g.data, "rsvp") === "Attending").length} attending</span></div>
     {initial.countsLocked && <p className={styles.notice}>Final counts have been sent. Changes to attendance, meals and allergy details are recorded for your planning team to review.</p>}
     {readOnly && <p className={styles.notice}>This view is read-only. Changes are disabled here.</p>}
+    {(() => {
+      // The studio's caterer warning, in the couple's words: they are the ones who can fix it.
+      const noMeal = guests.filter((g) => text(g.data, "rsvp") === "Attending" && !text(g.data, "meal")).length;
+      return noMeal > 0 && <p className={styles.notice}>{noMeal} attending {noMeal === 1 ? "guest still needs" : "guests still need"} a meal choice. Choose RSVP &ldquo;Attending&rdquo; to filter, then Edit each one.</p>;
+    })()}
     <div className={styles.actions}>
       <button type="button" aria-pressed={kind === "guest"} onClick={() => { setKind("guest"); setLimit(40); }}>Guests</button>
       <button type="button" aria-pressed={kind === "household"} onClick={() => { setKind("household"); setLimit(40); }}>Households & addresses</button>
@@ -93,7 +98,7 @@ export default function CoupleGuestManager({ initial, readOnly = false }: { init
     {!shown.length && <p className={styles.empty}>No {kind === "guest" ? "guests" : "households"} match this view.</p>}
     <ul className={styles.list}>{shown.slice(0, limit).map((record) => <li key={record.id}>
       <div><h3>{name(record) || "Unnamed"}</h3><p>{record.kind === "guest" ? [text(record.data, "rsvp"), text(record.data, "meal"), initial.tables.find((t) => t.id === text(record.data, "table_id"))?.name].filter(Boolean).join(" · ") : [text(record.data, "address"), text(record.data, "city"), text(record.data, "state"), text(record.data, "postal")].filter(Boolean).join(", ")}</p></div>
-      {!readOnly && <div className={styles.actions}><button type="button" disabled={busy} aria-label={`Edit ${name(record)}`} onClick={() => { setEditor({ id: record.id, kind: record.kind as CoupleGuestKind, data: { ...record.data }, expectedUpdatedAt: record.updated_at }); setError(""); }}>Edit</button><button type="button" disabled={busy} aria-label={`${confirming === record.id ? "Confirm removal of" : "Remove"} ${name(record)}`} onClick={() => void remove(record)}>{confirming === record.id ? "Confirm removal" : "Remove"}</button>{confirming === record.id && <button type="button" onClick={() => setConfirming(null)}>Keep</button>}</div>}
+      {!readOnly && <div className={styles.actions}><button type="button" disabled={busy} aria-label={`Edit ${name(record)}`} onClick={() => { setEditor({ id: record.id, kind: record.kind as CoupleGuestKind, data: { ...record.data }, expectedUpdatedAt: record.updated_at }); setError(""); }}>Edit</button>{record.addedByCouple ? <><button type="button" disabled={busy} aria-label={`${confirming === record.id ? "Confirm removal of" : "Remove"} ${name(record)}`} onClick={() => void remove(record)}>{confirming === record.id ? "Confirm removal" : "Remove"}</button>{confirming === record.id && <button type="button" onClick={() => setConfirming(null)}>Keep</button>}</> : <small>Added by your planner</small>}</div>}
     </li>)}</ul>
     {shown.length > limit && <button type="button" onClick={() => setLimit(limit + 40)}>Show more</button>}
   </section>;

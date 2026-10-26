@@ -23,6 +23,9 @@ export async function POST(request: Request) {
     if (recordId) {
       const before = await getRecord(session.client.id, recordId);
       if (!before || before.kind !== kind) return NextResponse.json({ error: "That guest record was not found." }, { status: 404 });
+      if (body.action === "delete" && !before.added_by_couple) {
+        return NextResponse.json({ error: "Your planning team added this one, so only they can remove it. You can still edit the details, or ask them to take it off." }, { status: 403 });
+      }
     }
     const expected = typeof body.expectedUpdatedAt === "string" ? body.expectedUpdatedAt : null;
     if (recordId && (!expected || expected.length > 100 || !Number.isFinite(new Date(expected).getTime()))) throw new Error("Refresh the guest list before editing.");

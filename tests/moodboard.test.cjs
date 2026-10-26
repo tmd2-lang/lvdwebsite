@@ -28,6 +28,10 @@ test('approval route requires explicit approval and session-derived actor/client
  assert.equal((await POST(req)).status,403);assert.equal(calls.length,0);
  session.relationship='partner';body.approved=false;assert.equal((await POST(req)).status,400);
  body.approved=true;assert.equal((await POST(req)).status,200);assert.deepEqual(Array.from(calls[0]),['OWN',id,'USER','TEST partner']);
+ // The stamp uses the partner's name from the client record, not the login handle.
+ session.client={id:'OWN',partner_one_name:'TEST Ana',partner_two_name:'TEST Ben'};session.user.displayName='handle123';
+ await POST(req);assert.equal(calls[1][3],'TEST Ben');
+ session.relationship='client';await POST(req);assert.equal(calls[2][3],'TEST Ana');
 });
 const pgModule=process.env.LVD_PGLITE_MODULE;
 test('SQL moodboards: immutable snapshots, explicit either-partner approval, reapproval, stale/cross-client rejection, notes isolation and permissions',{skip:!pgModule},async()=>{

@@ -47,6 +47,15 @@ export async function POST(request: Request) {
     }
     const bookedOn = body.bookedOn === undefined ? undefined : text(body.bookedOn);
     if (bookedOn && !isPlanningDate(bookedOn)) return NextResponse.json({ error: "Enter a valid Booked on date." }, { status: 400 });
+    // Older callers send no status and keep the database default (Active).
+    const status = body.status === undefined ? undefined : text(body.status);
+    if (status !== undefined && status !== "active" && status !== "booked") {
+      return NextResponse.json({ error: "Choose Booked or Still deciding." }, { status: 400 });
+    }
+    // Onboarding deadlines count from this date, so a booked client needs it.
+    if (status === "booked" && !bookedOn) {
+      return NextResponse.json({ error: "Enter the Booked on date so onboarding deadlines get real dates." }, { status: 400 });
+    }
 
     // Converting an inquiry: it must exist, and must not already be a client.
     const leadId = text(body.leadId);
@@ -72,6 +81,7 @@ export async function POST(request: Request) {
       guestCount: text(body.guestCount),
       planningPackage,
       designTier: (designTierValue as DesignTierId) || null,
+      status,
       notes: text(body.notes),
       leadId: leadId || null,
     });

@@ -41,7 +41,7 @@ async function request<T>(path: string, init: RequestInit & { prefer?: string },
 }
 
 const id = (value: string) => encodeURIComponent(value);
-const RECORD_COLUMNS = "id,kind,data,position,created_at,updated_at";
+const RECORD_COLUMNS = "id,kind,data,position,created_at,updated_at,added_by_couple";
 const SETTINGS_COLUMNS = "setup,events,counts_locked,locked_at,locked_by,exceptions";
 
 export type ClientGuests = { records: GuestRecord[]; settings: GuestSettings };

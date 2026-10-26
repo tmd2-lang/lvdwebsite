@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { FormEvent, useMemo, useState } from "react";
 import {
   CHECKLIST_OWNERS,
@@ -18,6 +17,7 @@ import {
   type ChecklistStatus,
   type ChecklistTrack,
 } from "@/lib/checklist-view";
+import { useSaveStatus } from "@/components/portal/useSaveStatus";
 import styles from "../../portal-admin.module.css";
 
 type TrackFilter = "all" | ChecklistTrack;
@@ -64,7 +64,7 @@ export default function ChecklistPanel({
   onOpenDesign?: () => void;
   onOpenGallery?: () => void;
 }) {
-  const router = useRouter();
+  const { saved, saveLabel } = useSaveStatus();
   const [items, setItems] = useState(initialItems);
   const [track, setTrack] = useState<TrackFilter>("all");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("open");
@@ -116,7 +116,7 @@ export default function ChecklistPanel({
         : entry));
       // Keep the page's copy current too, so switching tabs and back does
       // not reopen the checklist from before this save.
-      router.refresh();
+      saved();
       return true;
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Could not save that task.");
@@ -192,6 +192,7 @@ export default function ChecklistPanel({
         </select>
       </div>
 
+      {saveLabel && <p className={styles.formSuccess} role="status">{saveLabel}</p>}
       {error && <p className={styles.formError} role="alert">{error}</p>}
 
       {visible.length === 0 ? (

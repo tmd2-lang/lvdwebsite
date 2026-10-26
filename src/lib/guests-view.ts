@@ -147,6 +147,8 @@ export type GuestRecord = {
   data: GuestData;
   position: number;
   created_at: string;
+  /** Added by the couple in their portal. Couples may remove only these. */
+  added_by_couple?: boolean;
 };
 
 export type GuestSettings = {
@@ -194,6 +196,9 @@ export function guestName(guest: GuestRecord) {
 
 export const isAttending = (guest: GuestRecord) => text(guest.data, "rsvp") === "Attending";
 
+/** Invited but no answer yet. A new guest starts as Invited, so it counts too. */
+export const isAwaitingAnswer = (guest: GuestRecord) => ["Invited", "Awaiting Response"].includes(text(guest.data, "rsvp"));
+
 /** Fields whose change after the lock is logged as an exception. */
 export const LOCKED_FIELDS = ["rsvp", "meal", "table_id", "severe", "allergen", "dietary", "highchair"];
 
@@ -213,7 +218,7 @@ export const GUEST_VIEWS: { id: GuestView; label: string; hint: string }[] = [
 export function viewFilter(view: GuestView): (guest: GuestRecord) => boolean {
   switch (view) {
     case "followup":
-      return (guest) => text(guest.data, "rsvp") === "Awaiting Response" || ["Follow-Up Needed", "Contacted"].includes(text(guest.data, "follow"));
+      return (guest) => isAwaitingAnswer(guest) || ["Follow-Up Needed", "Contacted"].includes(text(guest.data, "follow"));
     case "meals":
     case "handoff":
       return isAttending;
@@ -236,7 +241,7 @@ export function guestCounts(guests: GuestRecord[]): GuestCounts {
   return [
     { label: "Guests", value: guests.length, warn: false },
     { label: "Attending", value: attending.length, warn: false },
-    { label: "Awaiting response", value: count(guests, (guest) => text(guest.data, "rsvp") === "Awaiting Response"), warn: false },
+    { label: "Awaiting response", value: count(guests, isAwaitingAnswer), warn: false },
     { label: "Declined", value: count(guests, (guest) => text(guest.data, "rsvp") === "Declined"), warn: false },
     { label: "Children attending", value: count(attending, (guest) => ["Child", "Infant"].includes(text(guest.data, "type"))), warn: false },
     { label: "Severe allergies", value: severe, warn: severe > 0 },

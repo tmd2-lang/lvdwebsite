@@ -12,6 +12,7 @@ export function moodboardInput(raw: Record<string, unknown>) {
   const title = typeof raw.title === "string" ? raw.title.trim() : "";
   const summary = typeof raw.summary === "string" ? raw.summary.trim() : "";
   if (!title || title.length > 160 || !summary || summary.length > 2000) throw new Error("Enter a title and a summary of this design version.");
+  if (summary.length < 10) throw new Error("Tell the couple what changed in a sentence. They see this summary.");
   const images = raw.images;
   if (!Array.isArray(images) || images.length < 1 || images.length > 40 || images.some((id) => typeof id !== "string" || !MOODBOARD_UUID.test(id)) || new Set(images).size !== images.length) throw new Error("Choose 1 to 40 Design images.");
   const source = raw.design as Record<string, unknown> | null;
@@ -23,4 +24,14 @@ export function moodboardInput(raw: Record<string, unknown>) {
   const expected = raw.expected === null ? null : typeof raw.expected === "string" && MOODBOARD_UUID.test(raw.expected) ? raw.expected : undefined;
   if (expected === undefined) throw new Error("Refresh the moodboard before submitting.");
   return { title, summary, images: images as string[], design, expected };
+}
+
+/**
+ * The name an approval is stamped with: the partner's name as the studio
+ * recorded it on the client record, not whatever handle their login carries.
+ */
+export function approverName(session: { client: { partner_one_name?: string | null; partner_two_name?: string | null }; relationship: string; user: { displayName?: string; firstName?: string; email?: string } }) {
+  const recorded = session.relationship === "client" ? session.client.partner_one_name
+    : session.relationship === "partner" ? session.client.partner_two_name : null;
+  return recorded?.trim() || session.user.displayName || session.user.firstName || session.user.email || "Partner";
 }

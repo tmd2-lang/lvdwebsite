@@ -10,7 +10,7 @@ import { buildChecklist } from "@/lib/checklist-view";
 import { getBudget } from "@/lib/budget-data";
 import { EMPTY_SETUP } from "@/lib/budget-view";
 import { getTimeline } from "@/lib/timeline-data";
-import { starterTimeline } from "@/lib/timeline-view";
+import { starterTimeline, withClientGuestCount } from "@/lib/timeline-view";
 import { getGuests } from "@/lib/guests-data";
 import { EMPTY_SETTINGS } from "@/lib/guests-view";
 import ClientWorkspace from "./ClientWorkspace";
@@ -75,7 +75,7 @@ export default async function ClientDetailPage({
 
   // A client nobody has edited yet starts from the starter template.
   const timelineLoad = await getTimeline(client.id)
-    .then((saved) => ({ timeline: saved ?? starterTimeline(client), error: "" }))
+    .then((saved) => ({ timeline: withClientGuestCount(saved ?? starterTimeline(client), client), error: "" }))
     .catch((error: unknown) => ({
       timeline: starterTimeline(client),
       error: error instanceof Error ? error.message : "Could not load the timeline.",

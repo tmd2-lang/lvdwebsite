@@ -38,6 +38,23 @@ Wave developer app setup, authorization and live invoice validation (Build 6); t
 
 ## Log
 
+### Oct 26, 2026: Audit fixes, round 2 (findings #5, #8, #9, #11, #12, #13, #15, #16)
+
+Committed and pushed Oct 26. TJ ran `supabase/couple-guest-protection.sql` first; the column was confirmed live before the push.
+
+- **Studio guests protected (#5).** Each guest and household now records whether the couple added it. Couples can remove only what they added. Studio entries show "Added by your planner" in place of Remove, and the server refuses the removal (route check plus database check). Couples can still edit those guests. Existing guests labeled "Entered by Couple" were marked as couple-added; studio guests whose RSVP a couple changed carry that same label, so they stay removable. Couples now also see how many attending guests still need a meal choice.
+- **Saves confirm (#8).** Checklist, Budget, Guests, Timeline and the moodboard editor show "Saved. Updating…" while the page data reloads, then "Saved." Checklist, Guests and Timeline already updated on the spot; Budget totals appear once the reload finishes.
+- **Next moodboard version (#9).** The title starts blank, with the previous title shown as a hint. "What changed since version N?" sits at the top and needs at least a sentence (checked on the server too).
+- **Booked at creation (#11).** New-client form has Status (Booked / Still deciding). Booked requires the Booked on date, so onboarding deadlines and the late-booking schedule work from day one.
+- **Timeline guest count (#12).** A blank "Guest Count (final, locked)" fills from the client record's guest count. Anything typed into the timeline wins.
+- **RSVP counts (#13).** "Invited" now counts as awaiting a response in the counts and the RSVP follow-up view.
+- **Image notes (#15).** The upload field is now "Title the couple sees", and each studio image card shows "Couple sees: …".
+- **Approval name (#16).** New approvals are stamped with the partner's name from the client record (partner one for the Client login, partner two for the Partner login), not the login handle. Earlier stamps are unchanged.
+
+Validation: TypeScript, production build and lint on the changed areas pass. 99 tests pass, including new tests for RSVP counting, the timeline guest count, couple guest removal and the approval name. The 5 PostgreSQL tests were skipped (no local database).
+
+Checked on the demo client in a signed-in studio browser: Awaiting response now counts the demo's Invited guest (1, was 0); a checklist status change showed "Saved. Updating…" then "Saved" (the task, Send welcome email, was set back to Not started, so its Last changed by now reads TJ); the timeline guest count reads 100; image cards show "Couple sees: …" and the field is labeled "Title the couple sees"; the next moodboard version form opens with a blank title and "What changed since version 2?" first; the new-client form defaults to Booked with Booked on required, and switching to Still deciding drops the requirement. Not checked in a browser: the couple's own guest list (Remove hidden on studio guests), which needs a couple sign-in; the server rule is covered by a test. No console or server errors.
+
 ### Oct 26, 2026: Audit fixes, round 1 (findings #2, #3, #6, #7, #10, #17)
 
 Committed and pushed Oct 26. TJ ran `supabase/documents-studio-only.sql` first; the column was confirmed live before the push.

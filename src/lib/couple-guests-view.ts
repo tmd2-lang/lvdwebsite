@@ -8,7 +8,7 @@ export const COUPLE_GUEST_GROUPS = GUEST_FIELD_GROUPS
 export const COUPLE_GUEST_FIELDS = COUPLE_GUEST_GROUPS.flatMap((group) => group.fields);
 export const COUPLE_HOUSEHOLD_FIELDS = HOUSEHOLD_FIELDS;
 export type CoupleGuestKind = "guest" | "household";
-export type CoupleGuestRecord = Pick<GuestRecord, "id" | "kind" | "data" | "created_at"> & { updated_at: string };
+export type CoupleGuestRecord = Pick<GuestRecord, "id" | "kind" | "data" | "created_at"> & { updated_at: string; addedByCouple: boolean };
 export type CoupleGuests = {
   records: CoupleGuestRecord[];
   tables: { id: string; name: string }[];
@@ -65,6 +65,7 @@ export function projectCoupleGuestRecord(record: GuestRecord): CoupleGuestRecord
   if (record.kind === "guest") { keys.add("table_id"); keys.add("events"); }
   return {
     id: record.id, kind: record.kind, created_at: record.created_at, updated_at: record.updated_at ?? record.created_at,
+    addedByCouple: record.added_by_couple === true,
     data: Object.fromEntries(Object.entries(record.data).filter(([key]) => keys.has(key))),
   };
 }

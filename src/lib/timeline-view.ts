@@ -101,6 +101,17 @@ export type TimelineSection = "overview" | "cues" | "production" | "vendors" | "
 
 export const UNCONFIRMED_STATUSES = ["Draft", "Pending Confirmation", "Changed"];
 
+const GUEST_COUNT_FIELD = "Guest Count (final, locked)";
+
+/**
+ * Fills a blank guest count from the client record so the planner never has
+ * to retype it. Anything already typed into the timeline wins.
+ */
+export function withClientGuestCount(doc: TimelineDoc, client: Pick<PortalClient, "guest_count">): TimelineDoc {
+  if (doc.overview[GUEST_COUNT_FIELD]?.trim() || !client.guest_count?.trim()) return doc;
+  return { ...doc, overview: { ...doc.overview, [GUEST_COUNT_FIELD]: client.guest_count.trim() } };
+}
+
 /** The starter timeline for a client nobody has edited yet. */
 export function starterTimeline(client: Pick<PortalClient, "display_name" | "event_date" | "venue" | "guest_count">): TimelineDoc {
   const overview: Record<string, string> = Object.fromEntries(OVERVIEW_FIELDS.map((field) => [field, ""]));

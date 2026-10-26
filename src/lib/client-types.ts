@@ -71,6 +71,8 @@ export type NewClientInput = {
   guestCount?: string;
   planningPackage: PlanningPackageId;
   designTier?: DesignTierId | null;
+  /** Set at creation: Active (still deciding) or Booked. Edit can use any status. */
+  status?: ClientStatus;
   notes?: string;
   /** The inquiry this client was converted from, if any. */
   leadId?: string | null;

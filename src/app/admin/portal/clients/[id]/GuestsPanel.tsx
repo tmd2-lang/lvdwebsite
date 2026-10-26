@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { FormEvent, useMemo, useState } from "react";
 import {
   EVENTS,
@@ -24,6 +23,7 @@ import {
   type GuestView,
   type RecordKind,
 } from "@/lib/guests-view";
+import { useSaveStatus } from "@/components/portal/useSaveStatus";
 import styles from "../../portal-admin.module.css";
 
 const RSVP_CLASS: Record<string, string | undefined> = {
@@ -153,7 +153,7 @@ export default function GuestsPanel({
   initialSettings: GuestSettings;
   loadError?: string;
 }) {
-  const router = useRouter();
+  const { saved: markSaved, saveLabel } = useSaveStatus();
   const [records, setRecords] = useState(initialRecords);
   const [settings, setSettings] = useState(initialSettings);
   const [view, setView] = useState<GuestView>("guests");
@@ -189,7 +189,7 @@ export default function GuestsPanel({
       const result = (await response.json().catch(() => ({}))) as { record?: GuestRecord; settings?: GuestSettings; error?: string };
       if (!response.ok) throw new Error(result.error || "Could not save that.");
       // The page refetches too, so switching tabs and back shows this save.
-      router.refresh();
+      markSaved();
       return result;
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Could not save that.");
@@ -347,6 +347,7 @@ export default function GuestsPanel({
         </details>
       )}
 
+      {saveLabel && <p className={styles.formSuccess} role="status">{saveLabel}</p>}
       {error && <p className={`${styles.formError} ${styles.budgetError}`} role="alert">{error}</p>}
       {hint && <p className={styles.guestHint}>{hint}</p>}
 

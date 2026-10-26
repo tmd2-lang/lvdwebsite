@@ -96,6 +96,7 @@ export async function createClient(input: NewClientInput): Promise<PortalClient>
     guest_count: trimmedOrNull(input.guestCount),
     planning_package: input.planningPackage,
     design_tier: input.designTier || null,
+    ...(input.status ? { status: input.status } : {}),
     notes: trimmedOrNull(input.notes),
     lead_id: input.leadId || null,
   };

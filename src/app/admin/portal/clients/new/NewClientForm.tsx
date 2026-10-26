@@ -25,6 +25,7 @@ export type ClientPrefill = {
 export default function NewClientForm({ leadId, prefill }: { leadId?: string; prefill?: ClientPrefill }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const [booked, setBooked] = useState(true);
   const [error, setError] = useState("");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -44,6 +45,7 @@ export default function NewClientForm({ leadId, prefill }: { leadId?: string; pr
           phone: data.get("phone"),
           eventDate: data.get("eventDate"),
           bookedOn: data.get("bookedOn"),
+          status: data.get("status"),
           venue: data.get("venue"),
           location: data.get("location"),
           guestCount: data.get("guestCount"),
@@ -126,7 +128,20 @@ export default function NewClientForm({ leadId, prefill }: { leadId?: string; pr
 
       <fieldset disabled={busy}>
         <legend>What they booked</legend>
-        <label><span>Booked on</span><input name="bookedOn" type="date" /><small>Actual booking date. Leave blank if unknown; onboarding deadlines follow this date.</small></label>
+        <div className={styles.formRow}>
+          <label>
+            <span>Status<b aria-hidden="true">*</b></span>
+            <select name="status" defaultValue="booked" onChange={(event) => setBooked(event.target.value === "booked")}>
+              <option value="booked">Booked</option>
+              <option value="active">Still deciding</option>
+            </select>
+          </label>
+          <label>
+            <span>Booked on{booked && <b aria-hidden="true">*</b>}</span>
+            <input name="bookedOn" type="date" required={booked} />
+            <small>{booked ? "The day they booked. Onboarding deadlines and the checklist schedule count from this date." : "Add it in Edit once they book."}</small>
+          </label>
+        </div>
         <div className={styles.formRow}>
           <label>
             <span>Planning package<b aria-hidden="true">*</b></span>

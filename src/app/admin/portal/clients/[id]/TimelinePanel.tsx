@@ -25,6 +25,7 @@ import {
   type TimelineSection,
   type TimelineVendor,
 } from "@/lib/timeline-view";
+import { useSaveStatus } from "@/components/portal/useSaveStatus";
 import styles from "../../portal-admin.module.css";
 
 type View = "cues" | "production" | "vendors" | "crew" | "overview" | "brief";
@@ -179,6 +180,7 @@ export default function TimelinePanel({
   loadError?: string;
 }) {
   const router = useRouter();
+  const { saved, saveLabel } = useSaveStatus();
   const [doc, setDoc] = useState(initial);
   const [view, setView] = useState<View>("cues");
   const [cueFilter, setCueFilter] = useState<CueFilter>("studio");
@@ -221,7 +223,7 @@ export default function TimelinePanel({
       setEditing("");
       // Keep the page's copy current too, so switching tabs and back does
       // not reopen the timeline from before this save.
-      router.refresh();
+      saved();
       return true;
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Could not save the timeline.");
@@ -323,6 +325,7 @@ export default function TimelinePanel({
         </div>
       </div>
 
+      {saveLabel && <p className={styles.formSuccess} role="status">{saveLabel}</p>}
       {error && (
         <p className={`${styles.formError} ${styles.budgetError}`} role="alert">
           {error}{" "}

@@ -60,6 +60,31 @@ test('late bookings squeeze stranded early tasks into the time left; couples nev
  const [stale,manual,future]=planning.projectCoupleChecklist([{...base,id:'a',suggestedDue:'2026-04-12'},{...base,id:'b',dueOn:'2026-04-12',suggestedDue:null},{...base,id:'c',suggestedDue:'2026-12-01'}],'2026-10-26');
  assert.equal(stale.dueOn,null);assert.equal(manual.dueOn,'2026-04-12');assert.equal(future.dueOn,'2026-12-01');
 });
+test('round 2: invited guests await an answer, timeline inherits the guest count, couples see who added each guest',()=>{
+ const guests=load('src/lib/guests-view.ts'),timeline=load('src/lib/timeline-view.ts');
+ const g=(rsvp,extra={})=>({id:rsvp,kind:'guest',position:0,created_at:'2026-10-26',data:{first:'TEST',rsvp,...extra}});
+ const counts=guests.guestCounts([g('Invited'),g('Awaiting Response'),g('Attending'),g('Declined')]);
+ assert.equal(counts.find(c=>c.label==='Awaiting response').value,2);
+ assert.equal(guests.viewFilter('followup')(g('Invited')),true);
+ const doc={overview:{'Guest Count (final, locked)':''}};
+ assert.equal(timeline.withClientGuestCount(doc,{guest_count:'100'}).overview['Guest Count (final, locked)'],'100');
+ assert.equal(timeline.withClientGuestCount({overview:{'Guest Count (final, locked)':'96'}},{guest_count:'100'}).overview['Guest Count (final, locked)'],'96');
+ assert.equal(guest.projectCoupleGuestRecord({...g('Invited'),added_by_couple:true}).addedByCouple,true);
+ assert.equal(guest.projectCoupleGuestRecord(g('Invited')).addedByCouple,false);
+});
+test('couples cannot remove a guest the studio entered',async()=>{
+ const studio={id:'11111111-1111-4111-8111-111111111111',kind:'guest',data:{first:'TEST'},updated_at:'2026-10-26T00:00:00Z',added_by_couple:false};
+ const calls=[];
+ const mocks={'next/server':{NextResponse:{json:(body,init)=>({body,status:init?.status??200})}},
+  '@/lib/portal-auth':{getPortalSession:async()=>({client:{id:'OWN'},user:{email:'t@example.test'},relationship:'partner'}),canEditGuestList:()=>true},
+  '@/lib/guests-data':{getRecord:async()=>studio,getRecordIds:async()=>new Set(),getSettings:async()=>({events:[]})},
+  '@/lib/couple-guests-data':{CoupleGuestConflict:class extends Error{},mutateCoupleGuest:async(i)=>{calls.push(i);return null;}}};
+ const {POST}=load('src/app/api/portal/guests/route.ts',mocks);
+ const req=b=>({json:async()=>b});
+ const body={action:'delete',kind:'guest',id:studio.id,expectedUpdatedAt:studio.updated_at};
+ assert.equal((await POST(req(body))).status,403);assert.equal(calls.length,0);
+ studio.added_by_couple=true;assert.equal((await POST(req(body))).status,200);assert.equal(calls.length,1);
+});
 const pgModule=process.env.LVD_PGLITE_MODULE;
 test('SQL migration repeats safely, protects confirmed versions, scopes guest writes and logs locked-count changes atomically',{skip:!pgModule},async()=>{
  const {PGlite}=require(pgModule);const db=new PGlite();

@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import {
   BUDGET_CATEGORIES,
@@ -28,6 +27,7 @@ import {
   type PaymentStatus,
 } from "@/lib/budget-view";
 import { money } from "@/lib/invoice-types";
+import { useSaveStatus } from "@/components/portal/useSaveStatus";
 import styles from "../../portal-admin.module.css";
 
 const STATUS_CLASS: Partial<Record<PaymentStatus, string>> = {
@@ -73,7 +73,7 @@ export default function BudgetPanel({
   payments: BudgetPayment[];
   loadError?: string;
 }) {
-  const router = useRouter();
+  const { saved, saveLabel } = useSaveStatus();
   const [busy, setBusy] = useState("");
   const [error, setError] = useState(loadError || "");
   const [editingLine, setEditingLine] = useState("");
@@ -96,7 +96,7 @@ export default function BudgetPanel({
       });
       const result = (await response.json().catch(() => ({}))) as { error?: string };
       if (!response.ok) throw new Error(result.error || "Could not save that.");
-      router.refresh();
+      saved();
       return true;
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Could not save that.");
@@ -240,6 +240,7 @@ export default function BudgetPanel({
         ))}
       </div>
 
+      {saveLabel && <p className={styles.formSuccess} role="status">{saveLabel}</p>}
       {error && <p className={`${styles.formError} ${styles.budgetError}`} role="alert">{error}</p>}
 
       <form className={styles.budgetSetup} onSubmit={saveSetup} key={`${setup.approved_cents}-${setup.contingency_percent}`}>

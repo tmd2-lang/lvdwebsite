@@ -255,6 +255,7 @@ export default function ImagePanel({
                 )}
                 <figcaption>
                   <strong title={image.name}>{image.name}</strong>
+                  {image.note && <small title={image.note}>Couple sees: &ldquo;{image.note}&rdquo;</small>}
                   <small>{image.album} · {readableImageSize(image.size_bytes)}</small>
                 </figcaption>
               </figure>
@@ -309,8 +310,8 @@ export default function ImagePanel({
         </div>
         <div className={styles.uploadRow}>
           <label>
-            <span>Note</span>
-            <input name="note" placeholder="Optional — applies to everything in this upload" disabled={busy} />
+            <span>Title the couple sees</span>
+            <input name="note" placeholder="Optional. Shown to the couple instead of the file name, on every image in this upload" disabled={busy} />
           </label>
         </div>
         <div className={styles.uploadActions}>
