@@ -14,7 +14,7 @@ const planning=load('src/lib/couple-planning-data.ts');
 const guest=load('src/lib/couple-guests-view.ts');
 test('couple checklist publishes only client work or safe approvals and strips studio metadata',()=>{
  const base={phase:'TEST',task:'TEST',status:'not_started',track:'Planning Core',assignedOwner:'Studio Manager',approval:'No',notes:'SECRET',dependency:'SECRET',updatedBy:'SECRET',dueOn:null,suggestedDue:'2026-11-01'};
- const items=planning.projectCoupleChecklist([{...base,id:'a',assignedOwner:'Client'},{...base,id:'b',approval:'Yes'},{...base,id:'c'},{...base,id:'LVD-103',track:'Design & Floral',approval:'Yes'},{...base,id:'LVD-101',track:'Design & Floral',approval:'Yes'},{...base,id:'d',assignedOwner:'Client',status:'not_applicable'}]);
+ const items=planning.projectCoupleChecklist([{...base,id:'a',assignedOwner:'Client'},{...base,id:'b',approval:'Yes'},{...base,id:'c'},{...base,id:'LVD-103',track:'Design & Floral',approval:'Yes'},{...base,id:'LVD-101',track:'Design & Floral',approval:'Yes'},{...base,id:'d',assignedOwner:'Client',status:'not_applicable'}],'2026-10-26');
  assert.deepEqual(Array.from(items,i=>i.id),['a','b','LVD-101']);
  assert.equal(JSON.stringify(items).includes('SECRET'),false);
  assert.equal(items[0].dueOn,'2026-11-01');
@@ -44,6 +44,21 @@ test('booking dates validate calendar dates and skip weekends for business deadl
  assert.equal(dates.addBusinessDays('2026-10-23',2),'2026-10-27');
  const checklist=load('src/lib/checklist-view.ts');
  assert.equal(checklist.suggestDue({phase:'Booking & Onboarding',timing:'Within 1 business day'},null,'2026-10-23'),'2026-10-26');
+});
+test('late bookings squeeze stranded early tasks into the time left; couples never see a passed suggestion',()=>{
+ const checklist=load('src/lib/checklist-view.ts');
+ const client={design_tier:'design-florals',event_date:'2027-06-12',booked_on:'2026-10-26'};
+ const late=checklist.buildChecklist(client,[]),early=checklist.buildChecklist({...client,booked_on:'2025-12-01'},[]),unknown=checklist.buildChecklist({...client,booked_on:null},[]);
+ const leadUp=late.filter(i=>i.phase!=='Booking & Onboarding'&&i.phase!=='Post-Event'&&i.suggestedDue);
+ assert.ok(unknown.some(i=>i.suggestedDue&&i.suggestedDue<'2026-10-26'),'template alone strands tasks before booking');
+ assert.equal(leadUp.every(i=>i.suggestedDue>='2026-10-26'),true,'nothing due before Booked on');
+ const raw=unknown.map(i=>i.suggestedDue),moved=late.map(i=>i.suggestedDue);
+ for(let i=0;i<raw.length;i++)for(let j=0;j<raw.length;j++)if(raw[i]&&raw[j]&&moved[i]&&moved[j]&&leadUp.some(x=>x.id===late[i].id)&&leadUp.some(x=>x.id===late[j].id)&&raw[i]<raw[j])assert.ok(moved[i]<=moved[j],'original order kept');
+ for(let i=0;i<raw.length;i++)if(raw[i]&&raw[i]>='2027-02-17'&&late[i].phase!=='Booking & Onboarding')assert.equal(moved[i],raw[i],'second-half deadlines untouched');
+ assert.equal(early.filter(i=>i.phase!=='Booking & Onboarding').every((i,k)=>i.suggestedDue===unknown.filter(x=>x.phase!=='Booking & Onboarding')[k].suggestedDue),true,'early bookings unchanged');
+ const base={phase:'TEST',task:'TEST',status:'not_started',track:'Planning Core',assignedOwner:'Client',approval:'No',dueOn:null};
+ const [stale,manual,future]=planning.projectCoupleChecklist([{...base,id:'a',suggestedDue:'2026-04-12'},{...base,id:'b',dueOn:'2026-04-12',suggestedDue:null},{...base,id:'c',suggestedDue:'2026-12-01'}],'2026-10-26');
+ assert.equal(stale.dueOn,null);assert.equal(manual.dueOn,'2026-04-12');assert.equal(future.dueOn,'2026-12-01');
 });
 const pgModule=process.env.LVD_PGLITE_MODULE;
 test('SQL migration repeats safely, protects confirmed versions, scopes guest writes and logs locked-count changes atomically',{skip:!pgModule},async()=>{

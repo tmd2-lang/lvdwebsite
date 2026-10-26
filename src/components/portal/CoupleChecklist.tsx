@@ -12,7 +12,7 @@ export default function CoupleChecklist({ items }: { items: CoupleChecklistItem[
       <h2>{phase}</h2><ul className={styles.list}>
         {items.filter((item) => item.phase === phase).map((item) => <li key={item.id}>
           <div><span className={styles.eyebrow}>{item.kind === "your_task" ? "Your task" : "For your review"}</span><h3>{item.title}</h3>
-            <p>{item.dueOn ? `Due ${formatChecklistDate(item.dueOn)}${item.suggested ? " · Suggested" : ""}` : "Your team will confirm a date"}</p></div>
+            <p>{item.dueOn ? `${item.suggested ? "Target" : "Due"} ${formatChecklistDate(item.dueOn)}` : "Your team will confirm a date"}</p></div>
           <span className={styles.badge}>{item.status === "waiting_client" ? "Waiting on you" : CHECKLIST_STATUS_LABELS[item.status]}</span>
         </li>)}
       </ul>

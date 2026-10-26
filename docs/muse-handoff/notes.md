@@ -38,6 +38,20 @@ Wave developer app setup, authorization and live invoice validation (Build 6); t
 
 ## Log
 
+### Oct 26, 2026: Audit fixes, round 1 (findings #2, #3, #6, #7, #10, #17)
+
+Committed and pushed Oct 26. TJ ran `supabase/documents-studio-only.sql` first; the column was confirmed live before the push.
+
+- **Dates rebased for late bookings (#2).** When Booked on is recorded and the template would put lead-up tasks before the booking, those early tasks are spread, in their original order, across the first half of the time actually left, starting two weeks after booking. Deadlines in the second half (final counts, 30-day cutoffs) do not move. Couples booked 14+ months out are unchanged. Example: June 12, 2027 wedding booked Oct 26, 2026 goes from 17 tasks already overdue to 0. Without a Booked on date nothing moves (never inferred), and the studio checklist now asks for it.
+- **Couples never see a passed suggested date.** A template suggestion that has passed shows "Your team will confirm a date." Dates the studio set by hand still show. Suggested dates read "Target," not "Due … · Suggested."
+- **Studio-only documents (#3).** Every upload must choose Studio only or Shared with the couple; there is no default. Each document shows its setting and can be switched either way. The couple portal never lists or serves studio-only files (checked by the server, not just hidden). Existing documents stay shared. The demo's internal test file (Truck Care) was switched to Studio only; the couple's document list now returns only the welcome packet and planning guide. The Overview tile is renamed from "Private files" to "Documents" and shows the shared and studio-only counts.
+- **Moodboard tab (#6).** Design clients get a Moodboard item in the couple navigation at `/portal/moodboard`. The approval moved there from Images, which now links to it. Planning-only couples don't get the tab.
+- **One pending label (#7).** Every unapproved version reads "Ready for your review."
+- **Name bug (#10).** The Edit screen now says "Update what the studio team and [client name] see."
+- **One money page (#17).** Payments is removed from the navigation; old `/portal/payments` links go to Invoices.
+
+Validation: TypeScript, production build and lint on the changed files pass. 97 tests pass (a new test covers rebasing and passed suggestions); the 5 PostgreSQL tests were skipped (no local database). Checked on the demo client in a signed-in studio browser: document visibility toggle and upload choice, Documents tile counts, Booked on nudge, couple-preview checklist (no passed dates, 20 items read "Your team will confirm a date"), moodboard label "Version 2 · Ready for your review", and Edit subtitle. Not checked: the couple's own navigation (Moodboard tab, Payments removed), which needs a couple sign-in. Saved changes take a few seconds to appear (finding #8, round 2).
+
 ### Oct 25, 2026: Build 6 prepared without Wave credentials
 
 **Implemented:** owner-only read-only OAuth setup with state bound to the signed-in owner, exact business-name verification and pinned business ID, encrypted tokens stored in private Supabase tables, refresh handling and a sync lease. Requested scopes are business/customer/invoice/product read only; the Wave client refuses mutation queries. No passwords or real credentials were provided. Source is `wave-api.ts`, `wave-data.ts`, `wave-db.ts`, `wave-view.ts`, with admin connection/callback/sync routes and a secret-protected cron.

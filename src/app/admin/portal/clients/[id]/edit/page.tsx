@@ -21,7 +21,7 @@ export default async function EditClientPage({ params }: { params: Promise<{ id:
         <Link className={styles.backLink} href={`/admin/portal/clients/${client.id}`}><span aria-hidden="true">←</span> {client.display_name}</Link>
         <p className={styles.eyebrow}>Client record</p>
         <h1>Edit the details.</h1>
-        <p className={styles.formIntro}>Update what Tanah and the client see across this planning portal.</p>
+        <p className={styles.formIntro}>Update what the studio team and {client.display_name} see across this planning portal.</p>
       </div>
       <EditClientForm client={client} />
     </main>

@@ -5,6 +5,7 @@ import {
   DOCUMENT_CATEGORIES,
   purgeDocument,
   restoreDocument,
+  setDocumentStudioOnly,
   softDeleteDocument,
   uploadDocument,
   type DocumentCategory,
@@ -40,12 +41,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Choose a category." }, { status: 400 });
     }
 
+    // No default on purpose: an internal file must never reach a couple by accident.
+    const visibility = String(form.get("visibility") || "");
+    if (visibility !== "studio" && visibility !== "couple") {
+      return NextResponse.json({ error: "Choose who can see this file: studio only, or shared with the couple." }, { status: 400 });
+    }
+
     const document = await uploadDocument({
       clientId: client.id,
       file,
       name: String(form.get("name") || "").trim() || file.name,
       category,
       note: String(form.get("note") || ""),
+      studioOnly: visibility === "studio",
       uploadedBy: user.email,
     });
 
@@ -87,9 +95,13 @@ export async function PATCH(request: Request) {
   if (!canManageClientPortal(user)) return NextResponse.json({ error: "Your account does not have client-portal access." }, { status: 403 });
 
   try {
-    const body = (await request.json()) as { id?: unknown; restore?: unknown };
+    const body = (await request.json()) as { id?: unknown; restore?: unknown; studioOnly?: unknown };
     const id = typeof body.id === "string" ? body.id : "";
     if (!id) return NextResponse.json({ error: "Which document?" }, { status: 400 });
+    if (typeof body.studioOnly === "boolean") {
+      await setDocumentStudioOnly(id, body.studioOnly);
+      return NextResponse.json({ ok: true, studioOnly: body.studioOnly });
+    }
     if (body.restore !== true) {
       return NextResponse.json({ error: "Nothing to change." }, { status: 400 });
     }

@@ -19,6 +19,8 @@ export type ClientDocument = {
   size_bytes: number;
   /** Null means live. Set means removed but recoverable. */
   deleted_at: string | null;
+  /** Internal file: the couple portal never lists or serves it. */
+  studio_only: boolean;
   uploaded_by: string | null;
 };
 
@@ -64,6 +66,17 @@ export async function getDocuments(): Promise<ClientDocument[]> {
   return responseJson<ClientDocument[]>(response, "Could not load documents.");
 }
 
+/** What the couple may see: live documents the studio has not kept internal. */
+export async function getCoupleDocumentsForClient(clientId: string): Promise<ClientDocument[]> {
+  const { url } = databaseConfig();
+  const response = await fetch(
+    `${url}/rest/v1/documents?select=*&client_id=eq.${encodeURIComponent(clientId)}&studio_only=is.false&deleted_at=is.null&order=created_at.desc`,
+    { headers: databaseHeaders(), cache: "no-store" },
+  );
+  return responseJson<ClientDocument[]>(response, "Could not load documents.");
+}
+
+/** Every live document for one celebration, including studio-only files. Studio use only. */
 export async function getDocumentsForClient(clientId: string): Promise<ClientDocument[]> {
   const { url } = databaseConfig();
   const response = await fetch(
@@ -91,7 +104,7 @@ export async function getDocument(documentId: string): Promise<ClientDocument | 
 export async function getDocumentForClient(documentId: string, clientId: string): Promise<ClientDocument | null> {
   const { url } = databaseConfig();
   const response = await fetch(
-    `${url}/rest/v1/documents?select=*&id=eq.${encodeURIComponent(documentId)}&client_id=eq.${encodeURIComponent(clientId)}&deleted_at=is.null&limit=1`,
+    `${url}/rest/v1/documents?select=*&id=eq.${encodeURIComponent(documentId)}&client_id=eq.${encodeURIComponent(clientId)}&studio_only=is.false&deleted_at=is.null&limit=1`,
     { headers: databaseHeaders(), cache: "no-store" },
   );
   const rows = await responseJson<ClientDocument[]>(response, "Could not load that document.");
@@ -104,6 +117,7 @@ export async function uploadDocument(input: {
   name: string;
   category: DocumentCategory;
   note?: string;
+  studioOnly: boolean;
   uploadedBy?: string;
 }): Promise<ClientDocument> {
   const { url, serviceRoleKey } = databaseConfig();
@@ -138,6 +152,7 @@ export async function uploadDocument(input: {
       storage_path: storagePath,
       content_type: input.file.type || null,
       size_bytes: input.file.size,
+      studio_only: input.studioOnly,
       uploaded_by: input.uploadedBy || null,
     }),
     cache: "no-store",
@@ -186,6 +201,18 @@ export async function softDeleteDocument(documentId: string): Promise<void> {
     cache: "no-store",
   });
   if (!response.ok) throw new Error("Could not remove that document.");
+}
+
+/** Shares a document with the couple, or takes it back to studio-only. */
+export async function setDocumentStudioOnly(documentId: string, studioOnly: boolean): Promise<void> {
+  const { url } = databaseConfig();
+  const response = await fetch(`${url}/rest/v1/documents?id=eq.${encodeURIComponent(documentId)}`, {
+    method: "PATCH",
+    headers: databaseHeaders(),
+    body: JSON.stringify({ studio_only: studioOnly }),
+    cache: "no-store",
+  });
+  if (!response.ok) throw new Error("Could not change who can see that document.");
 }
 
 /** Puts a removed document back. */

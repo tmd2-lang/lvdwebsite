@@ -1,6 +1,7 @@
 import "server-only";
 import { getChecklistRows } from "@/lib/checklist-data";
 import { buildChecklist, effectiveDue, type ChecklistItem } from "@/lib/checklist-view";
+import { studioToday } from "@/lib/calendar-view";
 import { getTimeline } from "@/lib/timeline-data";
 import { byStartTime, isClientVisible, type TimelineDoc } from "@/lib/timeline-view";
 import type { PortalClient } from "@/lib/client-types";
@@ -10,15 +11,20 @@ import type { CoupleChecklistItem, CoupleTimeline } from "@/lib/couple-planning-
 // in the source workbook must never accidentally publish those internal tasks.
 const CLIENT_DESIGN_DECISIONS = new Set(["LVD-021", "LVD-027", "LVD-028", "LVD-040", "LVD-049", "LVD-050", "LVD-101", "LVD-102", "LVD-118"]);
 
-export function projectCoupleChecklist(items: ChecklistItem[]): CoupleChecklistItem[] {
+export function projectCoupleChecklist(items: ChecklistItem[], today = studioToday()): CoupleChecklistItem[] {
   return items.filter((item) => item.status !== "not_applicable"
     && (item.assignedOwner === "Client" || item.approval === "Yes")
     && (item.track !== "Design & Floral" || CLIENT_DESIGN_DECISIONS.has(item.id)))
-    .map((item) => ({
-      id: item.id, phase: item.phase, title: item.task, status: item.status,
-      dueOn: effectiveDue(item), suggested: !item.dueOn && Boolean(item.suggestedDue),
-      kind: item.assignedOwner === "Client" ? "your_task" : "approval",
-    }));
+    .map((item) => {
+      // A template suggestion that has already passed reads as "behind" to a
+      // couple. Only a date the studio set itself is shown once it has passed.
+      const staleSuggestion = !item.dueOn && item.suggestedDue !== null && item.suggestedDue < today && item.status !== "complete";
+      return {
+        id: item.id, phase: item.phase, title: item.task, status: item.status,
+        dueOn: staleSuggestion ? null : effectiveDue(item), suggested: !item.dueOn && Boolean(item.suggestedDue),
+        kind: item.assignedOwner === "Client" ? "your_task" : "approval",
+      };
+    });
 }
 export async function getCoupleChecklist(client: PortalClient) {
   return projectCoupleChecklist(buildChecklist(client, await getChecklistRows(client.id)));

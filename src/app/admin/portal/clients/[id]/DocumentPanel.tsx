@@ -72,6 +72,7 @@ export default function DocumentPanel({
       data.set("file", file);
       data.set("category", String(fields.get("category") || "Planning"));
       data.set("note", String(fields.get("note") || ""));
+      data.set("visibility", String(fields.get("visibility") || ""));
       // A typed name only makes sense for a single file; a batch keeps its own file names.
       if (files.length === 1) data.set("name", String(fields.get("name") || ""));
 
@@ -108,6 +109,24 @@ export default function DocumentPanel({
       router.refresh();
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Could not remove that document.");
+    }
+  }
+
+  async function setStudioOnly(id: string, name: string, studioOnly: boolean) {
+    setError("");
+    setMessage("");
+    try {
+      const response = await fetch("/api/admin/documents", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, studioOnly }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || "Could not change who can see that document.");
+      setMessage(studioOnly ? `${name} is now studio only. The couple can no longer see it.` : `${name} is now shared with the couple.`);
+      router.refresh();
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Could not change who can see that document.");
     }
   }
 
@@ -205,9 +224,12 @@ export default function DocumentPanel({
             <li key={document.id}>
               <div>
                 <strong>{document.name}</strong>
-                <small>{document.category} · {document.standard_key ? document.standard_key === "planning_guide" ? "Online guide" : "PDF" : readableSize(document.size_bytes)}{document.note ? ` · ${document.note}` : ""}</small>
+                <small><b className={document.studio_only ? styles.documentStudioOnly : styles.documentShared}>{document.studio_only ? "Studio only" : "Shared with couple"}</b> · {document.category} · {document.standard_key ? document.standard_key === "planning_guide" ? "Online guide" : "PDF" : readableSize(document.size_bytes)}{document.note ? ` · ${document.note}` : ""}</small>
               </div>
               <div className={styles.documentRowActions}>
+                <button type="button" onClick={() => void setStudioOnly(document.id, document.name, !document.studio_only)}>
+                  {document.studio_only ? "Share with couple" : "Make studio only"}
+                </button>
                 <a
                   href={`/api/admin/documents/${document.id}`}
                   target="_blank"
@@ -246,7 +268,7 @@ export default function DocumentPanel({
         </div>
         <div className={styles.uploadRow}>
           <label>
-            <span>Name shown to the client</span>
+            <span>Document name</span>
             <input name="name" placeholder="Single file only — otherwise file names are used" disabled={busy} />
           </label>
           <label>
@@ -254,8 +276,13 @@ export default function DocumentPanel({
             <input name="note" placeholder="Optional" disabled={busy} />
           </label>
         </div>
+        <fieldset className={styles.visibilityChoice} disabled={busy}>
+          <legend>Who can see these files?</legend>
+          <label><input type="radio" name="visibility" value="studio" required /> <span><strong>Studio only</strong> Internal files, manuals, vendor notes. The couple never sees them.</span></label>
+          <label><input type="radio" name="visibility" value="couple" required /> <span><strong>Shared with the couple</strong> Shows in their portal under Documents.</span></label>
+        </fieldset>
         <div className={styles.uploadActions}>
-          <p>Select several files at once. Up to 25 MB each. Only this celebration can open them.</p>
+          <p>Select several files at once. Up to 25 MB each. You can change who sees a file later.</p>
           <button type="submit" disabled={busy}>{busy ? "Uploading…" : "Upload documents"}</button>
         </div>
         {error && <p className={styles.formError} role="alert">{error}</p>}

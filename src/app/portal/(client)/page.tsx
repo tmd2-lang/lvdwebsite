@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getPortalSession } from "@/lib/portal-auth";
 import { getInvoicesForClient } from "@/lib/invoice-data";
-import { getDocumentsForClient } from "@/lib/document-data";
+import { getCoupleDocumentsForClient } from "@/lib/document-data";
 import { celebrationTotals, invoiceOutstanding, invoiceTotal, money } from "@/lib/invoice-types";
 import { DESIGN_TIER_LABELS, PLANNING_PACKAGE_LABELS } from "@/lib/client-types";
 import { redirect } from "next/navigation";
@@ -35,7 +35,7 @@ export default async function PortalOverviewPage() {
   const invoiceError = invoiceResult.error;
   const invoices = invoiceResult.invoices
     .filter((invoice) => invoice.status !== "draft" && invoice.status !== "void");
-  const documents = await getDocumentsForClient(client.id).catch(() => []);
+  const documents = await getCoupleDocumentsForClient(client.id).catch(() => []);
 
   const totals = celebrationTotals(invoices);
   const percentPaid = totals.total > 0 ? Math.min(100, (totals.paid / totals.total) * 100) : 0;

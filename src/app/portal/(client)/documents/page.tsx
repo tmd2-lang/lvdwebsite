@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getPortalSession } from "@/lib/portal-auth";
-import { getDocumentsForClient, readableSize } from "@/lib/document-data";
+import { getCoupleDocumentsForClient, readableSize } from "@/lib/document-data";
 import DocumentBrowser from "./DocumentBrowser";
 import styles from "../../portal.module.css";
 
@@ -10,7 +10,7 @@ export default async function PortalDocumentsPage() {
   const session = await getPortalSession();
   if (!session) redirect("/portal/login");
 
-  const documents = await getDocumentsForClient(session.client.id).catch(() => []);
+  const documents = await getCoupleDocumentsForClient(session.client.id).catch(() => []);
 
   return (
     <div className={styles.content}>

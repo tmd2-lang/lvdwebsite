@@ -115,7 +115,7 @@ export default function ClientWorkspace({ client, members, invoices, documents, 
               <article className={styles.workspaceStatDark}><span>Total invoiced</span><strong>{money(totals.total)}</strong><small>{totals.count} active {totals.count === 1 ? "invoice" : "invoices"}</small></article>
               <article><span>Paid</span><strong>{money(totals.paid)}</strong><small>Across paid line items</small></article>
               <article><span>Remaining</span><strong>{money(totals.remaining)}</strong><small>Outstanding balance</small></article>
-              <article><span>Private files</span><strong>{documents.length}</strong><small>{members.length} portal {members.length === 1 ? "member" : "members"}</small></article>
+              <article><span>Documents</span><strong>{documents.length}</strong><small>{documents.filter((document) => !document.studio_only).length} shared with couple · {documents.filter((document) => document.studio_only).length} studio only</small></article>
             </section>
 
             <div className={styles.workspaceOverviewGrid}>
@@ -153,7 +153,7 @@ export default function ClientWorkspace({ client, members, invoices, documents, 
 
         {tab === "documents" && <DocumentPanel clientId={client.id} documents={documents} removedDocuments={removedDocuments} />}
 
-        {tab === "checklist" && <ChecklistPanel clientId={client.id} eventDate={client.event_date} initialItems={checklist} loadError={checklistError} onOpenDesign={() => { setImageAlbum("Design"); setTab("images"); }} onOpenGallery={() => setTab("overview")} />}
+        {tab === "checklist" && <ChecklistPanel clientId={client.id} eventDate={client.event_date} bookedOn={client.booked_on ?? null} initialItems={checklist} loadError={checklistError} onOpenDesign={() => { setImageAlbum("Design"); setTab("images"); }} onOpenGallery={() => setTab("overview")} />}
 
         {tab === "budget" && <BudgetPanel clientId={client.id} designBooked={Boolean(client.design_tier)} guestCount={parseInt(client.guest_count ?? "", 10) || null} setup={budget.setup} lines={budget.lines} payments={budget.payments} loadError={budgetError} />}
 

@@ -165,14 +165,58 @@ export function suggestDue(task: Pick<ChecklistTemplateTask, "timing" | "phase">
   return addDays(eventDate, -(unit === "week" ? nearer * 7 : nearer));
 }
 
+/** Event-relative lead-up tasks: the ones a late booking can leave stranded in the past. */
+function isEventLeadUp(task: Pick<ChecklistTemplateTask, "timing" | "phase">) {
+  return task.phase !== "Booking & Onboarding" && task.phase !== "Post-Event";
+}
+
+function dayNumber(date: string) {
+  return Math.round(new Date(`${date}T00:00:00Z`).getTime() / 86_400_000);
+}
+
+/**
+ * The template assumes booking 14-18 months out. When a couple books later,
+ * the earliest lead-up tasks would fall before they even booked. This squeezes
+ * that early stretch, in its original order, into the first half of the time
+ * actually left (Booked on to the wedding). Tasks already due in the second
+ * half keep their real deadlines, so final counts and 30-day cutoffs never move.
+ * The earliest tasks get a short runway after booking rather than all falling
+ * due on the day the couple signs.
+ * Without a Booked on date nothing moves: the studio records it, never infers it.
+ */
+export function rebaseLateBooking(raw: (string | null)[], leadUp: boolean[], eventDate: string | null, bookedOn: string | null | undefined): (string | null)[] {
+  if (!eventDate || !bookedOn) return raw;
+  const event = dayNumber(eventDate), booked = dayNumber(bookedOn);
+  if (booked >= event) return raw;
+  const early = raw.filter((date, index): date is string => leadUp[index] && date !== null).map(dayNumber);
+  if (!early.length) return raw;
+  const start = Math.min(...early);
+  if (start >= booked) return raw;
+  const pivot = booked + Math.floor((event - booked) / 2);
+  const runway = Math.min(14, Math.floor((pivot - booked) / 4));
+  const first = booked + runway;
+  return raw.map((date, index) => {
+    if (!date || !leadUp[index]) return date;
+    const day = dayNumber(date);
+    if (day >= pivot) return date;
+    return addDays(bookedOn, runway + Math.round(((day - start) * (pivot - first)) / (pivot - start)));
+  });
+}
+
 export function buildChecklist(
   client: Pick<PortalClient, "design_tier" | "event_date"> & Pick<PortalClient, "booked_on">,
   rows: ChecklistItemRow[],
 ): ChecklistItem[] {
   const saved = new Map(rows.map((row) => [row.task_id, row]));
   const tracks = bookedTracks(client);
+  const suggested = rebaseLateBooking(
+    CHECKLIST_TEMPLATE.map((task) => suggestDue(task, client.event_date, client.booked_on)),
+    CHECKLIST_TEMPLATE.map(isEventLeadUp),
+    client.event_date,
+    client.booked_on,
+  );
 
-  return CHECKLIST_TEMPLATE.map((task) => {
+  return CHECKLIST_TEMPLATE.map((task, index) => {
     const row = saved.get(task.id);
     const inScope = tracks.includes(task.track);
     return {
@@ -182,7 +226,7 @@ export function buildChecklist(
       status: row?.status ?? (inScope ? "not_started" : "not_applicable"),
       assignedOwner: row?.owner || task.owner,
       dueOn: row?.due_on ?? null,
-      suggestedDue: suggestDue(task, client.event_date, client.booked_on),
+      suggestedDue: suggested[index],
       notes: row?.notes ?? "",
       updatedBy: row?.updated_by ?? null,
       updatedAt: row?.updated_at ?? null,

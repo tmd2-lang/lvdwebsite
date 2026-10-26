@@ -5,16 +5,22 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import styles from "@/app/portal/portal.module.css";
 
-const navigation = [
-  { number: "01", label: "Overview", href: "/portal" },
-  { number: "02", label: "Checklist", href: "/portal/tasks" },
-  { number: "03", label: "Invoices", href: "/portal/invoices" },
-  { number: "04", label: "Payments", href: "/portal/payments" },
-  { number: "05", label: "Documents", href: "/portal/documents" },
-  { number: "06", label: "Images", href: "/portal/images" },
-  { number: "07", label: "Guests", href: "/portal/guests" },
-  { number: "08", label: "Timeline", href: "/portal/timeline" },
+const pages = [
+  { label: "Overview", href: "/portal" },
+  { label: "Checklist", href: "/portal/tasks" },
+  { label: "Invoices", href: "/portal/invoices" },
+  { label: "Moodboard", href: "/portal/moodboard", design: true },
+  { label: "Documents", href: "/portal/documents" },
+  { label: "Images", href: "/portal/images" },
+  { label: "Guests", href: "/portal/guests" },
+  { label: "Timeline", href: "/portal/timeline" },
 ];
+
+function navigationFor(showMoodboard: boolean) {
+  return pages
+    .filter((page) => showMoodboard || !page.design)
+    .map((page, index) => ({ ...page, number: String(index + 1).padStart(2, "0") }));
+}
 
 export default function ClientPortalShell({
   children,
@@ -24,6 +30,7 @@ export default function ClientPortalShell({
   initials,
   viewerName,
   viewerInitials,
+  showMoodboard = false,
 }: {
   children: React.ReactNode;
   coupleName: string;
@@ -34,7 +41,10 @@ export default function ClientPortalShell({
    *  an attendant sees the couple's portal while being neither of them. */
   viewerName: string;
   viewerInitials: string;
+  /** Design clients review moodboards; planning-only couples never get one. */
+  showMoodboard?: boolean;
 }) {
+  const navigation = navigationFor(showMoodboard);
   const pathname = usePathname();
   const router = useRouter();
   const [signingOut, setSigningOut] = useState(false);

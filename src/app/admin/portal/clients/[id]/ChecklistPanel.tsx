@@ -50,6 +50,7 @@ function isLate(item: ChecklistItem) {
 export default function ChecklistPanel({
   clientId,
   eventDate,
+  bookedOn,
   initialItems,
   loadError,
   onOpenDesign,
@@ -57,6 +58,7 @@ export default function ChecklistPanel({
 }: {
   clientId: string;
   eventDate: string | null;
+  bookedOn: string | null;
   initialItems: ChecklistItem[];
   loadError?: string;
   onOpenDesign?: () => void;
@@ -176,6 +178,9 @@ export default function ChecklistPanel({
 
       {!eventDate && (
         <p className={styles.checklistNotice}>Add the wedding date on this client to get suggested due dates for every task.</p>
+      )}
+      {eventDate && !bookedOn && (
+        <p className={styles.checklistNotice}>Add the Booked on date (Edit client) so onboarding tasks get real dates and early tasks are spread over the time left before the wedding. Until then, suggested dates assume the couple booked 14-18 months out.</p>
       )}
 
       <div className={styles.checklistControls}>
