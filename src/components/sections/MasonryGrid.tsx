@@ -70,6 +70,7 @@ export default function MasonryGrid({ images, onImageClick, enabled = true }: Ma
                 alt={img.alt || `Lady Victoria Designs Gallery ${batch.start + index + 1}`}
                 width={img.width}
                 height={img.height}
+                unoptimized={img.src.startsWith("https://")}
                 sizes="(max-width: 767px) calc(50vw - 24px), (max-width: 1279px) calc(33.33vw - 48px), (max-width: 1599px) calc(25vw - 42px), 358px"
                 loading="lazy"
                 fetchPriority="low"

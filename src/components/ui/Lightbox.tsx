@@ -6,6 +6,8 @@ import gsap from "gsap";
 import { GalleryImage } from "@/lib/gallery-data";
 import { PHOTO_PLACEHOLDER } from "@/lib/image-placeholder";
 
+// Supabase-hosted photos are already resized WebP, so they skip Vercel's paid-quota optimizer.
+const isHosted = (src: string) => src.startsWith("https://");
 const LIGHTBOX_SIZES = "(max-width: 768px) 84vw, 80vw";
 
 type LightboxProps = {
@@ -30,7 +32,7 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
     ])].filter((index) => index !== currentIndex).map((index) => {
       const image = images[index];
       const { props } = getImageProps({
-        src: image.src, alt: "", width: image.width, height: image.height, sizes: LIGHTBOX_SIZES,
+        src: image.src, alt: "", width: image.width, height: image.height, sizes: LIGHTBOX_SIZES, unoptimized: isHosted(image.src),
       });
       const preload = new window.Image();
       preload.fetchPriority = "low";
@@ -184,6 +186,7 @@ export default function Lightbox({ images, initialIndex, onClose }: LightboxProp
             src={images[currentIndex].src}
             alt={images[currentIndex].alt || `Gallery image ${currentIndex + 1}`}
             fill
+            unoptimized={isHosted(images[currentIndex].src)}
             sizes={LIGHTBOX_SIZES}
             loading="eager"
             fetchPriority="high"
