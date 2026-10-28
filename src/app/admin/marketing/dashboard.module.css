@@ -129,6 +129,10 @@
 .tagCell { display: inline-flex; align-items: center; gap: .5rem; }
 .tagInput { width: 190px; padding: .4rem .5rem; border: 1px solid #ded7ca; border-radius: 3px; background: #fffdfa; color: #423a31; font: inherit; font-size: .65rem; }
 .tagInput:focus { outline: 2px solid #b8a47f; outline-offset: 1px; }
+.tagChip { padding: .3rem .55rem; border-radius: 3px; background: #f4efe4; color: #6f5d3b; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .62rem; }
+.tagAction { padding: 0; border: 0; background: transparent; color: #8d7043; font: inherit; font-size: .62rem; font-weight: 700; cursor: pointer; }
+.tagAction:hover { text-decoration: underline; }
+.tagAction:disabled { opacity: .5; cursor: default; }
 .tagGuess { color: #a08350; font-size: .6rem; }
 .totalRow td { background: #f6f2e9; font-weight: 700; }
 .uploadPanel { display: grid; grid-template-columns: .8fr 1.2fr; align-items: start; gap: clamp(2rem, 5vw, 4rem); padding: clamp(1.5rem, 4vw, 3rem); border: 1px solid #ded7ca; border-radius: 5px; background: #fffdfa; }

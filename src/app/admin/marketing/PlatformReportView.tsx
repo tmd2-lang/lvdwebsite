@@ -15,22 +15,46 @@ function shortDay(iso: string) {
   return new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
 }
 
-function TagInput({ row, onError }: { row: PlatformReportRow; onError: (message: string | null) => void }) {
+/** The tag reads as a fixed label; Edit turns it into a box. Enter or Save keeps the change, Esc cancels. */
+function TagCell({ row, onError }: { row: PlatformReportRow; onError: (message: string | null) => void }) {
   const router = useRouter();
-  async function save(next: string) {
-    onError(null);
-    const response = await fetch("/api/admin/marketing/platform-stats", {
-      method: "PATCH", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ platform: row.platform, campaign: row.campaign, ad_group: row.ad_group, ad_name: row.ad_name, utmContent: next }),
-    });
-    if (!response.ok) { onError((await response.json().catch(() => null))?.error || "Could not save that link tag."); return; }
-    router.refresh();
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState(row.tag || "");
+  const [saving, setSaving] = useState(false);
+
+  function start() { setValue(row.tag || ""); setEditing(true); }
+
+  async function save() {
+    const next = value.trim();
+    if (next === (row.tag || "")) { setEditing(false); return; }
+    onError(null); setSaving(true);
+    try {
+      const response = await fetch("/api/admin/marketing/platform-stats", {
+        method: "PATCH", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ platform: row.platform, campaign: row.campaign, ad_group: row.ad_group, ad_name: row.ad_name, utmContent: next }),
+      });
+      if (!response.ok) { onError((await response.json().catch(() => null))?.error || "Could not save that link tag."); return; }
+      setEditing(false);
+      router.refresh();
+    } finally { setSaving(false); }
+  }
+
+  if (editing) {
+    return (
+      <span className={styles.tagCell}>
+        <input className={styles.tagInput} value={value} autoFocus aria-label={`Link tag for ${row.ad_name}`}
+          onChange={(event) => setValue(event.target.value)}
+          onKeyDown={(event) => { if (event.key === "Enter") save(); if (event.key === "Escape") setEditing(false); }} />
+        <button type="button" className={styles.tagAction} disabled={saving} onClick={save}>{saving ? "Saving…" : "Save"}</button>
+        <button type="button" className={styles.tagAction} disabled={saving} onClick={() => setEditing(false)}>Cancel</button>
+      </span>
+    );
   }
   return (
     <span className={styles.tagCell}>
-      <input className={styles.tagInput} defaultValue={row.tag || ""} placeholder="no tag yet" aria-label={`Link tag for ${row.ad_name}`}
-        onBlur={(event) => { const value = event.target.value.trim(); if (value !== (row.tag || "")) save(value); }} />
+      {row.tag ? <code className={styles.tagChip}>{row.tag}</code> : <span className={styles.tagGuess}>no tag yet</span>}
       {row.tagGuessed && <small className={styles.tagGuess}>matched by name</small>}
+      <button type="button" className={styles.tagAction} onClick={start} aria-label={`${row.tag ? "Edit" : "Add"} link tag for ${row.ad_name}`}>{row.tag ? "Edit" : "Add tag"}</button>
     </span>
   );
 }
@@ -73,7 +97,7 @@ export default function PlatformReportView({ data, channelName, onUpload }: { da
         <tbody>
           {report.rows.map((row) => <tr key={`${row.campaign}|${row.ad_group}|${row.ad_name}`}>
             <td>{row.ad_name}</td>
-            <td><TagInput key={`${row.utm_content}|${row.tag}`} row={row} onError={setError} /></td>
+            <td><TagCell key={`${row.utm_content}|${row.tag}`} row={row} onError={setError} /></td>
             <td>{money(row.spend)}</td><td>{whole(row.impressions)}</td><td>{whole(row.clicks)}</td><td>{percent(row.ctr)}</td><td>{money(row.cpc)}</td>
             {showInquiries && <><td>{row.inquiries}</td><td>{row.highBudget}</td><td>{row.consults}</td><td>{row.booked ? `${row.booked}${row.bookedAmount ? ` · ${money(row.bookedAmount)}` : ""}` : 0}</td><td>{money(row.costPerInquiry)}</td></>}
           </tr>)}
