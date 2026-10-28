@@ -1,6 +1,7 @@
 import type { AdminLead, LeadNote, LeadStatus, LeadActivity, LeadAppointment } from "@/lib/admin-types";
 import type { SalesAction } from "@/lib/sales-stage";
 import type { Attribution } from "@/lib/attribution";
+import { readLeadNotification } from "@/lib/lead-quality";
 
 type StoredAdminLead = Omit<AdminLead, "attachments" | "notes"> & {
   payload: unknown;
@@ -126,6 +127,7 @@ export async function getAdminLeads({ includeMarketing = false } = {}): Promise<
     ...lead,
     services: Array.isArray(lead.services) ? lead.services : [],
     attachments: attachmentUrls(payload, url),
+    notification: readLeadNotification(payload),
     notes: notesByLead.get(lead.id) || [],
     activity: tracking.activity.filter((item) => item.lead_id === lead.id),
     tracking_started_at: tracking.startedAt,

@@ -895,7 +895,7 @@
 
 /* Printing the brief prints only the brief. */
 @media print {
-  body * { visibility: hidden; }
+  .app * { visibility: hidden; }
   .timelinePrint, .timelinePrint * { visibility: visible; }
   .timelinePrint { position: absolute; inset: 0 auto auto 0; width: 100%; border: 0; padding: 0; }
 }

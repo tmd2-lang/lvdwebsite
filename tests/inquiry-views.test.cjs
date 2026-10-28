@@ -6,7 +6,10 @@ const ts = require('typescript');
 function load(file, globals = {}) {
   const exports = {};
   const code = ts.transpileModule(fs.readFileSync(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, jsx: ts.JsxEmit.ReactJSX } }).outputText;
-  vm.runInNewContext(code, { exports, ...globals });
+  vm.runInNewContext(code, { exports, require: name => {
+    if (name === '@/lib/lead-quality') return load('src/lib/lead-quality.ts');
+    throw Error(`Unexpected import: ${name}`);
+  }, ...globals });
   return exports;
 }
 const { viewState, filterInquiries, lastActivityAt, isUnread, inquiryCounts } = load('src/lib/inquiry-views.ts');

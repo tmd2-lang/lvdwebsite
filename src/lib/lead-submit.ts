@@ -1,6 +1,7 @@
 import { attributionForSubmit } from "./attribution";
 import { rememberConsultation } from "./consultation-booking";
 import { trackGA4 } from "./ga4";
+import { trackMetaLead } from "./meta-pixel";
 
 export type LeadSource = "inquire" | "consultation" | "reserve" | "style_quiz";
 
@@ -24,7 +25,20 @@ export type LeadSubmission = {
   payload?: Record<string, unknown>;
 };
 
-export async function submitLead(submission: LeadSubmission) {
+type SubmissionResult = { leadId: string; notificationSent: false; notificationStatus: "queued" | "not_configured"; trackingEligible: boolean };
+const pendingSubmissions = new Map<string, Promise<SubmissionResult>>();
+
+/** A double click while a save is in flight shares the original request. */
+export function submitLead(submission: LeadSubmission) {
+  const key = JSON.stringify(submission);
+  const pending = pendingSubmissions.get(key);
+  if (pending) return pending;
+  const request = sendLead(submission).finally(() => pendingSubmissions.delete(key));
+  pendingSubmissions.set(key, request);
+  return request;
+}
+
+async function sendLead(submission: LeadSubmission) {
   const response = await fetch("/api/leads", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -36,14 +50,21 @@ export async function submitLead(submission: LeadSubmission) {
     throw new Error(typeof result.error === "string" ? result.error : "Could not submit your inquiry.");
   }
 
+  if (typeof result.leadId !== "string" || !result.leadId) {
+    throw new Error("Could not confirm your saved inquiry. Please contact the studio before submitting again.");
+  }
+  if (result.trackingEligible !== false) {
+    // Analytics must not turn a saved inquiry into a failed form and another submission.
+    try { trackMetaLead(submission.source, result.leadId); } catch { /* Non-critical analytics. */ }
+  }
   rememberConsultation(result.leadId, submission.name, submission.email);
 
   if (typeof window !== "undefined") {
     const path = window.location.pathname.replace(/\/$/, "");
-    if (path === "/welcome" || path === "/inquire") {
-      trackGA4("generate_lead", path === "/welcome" ? "welcome" : "inquire");
+    if (result.trackingEligible !== false && (path === "/welcome" || path === "/inquire")) {
+      try { trackGA4("generate_lead", path === "/welcome" ? "welcome" : "inquire"); } catch { /* The inquiry is already saved. */ }
     }
   }
 
-  return result as { leadId: string; notificationSent: boolean };
+  return result as SubmissionResult;
 }

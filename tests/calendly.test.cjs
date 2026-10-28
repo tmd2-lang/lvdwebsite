@@ -7,7 +7,7 @@ const crypto = require('node:crypto');
 function load(path, extras = {}, requireFn = require) {
   const exports = {};
   const code = ts.transpileModule(fs.readFileSync(path, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 } }).outputText;
-  vm.runInNewContext(code, { exports, require: requireFn, Buffer, URL, AbortSignal, Date, Intl, console: { error() {} }, ...extras });
+  vm.runInNewContext(code, { exports, require: name => name === '@/lib/lead-quality' ? load('src/lib/lead-quality.ts') : requireFn(name), Buffer, URL, AbortSignal, Date, Intl, console: { error() {} }, ...extras });
   return exports;
 }
 const webhook = load('src/lib/calendly-webhook.ts');

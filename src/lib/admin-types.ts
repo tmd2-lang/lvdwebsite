@@ -1,5 +1,6 @@
 import type { Attribution } from "./attribution";
 import type { LostReason } from "./sales-stage";
+import type { LeadNotification } from "./lead-quality";
 
 export const LEAD_STATUSES = [
   "new",
@@ -38,6 +39,7 @@ export type LeadAppointment = {
 };
 
 export type AdminLead = {
+  notification?: LeadNotification;
   appointments?: LeadAppointment[];
   consultation_sync_available?: boolean;
   id: string;

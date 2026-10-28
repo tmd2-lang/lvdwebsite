@@ -5,6 +5,7 @@ import GA4Tracking from "@/components/GA4Tracking";
 import { usePathname } from "next/navigation";
 import Script from "next/script";
 import MetaPixelNavigation from "@/components/MetaPixelNavigation";
+import { META_PIXEL_ID } from "@/lib/meta-pixel";
 
 /**
  * Google Ads, Pinterest, and Meta advertising tags.
@@ -54,10 +55,12 @@ export default function MarketingScripts() {
             t.src=v;s=b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '1263840655319183');
-            // Temporary additional pixel. Keep both initialized before tracking.
-            fbq('init', '1245149713783773');
-            fbq('track', 'PageView');
+            if (['ladyvictoriadesigns.com', 'www.ladyvictoriadesigns.com'].includes(location.hostname)) {
+              // Disable Meta's legacy URL/button rules. Only saved submissions emit Lead.
+              fbq('optOut', '${META_PIXEL_ID}', 'ESTRuleEngine');
+              fbq('init', '${META_PIXEL_ID}');
+              fbq('trackSingle', '${META_PIXEL_ID}', 'PageView');
+            }
           `}
       </Script>
       <noscript>
@@ -66,14 +69,6 @@ export default function MarketingScripts() {
           width="1"
           style={{ display: "none" }}
           src="https://www.facebook.com/tr?id=1263840655319183&ev=PageView&noscript=1"
-          alt=""
-        />
-        {/* Temporary additional Meta pixel. */}
-        <img
-          height="1"
-          width="1"
-          style={{ display: "none" }}
-          src="https://www.facebook.com/tr?id=1245149713783773&ev=PageView&noscript=1"
           alt=""
         />
         <img

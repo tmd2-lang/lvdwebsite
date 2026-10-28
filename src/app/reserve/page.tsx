@@ -9,7 +9,6 @@ import Magnetic from "@/components/Magnetic";
 import { media } from "@/lib/media-slots";
 import { INQUIRY_INVESTMENTS } from "@/data/inquiry-investments";
 import { submitLead } from "@/lib/lead-submit";
-import { trackMetaLead } from "@/lib/meta-pixel";
 
 const portfolioImages = [
   {
@@ -237,7 +236,6 @@ export default function ReservePage() {
         attachments: uploadedUrls,
         payload: formData,
       });
-      trackMetaLead("reserve");
       router.push("/thank-you");
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : "Could not submit your inquiry. Please try again.");
