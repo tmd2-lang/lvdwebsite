@@ -8,7 +8,6 @@ import Image from "next/image";
 import { media } from "@/lib/media-slots";
 import { INQUIRY_INVESTMENTS } from "@/data/inquiry-investments";
 import { submitLead } from "@/lib/lead-submit";
-import { trackMetaLead } from "@/lib/meta-pixel";
 import { useRouter } from "next/navigation";
 
 type FormData = {
@@ -117,7 +116,6 @@ export default function ConsultationClient() {
         attachments: uploadedUrls,
         payload: formData,
       });
-      trackMetaLead("consultation");
       router.push("/thank-you");
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : "Could not submit your inquiry. Please try again.");

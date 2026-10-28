@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { submitLead } from "@/lib/lead-submit";
-import { trackMetaLead } from "@/lib/meta-pixel";
 import { useRouter } from "next/navigation";
 
 const ArrowLeft = ({ className = "w-4 h-4" }: { className?: string }) => (
@@ -221,7 +220,6 @@ export default function QuizClient() {
         quizResultTier: result.tier,
         payload: { formData, score, guestPoints, result },
       });
-      trackMetaLead("style_quiz");
       router.push("/thank-you");
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : "Could not submit your inquiry. Please try again.");

@@ -572,6 +572,15 @@ export default function InquiriesDashboard({
                     </div>
                     <p>{latestView(selected) ? `Last opened by ${latestView(selected)?.actor_name} · ${submittedAt(latestView(selected)!.created_at)}` : viewState(selected) === "unviewed" ? "Not yet opened by the studio." : "Earlier view history is unavailable."}</p>
                   </section>
+                  <section className={styles.contactBlock} aria-label="Inquiry notification">
+                    <p>Studio email notification</p>
+                    <span>{!selected.notification ? "Delivery status wasn’t recorded for this inquiry."
+                      : selected.notification.status === "accepted" ? "Accepted by the email provider. Inbox delivery isn’t confirmed."
+                      : selected.notification.status === "failed" ? "Email notification failed. The inquiry is saved here; contact this lead from the studio."
+                      : selected.notification.status === "not_configured" ? "Email notifications aren’t configured. The inquiry is saved here."
+                      : "Email notification queued. Refresh to check the outcome."}</span>
+                    {selected.notification && <small>{selected.notification.attempts} email attempt{selected.notification.attempts === 1 ? "" : "s"}</small>}
+                  </section>
                   {(selected.email || selected.phone) && (
                     <section className={styles.contactBlock} aria-label="Contact information">
                       <p>Contact</p>

@@ -2,8 +2,10 @@ import { createHash } from "node:crypto";
 import nodemailer from "nodemailer";
 import { after } from "next/server";
 import { attributionColumns } from "@/lib/attribution";
+import { isMarketingSolicitation, type LeadNotification } from "@/lib/lead-quality";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 90;
 
 const LEAD_SOURCES = new Set(["inquire", "consultation", "reserve", "style_quiz"]);
 const BLOCKED_EMAILS = new Set(["emmahines23@gmail.com", "emmahines23@gamil.com"]);
@@ -104,8 +106,16 @@ export async function POST(request: Request) {
       return Response.json({ error: "Name, email, and phone are required." }, { status: 400 });
     }
 
+    const gmailUser = process.env.GMAIL_USER?.trim();
+    const gmailAppPassword = process.env.GMAIL_APP_PASSWORD?.replace(/\s/g, "");
+    const notificationEmails = [...new Set((process.env.NOTIFICATION_EMAIL || "")
+      .split(",").map((address) => address.trim()).filter(Boolean))];
+    const notificationStatus = gmailUser && gmailAppPassword && notificationEmails.length
+      ? "queued" as const : "not_configured" as const;
+    const solicitation = isMarketingSolicitation(stringValue(body.vision));
     const lead = {
       source,
+      status: solicitation ? "spam" : "new",
       name,
       email,
       phone,
@@ -120,7 +130,11 @@ export async function POST(request: Request) {
       referral_source: optionalString(body.referralSource),
       quiz_score: numericValue(body.quizScore),
       quiz_result_tier: optionalString(body.quizResultTier),
-      payload: { ...plainPayload(body.payload), attachments: stringArray(body.attachments) },
+      payload: {
+        ...plainPayload(body.payload), attachments: stringArray(body.attachments),
+        notification: { status: notificationStatus, attempts: 0, updatedAt: new Date().toISOString() } as LeadNotification,
+        quality: solicitation ? "marketing_solicitation" : "unreviewed",
+      },
       user_agent: optionalString(request.headers.get("user-agent")),
       referrer: optionalString(request.headers.get("referer")),
       ip_hash: senderIpHash,
@@ -155,13 +169,16 @@ export async function POST(request: Request) {
 
     const leadId = Array.isArray(result) && result[0]?.id ? String(result[0].id) : "";
 
-    const gmailUser = process.env.GMAIL_USER?.trim();
-    const gmailAppPassword = process.env.GMAIL_APP_PASSWORD?.replace(/\s/g, "");
-    const notificationEmails = (process.env.NOTIFICATION_EMAIL || "")
-      .split(",")
-      .map((emailAddress) => emailAddress.trim())
-      .filter(Boolean);
-    let notificationSent = false;
+    const saveNotification = async (status: LeadNotification["status"], attempts: number) => {
+      if (!leadId) return;
+      const saved = await fetch(`${supabaseUrl}/rest/v1/leads?id=eq.${encodeURIComponent(leadId)}`, {
+        method: "PATCH",
+        headers: { apikey: serviceRoleKey, Authorization: `Bearer ${serviceRoleKey}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ payload: { ...lead.payload, notification: { status, attempts, updatedAt: new Date().toISOString() } } }),
+        cache: "no-store", signal: AbortSignal.timeout(5000),
+      });
+      if (!saved.ok) console.error("Could not persist lead notification status.", { leadId, status });
+    };
 
     if (!gmailUser || !gmailAppPassword || notificationEmails.length === 0) {
       console.error("Lead notification email is not configured.", {
@@ -176,14 +193,17 @@ export async function POST(request: Request) {
             host: "smtp.gmail.com",
             port: 465,
             secure: true,
+            connectionTimeout: 5000,
+            greetingTimeout: 5000,
+            socketTimeout: 8000,
             auth: {
               user: gmailUser,
               pass: gmailAppPassword,
             },
           });
 
-          const attachmentsList = (lead.payload as any)?.attachments?.length 
-            ? `\nVision & Inspiration Images:\n${(lead.payload as any).attachments.map((url: string, i: number) => `${i + 1}. ${url}`).join('\n')}` 
+          const attachmentsList = lead.payload.attachments.length
+            ? `\nVision & Inspiration Images:\n${lead.payload.attachments.map((url: string, i: number) => `${i + 1}. ${url}`).join('\n')}`
             : "";
 
           const emailText = `
@@ -211,27 +231,27 @@ ${lead.vision || "No additional notes provided."}
 ${attachmentsList}
           `.trim();
 
-          const emailResult = await transporter.sendMail({
+          const message = {
             from: `Lady Victoria Designs Website <${gmailUser}>`,
-            to: notificationEmails,
             replyTo: email,
-            subject: `New Website Lead: ${name.replace(/[\r\n]+/g, " ")}`,
+            subject: `${solicitation ? "Review: possible solicitation" : "New Website Lead"}: ${name.replace(/[\r\n]+/g, " ")}`,
+            messageId: `<inquiry-${leadId}@ladyvictoriadesigns.com>`,
             text: emailText,
-          });
-
-          const acceptedCount = emailResult.accepted.length;
-          const notificationSent = acceptedCount === notificationEmails.length;
-
-          if (!notificationSent) {
-            console.error("Gmail did not accept every lead notification recipient.", {
-              acceptedCount,
-              rejectedCount: emailResult.rejected.length,
-            });
-          } else {
-            console.log("Lead notification email accepted by Gmail.", {
-              messageId: emailResult.messageId,
-              recipientCount: acceptedCount,
-            });
+          };
+          let pending = [...notificationEmails];
+          for (let attempt = 1; attempt <= 3; attempt++) {
+            try {
+              const sent = await transporter.sendMail({ ...message, to: pending });
+              const accepted = new Set(sent.accepted.map((address) => String(address).toLowerCase()));
+              pending = pending.filter((address) => !accepted.has(address.toLowerCase()));
+            } catch {
+              console.error("Lead notification attempt failed.", { leadId, attempt });
+            }
+            const status = pending.length ? "failed" : "accepted";
+            try { await saveNotification(status, attempt); } catch {
+              console.error("Could not persist lead notification status.", { leadId, status });
+            }
+            if (!pending.length) break;
           }
         } catch (emailError) {
           console.error("Failed to send Gmail lead notification:", emailError);
@@ -239,9 +259,8 @@ ${attachmentsList}
       });
     }
 
-    // The lead remains successfully submitted even if notification delivery fails.
-    // Exposing this boolean makes direct API tests and production logs unambiguous.
-    return Response.json({ leadId, notificationSent: true });
+    // SMTP runs later; never claim delivery before the attempt has happened.
+    return Response.json({ leadId, notificationSent: false, notificationStatus, trackingEligible: !solicitation });
   } catch (error) {
     console.error("Lead submission failed:", error);
     return Response.json({ error: "Could not submit your inquiry. Please try again." }, { status: 400 });
