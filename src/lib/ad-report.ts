@@ -29,6 +29,17 @@ export function budgetFloor(investment: string | null | undefined) {
   return match ? Number(match[1].replace(/,/g, "")) : null;
 }
 
+/** What happened to one inquiry, shared by the Meta ad report and the platform tables. */
+export function leadOutcomes(lead: AdminLead) {
+  return {
+    highBudget: (budgetFloor(lead.investment) ?? 0) >= HIGH_BUDGET_FROM,
+    consult: Boolean(lead.consult_outcome) || (lead.appointments || []).some((item) => item.status === "scheduled"),
+    // Bookings marked with the old status dropdown count too, just without an amount.
+    booked: lead.sales_outcome === "booked" || (lead.status === "booked" && lead.sales_outcome !== "lost"),
+    bookedAmount: Number(lead.booked_amount) || 0,
+  };
+}
+
 function emptyRow(key: string, adId: string | null, label: string, spend: number | null): AdRow {
   return { key, adId, label, inquiries: 0, highBudget: 0, consults: 0, completed: 0, goodFit: 0, proposals: 0, booked: 0, bookedAmount: 0, lost: 0, spend };
 }
@@ -49,16 +60,13 @@ export function buildAdReport(leads: AdminLead[], spendByAd: Record<string, numb
       row = rows.get(key) || emptyRow(key, null, "No ad (Instagram bio, referrals, Google, direct…)", null);
     }
     row.inquiries += 1;
-    if ((budgetFloor(lead.investment) ?? 0) >= HIGH_BUDGET_FROM) row.highBudget += 1;
-    const hadConsult = Boolean(lead.consult_outcome) || (lead.appointments || []).some((item) => item.status === "scheduled");
-    if (hadConsult) row.consults += 1;
+    const outcome = leadOutcomes(lead);
+    if (outcome.highBudget) row.highBudget += 1;
+    if (outcome.consult) row.consults += 1;
     if (lead.consult_outcome === "completed") row.completed += 1;
     if (lead.fit === "good_fit") row.goodFit += 1;
     if (lead.proposal_amount != null) row.proposals += 1;
-    // Bookings marked with the old status dropdown count too, just without an amount.
-    if (lead.sales_outcome === "booked" || (lead.status === "booked" && lead.sales_outcome !== "lost")) {
-      row.booked += 1; row.bookedAmount += Number(lead.booked_amount) || 0;
-    }
+    if (outcome.booked) { row.booked += 1; row.bookedAmount += outcome.bookedAmount; }
     if (lead.sales_outcome === "lost") row.lost += 1;
     rows.set(key, row);
   }

@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
+import PlatformReportView, { type PlatformReportData } from "./PlatformReportView";
+import StatsUploader from "./StatsUploader";
 import styles from "./dashboard.module.css";
 
 type View = "overview" | "meta" | "google" | "reddit" | "pinterest" | "library" | "tests" | "uploads" | "journal";
@@ -54,7 +56,7 @@ function RangePicker({ range, setRange }: { range: Range; setRange: (range: Rang
   ))}</div>;
 }
 
-export default function MarketingDashboard({ journal, openTodos, notesCount, canViewAdReport, setupError }: { journal: ReactNode; openTodos: number; notesCount: number; canViewAdReport: boolean; setupError: string | null }) {
+export default function MarketingDashboard({ journal, openTodos, notesCount, canViewAdReport, setupError, reddit }: { journal: ReactNode; openTodos: number; notesCount: number; canViewAdReport: boolean; setupError: string | null; reddit: PlatformReportData }) {
   const [view, setView] = useState<View>("overview");
   const [range, setRange] = useState<Range>("14d");
   const [level, setLevel] = useState<Level>("Campaigns");
@@ -93,7 +95,7 @@ export default function MarketingDashboard({ journal, openTodos, notesCount, can
           {view === "journal" ? journal : <>
             <header className={styles.header}>
               <div><p className={styles.eyebrow}>{heading.eyebrow}</p><h1>{heading.title}</h1><p className={styles.lede}>{heading.description}</p></div>
-              {(view === "overview" || channel) && <RangePicker range={range} setRange={setRange} />}
+              {(view === "overview" || (channel && view !== "reddit")) && <RangePicker range={range} setRange={setRange} />}
             </header>
 
             {view === "overview" && <>
@@ -114,7 +116,12 @@ export default function MarketingDashboard({ journal, openTodos, notesCount, can
               <section className={styles.nextStep}><div><p className={styles.micro}>Already in Studio</p><h2>Your work is still here.</h2><p>{openTodos} open to-dos · {notesCount} notes in the Journal</p></div><button type="button" onClick={() => go("journal")}>Open Journal <span aria-hidden="true">→</span></button></section>
             </>}
 
-            {channel && <>
+            {view === "reddit" && channel && <>
+              <div className={styles.channelBanner}><div><span className={styles.channelBadge}>{channel.initial}</span><div><p className={styles.micro}>{channel.name} / Delivery</p><h2>Performance by ad</h2></div></div><span>From your uploaded reports</span></div>
+              <PlatformReportView data={reddit} channelName={channel.name} onUpload={() => go("uploads")} />
+            </>}
+
+            {view !== "reddit" && channel && <>
               <div className={styles.channelBanner}><div><span className={styles.channelBadge}>{channel.initial}</span><div><p className={styles.micro}>{channel.name} / Delivery</p><h2>Performance by level</h2></div></div><span>Daily feed pending</span></div>
               <div className={styles.panel}>
                 <div className={styles.tableToolbar}><div className={styles.levelTabs} aria-label="Entity level">{(["Campaigns", "Ad sets", "Ads"] as Level[]).map((item) => <button key={item} type="button" className={level === item ? styles.levelActive : ""} aria-pressed={level === item} onClick={() => setLevel(item)}>{item}</button>)}</div><span>0 {level.toLowerCase()}</span></div>
@@ -128,7 +135,7 @@ export default function MarketingDashboard({ journal, openTodos, notesCount, can
 
             {view === "tests" && <section className={styles.featurePanel}><div className={styles.timelineMock}><span className={styles.timelineDot} /><div><small>THE TEST TIMELINE</small><strong>What changed?</strong><p>Launch · copy · targeting · budget · tracking</p></div><span className={styles.timelineDot} /><div><small>THE READOUT</small><strong>What happened next?</strong><p>See the before and after beside the change.</p></div></div><div><p className={styles.micro}>Make learning visible</p><h2>A record of every experiment.</h2><p>Tests will connect a hypothesis and a specific change to the resulting performance window. Your existing Journal remains available for everyday notes.</p><button type="button" className={styles.textAction} onClick={() => go("journal")}>Open Journal →</button></div></section>}
 
-            {view === "uploads" && <section className={styles.featurePanel}><div className={styles.uploadMock}><span className={styles.uploadIcon}>↥</span><strong>Reports belong here</strong><p>CSV and PDF imports will appear here after the importer is built.</p><div><span>CSV</span><span>PDF</span></div></div><div><p className={styles.micro}>Bring the numbers in</p><h2>One place for every source.</h2><p>Future uploads will show a preview of parsed rows and an import history, so you can see exactly what entered the dashboard.</p><p className={styles.featureStatus}>Upload is a UI preview; file processing is not connected yet.</p></div></section>}
+            {view === "uploads" && <StatsUploader onImported={() => go("reddit")} />}
           </>}
         </div>
       </div>

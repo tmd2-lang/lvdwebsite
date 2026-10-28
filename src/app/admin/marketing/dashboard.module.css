@@ -124,3 +124,22 @@
 @media (max-width: 1100px) { .app { grid-template-columns: 210px minmax(0, 1fr); }.metricGrid { grid-template-columns: repeat(2, 1fr); }.overviewGrid { grid-template-columns: 1fr; } }
 @media (max-width: 760px) { .app { display: block; }.sidebar { position: relative; height: auto; padding: 1rem; }.brand { flex-direction: row; align-items: baseline; }.monogram { font-size: 1.6rem; }.sidebarBody { margin: .9rem -1rem -1rem; overflow-x: auto; }.sidebarBody > .navLabel, .nav .navLabel, .sidebarFooter { display: none; }.nav { display: flex; gap: .2rem; padding: 0 1rem .75rem; width: max-content; }.nav button { width: auto; padding: .5rem .65rem; white-space: nowrap; }.navIcon, .nav .channelIcon { display: none; }.topbar { height: 50px; }.workspace { padding-top: 2rem; }.header { display: block; }.rangePicker { max-width: 100%; margin-top: 1.4rem; overflow-x: auto; }.introPanel { align-items: flex-start; flex-direction: column; }.introPanel button { width: 100%; }.featurePanel { grid-template-columns: 1fr; }.featureVisual, .timelineMock, .uploadMock { min-height: 220px; }.trendGrid { grid-template-columns: 1fr; } }
 @media (max-width: 500px) { .metricGrid { gap: .55rem; }.metricCard { min-height: 125px; padding: 1rem; }.metricCard strong { font-size: 2rem; }.sectionTitle { align-items: flex-start; flex-direction: column; }.panelHead { flex-direction: column; }.channelListStatus { display: none; }.nextStep, .existingReport { align-items: stretch; flex-direction: column; }.channelBanner > span { display: none; } }
+
+.toolbarTitle { padding: 1rem 0; font-size: .75rem; }
+.tagCell { display: inline-flex; align-items: center; gap: .5rem; }
+.tagInput { width: 190px; padding: .4rem .5rem; border: 1px solid #ded7ca; border-radius: 3px; background: #fffdfa; color: #423a31; font: inherit; font-size: .65rem; }
+.tagInput:focus { outline: 2px solid #b8a47f; outline-offset: 1px; }
+.tagGuess { color: #a08350; font-size: .6rem; }
+.totalRow td { background: #f6f2e9; font-weight: 700; }
+.uploadPanel { display: grid; grid-template-columns: .8fr 1.2fr; align-items: start; gap: clamp(2rem, 5vw, 4rem); padding: clamp(1.5rem, 4vw, 3rem); border: 1px solid #ded7ca; border-radius: 5px; background: #fffdfa; }
+.uploadPanel h2 { margin: .7rem 0 .8rem; font-family: var(--font-bodoni); font-size: clamp(2rem, 3vw, 3rem); font-weight: 400; line-height: 1.04; letter-spacing: -.03em; }
+.uploadPanel p:not(.micro):not(.setupError) { max-width: 420px; color: #776e63; font-size: .8rem; line-height: 1.7; }
+.fileButton { position: relative; display: inline-block; margin-top: 1.2rem; padding: .85rem 1.3rem; border-radius: 4px; background: #231f1a; color: #f6f2e9; font-size: .72rem; font-weight: 700; cursor: pointer; }
+.fileButton input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.preview .table td, .preview .table th { padding: .7rem .8rem; }
+.periodRow { display: flex; flex-wrap: wrap; align-items: end; gap: 1rem; margin: 1.2rem 0 .5rem; }
+.periodRow label { display: flex; flex-direction: column; gap: .35rem; color: #746b60; font-size: .65rem; }
+.periodRow input { padding: .5rem .6rem; border: 1px solid #ded7ca; border-radius: 3px; background: #fffdfa; font: inherit; font-size: .72rem; }
+.importButton { min-height: 40px; padding: 0 1.2rem; border: 0; border-radius: 4px; background: #b8a47f; color: #231f1a; font: inherit; font-size: .72rem; font-weight: 700; cursor: pointer; }
+.importButton:disabled { opacity: .5; cursor: not-allowed; }
+@media (max-width: 760px) { .uploadPanel { grid-template-columns: 1fr; } }

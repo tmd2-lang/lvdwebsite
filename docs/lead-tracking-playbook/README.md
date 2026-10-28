@@ -275,3 +275,22 @@ just fills out forms.
 
 - LVD had two pixels installed; only one is used by the ad sets. Send Conversions API events to that one.
 - Meta optimizes on an event only once it gets a decent volume of it each week. Bookings will be too rare for that at first; their value is in reporting and in Meta's matching.
+
+## Step 8: Other ad platforms by CSV (Reddit first)
+
+**As Valentina:** Reddit has no live feed into the site, so she downloads Reddit's
+per-ad report (Reddit Ads → Reports → break down by Ad → export CSV) and drops it
+on **Marketing → Uploads**. The **Reddit Ads** tab then shows each ad's spend,
+clicks, CTR and CPC beside the inquiries our own site captured from that ad, plus
+cost per inquiry.
+
+- Table `ad_platform_stats`, one row per ad. Re-importing a later report replaces the numbers for the same ads and keeps their link tag. The newest import's date range is what the tab shows.
+- **The join is the `utm_content` tag.** Each Reddit ad's link carries one (`ad7_vision_brought_to_life`); the site already saves it inside the lead's first-touch attribution. An ad is matched by its saved tag, else guessed from its name (every word of the tag appears in the ad name, or `ad2_…` ↔ an ad literally named "Ad 2"). Wrong or missing? Type the tag next to the ad.
+- Inquiries that match no ad are listed on their own row, so the total still equals the real inquiry count.
+- Inquiry columns ($20k+, consults, booked) are visible only to marketing viewers, like the Meta report. Others see delivery numbers only.
+- Reddit shows "0 results" because no Reddit conversion event is set up; this table is the source of truth for inquiries.
+
+**Setup at a new business:** run `supabase/ad-platform-stats-schema.sql`; put a unique `utm_content` on every ad link; export per-ad (not per-campaign) CSVs.
+
+**Gotchas:** Reddit's campaign-level export has no Ad Name column and is refused with a message. Spend is the sum of what the CSV says, so it can differ from Reddit's headline by a cent from rounding.
+

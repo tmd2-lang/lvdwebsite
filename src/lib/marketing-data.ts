@@ -1,3 +1,5 @@
+import type { ParsedAdRow, PlatformId, PlatformStatRow } from "./platform-stats";
+
 export const MARKETING_CHANNELS = [
   { id: "reddit", label: "Reddit Ads" },
   { id: "meta", label: "Meta Ads" },
@@ -136,5 +138,51 @@ export async function saveStat(day: string, channel: MarketingChannel, body: str
     method: "POST",
     prefer: "resolution=merge-duplicates",
     body: JSON.stringify({ day, channel, body, updated_at: new Date().toISOString() }),
+  });
+}
+
+const STATS_TABLE_HINT = "Imported ad numbers are not set up yet. Run supabase/ad-platform-stats-schema.sql in the Supabase SQL editor.";
+
+async function statsRequest<T>(path: string, failure: string, init?: RequestInit & { prefer?: string }): Promise<T> {
+  const { url } = databaseConfig();
+  const { prefer, ...rest } = init || {};
+  const response = await fetch(`${url}/rest/v1/${path}`, { ...rest, headers: databaseHeaders(prefer), cache: "no-store" });
+  if (response.status === 204) return undefined as T;
+  const payload = await response.json().catch(() => null);
+  if (!response.ok) {
+    if ((payload as { code?: string } | null)?.code === "PGRST205") throw new Error(STATS_TABLE_HINT);
+    console.error("Platform stats request failed:", JSON.stringify(payload) || response.status);
+    throw new Error(failure);
+  }
+  return payload as T;
+}
+
+/** Empty (not an error) until the SQL has been run, so the rest of the page still loads. */
+export async function getPlatformStats(platform: PlatformId): Promise<{ available: boolean; rows: PlatformStatRow[] }> {
+  try {
+    const rows = await statsRequest<PlatformStatRow[]>(
+      `ad_platform_stats?select=*&platform=eq.${platform}&order=spend.desc&limit=1000`, "Could not load the imported ad numbers.");
+    return { available: true, rows: rows.map((row) => ({ ...row, spend: Number(row.spend) })) };
+  } catch (error) {
+    if (error instanceof Error && error.message === STATS_TABLE_HINT) return { available: false, rows: [] };
+    throw error;
+  }
+}
+
+/** Replaces the numbers for ads already imported and leaves their saved link tags alone. */
+export async function importPlatformStats(platform: PlatformId, period: { start: string; end: string }, rows: ParsedAdRow[]) {
+  const importedAt = new Date().toISOString();
+  await statsRequest("ad_platform_stats?on_conflict=platform,campaign,ad_group,ad_name", "Could not save the imported ads.", {
+    method: "POST",
+    prefer: "resolution=merge-duplicates",
+    body: JSON.stringify(rows.map((row) => ({ ...row, platform, period_start: period.start, period_end: period.end, imported_at: importedAt }))),
+  });
+}
+
+export async function setPlatformTag(platform: PlatformId, ad: { campaign: string; ad_group: string; ad_name: string }, utmContent: string | null) {
+  const filter = ["campaign", "ad_group", "ad_name"].map((key) => `${key}=eq.${encodeURIComponent(ad[key as keyof typeof ad])}`).join("&");
+  await statsRequest(`ad_platform_stats?platform=eq.${platform}&${filter}`, "Could not save that link tag.", {
+    method: "PATCH",
+    body: JSON.stringify({ utm_content: utmContent }),
   });
 }
