@@ -78,7 +78,7 @@ export default function PlatformReportView({ data, channelName, onUpload }: { da
             {showInquiries && <><td>{row.inquiries}</td><td>{row.highBudget}</td><td>{row.consults}</td><td>{row.booked ? `${row.booked}${row.bookedAmount ? ` · ${money(row.bookedAmount)}` : ""}` : 0}</td><td>{money(row.costPerInquiry)}</td></>}
           </tr>)}
           {showInquiries && unmatched.inquiries > 0 && <tr><td>Inquiries with no matching ad</td><td>{unmatched.tags.join(", ") || "no tag"}</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>{unmatched.inquiries}</td><td colSpan={4}>Type that tag next to the right ad above</td></tr>}
-          <tr className={styles.totalRow}><td>All {channelName.toLowerCase()}</td><td />
+          <tr className={styles.totalRow}><td>All ads</td><td />
             <td>{money(totals.spend)}</td><td>{whole(totals.impressions)}</td><td>{whole(totals.clicks)}</td><td>{percent(totals.impressions ? totals.clicks / totals.impressions : null)}</td><td>{money(totals.clicks ? totals.spend / totals.clicks : null)}</td>
             {showInquiries && <><td>{totals.inquiries}</td><td>{report.rows.reduce((sum, row) => sum + row.highBudget, 0)}</td><td>{report.rows.reduce((sum, row) => sum + row.consults, 0)}</td><td>{report.rows.reduce((sum, row) => sum + row.booked, 0)}</td><td>{money(totals.costPerInquiry)}</td></>}
           </tr>
