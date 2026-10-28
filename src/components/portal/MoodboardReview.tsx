@@ -4,15 +4,15 @@ import { useRouter } from "next/navigation";
 import { DESIGN_FIELDS, type MoodboardVersion } from "@/lib/moodboard-view";
 import styles from "./couple-planning.module.css";
 import board from "./moodboard.module.css";
-export default function MoodboardReview({ versions, canApprove = false, preview = false }: { versions: MoodboardVersion[]; canApprove?: boolean; preview?: boolean }) {
+export default function MoodboardReview({ versions, canApprove = false, preview = false, suggestedName = "" }: { versions: MoodboardVersion[]; canApprove?: boolean; preview?: boolean; suggestedName?: string }) {
   const router = useRouter();
-  const [checked, setChecked] = useState(false), [busy, setBusy] = useState(false), [error, setError] = useState("");
+  const [checked, setChecked] = useState(false), [busy, setBusy] = useState(false), [error, setError] = useState(""), [name, setName] = useState(suggestedName);
   const current = versions[0];
   async function approve() {
-    if (!current || !checked || busy) return;
+    if (!current || !checked || busy || name.trim().length < 2) return;
     setBusy(true); setError("");
     try {
-      const response = await fetch("/api/portal/moodboards", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ revision: current.id, approved: true }) });
+      const response = await fetch("/api/portal/moodboards", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ revision: current.id, approved: true, name: name.trim() }) });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "Could not record approval.");
       setChecked(false); router.refresh();
@@ -30,7 +30,7 @@ export default function MoodboardReview({ versions, canApprove = false, preview 
   return <section className={styles.card}>
     <div className={styles.heading}><h2>{current.title}</h2><span className={styles.badge}>Version {current.version} · {current.approvals.length ? "Approved" : "Ready for your review"}</span></div>
     {content(current)}
-    {!current.approvals.length && <><p>Either partner may approve. One explicit approval is enough. Changes to the palette, furniture, florals or price require a new version and approval.</p>{canApprove && !preview ? <div className={board.approval}><label><input type="checkbox" checked={checked} disabled={busy} onChange={(event) => setChecked(event.target.checked)} /> I have reviewed version {current.version} and approve this design, including the price and scope shown above.</label><button type="button" disabled={!checked || busy || current.images.some((image) => !image.url)} onClick={() => void approve()}>{busy ? "Recording approval…" : `Approve version ${current.version}`}</button></div> : <p>{preview ? "Preview only. Approval must come from a partner’s own portal sign-in." : "A partner’s portal sign-in is required to approve."}</p>}</>}
+    {!current.approvals.length && <><p>Either partner may approve. One explicit approval is enough. Changes to the palette, furniture, florals or price require a new version and approval.</p>{canApprove && !preview ? <div className={board.approval}><label><input type="checkbox" checked={checked} disabled={busy} onChange={(event) => setChecked(event.target.checked)} /> I have reviewed version {current.version} and approve this design, including the price and scope shown above.</label><label>Your full name<input type="text" autoComplete="name" maxLength={120} required value={name} disabled={busy} onChange={(event) => setName(event.target.value)} /></label><button type="button" disabled={!checked || busy || name.trim().length < 2 || current.images.some((image) => !image.url)} onClick={() => void approve()}>{busy ? "Recording approval…" : `Approve version ${current.version}`}</button></div> : <p>{preview ? "Preview only. Approval must come from a partner’s own portal sign-in." : "A partner’s portal sign-in is required to approve."}</p>}</>}
     {error && <p role="alert" className={styles.error}>{error}</p>}
     {versions.length > 1 && <details><summary>Previous versions ({versions.length - 1})</summary>{versions.slice(1).map((version) => <details key={version.id}><summary>Version {version.version} · {version.title} · {version.approvals.length ? "Previously approved" : "Superseded without approval"}</summary>{content(version)}</details>)}</details>}
   </section>;

@@ -20,3 +20,5 @@
 .editor textarea:focus-visible { outline:2px solid #9a7840; outline-offset:3px; }
 
 .editor input[type=checkbox] { width:22px; min-width:22px; min-height:22px; height:22px; vertical-align:middle; }
+.approval label:has(input[type=text]) { flex-direction:column; gap:6px; margin-top:14px; }
+.approval input[type=text] { width:100%; max-width:360px; min-height:44px; margin:0; padding:.6rem; border:1px solid #d6cbb9; border-radius:4px; background:#fffdfa; font:inherit; }

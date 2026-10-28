@@ -22,16 +22,14 @@ test('approval route requires explicit approval and session-derived actor/client
  let session=null;const calls=[];
  const mocks={'next/server':{NextResponse:{json:(body,init)=>({body,status:init?.status??200})}},'@/lib/portal-auth':{getPortalSession:async()=>session},'@/lib/moodboard-data':{MoodboardConflict:class extends Error{},approveMoodboard:async(...args)=>calls.push(args)}};
  const {POST}=load('src/app/api/portal/moodboards/route.ts',mocks);
- let body={revision:id,approved:true,clientId:'SPOOF',name:'SPOOF',userId:'SPOOF'};const req={json:async()=>body};
+ let body={revision:id,approved:true,clientId:'SPOOF',name:'TEST Ben Rivera',userId:'SPOOF'};const req={json:async()=>body};
  assert.equal((await POST(req)).status,401);
- session={client:{id:'OWN'},user:{id:'USER',displayName:'TEST partner'},relationship:'family'};
+ session={client:{id:'OWN'},user:{id:'USER',email:'handle@example.test',displayName:'handle123'},relationship:'family'};
  assert.equal((await POST(req)).status,403);assert.equal(calls.length,0);
  session.relationship='partner';body.approved=false;assert.equal((await POST(req)).status,400);
- body.approved=true;assert.equal((await POST(req)).status,200);assert.deepEqual(Array.from(calls[0]),['OWN',id,'USER','TEST partner']);
- // The stamp uses the partner's name from the client record, not the login handle.
- session.client={id:'OWN',partner_one_name:'TEST Ana',partner_two_name:'TEST Ben'};session.user.displayName='handle123';
- await POST(req);assert.equal(calls[1][3],'TEST Ben');
- session.relationship='client';await POST(req);assert.equal(calls[2][3],'TEST Ana');
+ // The stamp carries the name the person typed; client and user still come from the session.
+ body.approved=true;assert.equal((await POST(req)).status,200);assert.deepEqual(Array.from(calls[0]),['OWN',id,'USER','TEST Ben Rivera']);
+ body.name='  ';assert.equal((await POST(req)).status,400);assert.equal(calls.length,1);
 });
 const pgModule=process.env.LVD_PGLITE_MODULE;
 test('SQL moodboards: immutable snapshots, explicit either-partner approval, reapproval, stale/cross-client rejection, notes isolation and permissions',{skip:!pgModule},async()=>{

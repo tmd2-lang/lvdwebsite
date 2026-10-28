@@ -30,8 +30,3 @@ export function moodboardInput(raw: Record<string, unknown>) {
  * The name an approval is stamped with: the partner's name as the studio
  * recorded it on the client record, not whatever handle their login carries.
  */
-export function approverName(session: { client: { partner_one_name?: string | null; partner_two_name?: string | null }; relationship: string; user: { displayName?: string; firstName?: string; email?: string } }) {
-  const recorded = session.relationship === "client" ? session.client.partner_one_name
-    : session.relationship === "partner" ? session.client.partner_two_name : null;
-  return recorded?.trim() || session.user.displayName || session.user.firstName || session.user.email || "Partner";
-}

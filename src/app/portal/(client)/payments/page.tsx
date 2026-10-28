@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-// Invoices and Payments were the same Wave view; keep old links working.
+// Budget and payments live on the invoices page; keep old links working.
 export default function PortalPaymentsPage() {
   redirect("/portal/invoices");
 }

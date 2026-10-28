@@ -50,7 +50,7 @@ export const GUEST_FIELD_GROUPS: { title: string; fields: FieldDef[] }[] = [
     title: "RSVP",
     fields: [
       { key: "invitation", label: "Invitation", kind: "select", options: INVITATION },
-      { key: "rsvp", label: "RSVP", kind: "select", options: RSVP },
+      { key: "rsvp", label: "RSVP", kind: "select", options: ["", ...RSVP] },
       { key: "rsvp_date", label: "RSVP date", kind: "date" },
       { key: "source", label: "Responded via", kind: "select", options: RESPONSE_SOURCE },
       { key: "plus_allowed", label: "Plus-one allowed", kind: "yesno" },
@@ -173,7 +173,7 @@ export const EMPTY_SETTINGS: GuestSettings = {
 export function blankGuest(): GuestData {
   return {
     first: "", last: "", household_id: "", side: "Client A", type: "Adult", vip: false, relationship: "", email: "", mobile: "",
-    invitation: "Not Sent", rsvp: "Invited", rsvp_date: "", source: "Entered by Studio", plus_allowed: false, plus_name: "",
+    invitation: "Not Sent", rsvp: "", rsvp_date: "", source: "Entered by Studio", plus_allowed: false, plus_name: "",
     meal: "", dietary: "", severe: false, allergen: "", accessibility: "", mobility: "", sensory: "", service_animal: false, highchair: false,
     table_id: "", events: {}, arrival: "", flight: "", departure: "", hotel: "Not Required", property: "", room: "",
     transport: "Not Required", route: "", gift: "", gift_delivery: "", follow: "No Follow-Up", last_outreach: "", method: "",

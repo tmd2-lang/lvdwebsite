@@ -11,6 +11,8 @@
 
 export const BUDGET_CATEGORIES = [
   "Planning & Management",
+  // LVD's own design & florals contract. Outside florists stay in Floral & Decor.
+  "Design + Florals",
   "Venue & Site Fees",
   "Catering & Food",
   "Beverage & Bar",
@@ -263,6 +265,32 @@ export function lvdSchedule(totalCents: number, eventDate: string | null) {
     { payment_type: "installment" as const, amount_cents: installment, due_on: eventDate ? addDays(eventDate, -90) : null },
     { payment_type: "final_balance" as const, amount_cents: totalCents - retainer - installment, due_on: eventDate ? addDays(eventDate, -30) : null },
   ];
+}
+
+const PLAN_STEPS = ["retainer", "installment", "final_balance"] as const;
+
+/**
+ * The couple's 40/30/30 across everything they owe LVD: planning and design,
+ * Wave invoices and hand-entered lines together. Each contract keeps its own
+ * schedule; this adds them up step by step so the couple sees one plan on
+ * the full contract amount. Outside vendors are never part of it.
+ */
+export function lvdPaymentPlan(lines: BudgetLine[], payments: BudgetPayment[]) {
+  const lvdLines = lines.filter((line) => isLvdSide(line.side) && line.status !== "canceled");
+  const lvdIds = new Set(lvdLines.map((line) => line.id));
+  const lvdPayments = payments.filter((payment) => lvdIds.has(payment.line_id));
+  const total = lvdLines.reduce((sum, line) => sum + lineForecast(line), 0);
+  const paid = lvdPayments.reduce((sum, payment) => sum + payment.paid_cents, 0);
+  const steps = PLAN_STEPS.map((type) => {
+    const rows = lvdPayments.filter((payment) => payment.payment_type === type);
+    const amount = rows.reduce((sum, payment) => sum + payment.amount_cents, 0);
+    const stepPaid = rows.reduce((sum, payment) => sum + Math.min(payment.paid_cents, payment.amount_cents), 0);
+    const dates = rows.flatMap((payment) => (payment.due_on ? [payment.due_on] : [])).sort();
+    return { type, label: PAYMENT_TYPE_LABELS[type], amount, paid: stepPaid, balance: amount - stepPaid, due: dates[0] ?? null };
+  });
+  // Lines nobody has scheduled yet still count toward the total.
+  const scheduled = steps.reduce((sum, step) => sum + step.amount, 0);
+  return { total, paid, remaining: Math.max(total - paid, 0), unscheduled: Math.max(total - scheduled, 0), steps };
 }
 
 /** "12,500.50" or "$12,500.50" typed by a person → cents. Null if unreadable. */

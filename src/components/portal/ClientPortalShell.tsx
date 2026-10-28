@@ -8,7 +8,7 @@ import styles from "@/app/portal/portal.module.css";
 const pages = [
   { label: "Overview", href: "/portal" },
   { label: "Checklist", href: "/portal/tasks" },
-  { label: "Invoices", href: "/portal/invoices" },
+  { label: "Budget & payments", href: "/portal/invoices" },
   { label: "Moodboard", href: "/portal/moodboard", design: true },
   { label: "Documents", href: "/portal/documents" },
   { label: "Images", href: "/portal/images" },

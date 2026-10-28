@@ -15,6 +15,10 @@ export default async function PortalMoodboardPage() {
   // Planning-only couples have no design to approve, unless one was shared anyway.
   if (!session.client.design_tier && !boards.versions.length && !boards.error) notFound();
 
+  // Prefill with the partner name the studio recorded; never the login handle.
+  const suggestedName = (session.relationship === "client" ? session.client.partner_one_name
+    : session.relationship === "partner" ? session.client.partner_two_name : null)?.trim() || "";
+
   return (
     <div className={styles.content}>
       <header className={styles.sectionHero}>
@@ -25,7 +29,7 @@ export default async function PortalMoodboardPage() {
         <p>Review each design version your team shares. One partner&apos;s approval is all it takes.</p>
       </header>
 
-      {boards.error ? <p role="alert">Your moodboard could not be loaded. Please refresh before approving.</p> : <MoodboardReview versions={boards.versions} canApprove={isMoodboardApprover(session.relationship)} />}
+      {boards.error ? <p role="alert">Your moodboard could not be loaded. Please refresh before approving.</p> : <MoodboardReview versions={boards.versions} canApprove={isMoodboardApprover(session.relationship)} suggestedName={suggestedName} />}
     </div>
   );
 }
