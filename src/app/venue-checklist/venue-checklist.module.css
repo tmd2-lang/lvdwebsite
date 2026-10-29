@@ -1,0 +1,44 @@
+/* Guide preview: pages sweep in from the edges of the screen and settle into the fan. */
+.settle {
+  animation-duration: 1.6s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: both;
+}
+
+.fromLeft {
+  animation-name: from-left;
+  animation-delay: 0.1s;
+}
+
+.fromRight {
+  animation-name: from-right;
+  animation-delay: 0.25s;
+}
+
+.fromAbove {
+  animation-name: from-above;
+  animation-delay: 0.6s;
+}
+
+/* vw distances start each page near the screen edge whatever the device width. */
+@keyframes from-left {
+  from { opacity: 0; transform: translate(-60vw, 18vh) rotate(-38deg); }
+  30% { opacity: 1; }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes from-right {
+  from { opacity: 0; transform: translate(60vw, 24vh) rotate(42deg); }
+  30% { opacity: 1; }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes from-above {
+  from { opacity: 0; transform: translate(-12vw, -55vh) rotate(-24deg) scale(1.12); }
+  30% { opacity: 1; }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settle { animation: none; }
+}

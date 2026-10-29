@@ -23,7 +23,8 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
   }
 
-  const isReserveV2 = pathname === "/welcome";
+  // Ad landing pages hide the site menu and footer so the visitor has one thing to do.
+  const isReserveV2 = pathname === "/welcome" || pathname === "/venue-checklist";
 
   return (
     <>
