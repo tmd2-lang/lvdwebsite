@@ -14,7 +14,7 @@ Written for Irene's Muse, from TJ's side, so it can see what has been built from
 | 3 | Event-day Timeline tab | **Live, including confirmed couple sharing.** Specialty sheets and vendor extracts remain. |
 | 4 | Guests, RSVP & Hospitality tab | **Live, including couple view/edit.** Public online RSVPs remain later. |
 | 5 | Inquiry → client conversion | **Live.** Auto-acknowledgment email and sorting inquiries by value not built yet. |
-| 6 | 40/30/30 invoice schedule | **Built for account setup.** Read-only OAuth, matching, installment sync and TEST preview implemented; live Wave authorization/verification outstanding. |
+| 6 | 40/30/30 invoice schedule | **Connected (Oct 28).** Read-only link to the Wave business "Planning & Coordination LVD"; 5 invoices imported. Irene's main invoices (#528 etc.) appear to be in a different Wave business. Couple view: Budget & payments tab. |
 | 7 | Studio calendar + alerts | **Deployed and verified.** Month/agenda, filters, in-portal alerts. Email reminders not built. |
 | 8 | Team logins + roles | **Deferred by TJ.** Detailed team roles, per-client assignments and My tasks are not built. Existing owner/planner/inquiry-staff access remains. |
 | 9 | Documents / images finishing | **Deployed and verified; SQL active.** Default documents, Design album links, photographer gallery + checklist sync. Versioned couple approval flow implemented; deployment in progress. |
@@ -32,11 +32,30 @@ Written for Irene's Muse, from TJ's side, so it can see what has been built from
 
 ## Still to build
 
-Wave developer app setup, authorization and live invoice validation (Build 6); team roles/assignments/My tasks (Build 8, deferred by TJ). Public guest RSVPs remain later. Earlier second-pass items (budget change log/comparison/export, timeline specialty sheets/vendor extracts/checklist links, calendar email reminders, inquiry auto-acknowledgment) are not included in the current release. Build 10 remains skipped.
+Connecting the Wave business that holds Irene's main invoices, then matching invoices to couples (Build 6); team roles/assignments/My tasks (Build 8, deferred by TJ). Public guest RSVPs remain later. Earlier second-pass items (budget change log/comparison/export, timeline specialty sheets/vendor extracts/checklist links, calendar email reminders, inquiry auto-acknowledgment) are not included in the current release. Build 10 remains skipped.
 
 ---
 
 ## Log
+
+### Oct 28, 2026: Irene's portal re-check (8 items)
+
+- **1 Wave:** **connected (Oct 28 evening), read-only.** Details in the Wave section below. Open question for Irene: which Wave business holds her main invoices.
+- **2 + 3 Couple money page:** the couple's "Invoices" tab is now **Budget & payments**. It shows one 40/30/30 schedule covering the full LVD contract (planning + design, Wave invoices plus any hand-entered LVD lines), then their budget by category, then their Wave invoices. Outside vendors are not part of the 40/30/30. Any LVD amount not on a schedule yet shows as a note.
+- **4 Approval name:** the person now types their full name when they approve a moodboard (prefilled with the partner name the studio recorded). The stamp shows that typed name. The account is still recorded in the activity log.
+- **5 Design + Florals:** category added (Codex). Live.
+- **6 Activity log:** page built (Codex) but **not live yet**. It's still uncommitted, so Irene won't see it on the site.
+- **7 Roles:** draft for Irene in `portal-roles-draft-2026-10-28.md`. Nothing changes until she approves. Note: today Family and Guest can see every page, including money.
+- **8 Guest default:** a new guest's RSVP now starts blank ("Not chosen") instead of "Invited".
+- **Tested:** all automated tests pass (116 in the shipped code), plus typecheck. The signed-in couple pages were not clicked through: no test couple login was available.
+
+#### Wave connection (Oct 28 evening)
+
+- The Wave developer app "LVD Client Portal" is created, its four settings are in Vercel, and the portal is connected to the Wave business **"Planning & Coordination LVD"**. Read-only: the portal can't create, change or send anything in Wave.
+- Three things blocked the connection and were fixed: Wave always adds a read-only "basic" permission, which the portal had refused; the portal (code and database) expected the business name "Lady Victoria Designs LLC"; and Wave writes amounts with commas ("1,272.00").
+- First import worked: **5 invoices** (#1, #4, #5, #7, #8). Amounts match Wave. #5 is a draft, so it stays out of couple totals.
+- **Open question for Irene:** her examples **#528, #491 and #514 aren't in this business**, which only goes up to #8. Her main invoices are probably in a different Wave business, likely under a different Wave login. Once we know which one, it's a reconnect plus a name change on our side.
+- Nothing is matched to couples yet. Each invoice still needs the studio to choose its event, track and signing date.
 
 ### Oct 26, 2026: Audit fixes, round 2 (findings #5, #8, #9, #11, #12, #13, #15, #16)
 
@@ -310,22 +329,3 @@ After the verification cleanup, the walkthrough showed only Tanah & Kaisa's pre-
 - No couple-facing view yet (waiting on Irene, item 1 above).
 
 **Tested:** status changes, owner, due date and notes all saved and survived a page reload. Phone layout checked. Test changes were removed afterwards.
-
-## Oct 28, 2026: Irene's portal re-check (8 items)
-
-- **1 Wave:** **connected (Oct 28 evening), read-only.** Details in the Wave section below. Open question for Irene: which Wave business holds her main invoices.
-- **2 + 3 Couple money page:** the couple's "Invoices" tab is now **Budget & payments**. It shows one 40/30/30 schedule covering the full LVD contract (planning + design, Wave invoices plus any hand-entered LVD lines), then their budget by category, then their Wave invoices. Outside vendors are not part of the 40/30/30. Any LVD amount not on a schedule yet shows as a note.
-- **4 Approval name:** the person now types their full name when they approve a moodboard (prefilled with the partner name the studio recorded). The stamp shows that typed name. The account is still recorded in the activity log.
-- **5 Design + Florals:** category added (Codex). Live.
-- **6 Activity log:** page built (Codex) but **not live yet**. It's still uncommitted, so Irene won't see it on the site.
-- **7 Roles:** draft for Irene in `portal-roles-draft-2026-10-28.md`. Nothing changes until she approves. Note: today Family and Guest can see every page, including money.
-- **8 Guest default:** a new guest's RSVP now starts blank ("Not chosen") instead of "Invited".
-- **Tested:** all automated tests pass (116 in the shipped code), plus typecheck. The signed-in couple pages were not clicked through: no test couple login was available.
-
-### Wave connection (Oct 28 evening)
-
-- The Wave developer app "LVD Client Portal" is created, its four settings are in Vercel, and the portal is connected to the Wave business **"Planning & Coordination LVD"**. Read-only: the portal can't create, change or send anything in Wave.
-- Three things blocked the connection and were fixed: Wave always adds a read-only "basic" permission, which the portal had refused; the portal (code and database) expected the business name "Lady Victoria Designs LLC"; and Wave writes amounts with commas ("1,272.00").
-- First import worked: **5 invoices** (#1, #4, #5, #7, #8). Amounts match Wave. #5 is a draft, so it stays out of couple totals.
-- **Open question for Irene:** her examples **#528, #491 and #514 aren't in this business**, which only goes up to #8. Her main invoices are probably in a different Wave business, likely under a different Wave login. Once we know which one, it's a reconnect plus a name change on our side.
-- Nothing is matched to couples yet. Each invoice still needs the studio to choose its event, track and signing date.
