@@ -15,6 +15,8 @@ export const waveIsBillable = (invoice: WaveInvoice) => !invoice.missing && invo
 // are refused unless `round` is set (line items only, since the invoice total is reconciled separately).
 export function cents(value: unknown, round = false): number {
  const fail = () => { console.error("Unsupported Wave money amount:", JSON.stringify(value)?.slice(0, 40)); return new Error("Unsupported Wave money amount."); };
+ // Wave formats thousands with commas ("1,272.00"); only well-placed separators are accepted.
+ if (typeof value === "string" && /^-?\d{1,3}(?:,\d{3})+(?:\.\d+)?$/.test(value)) value = value.replace(/,/g, "");
  if (typeof value !== "string" || !/^-?\d+(?:\.\d+)?$/.test(value)) throw fail();
  const negative = value.startsWith("-"), [whole, fraction = ""] = value.replace(/^-/, "").split("."), extra = fraction.slice(2);
  if (/[1-9]/.test(extra) && !round) throw fail();
