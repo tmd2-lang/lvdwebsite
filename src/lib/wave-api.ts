@@ -14,9 +14,9 @@ export type WaveTokens={access_token:string;refresh_token:string;expires_at:numb
 export async function exchangeWave(values:Record<string,string>,oldRefresh?:string,originalRedirect?:string):Promise<WaveTokens> {
  const c=waveConfig();const response=await fetch("https://api.waveapps.com/oauth2/token/",{method:"POST",cache:"no-store",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:new URLSearchParams({...values,client_id:c.clientId,client_secret:c.secret,redirect_uri:originalRedirect || c.redirect})});
  const data=await response.json().catch(()=>null);
- if(!response.ok || !data?.access_token || !(data.refresh_token || oldRefresh) || !Number.isFinite(data.expires_in))throw new Error("Wave authorization failed. Check the business subscription and reconnect.");
+ if(!response.ok || !data?.access_token || !(data.refresh_token || oldRefresh) || !Number.isFinite(data.expires_in))throw new Error(`Wave authorization failed (HTTP ${response.status}${data?.error?`, ${String(data.error).slice(0,60)}`:""}). Check the business subscription and reconnect.`);
  if(!oldRefresh && typeof data.scope!=="string")throw new Error("Wave did not confirm the granted permissions.");
- if(data.scope && String(data.scope).split(/\s+/).some((s:string)=>!WAVE_SCOPES.split(" ").includes(s)))throw new Error("Wave must authorize read-only invoice access.");
+ if(data.scope && String(data.scope).split(/\s+/).some((s:string)=>!WAVE_SCOPES.split(" ").includes(s)))throw new Error(`Wave must authorize read-only invoice access (granted: ${String(data.scope).slice(0,200)}).`);
  return {access_token:data.access_token,refresh_token:data.refresh_token || oldRefresh,expires_at:Date.now()+data.expires_in*1000,redirect_uri:originalRedirect || c.redirect};
 }
 export async function waveQuery<T>(token:string,query:string,variables:Record<string,unknown>):Promise<T> {
