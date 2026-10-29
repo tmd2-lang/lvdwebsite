@@ -3,7 +3,7 @@ import { rememberConsultation } from "./consultation-booking";
 import { trackGA4 } from "./ga4";
 import { trackMetaLead } from "./meta-pixel";
 
-export type LeadSource = "inquire" | "consultation" | "reserve" | "style_quiz";
+export type LeadSource = "inquire" | "consultation" | "reserve" | "style_quiz" | "venue_checklist";
 
 export type LeadSubmission = {
   source: LeadSource;

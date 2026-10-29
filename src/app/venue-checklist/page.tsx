@@ -87,10 +87,11 @@ export default function VenueChecklistPage() {
 
       {/* The one rule */}
       <section className="relative min-h-[70vh] flex items-end">
-        <Image src="/venue-checklist/arch.jpg" alt="A red rose arch installation in a glass-walled ballroom" fill sizes="100vw" className="object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/55 to-ink/10" />
+        <Image src="/venue-checklist/rule-lounge.jpg" alt="An evening reception lounge with a tall gold vase of white roses" fill sizes="100vw" className="object-cover object-[60%_50%]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-ink/85 via-ink/50 to-ink/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/60 to-transparent" />
         <div className="relative px-6 md:px-12 pb-16 lg:pb-24 max-w-6xl mx-auto w-full text-ivory">
-          <p className="font-body text-[10px] uppercase tracking-[0.25em] text-gold font-semibold mb-4">The one rule</p>
+          <p className="font-body text-[11px] uppercase tracking-[0.28em] text-[#D9BC82] font-semibold mb-4">The one rule</p>
           <h2 className="font-display text-[clamp(2.2rem,6vw,4.5rem)] leading-[1.02] mb-5 max-w-3xl">“We’re flexible” <span className="italic">is not a yes.</span></h2>
           <p className="font-body text-base md:text-lg text-ivory/80 leading-relaxed max-w-xl">
             If a promise affects your ceremony, décor, food, music, parking, guest count, budget, installation, or timeline, get it confirmed in the contract before you pay the deposit.

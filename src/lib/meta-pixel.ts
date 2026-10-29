@@ -7,7 +7,7 @@ declare global {
   }
 }
 
-export type MetaLeadSource = "inquire" | "consultation" | "reserve" | "style_quiz";
+export type MetaLeadSource = "inquire" | "consultation" | "reserve" | "style_quiz" | "venue_checklist";
 const sentEvents = new Set<string>();
 
 function publicProductionPage() {
@@ -27,7 +27,8 @@ export function trackMetaPageView() {
 export function trackMetaLead(source: MetaLeadSource, leadId: string) {
   if (!publicProductionPage() || typeof window.fbq !== "function" || !leadId) return false;
   const eventName = source === "style_quiz" ? "StyleQuizCompleted" : "Lead";
-  const eventId = `lvd_${leadId}_${eventName === "Lead" ? "inquiry" : "quiz"}`;
+  const kind = eventName === "Lead" ? (source === "venue_checklist" ? "checklist" : "inquiry") : "quiz";
+  const eventId = `lvd_${leadId}_${kind}`;
   if (sentEvents.has(eventId)) return false;
   try {
     if (window.sessionStorage.getItem(eventId)) return false;

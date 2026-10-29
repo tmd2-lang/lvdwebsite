@@ -26,6 +26,7 @@ const SOURCE_LABELS: Record<string, string> = {
   consultation: "Consultation",
   reserve: "Reserve your date",
   style_quiz: "Style quiz",
+  venue_checklist: "Venue checklist",
   admin: "Added by studio",
   imported: "Imported",
 };

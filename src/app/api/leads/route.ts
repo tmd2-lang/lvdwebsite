@@ -7,7 +7,9 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 90;
 
-const LEAD_SOURCES = new Set(["inquire", "consultation", "reserve", "style_quiz"]);
+const LEAD_SOURCES = new Set(["inquire", "consultation", "reserve", "style_quiz", "venue_checklist"]);
+// The checklist download form asks for no phone number, to keep signups quick.
+const PHONE_OPTIONAL_SOURCES = new Set(["venue_checklist"]);
 const BLOCKED_EMAILS = new Set(["emmahines23@gmail.com", "emmahines23@gamil.com"]);
 const BLOCKED_PHONES = new Set(["302233290", "3022333290"]);
 // Same network hash on both known inquiries; uses the existing storage hash format.
@@ -102,8 +104,9 @@ export async function POST(request: Request) {
       return Response.json({ error: "Choose a valid inquiry source." }, { status: 400 });
     }
 
-    if (!name || !email || !phone) {
-      return Response.json({ error: "Name, email, and phone are required." }, { status: 400 });
+    const phoneOptional = PHONE_OPTIONAL_SOURCES.has(source);
+    if (!name || !email || (!phone && !phoneOptional)) {
+      return Response.json({ error: phoneOptional ? "Name and email are required." : "Name, email, and phone are required." }, { status: 400 });
     }
 
     const gmailUser = process.env.GMAIL_USER?.trim();
@@ -118,7 +121,7 @@ export async function POST(request: Request) {
       status: solicitation ? "spam" : "new",
       name,
       email,
-      phone,
+      phone: phone || null,
       celebration_type: optionalString(body.celebrationType),
       event_date: optionalDate(body.date),
       date_undecided: Boolean(body.dateUndecided),
@@ -207,12 +210,12 @@ export async function POST(request: Request) {
             : "";
 
           const emailText = `
-New Inquiry Received from ${name}
+${source === "venue_checklist" ? "Venue Checklist Downloaded by" : "New Inquiry Received from"} ${name}
 
 Contact Details:
 Name: ${name}
 Email: ${email}
-Phone: ${phone}
+Phone: ${phone || "Not asked"}
 
 Event Details:
 Inquiry Type: ${lead.source}
@@ -234,7 +237,7 @@ ${attachmentsList}
           const message = {
             from: `Lady Victoria Designs Website <${gmailUser}>`,
             replyTo: email,
-            subject: `${solicitation ? "Review: possible solicitation" : "New Website Lead"}: ${name.replace(/[\r\n]+/g, " ")}`,
+            subject: `${solicitation ? "Review: possible solicitation" : source === "venue_checklist" ? "Venue Checklist Download" : "New Website Lead"}: ${name.replace(/[\r\n]+/g, " ")}`,
             messageId: `<inquiry-${leadId}@ladyvictoriadesigns.com>`,
             text: emailText,
           };

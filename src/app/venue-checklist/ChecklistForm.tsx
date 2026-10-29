@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { submitLead } from "@/lib/lead-submit";
 
 const BUDGETS = [
   "Under $60,000",
@@ -40,15 +41,37 @@ export default function ChecklistForm() {
   const [venue, setVenue] = useState("");
   const [multicultural, setMulticultural] = useState("");
   const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
 
-  // Saving the signup and sending the email come later; for now the form only reveals the download.
-  const submit = (event: FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault();
+    if (saving) return;
     if (!name.trim() || !/^\S+@\S+\.\S+$/.test(email.trim())) return setError("Please add your name and a valid email.");
     if (!month && !dateUnsure) return setError("Please add your wedding month, or tick “Not sure yet.”");
     if (!budget || !venue || !multicultural) return setError("Please answer each question so we can send the right edition.");
     setError("");
+    setSaving(true);
+    const edition = multicultural === "yes" ? "multicultural" : "standard";
+    try {
+      // Mapped onto the inquiry columns the studio already sees: celebration, date, venue, budget.
+      await submitLead({
+        source: "venue_checklist",
+        name: name.trim(),
+        email: email.trim(),
+        phone: "",
+        celebrationType: edition === "multicultural" ? "Multicultural wedding" : "Wedding",
+        date: dateUnsure ? undefined : `${month}-01`,
+        dateUndecided: dateUnsure,
+        venue: venue === "booked" ? "Already booked (not named)" : undefined,
+        investment: budget,
+        payload: { edition, venueStatus: venue, weddingMonth: dateUnsure ? null : month },
+      });
+    } catch (saveError) {
+      // The download matters more than the record: never hold the guide back over a failed save.
+      console.error("Venue checklist signup was not saved:", saveError);
+    }
+    setSaving(false);
     setDone(true);
   };
 
@@ -123,9 +146,9 @@ export default function ChecklistForm() {
 
       {error && <p className="font-body text-sm text-[#9a3b2e]" role="alert">{error}</p>}
 
-      <button type="submit"
-        className="w-full bg-ink text-ivory font-body text-[11px] uppercase tracking-[0.22em] px-8 py-4 rounded-full hover:bg-gold hover:text-ink transition-colors">
-        Send me the venue checklist
+      <button type="submit" disabled={saving}
+        className="w-full bg-ink text-ivory font-body text-[11px] uppercase tracking-[0.22em] px-8 py-4 rounded-full hover:bg-gold hover:text-ink transition-colors disabled:opacity-60">
+        {saving ? "Preparing your checklist…" : "Send me the venue checklist"}
       </button>
       <p className="font-body text-[11px] text-ink/45 text-center -mt-3">Complimentary from Lady Victoria Designs.</p>
     </form>
