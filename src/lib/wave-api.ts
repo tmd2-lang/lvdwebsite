@@ -36,7 +36,7 @@ type RawInvoice={id:string;invoiceNumber:string;invoiceDate:string;dueDate:strin
 export function normalizeWave(raw:RawInvoice):WaveInvoice {
  const total=cents(raw.total.value),paid=cents(raw.amountPaid.value),balance=cents(raw.amountDue.value);
  if(total<0 || paid<0 || balance<0 || !Number.isFinite(Date.parse(raw.modifiedAt)) || !raw.id || !raw.customer?.id)throw new Error("Wave invoice needs manual review before importing.");
- const items=raw.items.map(i=>({name:i.product?.name || i.description || "Invoice line",description:i.description || "",amount:cents(i.total.value)}));
+ const items=raw.items.map(i=>({name:i.product?.name || i.description || "Invoice line",description:i.description || "",amount:cents(i.total.value,true)}));
  if(!items.length)items.push({name:"Wave invoice",description:"",amount:total});
  const remainder=total-items.reduce((s,i)=>s+i.amount,0);if(remainder)items.push({name:"Wave invoice adjustment",description:"Tax, discount or invoice-level adjustment",amount:remainder});
  return {id:raw.id,number:raw.invoiceNumber,customer_id:raw.customer.id,customer_name:raw.customer.name,customer_email:raw.customer.email || "",status:raw.status,currency:raw.currency.code,total,paid,balance,issued_on:raw.invoiceDate,wave_due_on:raw.dueDate,modified_at:raw.modifiedAt,payment_url:safeWaveLink(raw.viewUrl),items,client_id:null,track:null,signed_on:null,agreement_signed:false,synced_at:new Date().toISOString(),missing:false};

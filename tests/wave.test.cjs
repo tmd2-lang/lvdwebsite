@@ -25,7 +25,7 @@ test('milestones require all event invoices, explicit set review and signature; 
  assert.equal(view.safeWaveLink('https://my.waveapps.com/TEST'),'https://my.waveapps.com/TEST');for(const bad of ['javascript:alert(1)','https://waveapps.com.evil.test','https://user:pass@waveapps.com'])assert.equal(view.safeWaveLink(bad),null);
 });
 test('exact cents and budget allocations preserve invoice totals, partial payments, adjustments and overpayment credits',()=>{
- assert.equal(view.cents('0.29'),29);assert.equal(view.cents('-1.25'),-125);for(const value of ['1.234','1e4','12junk',1.25])assert.throws(()=>view.cents(value));
+ assert.equal(view.cents('0.29'),29);assert.equal(view.cents('-1.25'),-125);for(const value of ['1.234','1e4','12junk',1.25])assert.throws(()=>view.cents(value));assert.equal(view.cents('1500.000'),150000);assert.equal(view.cents('-2.5000'),-250);assert.equal(view.cents('33.335',true),3334);assert.equal(view.cents('33.334',true),3333);
  for(let total=1;total<100;total++){const inv=invoice({total,paid:Math.floor(total*.71),balance:total-Math.floor(total*.71),items:[{name:'TEST a',description:'',amount:total+7},{name:'TEST credit',description:'',amount:-7}]});const result=budget.waveBudget([inv],'2027-01-01','2026-10-25');assert.equal(result.lines.reduce((s,l)=>s+l.contracted_cents+l.changes_cents,0),total);assert.equal(result.payments.reduce((s,p)=>s+p.amount_cents,0),total);assert.equal(result.payments.reduce((s,p)=>s+p.paid_cents,0),inv.paid);assert.equal(result.payments.every(p=>p.paid_cents<=p.amount_cents),true);}
  const over=budget.waveBudget([invoice({paid:1400000,balance:0})],null,'2026-10-25');assert.equal(over.payments.reduce((s,p)=>s+p.paid_cents,0),1400000);
 });

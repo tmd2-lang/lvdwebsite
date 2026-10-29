@@ -11,10 +11,14 @@ export type WaveInvoice = {
 export const WAVE_BUSINESS = "Planning & Coordination LVD";
 export const WAVE_SCOPES = "business:read customer:read invoice:read product:read";
 export const waveIsBillable = (invoice: WaveInvoice) => !invoice.missing && invoice.currency === "USD" && ["SENT","VIEWED","UNPAID","PARTIAL","OVERDUE","PAID","OVERPAID"].includes(invoice.status);
-export function cents(value: unknown): number {
- if (typeof value !== "string" || !/^-?\d+(?:\.\d{1,2})?$/.test(value)) throw new Error("Unsupported Wave money amount.");
- const negative = value.startsWith("-"), [whole, fraction = ""] = value.replace(/^-/, "").split(".");
- const amount = Number(whole) * 100 + Number(fraction.padEnd(2,"0"));
+// Wave may send extra decimal places ("1500.000"). Trailing zeros are fine; real fractions of a cent
+// are refused unless `round` is set (line items only, since the invoice total is reconciled separately).
+export function cents(value: unknown, round = false): number {
+ const fail = () => { console.error("Unsupported Wave money amount:", JSON.stringify(value)?.slice(0, 40)); return new Error("Unsupported Wave money amount."); };
+ if (typeof value !== "string" || !/^-?\d+(?:\.\d+)?$/.test(value)) throw fail();
+ const negative = value.startsWith("-"), [whole, fraction = ""] = value.replace(/^-/, "").split("."), extra = fraction.slice(2);
+ if (/[1-9]/.test(extra) && !round) throw fail();
+ const amount = Number(whole) * 100 + Number(fraction.slice(0, 2).padEnd(2,"0")) + (Number(extra[0] ?? 0) >= 5 ? 1 : 0);
  if (!Number.isSafeInteger(amount)) throw new Error("Wave amount is too large.");
  return negative ? -amount : amount;
 }
