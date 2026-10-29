@@ -6,8 +6,9 @@ import { CONSULTATION_URL } from "./consultation-booking";
  * The venue checklist follow-up sequence: Email 1 right away, Email 2 on day 3,
  * Email 3 on day 7. Copy lives in docs/venue-checklist/emails.md. Each signup
  * gets the lines for their edition (standard / multicultural) and venue status
- * (still looking / already booked). Sent through the site's Gmail account;
- * what was sent is recorded in the lead's payload.emails.
+ * (still looking / already booked). Sent through the studio's Google Workspace
+ * account (CHECKLIST_GMAIL_USER, hello@); what was sent is recorded in the
+ * lead's payload.emails.
  */
 
 const SITE = "https://www.ladyvictoriadesigns.com";
@@ -173,9 +174,12 @@ export function buildChecklistEmail(step: ChecklistStep, lead: ChecklistLead) {
   return { subject: copy.subject, ...render(copy, unsubscribeUrl(lead.id)) };
 }
 
+// Couples must hear from the studio's own address, so this deliberately does not
+// fall back to GMAIL_USER (the account behind the internal lead alerts). Until the
+// hello@ account's app password is set, no checklist emails are sent.
 function gmail() {
-  const user = process.env.GMAIL_USER?.trim();
-  const pass = process.env.GMAIL_APP_PASSWORD?.replace(/\s/g, "");
+  const user = process.env.CHECKLIST_GMAIL_USER?.trim();
+  const pass = process.env.CHECKLIST_GMAIL_APP_PASSWORD?.replace(/\s/g, "");
   if (!user || !pass) return null;
   return {
     user,
@@ -231,21 +235,26 @@ export async function sendChecklistEmail(step: ChecklistStep, lead: ChecklistLea
   return true;
 }
 
-/** Daily: Email 2 from day 3 and Email 3 from day 7, one email per lead per run. */
+/**
+ * Daily, one email per lead per run. Catches up Email 1 for anyone who signed up
+ * while sending was off, then times Email 2 (day 3) and Email 3 (day 7) from when
+ * Email 1 actually went out, so the order always holds.
+ */
 export async function runChecklistSequence(now = new Date()) {
   const db = supabase();
   const since = new Date(now.getTime() - 21 * DAY).toISOString();
   const response = await fetch(`${db.url}/rest/v1/leads?source=eq.venue_checklist&status=neq.spam&created_at=gte.${since}&select=id,name,email,created_at,payload`, { headers: db.headers, cache: "no-store" });
   if (!response.ok) throw new Error(`Could not load checklist leads (${response.status}).`);
   const leads = await response.json() as ChecklistLead[];
-  const sent = { email2: 0, email3: 0, skipped: 0 };
+  const sent = { email1: 0, email2: 0, email3: 0, skipped: 0 };
   for (const lead of leads) {
     const payload = lead.payload || {};
     const emails = (payload.emails || {}) as Record<string, string>;
-    const age = now.getTime() - Date.parse(lead.created_at);
     if (payload.unsubscribed) { sent.skipped++; continue; }
-    if (!emails.email2 && age >= 3 * DAY) { if (await sendChecklistEmail(2, lead)) sent.email2++; }
-    else if (emails.email2 && !emails.email3 && age >= 7 * DAY) { if (await sendChecklistEmail(3, lead)) sent.email3++; }
+    if (!emails.email1) { if (await sendChecklistEmail(1, lead)) sent.email1++; continue; }
+    const sinceFirst = now.getTime() - Date.parse(emails.email1);
+    if (!emails.email2 && sinceFirst >= 3 * DAY) { if (await sendChecklistEmail(2, lead)) sent.email2++; }
+    else if (emails.email2 && !emails.email3 && sinceFirst >= 7 * DAY) { if (await sendChecklistEmail(3, lead)) sent.email3++; }
   }
   return { leads: leads.length, ...sent };
 }
