@@ -16,7 +16,8 @@ export async function exchangeWave(values:Record<string,string>,oldRefresh?:stri
  const data=await response.json().catch(()=>null);
  if(!response.ok || !data?.access_token || !(data.refresh_token || oldRefresh) || !Number.isFinite(data.expires_in))throw new Error(`Wave authorization failed (HTTP ${response.status}${data?.error?`, ${String(data.error).slice(0,60)}`:""}). Check the business subscription and reconnect.`);
  if(!oldRefresh && typeof data.scope!=="string")throw new Error("Wave did not confirm the granted permissions.");
- if(data.scope && String(data.scope).split(/\s+/).some((s:string)=>!WAVE_SCOPES.split(" ").includes(s)))throw new Error(`Wave must authorize read-only invoice access (granted: ${String(data.scope).slice(0,200)}).`);
+ // Wave always adds "basic" (read-only account profile) to whatever was requested.
+ if(data.scope && String(data.scope).split(/\s+/).some((s:string)=>![...WAVE_SCOPES.split(" "),"basic"].includes(s)))throw new Error(`Wave must authorize read-only invoice access (granted: ${String(data.scope).slice(0,200)}).`);
  return {access_token:data.access_token,refresh_token:data.refresh_token || oldRefresh,expires_at:Date.now()+data.expires_in*1000,redirect_uri:originalRedirect || c.redirect};
 }
 export async function waveQuery<T>(token:string,query:string,variables:Record<string,unknown>):Promise<T> {

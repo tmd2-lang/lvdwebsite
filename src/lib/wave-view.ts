@@ -7,7 +7,8 @@ export type WaveInvoice = {
  client_id: string | null; track: "planning" | "design" | null; signed_on: string | null; agreement_signed: boolean;
  synced_at: string; missing: boolean;
 };
-export const WAVE_BUSINESS = "Lady Victoria Designs LLC";
+// Exact business name as it appears in Wave (Irene's Pro business).
+export const WAVE_BUSINESS = "Planning & Coordination LVD";
 export const WAVE_SCOPES = "business:read customer:read invoice:read product:read";
 export const waveIsBillable = (invoice: WaveInvoice) => !invoice.missing && invoice.currency === "USD" && ["SENT","VIEWED","UNPAID","PARTIAL","OVERDUE","PAID","OVERPAID"].includes(invoice.status);
 export function cents(value: unknown): number {

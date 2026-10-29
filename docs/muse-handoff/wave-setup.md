@@ -4,7 +4,7 @@ Build 6 reads Wave only. The server has no Wave invoice-creation or payment-writ
 
 ## Remaining account setup
 
-1. Confirm Lady Victoria Designs LLC has an active Wave Pro or Wave Advisor subscription.
+1. Confirm the Wave business "Planning & Coordination LVD" has an active Wave Pro or Wave Advisor subscription.
 2. Register the portal developer app in Wave. Configure the exact callback:
    `https://www.ladyvictoriadesigns.com/api/admin/wave/callback`.
    Local development can use a separately registered `http://localhost:3000/api/admin/wave/callback`.

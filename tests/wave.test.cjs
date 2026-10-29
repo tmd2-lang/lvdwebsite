@@ -37,12 +37,20 @@ test('OAuth token encryption authenticates ciphertext; query client rejects writ
  const normalized=api.normalizeWave({id:'TEST',invoiceNumber:'TEST',invoiceDate:'2026-01-01',dueDate:null,modifiedAt:'2026-01-01T00:00:00Z',status:'SENT',viewUrl:'https://evil.test',customer:{id:'TEST',name:'TEST',email:null},currency:{code:'USD'},total:{value:'100.00'},amountPaid:{value:'0.00'},amountDue:{value:'100.00'},items:[{description:'TEST',product:null,total:{value:'90.00'}}]});assert.equal(normalized.items[1].amount,1000);assert.equal(normalized.payment_url,null);
  }finally{for(const [key,value]of Object.entries(previous))if(value===undefined)delete process.env[key];else process.env[key]=value;}
 });
+test('Token exchange accepts Wave\'s added basic scope and refuses write scopes',async()=>{
+ const env={WAVE_CLIENT_ID:'TEST',WAVE_CLIENT_SECRET:'TEST',WAVE_REDIRECT_URI:'http://localhost:3000/api/admin/wave/callback',WAVE_TOKEN_ENCRYPTION_KEY:Buffer.alloc(32,7).toString('base64')};
+ const previous={};for(const [key,value]of Object.entries(env)){previous[key]=process.env[key];process.env[key]=value;}
+ const api=scope=>load('src/lib/wave-api.ts',{}, {URLSearchParams,fetch:async()=>new Response(JSON.stringify({access_token:'TEST',refresh_token:'TEST',expires_in:3600,scope}),{status:200})});
+ try {await api('product:read business:read invoice:read basic customer:read').exchangeWave({grant_type:'authorization_code',code:'TEST'});
+ await assert.rejects(api('business:read invoice:read invoice:write').exchangeWave({grant_type:'authorization_code',code:'TEST'}));
+ }finally{for(const [key,value]of Object.entries(previous))if(value===undefined)delete process.env[key];else process.env[key]=value;}
+});
 const pgModule=process.env.LVD_PGLITE_MODULE;
 test('Wave SQL snapshot/map/review/checklist is atomic, private, repeatable, preserves notes and rejects stale/foreign business', {skip:!pgModule},async()=>{
  const {PGlite}=require(pgModule),db=new PGlite();try{
  await db.exec(`create role anon;create role authenticated;create role service_role;create table clients(id uuid primary key);create function set_updated_at() returns trigger language plpgsql as $$begin new.updated_at=clock_timestamp();return new;end;$$;`);
  for(const f of ['checklist-schema.sql','budget-schema.sql','wave-schema.sql','wave-schema.sql'])await db.exec(fs.readFileSync('supabase/'+f,'utf8').replace('create extension if not exists pgcrypto;',''));
- const client=invoice().client_id;await db.query('insert into clients values($1)',[client]);await db.exec("insert into wave_connection(singleton,business_id,business_name,tokens,connected_by) values(true,'TEST business','Lady Victoria Designs LLC','TEST encrypted','TEST owner')");
+ const client=invoice().client_id;await db.query('insert into clients values($1)',[client]);await db.exec("insert into wave_connection(singleton,business_id,business_name,tokens,connected_by) values(true,'TEST business','Planning & Coordination LVD','TEST encrypted','TEST owner')");
  const lock=(await db.query('select wave_acquire_lock() token')).rows[0].token;
  await assert.rejects(db.query('select wave_acquire_lock()'));await assert.rejects(db.query('select wave_apply_snapshot($1,$2,$3)',[lock,'FOREIGN','[]']));
  const snapshot=async(invoices)=>db.query('select wave_apply_snapshot($1,$2,$3)',[lock,'TEST business',JSON.stringify(invoices)]);
@@ -78,7 +86,7 @@ test('studio Wave actions reject unauthorized roles before data access and rejec
 });
 test('OAuth callback rejects cross-owner or incorrect state before exchanging tokens',async()=>{
  let value='TEST-user:good',exchanged=0;
- const mocks={'next/server':{NextResponse:{redirect:url=>({headers:new Headers({Location:String(url)}),cookies:{set(){}}}),json:(body,init)=>({body,status:init?.status??200})}},'next/headers':{cookies:async()=>({get:()=>({value})})},'@/lib/admin-auth':{getAdminUser:async()=>({id:'TEST-user',role:'owner',email:'TEST'})},'@/lib/wave-api':{waveConfig:()=>({redirect:'http://localhost:3000/api/admin/wave/callback'}),exchangeWave:async()=>{exchanged++;return{};},verifiedBusiness:async()=>({id:'TEST business',name:'Lady Victoria Designs LLC'}),encryptWave:()=> 'TEST encrypted'},'@/lib/wave-db':{waveDb:async path=>path==='rpc/wave_acquire_lock'?'TEST lock':[]}};
+ const mocks={'next/server':{NextResponse:{redirect:url=>({headers:new Headers({Location:String(url)}),cookies:{set(){}}}),json:(body,init)=>({body,status:init?.status??200})}},'next/headers':{cookies:async()=>({get:()=>({value})})},'@/lib/admin-auth':{getAdminUser:async()=>({id:'TEST-user',role:'owner',email:'TEST'})},'@/lib/wave-api':{waveConfig:()=>({redirect:'http://localhost:3000/api/admin/wave/callback'}),exchangeWave:async()=>{exchanged++;return{};},verifiedBusiness:async()=>({id:'TEST business',name:'Planning & Coordination LVD'}),encryptWave:()=> 'TEST encrypted'},'@/lib/wave-db':{waveDb:async path=>path==='rpc/wave_acquire_lock'?'TEST lock':[]}};
  const {GET}=load('src/app/api/admin/wave/callback/route.ts',mocks);
  let result=await GET({url:'http://localhost:3000/api/admin/wave/callback?code=TEST&state=bad'});assert.equal(result.headers.get('Location').includes('notice=authorization'),true);assert.equal(exchanged,0);
  value='OTHER-user:good';await GET({url:'http://localhost:3000/api/admin/wave/callback?code=TEST&state=good'});assert.equal(exchanged,0);
@@ -97,7 +105,7 @@ test('Wave adapters keep overpaid credit out of remaining balance and zero invoi
 
 test('Wave pagination commits only a complete, stable invoice set',async()=>{
  const raw={id:'TEST 1',invoiceNumber:'TEST',invoiceDate:'2026-01-01',dueDate:null,modifiedAt:'2026-01-01T00:00:00Z',status:'SENT',viewUrl:null,customer:{id:'TEST',name:'TEST',email:null},currency:{code:'USD'},total:{value:'1.00'},amountPaid:{value:'0.00'},amountDue:{value:'1.00'},items:[]};
- const api=(mode)=>load('src/lib/wave-api.ts',{}, {fetch:async(url,init)=>{const page=JSON.parse(init.body).variables.page;return new Response(JSON.stringify({data:{business:{id:'TEST business',name:'Lady Victoria Designs LLC',invoices:{pageInfo:{totalPages:2,totalCount:mode==='changed'&&page===2?3:2},edges:[{node:{...raw,id:page===2&&mode!=='duplicate'?'TEST 2':'TEST 1'}}]}}}}),{status:200});}});
+ const api=(mode)=>load('src/lib/wave-api.ts',{}, {fetch:async(url,init)=>{const page=JSON.parse(init.body).variables.page;return new Response(JSON.stringify({data:{business:{id:'TEST business',name:'Planning & Coordination LVD',invoices:{pageInfo:{totalPages:2,totalCount:mode==='changed'&&page===2?3:2},edges:[{node:{...raw,id:page===2&&mode!=='duplicate'?'TEST 2':'TEST 1'}}]}}}}),{status:200});}});
  assert.equal((await api('valid').readWaveInvoices('TEST token','TEST business')).length,2);
  await assert.rejects(api('changed').readWaveInvoices('TEST token','TEST business'));
  await assert.rejects(api('duplicate').readWaveInvoices('TEST token','TEST business'));
