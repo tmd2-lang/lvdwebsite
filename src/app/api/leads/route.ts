@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import nodemailer from "nodemailer";
 import { after } from "next/server";
 import { attributionColumns } from "@/lib/attribution";
+import { sendChecklistEmail } from "@/lib/checklist-emails";
 import { isMarketingSolicitation, type LeadNotification } from "@/lib/lead-quality";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -255,6 +256,11 @@ ${attachmentsList}
               console.error("Could not persist lead notification status.", { leadId, status });
             }
             if (!pending.length) break;
+          }
+          // Checklist signups get Email 1 of the follow-up sequence. It runs after the
+          // studio alert so the two payload updates cannot overwrite each other.
+          if (source === "venue_checklist" && leadId && !solicitation) {
+            await sendChecklistEmail(1, { id: leadId, name, email, created_at: new Date().toISOString(), payload: lead.payload });
           }
         } catch (emailError) {
           console.error("Failed to send Gmail lead notification:", emailError);
