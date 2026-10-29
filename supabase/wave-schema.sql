@@ -2,7 +2,7 @@
 -- Run after clients/checklist schemas. Tokens are encrypted in the application.
 begin;
 create table if not exists public.wave_connection (
- singleton boolean primary key default true check(singleton), business_id text not null, business_name text not null check(business_name='Lady Victoria Designs LLC'),
+ singleton boolean primary key default true check(singleton), business_id text not null, business_name text not null check(business_name='Planning & Coordination LVD'),
  tokens text not null, connected_by text not null, synced_at timestamptz
 );
 create table if not exists public.wave_lock (singleton boolean primary key default true check(singleton), token uuid, expires_at timestamptz);
