@@ -47,11 +47,8 @@ export default function VenueChecklistPage() {
             <h1 className="font-display text-[clamp(2.6rem,8vw,4.5rem)] leading-[1.02] tracking-tight mb-5">
               Touring venues? <span className="italic text-gold">Start here.</span>
             </h1>
-            <p className="font-display text-[clamp(1.3rem,3vw,1.75rem)] leading-snug max-w-xl mb-5">
+            <p className="font-display text-[clamp(1.3rem,3vw,1.75rem)] leading-snug max-w-xl mb-10">
               Before you book the venue, ask the questions that protect your celebration.
-            </p>
-            <p className="font-body text-sm md:text-base text-ink/65 leading-relaxed max-w-xl mb-10">
-              Your venue determines whether your ceremonies, cuisine, music, décor, guest count, parking, and timeline can happen as envisioned. Download the checklist before your next venue tour.
             </p>
             {/* On phones the form sits below the preview, so give a way straight to it. */}
             <a href="#get-the-checklist"
