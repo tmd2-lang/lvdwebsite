@@ -313,11 +313,19 @@ After the verification cleanup, the walkthrough showed only Tanah & Kaisa's pre-
 
 ## Oct 28, 2026: Irene's portal re-check (8 items)
 
-- **1 Wave:** the code is ready. It's waiting on the Wave developer app (client ID, client secret, callback, encryption key). Someone with the Wave login has to set it up. Not done yet.
+- **1 Wave:** **connected (Oct 28 evening), read-only.** Details in the Wave section below. Open question for Irene: which Wave business holds her main invoices.
 - **2 + 3 Couple money page:** the couple's "Invoices" tab is now **Budget & payments**. It shows one 40/30/30 schedule covering the full LVD contract (planning + design, Wave invoices plus any hand-entered LVD lines), then their budget by category, then their Wave invoices. Outside vendors are not part of the 40/30/30. Any LVD amount not on a schedule yet shows as a note.
 - **4 Approval name:** the person now types their full name when they approve a moodboard (prefilled with the partner name the studio recorded). The stamp shows that typed name. The account is still recorded in the activity log.
-- **5 Design + Florals:** category added (Codex).
-- **6 Activity log:** page built (Codex).
+- **5 Design + Florals:** category added (Codex). Live.
+- **6 Activity log:** page built (Codex) but **not live yet**. It's still uncommitted, so Irene won't see it on the site.
 - **7 Roles:** draft for Irene in `portal-roles-draft-2026-10-28.md`. Nothing changes until she approves. Note: today Family and Guest can see every page, including money.
 - **8 Guest default:** a new guest's RSVP now starts blank ("Not chosen") instead of "Invited".
-- **Tested:** 117 automated tests pass, plus typecheck. The signed-in couple pages were not clicked through: no test couple login was available.
+- **Tested:** all automated tests pass (116 in the shipped code), plus typecheck. The signed-in couple pages were not clicked through: no test couple login was available.
+
+### Wave connection (Oct 28 evening)
+
+- The Wave developer app "LVD Client Portal" is created, its four settings are in Vercel, and the portal is connected to the Wave business **"Planning & Coordination LVD"**. Read-only: the portal can't create, change or send anything in Wave.
+- Three things blocked the connection and were fixed: Wave always adds a read-only "basic" permission, which the portal had refused; the portal (code and database) expected the business name "Lady Victoria Designs LLC"; and Wave writes amounts with commas ("1,272.00").
+- First import worked: **5 invoices** (#1, #4, #5, #7, #8). Amounts match Wave. #5 is a draft, so it stays out of couple totals.
+- **Open question for Irene:** her examples **#528, #491 and #514 aren't in this business**, which only goes up to #8. Her main invoices are probably in a different Wave business, likely under a different Wave login. Once we know which one, it's a reconnect plus a name change on our side.
+- Nothing is matched to couples yet. Each invoice still needs the studio to choose its event, track and signing date.
