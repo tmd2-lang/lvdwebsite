@@ -23,7 +23,8 @@ ANSWER = '<div class="ans"><span>Answer</span><i></i><span>Who said it</span><i>
 
 def question(q):
     if not q.get("star"):
-        return f'      <li><span class="t">{esc(q["text"])}</span></li>'
+        tip = f'<span class="w tip">{esc(q["tip"])}</span>' if q.get("tip") else ""
+        return f'      <li><span class="t">{esc(q["text"])}</span>{tip}</li>'
     return f'      <li class="s"><span class="t">{esc(q["text"])}</span><span class="w">{esc(q["why"])}</span>{ANSWER}</li>'
 
 

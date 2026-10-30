@@ -252,7 +252,7 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
                               </button>
                               <p className={`flex-1 font-body text-[15px] leading-relaxed pt-0.5 ${skipped ? "line-through text-ink/35" : ""}`}>
                                 {q.star && <span className="text-gold mr-1.5">★</span>}{q.text}
-                                {q.why && !skipped && <span className="block font-display italic text-[1.02rem] text-ink/70 mt-1 leading-snug">{q.why}</span>}
+                                {(q.why || q.tip) && !skipped && <span className="block font-display italic text-[1.02rem] text-ink/70 mt-1 leading-snug">{q.why || q.tip}</span>}
                               </p>
                               <button onClick={() => toggleNa(q.id)} className="shrink-0 font-body text-[11px] uppercase tracking-[0.12em] text-ink/45 pt-1.5">
                                 {skipped ? "Undo" : "Skip"}

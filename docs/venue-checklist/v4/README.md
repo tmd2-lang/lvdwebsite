@@ -2,7 +2,8 @@
 
 The printable PDF guide, in two editions. Same design as v3; questions rewritten from the Reddit research and Irene's picks. The full old-vs-new list is in `../v4-question-list.md`.
 
-- 42 questions (56 in the multicultural edition), 10 starred dealbreakers with a one-line "why" under each
+- 43 questions (57 in the multicultural edition), 10 starred dealbreakers with a one-line "why" under each, and a short "listen for" tip on 8 questions whose answers are easy to misread
+- Start Here asks how far the couple will travel, and how far their guests will
 - "10 questions to never leave a tour without" page, red flags on the rule page, Before You Sign under the Chase List
 - 13 pages standard, 15 multicultural
 

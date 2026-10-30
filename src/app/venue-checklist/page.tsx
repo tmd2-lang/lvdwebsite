@@ -15,7 +15,7 @@ function GuidePreview() {
     <div className="relative mx-auto w-full max-w-[340px] sm:max-w-[400px] aspect-[3/3.1]">
       <div className="absolute left-[2%] top-[9%] w-[60%] rotate-[-7deg]">
         <div className={`${styles.settle} ${styles.fromLeft} shadow-[0_18px_40px_rgba(20,18,15,0.18)]`}>
-          <Image src="/venue-checklist/v4-questions.jpg" alt="" width={1100} height={1424} sizes="240px" className="w-full h-auto" />
+          <Image src="/venue-checklist/v4-questions-tips.jpg" alt="" width={1100} height={1424} sizes="240px" className="w-full h-auto" />
         </div>
       </div>
       <div className="absolute right-[2%] top-[9%] w-[60%] rotate-[7deg]">

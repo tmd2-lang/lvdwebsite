@@ -8,7 +8,8 @@
  * are questions retired in earlier versions).
  */
 
-export type ChecklistQuestion = { id: string; text: string; star?: true; why?: string };
+// why: the one-line reason under a starred dealbreaker. tip: a short "listen for" note on a question whose answer is easy to misread.
+export type ChecklistQuestion = { id: string; text: string; star?: true; why?: string; tip?: string };
 export type ChecklistSection = {
   id: string; num: string; title: string; why?: string; planner?: string;
   multicultural?: true; questions: ChecklistQuestion[];
@@ -21,7 +22,7 @@ export const CHECKLIST_SECTIONS: ChecklistSection[] = [
     questions: [
       { id: "hours-1", text: "What time can our vendors start setting up, and when does setup have to be finished?" },
       { id: "hours-2", text: "What time does everything have to end: music, the bar, guests, and vendors packing up?", star: true, why: "An early end time changes the whole shape of the day." },
-      { id: "hours-3", text: "What does it cost if we run over time, and is that charged by the half hour or the hour?" },
+      { id: "hours-3", text: "What does it cost if we run over time, and is that charged by the half hour or the hour?", tip: "Listen for: whether staff and security are charged on top of the room." },
       { id: "hours-4", text: "Is there a local noise rule that ends outdoor music earlier than the venue’s own curfew?" },
       { id: "hours-5", text: "Is any other event happening at the venue on the same day?" },
     ],
@@ -33,8 +34,8 @@ export const CHECKLIST_SECTIONS: ChecklistSection[] = [
       { id: "capacity-1", text: "How many guests can the room really seat once the dance floor, stage, bars, and lounge areas are in?", star: true, why: "A room listed for 200 may seat far fewer with your layout." },
       { id: "capacity-2", text: "Can we see the rain-backup space, and does it fit all our guests?", star: true, why: "A rain plan only helps if you would be happy celebrating in it." },
       { id: "capacity-3", text: "If the weather turns, by what time do we have to decide, and are tents, heaters, or flooring allowed?" },
-      { id: "capacity-4", text: "If the ceremony and reception are in the same room, where do guests wait during the changeover, and does it fit everyone?" },
-      { id: "capacity-5", text: "How many restrooms are there, and are they enough for our guest count?" },
+      { id: "capacity-4", text: "If the ceremony and reception are in the same room, where do guests wait during the changeover, and does it fit everyone?", tip: "Listen for: how long the changeover takes. A cocktail space that’s too small is a common surprise." },
+      { id: "capacity-5", text: "How many restrooms are there, and are they enough for our guest count?", tip: "Listen for: a number, not “plenty.”" },
       { id: "capacity-6", text: "Is there a getting-ready space for both sides, and can hair and makeup work on site?" },
     ],
   },
@@ -54,7 +55,7 @@ export const CHECKLIST_SECTIONS: ChecklistSection[] = [
       { id: "catering-1", text: "Do we have to use the venue’s caterer, pick from their list, or can we bring our own?", star: true, why: "If you must use theirs, the menu and the price are largely decided for you." },
       { id: "catering-2", text: "Can our caterer cook on site?" },
       { id: "catering-3", text: "Can dietary and allergy needs be met?" },
-      { id: "catering-4", text: "Is there a food and drink minimum, and is it lower on off-peak days or seasons?" },
+      { id: "catering-4", text: "Is there a food and drink minimum, and is it lower on off-peak days or seasons?", tip: "A minimum isn’t a quote: tax and service charges often come on top." },
     ],
   },
   {
@@ -62,7 +63,7 @@ export const CHECKLIST_SECTIONS: ChecklistSection[] = [
     why: "“Included” can mean anything. The chairs may be included; the chairs you want may not be.",
     questions: [
       { id: "rentals-1", text: "Which tables, chairs, linens, place settings, bars, and dance floor are included?" },
-      { id: "rentals-2", text: "Can we see the included pieces, and what costs extra to deliver, set up, or clean?" },
+      { id: "rentals-2", text: "Can we see the included pieces, and what costs extra to deliver, set up, or clean?", tip: "“Included” chairs can turn out to be the wrong color, or the glassware plastic. Seeing them is the only way to know." },
       { id: "rentals-4", text: "Can the dance floor be wrapped or covered?" },
     ],
   },
@@ -76,7 +77,7 @@ export const CHECKLIST_SECTIONS: ChecklistSection[] = [
       { id: "decor-3", text: "Can setup start the day before, and can décor stay overnight?" },
       { id: "decor-6", text: "Can large installations get into the room without stairs or tight turns?", star: true, why: "If the big pieces cannot get in, the design changes, however beautiful the room." },
       { id: "decor-8", text: "What time does the room have to be guest-ready?" },
-      { id: "decor-9", text: "Are real candles allowed, and are there rules on the holders (floating only, enclosed)?" },
+      { id: "decor-9", text: "Are real candles allowed, and are there rules on the holders (floating only, enclosed)?", tip: "Some venues allow only floating candles, which can change a whole design." },
       { id: "decor-10", text: "What can be attached to the walls, ceiling, or floor, and are tape, confetti, loose petals, or sparklers allowed?" },
     ],
   },
@@ -100,6 +101,7 @@ export const CHECKLIST_SECTIONS: ChecklistSection[] = [
       { id: "parking-4", text: "Where do guests get dropped off, including shuttles, rideshare, and accessible drop-off?" },
       { id: "parking-5", text: "Is there overflow parking, and would we need a shuttle?" },
       { id: "parking-6", text: "Is the walk from parking safe, accessible, and well lit in bad weather?" },
+      { id: "parking-7", text: "How far is it from the hotels your guests will use, and from the nearest airport?" },
     ],
   },
   {
@@ -109,9 +111,9 @@ export const CHECKLIST_SECTIONS: ChecklistSection[] = [
       { id: "cost-1", text: "Does the quote include everything: venue fee, service charge, tax, staffing, security, cleaning, rentals, parking, valet, power, and overtime?", star: true, why: "Service charges, tax, and overtime are rarely in the first number." },
       { id: "cost-5", text: "Are there admin or credit card fees on top of the service charge?" },
       { id: "cost-6", text: "Can our guest count go down after we sign, or only up?", star: true, why: "Sign for 200, have 150 come, and you may still pay for 200." },
-      { id: "cost-2", text: "Will everything we’ve agreed go in the contract?" },
+      { id: "cost-2", text: "Will everything we’ve agreed go in the contract?", tip: "If it was only said on the tour, it isn’t promised." },
       { id: "cost-4", text: "What deposit and payment schedule do you require, and what happens if we cancel or postpone?", star: true, why: "Know what you would lose before you pay, not after." },
-      { id: "cost-7", text: "Will the person planning with us be the one there on the day?" },
+      { id: "cost-7", text: "Will the person planning with us be the one there on the day?", tip: "Some couples plan with one person and meet a stranger on the day." },
     ],
   },
   {

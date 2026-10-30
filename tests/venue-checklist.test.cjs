@@ -28,10 +28,10 @@ test('the phone checklist asks exactly the PDF questions, in order, with the sam
   assert.deepEqual(app, pdfQuestions);
 });
 
-test('standard edition has 42 questions, multicultural 56', () => {
+test('standard edition has 43 questions, multicultural 57', () => {
   const count = edition => sectionsFor(edition).reduce((n, s) => n + s.questions.length, 0);
-  assert.equal(count('standard'), 42);
-  assert.equal(count('multicultural'), 56);
+  assert.equal(count('standard'), 43);
+  assert.equal(count('multicultural'), 57);
 });
 
 test('the standard edition has ten dealbreakers, and every one says why it matters', () => {

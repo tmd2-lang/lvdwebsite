@@ -74,7 +74,8 @@ Most signups come from Meta ads on phones, where the PDF means pinching and zoom
 
 ## 6. v4 is live (from the Reddit research and Irene's picks)
 
-- **42 questions** (56 multicultural), in plain English. All 7 of Irene's swap-ins are in. The technical questions are now short "For your planner" notes.
+- **43 questions** (57 multicultural), in plain English. After Irene's two later notes, it also teaches more: 8 questions whose answers are easy to misread now have a short "listen for" tip (for example "Listen for: a number, not 'plenty'"). Start Here now asks how far you'll travel and how far your guests will, there's a fill-in line for it, and there's a new question about distance to hotels and the airport.
+- Wording: All 7 of Irene's swap-ins are in. The technical questions are now short "For your planner" notes.
 - **New front page:** "10 questions to never leave a tour without", each with a one-line "why" (for example "Sign for 200, have 150 come, and you may still pay for 200").
 - **Red flags** now sit on the rule page, and **Before You Sign** sits under the Chase List.
 - **Same page count as v3:** 13 standard, 15 multicultural.

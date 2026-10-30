@@ -207,11 +207,13 @@ body{font-weight:400}
 .boxes div,.extra{font-size:9.8pt}
 .bring li{font-size:10pt}
 .start{padding-top:.7in!important;padding-bottom:.6in!important}
-.start .steps li{padding:6pt 0}
-.start .fill{margin-top:12pt}
-.start .fill div{padding:5pt 0}
-.start .note{margin-top:12pt}
-/* v4: a one-line "why" under each dealbreaker, and the ten-dealbreaker page */
+.start .steps li{padding:5pt 0}
+.start .fill{margin-top:10pt;padding-top:9pt;padding-bottom:6pt}
+.start .fill div{padding:3.5pt 0}
+.start .note{margin-top:10pt;padding-top:10pt;padding-bottom:11pt}
+/* v4: a one-line "why" under each dealbreaker (and a "listen for" tip on a few others), and the ten-dealbreaker page */
+.q li .w.tip{font-size:10.4pt;color:var(--muted);padding-left:0}
+.fill div em span.plain::before{display:none}
 .q li .w{grid-column:2;font:italic 400 11pt/1.35 var(--display);color:var(--ink);margin-top:1pt;padding-left:13pt}
 .top10 .steps li{padding:9pt 0;font:italic 400 12pt/1.4 var(--display)}
 .top10 .steps li b{font:400 10.4pt/1.5 var(--body);font-style:normal;margin-bottom:3pt}
@@ -259,7 +261,7 @@ body{font-weight:400}
   <p class="lead" style="margin-bottom:10pt">The venue search often goes wrong when couples start by touring. Start by deciding. These five steps can save you weeks, and tours of venues that were never right for you.</p>
   <ol class="steps">
     <li><span>01</span><div><b>Choose your months, then your dates</b>Pick two months you would be happy to marry in, then two or three dates inside them. Every venue conversation then starts with availability, not guesswork.</div></li>
-    <li><span>02</span><div><b>Choose your area, wider than you think</b>Pick a region, not a single city. In the DMV, that might mean Maryland, Washington DC, and Virginia. Two or three states multiply your options.</div></li>
+    <li><span>02</span><div><b>Decide how far you’ll go, and how far your guests will</b>Pick a region, not a single city: in the DMV, maybe Maryland, DC, and Virginia. Then set a limit on how far you’ll drive to tour, and how far guests will travel, hotels and airports included.</div></li>
     <li><span>03</span><div><b>Decide your style</b>A hotel ballroom, a standalone ballroom, an industrial space, a barn, an estate or garden. And decide whether you want a space that is already beautiful, or an empty canvas to transform.</div></li>
     <li><span>04</span><div><b>Decide how your day flows</b>Ceremony, cocktail hour, and reception all in one place? A church ceremony, then a reception venue nearby? An outdoor ceremony? These answers change which venues can work.</div></li>
     <li><span>05</span><div><b>Build your shortlist, then email before you tour</b>We recommend listing five to ten venues that fit, then emailing each one with your guest count to ask for a rough total cost and a video walkthrough of the space.</div></li>
@@ -269,6 +271,7 @@ body{font-weight:400}
     <div>My two months<i></i></div>
     <div>My dates<i></i></div>
     <div>My area<i></i></div>
+    <div>How far we’ll go<em><span class="plain">Us: ______ hours</span><span class="plain">Our guests: ______ hours</span></em></div>
     <div>My style<i></i></div>
     <div>My flow<em><span>All in one venue</span><span>Church + reception</span><span>Outdoor ceremony</span></em></div>
     <div>My shortlist<i></i></div>
@@ -354,7 +357,7 @@ body{font-weight:400}
     <ul class="q">
       <li><span class="t">What time can our vendors start setting up, and when does setup have to be finished?</span></li>
       <li class="s"><span class="t">What time does everything have to end: music, the bar, guests, and vendors packing up?</span><span class="w">An early end time changes the whole shape of the day.</span><div class="ans"><span>Answer</span><i></i><span>Who said it</span><i></i></div></li>
-      <li><span class="t">What does it cost if we run over time, and is that charged by the half hour or the hour?</span></li>
+      <li><span class="t">What does it cost if we run over time, and is that charged by the half hour or the hour?</span><span class="w tip">Listen for: whether staff and security are charged on top of the room.</span></li>
       <li><span class="t">Is there a local noise rule that ends outdoor music earlier than the venue’s own curfew?</span></li>
       <li><span class="t">Is any other event happening at the venue on the same day?</span></li>
     </ul>
@@ -367,8 +370,8 @@ body{font-weight:400}
       <li class="s"><span class="t">How many guests can the room really seat once the dance floor, stage, bars, and lounge areas are in?</span><span class="w">A room listed for 200 may seat far fewer with your layout.</span><div class="ans"><span>Answer</span><i></i><span>Who said it</span><i></i></div></li>
       <li class="s"><span class="t">Can we see the rain-backup space, and does it fit all our guests?</span><span class="w">A rain plan only helps if you would be happy celebrating in it.</span><div class="ans"><span>Answer</span><i></i><span>Who said it</span><i></i></div></li>
       <li><span class="t">If the weather turns, by what time do we have to decide, and are tents, heaters, or flooring allowed?</span></li>
-      <li><span class="t">If the ceremony and reception are in the same room, where do guests wait during the changeover, and does it fit everyone?</span></li>
-      <li><span class="t">How many restrooms are there, and are they enough for our guest count?</span></li>
+      <li><span class="t">If the ceremony and reception are in the same room, where do guests wait during the changeover, and does it fit everyone?</span><span class="w tip">Listen for: how long the changeover takes. A cocktail space that’s too small is a common surprise.</span></li>
+      <li><span class="t">How many restrooms are there, and are they enough for our guest count?</span><span class="w tip">Listen for: a number, not “plenty.”</span></li>
       <li><span class="t">Is there a getting-ready space for both sides, and can hair and makeup work on site?</span></li>
     </ul>
     <div class="verdict"><p class="label">Verdict</p><span>Clear</span><span>Needs follow-up</span><span>Dealbreaker</span></div>
@@ -394,7 +397,7 @@ body{font-weight:400}
       <li class="s"><span class="t">Do we have to use the venue’s caterer, pick from their list, or can we bring our own?</span><span class="w">If you must use theirs, the menu and the price are largely decided for you.</span><div class="ans"><span>Answer</span><i></i><span>Who said it</span><i></i></div></li>
       <li><span class="t">Can our caterer cook on site?</span></li>
       <li><span class="t">Can dietary and allergy needs be met?</span></li>
-      <li><span class="t">Is there a food and drink minimum, and is it lower on off-peak days or seasons?</span></li>
+      <li><span class="t">Is there a food and drink minimum, and is it lower on off-peak days or seasons?</span><span class="w tip">A minimum isn’t a quote: tax and service charges often come on top.</span></li>
     </ul>
     <div class="verdict"><p class="label">Verdict</p><span>Clear</span><span>Needs follow-up</span><span>Dealbreaker</span></div>
   </div>
@@ -403,7 +406,7 @@ body{font-weight:400}
     <p class="why">“Included” can mean anything. The chairs may be included; the chairs you want may not be.</p>
     <ul class="q">
       <li><span class="t">Which tables, chairs, linens, place settings, bars, and dance floor are included?</span></li>
-      <li><span class="t">Can we see the included pieces, and what costs extra to deliver, set up, or clean?</span></li>
+      <li><span class="t">Can we see the included pieces, and what costs extra to deliver, set up, or clean?</span><span class="w tip">“Included” chairs can turn out to be the wrong color, or the glassware plastic. Seeing them is the only way to know.</span></li>
       <li><span class="t">Can the dance floor be wrapped or covered?</span></li>
     </ul>
     <div class="verdict"><p class="label">Verdict</p><span>Clear</span><span>Needs follow-up</span><span>Dealbreaker</span></div>
@@ -421,7 +424,7 @@ body{font-weight:400}
       <li><span class="t">Can setup start the day before, and can décor stay overnight?</span></li>
       <li class="s"><span class="t">Can large installations get into the room without stairs or tight turns?</span><span class="w">If the big pieces cannot get in, the design changes, however beautiful the room.</span><div class="ans"><span>Answer</span><i></i><span>Who said it</span><i></i></div></li>
       <li><span class="t">What time does the room have to be guest-ready?</span></li>
-      <li><span class="t">Are real candles allowed, and are there rules on the holders (floating only, enclosed)?</span></li>
+      <li><span class="t">Are real candles allowed, and are there rules on the holders (floating only, enclosed)?</span><span class="w tip">Some venues allow only floating candles, which can change a whole design.</span></li>
       <li><span class="t">What can be attached to the walls, ceiling, or floor, and are tape, confetti, loose petals, or sparklers allowed?</span></li>
     </ul>
     <p class="designer"><b>For your planner:</b> whether the room is on the loading level, the dock or service entrance, and measuring the path from the truck to the room.</p>
@@ -453,6 +456,7 @@ body{font-weight:400}
       <li><span class="t">Where do guests get dropped off, including shuttles, rideshare, and accessible drop-off?</span></li>
       <li><span class="t">Is there overflow parking, and would we need a shuttle?</span></li>
       <li><span class="t">Is the walk from parking safe, accessible, and well lit in bad weather?</span></li>
+      <li><span class="t">How far is it from the hotels your guests will use, and from the nearest airport?</span></li>
     </ul>
     <div class="verdict"><p class="label">Verdict</p><span>Clear</span><span>Needs follow-up</span><span>Dealbreaker</span></div>
   </div>
@@ -468,9 +472,9 @@ body{font-weight:400}
       <li class="s"><span class="t">Does the quote include everything: venue fee, service charge, tax, staffing, security, cleaning, rentals, parking, valet, power, and overtime?</span><span class="w">Service charges, tax, and overtime are rarely in the first number.</span><div class="ans"><span>Answer</span><i></i><span>Who said it</span><i></i></div></li>
       <li><span class="t">Are there admin or credit card fees on top of the service charge?</span></li>
       <li class="s"><span class="t">Can our guest count go down after we sign, or only up?</span><span class="w">Sign for 200, have 150 come, and you may still pay for 200.</span><div class="ans"><span>Answer</span><i></i><span>Who said it</span><i></i></div></li>
-      <li><span class="t">Will everything we’ve agreed go in the contract?</span></li>
+      <li><span class="t">Will everything we’ve agreed go in the contract?</span><span class="w tip">If it was only said on the tour, it isn’t promised.</span></li>
       <li class="s"><span class="t">What deposit and payment schedule do you require, and what happens if we cancel or postpone?</span><span class="w">Know what you would lose before you pay, not after.</span><div class="ans"><span>Answer</span><i></i><span>Who said it</span><i></i></div></li>
-      <li><span class="t">Will the person planning with us be the one there on the day?</span></li>
+      <li><span class="t">Will the person planning with us be the one there on the day?</span><span class="w tip">Some couples plan with one person and meet a stranger on the day.</span></li>
     </ul>
     <div class="verdict"><p class="label">Verdict</p><span>Clear</span><span>Needs follow-up</span><span>Dealbreaker</span></div>
   </div>
