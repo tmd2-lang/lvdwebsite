@@ -19,7 +19,7 @@ const { CHECKLIST_SECTIONS, sectionsFor } = load('src/lib/venue-checklist-questi
 const { cleanTour, MAX_VENUES } = load('src/lib/venue-checklist-tour.ts');
 
 // The PDF source, reduced to its question text and stars.
-const pdf = fs.readFileSync('docs/venue-checklist/v3/index.html', 'utf8');
+const pdf = fs.readFileSync('docs/venue-checklist/v4/index.html', 'utf8');
 const decode = s => s.replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
 const pdfQuestions = [...pdf.matchAll(/<li( class="s")?><span class="t">(.*?)<\/span>/gs)].map(m => ({ text: decode(m[2]), star: Boolean(m[1]) }));
 
@@ -28,10 +28,16 @@ test('the phone checklist asks exactly the PDF questions, in order, with the sam
   assert.deepEqual(app, pdfQuestions);
 });
 
-test('standard edition has 45 questions, multicultural 59', () => {
+test('standard edition has 42 questions, multicultural 56', () => {
   const count = edition => sectionsFor(edition).reduce((n, s) => n + s.questions.length, 0);
-  assert.equal(count('standard'), 45);
-  assert.equal(count('multicultural'), 59);
+  assert.equal(count('standard'), 42);
+  assert.equal(count('multicultural'), 56);
+});
+
+test('the standard edition has ten dealbreakers, and every one says why it matters', () => {
+  const stars = sectionsFor('standard').flatMap(s => s.questions).filter(q => q.star);
+  assert.equal(stars.length, 10);
+  for (const q of CHECKLIST_SECTIONS.flatMap(s => s.questions).filter(q => q.star)) assert.ok(q.why, q.id);
 });
 
 test('question ids are unique', () => {
@@ -43,7 +49,7 @@ test('saved progress keeps known answers and drops anything unexpected', () => {
   const tour = cleanTour({
     venues: [{
       id: 'a1', name: 'The Grand', email: 'events@grand.com',
-      marks: { 'hours-1': 'slash', 'hours-2': 'check', 'cost-1': 'na', 'made-up': 'check', 'hours-3': 'maybe' },
+      marks: { 'hours-1': 'slash', 'hours-2': 'check', 'cost-1': 'na', 'made-up': 'check', 'hours-3': 'maybe', 'alcohol-2': 'check' },
       answers: { 'hours-2': { answer: 'Midnight', who: 'Dana' }, 'nope': { answer: 'x' } },
       verdicts: { hours: 'clear', capacity: 'awful', ghost: 'deal' },
       notes: 'Lovely light', extra: 'ignored',

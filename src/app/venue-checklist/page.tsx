@@ -3,8 +3,8 @@ import ChecklistForm from "./ChecklistForm";
 import styles from "./venue-checklist.module.css";
 
 const INSIDE = [
-  ["Every question that matters", "Hours, capacity, catering, décor access, parking, and the true total cost, plus the red flags to listen for."],
-  ["Start here", "Five steps to take before you contact a single venue."],
+  ["10 questions to never leave a tour without", "Including the one most couples miss: can your guest count go down after you sign?"],
+  ["Every question that matters", "Hours, capacity, catering, what’s really included, parking, and the true total cost, in plain English."],
   ["One box, three marks", "Asked, told yes, or confirmed in writing, so you know what is still only a promise."],
   ["A multicultural edition", "A dedicated chapter for multiple ceremonies, sacred fire, processions, and family needs."],
 ];
@@ -15,12 +15,12 @@ function GuidePreview() {
     <div className="relative mx-auto w-full max-w-[340px] sm:max-w-[400px] aspect-[3/3.1]">
       <div className="absolute left-[2%] top-[9%] w-[60%] rotate-[-7deg]">
         <div className={`${styles.settle} ${styles.fromLeft} shadow-[0_18px_40px_rgba(20,18,15,0.18)]`}>
-          <Image src="/venue-checklist/v3-questions-bw.jpg" alt="" width={1100} height={1424} sizes="240px" className="w-full h-auto" />
+          <Image src="/venue-checklist/v4-questions.jpg" alt="" width={1100} height={1424} sizes="240px" className="w-full h-auto" />
         </div>
       </div>
       <div className="absolute right-[2%] top-[9%] w-[60%] rotate-[7deg]">
         <div className={`${styles.settle} ${styles.fromRight} shadow-[0_18px_40px_rgba(20,18,15,0.18)]`}>
-          <Image src="/venue-checklist/v3-start-here-lg.jpg" alt="" width={1100} height={1424} sizes="240px" className="w-full h-auto" />
+          <Image src="/venue-checklist/v4-top10.jpg" alt="" width={1100} height={1424} sizes="240px" className="w-full h-auto" />
         </div>
       </div>
       <div className="absolute left-1/2 top-0 w-[66%] -translate-x-1/2">

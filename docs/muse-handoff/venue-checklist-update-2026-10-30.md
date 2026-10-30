@@ -71,3 +71,13 @@ Most signups come from Meta ads on phones, where the PDF means pinching and zoom
 - **Saved to her lead, through a private link** in Email 1 (no account or password). It works on any phone or browser and survives Instagram's built-in browser, which would wipe a phone-only save. It also keeps a copy on the phone so it works on tours with bad signal.
 - **Same questions as the PDF,** read from one shared list, so a question change only happens once.
 - **Later, optional:** Irene could see which venues a couple is touring and what they marked as a dealbreaker before the consultation. If we add this, the app will say plainly that answers are saved with Lady Victoria Designs.
+
+## 6. v4 is live (from the Reddit research and Irene's picks)
+
+- **42 questions** (56 multicultural), in plain English. All 7 of Irene's swap-ins are in. The technical questions are now short "For your planner" notes.
+- **New front page:** "10 questions to never leave a tour without", each with a one-line "why" (for example "Sign for 200, have 150 come, and you may still pay for 200").
+- **Red flags** now sit on the rule page, and **Before You Sign** sits under the Chase List.
+- **Same page count as v3:** 13 standard, 15 multicultural.
+- **Phone version updated to match:** the "why" lines, the planner notes, and a "Show just the 10 dealbreakers" switch for couples short on time.
+- **Landing page:** the previews now show the 10-questions page, and "Inside the guide" leads with it.
+- Full old-vs-new list: `docs/venue-checklist/v4-question-list.md`.

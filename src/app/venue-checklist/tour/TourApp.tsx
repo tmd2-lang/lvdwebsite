@@ -39,6 +39,7 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
   const [open, setOpen] = useState<Record<string, boolean>>({ [sections[0].id]: true });
   const [saveState, setSaveState] = useState<SaveState>("saved");
   const [copied, setCopied] = useState(false);
+  const [onlyStars, setOnlyStars] = useState(false);
   const dirty = useRef(false);
   const latest = useRef(tour);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -213,9 +214,14 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
             <span className="flex items-center gap-2"><Box mark="slash" size={20} />Told yes</span>
             <span className="flex items-center gap-2"><Box mark="check" size={20} />In writing</span>
           </div>
+          <button onClick={() => { setOnlyStars((on) => !on); if (!onlyStars) setOpen(Object.fromEntries(sections.map((s) => [s.id, true]))); }}
+            className={`w-full mb-5 rounded-xl border px-4 py-3.5 text-left font-body text-[14px] ${onlyStars ? "border-ink bg-ink text-white" : "border-ink/20"}`}>
+            <span className="text-gold mr-1.5">★</span>{onlyStars ? "Showing just the 10 dealbreakers · show everything" : "Short on time? Show just the 10 dealbreakers"}
+          </button>
           <p className="font-body text-sm text-ink/70 mb-6 leading-relaxed">Tap a box to change it. Tap <b className="font-medium">Skip</b> on anything that doesn’t apply. For <span className="text-gold">★</span> dealbreakers, write down the answer and who said it.</p>
 
           {sections.map((section) => {
+            if (onlyStars && !section.questions.some((q) => q.star)) return null;
             const isOpen = open[section.id];
             const live = section.questions.filter((q) => venue.marks[q.id] !== "na");
             const done = live.filter((q) => venue.marks[q.id]).length;
@@ -234,7 +240,7 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
                   <div className="pb-7">
                     {section.why && <p className="font-display italic text-[1.05rem] text-ink/70 mb-4 leading-snug">{section.why}</p>}
                     <ul>
-                      {section.questions.map((q) => {
+                      {section.questions.filter((q) => !onlyStars || q.star).map((q) => {
                         const mark = venue.marks[q.id];
                         const skipped = mark === "na";
                         return (
@@ -246,6 +252,7 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
                               </button>
                               <p className={`flex-1 font-body text-[15px] leading-relaxed pt-0.5 ${skipped ? "line-through text-ink/35" : ""}`}>
                                 {q.star && <span className="text-gold mr-1.5">★</span>}{q.text}
+                                {q.why && !skipped && <span className="block font-display italic text-[1.02rem] text-ink/70 mt-1 leading-snug">{q.why}</span>}
                               </p>
                               <button onClick={() => toggleNa(q.id)} className="shrink-0 font-body text-[11px] uppercase tracking-[0.12em] text-ink/45 pt-1.5">
                                 {skipped ? "Undo" : "Skip"}
@@ -261,6 +268,11 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
                         );
                       })}
                     </ul>
+                    {section.planner && !onlyStars && (
+                      <p className="mt-4 p-4 rounded-xl bg-ink/[0.04] font-body text-[13px] leading-relaxed text-ink/75">
+                        <b className="font-semibold text-ink">For your planner:</b> {section.planner}
+                      </p>
+                    )}
                     <div className="mt-5">
                       <p className={`${kicker} mb-2.5`}>Verdict</p>
                       <div className="flex flex-wrap gap-2">
