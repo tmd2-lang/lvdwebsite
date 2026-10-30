@@ -40,6 +40,7 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
   const [saveState, setSaveState] = useState<SaveState>("saved");
   const [copied, setCopied] = useState(false);
   const [onlyStars, setOnlyStars] = useState(false);
+  const [confirmRemove, setConfirmRemove] = useState(false);
   const dirty = useRef(false);
   const latest = useRef(tour);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -127,12 +128,13 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
     setView("checklist");
   };
   // With one venue left there is nothing to switch to, so "remove" starts it over instead.
+  // Confirmed in the page, not with window.confirm: in-app browsers (Instagram, Facebook)
+  // often block that dialog, so the delete would silently never happen.
   const removeVenue = () => {
-    const only = tour.venues.length < 2;
-    if (!window.confirm(only ? "Clear every answer and start this checklist over?" : `Remove ${venue.name.trim() || "this venue"} and all its answers?`)) return;
-    const rest = only ? [newVenue("Venue 1")] : tour.venues.filter((v) => v.id !== venue.id);
+    const rest = tour.venues.length < 2 ? [newVenue("Venue 1")] : tour.venues.filter((v) => v.id !== venue.id);
     update((t) => ({ ...t, venues: rest }));
     setVenueId(rest[0].id);
+    setConfirmRemove(false);
   };
 
   const allQuestions = useMemo(() => sections.flatMap((s) => s.questions.map((q) => ({ ...q, section: s }))), [sections]);
@@ -175,12 +177,12 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
         <div className="max-w-2xl mx-auto px-5 pb-3 flex gap-2 overflow-x-auto [scrollbar-width:none]">
           {tour.venues.map((v) => (
             <span key={v.id} className={`shrink-0 flex items-center rounded-full border font-body text-sm ${v.id === venue.id ? "bg-ink text-white border-ink" : "border-ink/25 text-ink/75"}`}>
-              <button onClick={() => setVenueId(v.id)} className={`py-2 ${v.id === venue.id && tour.venues.length > 1 ? "pl-4 pr-1" : "px-4"}`}>
+              <button onClick={() => { setVenueId(v.id); setConfirmRemove(false); }} className={`py-2 ${v.id === venue.id && tour.venues.length > 1 ? "pl-4 pr-1" : "px-4"}`}>
                 {v.name.trim() || "Untitled venue"}
               </button>
               {/* Delete straight from the tab, for a venue added by mistake. */}
               {v.id === venue.id && tour.venues.length > 1 && (
-                <button onClick={removeVenue} aria-label={`Delete ${v.name.trim() || "this venue"}`} className="pl-1 pr-3 py-2 text-white/70 text-base leading-none">×</button>
+                <button onClick={() => { setVenueId(v.id); setConfirmRemove(true); window.scrollTo({ top: 0, behavior: "smooth" }); }} aria-label={`Delete ${v.name.trim() || "this venue"}`} className="pl-1 pr-3 py-2 text-white/70 text-base leading-none">×</button>
               )}
             </span>
           ))}
@@ -205,10 +207,23 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
           </label>
           <div className="flex items-center justify-between gap-4 mt-2">
             <p className="font-body text-[13px] text-gold">{/^Venue \d+$/.test(venue.name.trim()) ? "Tap the name to rename it." : ""}</p>
-            <button onClick={removeVenue} className="shrink-0 font-body text-[12px] text-ink/50 underline underline-offset-4">
+            <button onClick={() => setConfirmRemove(true)} className="shrink-0 font-body text-[12px] text-ink/50 underline underline-offset-4">
               {tour.venues.length > 1 ? "Remove venue" : "Start over"}
             </button>
           </div>
+          {confirmRemove && (
+            <div role="alertdialog" aria-label="Confirm" className="mt-3 p-4 rounded-xl border border-[#8A2F22]/30 bg-[#F4E0DC]/60">
+              <p className="font-body text-[14px] mb-3">
+                {tour.venues.length > 1 ? `Delete ${venue.name.trim() || "this venue"} and all its answers?` : "Clear every answer and start over?"}
+              </p>
+              <div className="flex gap-3">
+                <button onClick={removeVenue} className="rounded-full bg-[#8A2F22] text-white font-body text-[13px] px-5 py-2.5">
+                  {tour.venues.length > 1 ? "Delete venue" : "Clear everything"}
+                </button>
+                <button onClick={() => setConfirmRemove(false)} className="rounded-full border border-ink/25 font-body text-[13px] px-5 py-2.5">Cancel</button>
+              </div>
+            </div>
+          )}
           <p className="font-body text-sm text-ink/70 mt-3">
             {progress.asked} of {progress.total} asked · {progress.confirmed} confirmed in writing
           </p>
