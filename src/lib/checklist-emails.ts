@@ -30,7 +30,10 @@ export type ChecklistLead = {
 };
 
 type Copy = { subject: string; preview: string; blocks: Block[] };
-type Block = { p: string } | { list: [bold: string, rest: string][] } | { button: [label: string, href: string] };
+type Block = { p: string } | { list: [bold: string, rest: string][] } | { button: [label: string, href: string] }
+  | { feedback: [question: string, yesHref: string, noHref: string] };
+export type ChecklistFeedback = "yes" | "no";
+const FEEDBACK_LABELS: Record<ChecklistFeedback, string> = { yes: "Yes, it helped", no: "Not really" };
 
 function readLead(lead: ChecklistLead) {
   const payload = lead.payload || {};
@@ -91,6 +94,7 @@ function copyFor(step: ChecklistStep, lead: ChecklistLead): Copy {
       ] },
       { p: "These are the questions our planning team asks on every tour. If you’d rather we handled them for you:" },
       { button: ["See how we plan", trackedUrl(PLANNING_URL, 2)] },
+      { feedback: ["One quick question: was the checklist useful?", feedbackUrl(lead.id, "yes"), feedbackUrl(lead.id, "no")] },
     ],
   };
   return {
@@ -118,6 +122,11 @@ function render(copy: Copy, unsubscribeUrl: string) {
     if ("p" in block) return `<p style="margin:0 0 18px;font:16px/1.65 ${sans};color:#3a3631">${escapeHtml(block.p)}</p>`;
     if ("list" in block) return `<ol style="margin:0 0 18px;padding-left:22px;font:16px/1.65 ${sans};color:#3a3631">${block.list
       .map(([bold, rest]) => `<li style="margin:0 0 10px"><strong style="color:#14120F">${escapeHtml(bold)}</strong> ${escapeHtml(rest)}</li>`).join("")}</ol>`;
+    if ("feedback" in block) {
+      const [question, yes, no] = block.feedback;
+      const pill = (href: string, label: string) => `<td style="padding:0 8px 0 0"><a href="${escapeHtml(href)}" style="display:inline-block;padding:11px 22px;border:1px solid #14120F;border-radius:999px;font:600 11px/1 ${sans};letter-spacing:1.8px;text-transform:uppercase;color:#14120F;text-decoration:none">${escapeHtml(label)}</a></td>`;
+      return `<div style="margin:4px 0 26px;padding:22px 0 0;border-top:1px solid #E4DED3"><p style="margin:0 0 14px;font:16px/1.65 ${sans};color:#3a3631">${escapeHtml(question)}</p><table role="presentation" cellpadding="0" cellspacing="0"><tr>${pill(yes, FEEDBACK_LABELS.yes)}${pill(no, FEEDBACK_LABELS.no)}</tr></table></div>`;
+    }
     const [label, href] = block.button;
     return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:6px 0 26px"><tr><td style="border-radius:999px;background:#14120F"><a href="${escapeHtml(href)}" style="display:inline-block;padding:15px 34px;font:600 12px/1 ${sans};letter-spacing:2.4px;text-transform:uppercase;color:#F7F4EE;text-decoration:none">${escapeHtml(label)}</a></td></tr></table>`;
   }).join("");
@@ -141,6 +150,7 @@ You’re receiving this because you downloaded the venue checklist at ladyvictor
   const text = [
     ...copy.blocks.map((block) => "p" in block ? block.p
       : "list" in block ? block.list.map(([bold, rest], i) => `${i + 1}. ${bold} ${rest}`).join("\n")
+      : "feedback" in block ? `${block.feedback[0]}\n${FEEDBACK_LABELS.yes}: ${block.feedback[1]}\n${FEEDBACK_LABELS.no}: ${block.feedback[2]}`
       : `${block.button[0]}: ${block.button[1]}`),
     "Warmly,\nIrene\nIrene Ntiako, Founder & Creative Director, Lady Victoria Designs",
     `Unsubscribe: ${unsubscribeUrl}`,
@@ -154,14 +164,22 @@ function unsubscribeSecret() {
   return secret;
 }
 
-export function unsubscribeToken(leadId: string) {
-  return createHmac("sha256", unsubscribeSecret()).update(`checklist-unsubscribe:${leadId}`).digest("hex").slice(0, 32);
+function linkToken(purpose: "unsubscribe" | "feedback", leadId: string) {
+  return createHmac("sha256", unsubscribeSecret()).update(`checklist-${purpose}:${leadId}`).digest("hex").slice(0, 32);
 }
 
-export function validUnsubscribeToken(leadId: string, token: string) {
-  const expected = Buffer.from(unsubscribeToken(leadId));
+function validLinkToken(purpose: "unsubscribe" | "feedback", leadId: string, token: string) {
+  const expected = Buffer.from(linkToken(purpose, leadId));
   const given = Buffer.from(token);
   return given.length === expected.length && timingSafeEqual(given, expected);
+}
+
+export const unsubscribeToken = (leadId: string) => linkToken("unsubscribe", leadId);
+export const validUnsubscribeToken = (leadId: string, token: string) => validLinkToken("unsubscribe", leadId, token);
+export const validFeedbackToken = (leadId: string, token: string) => validLinkToken("feedback", leadId, token);
+
+export function feedbackUrl(leadId: string, answer: ChecklistFeedback) {
+  return `${SITE}/api/venue-checklist/feedback?id=${encodeURIComponent(leadId)}&a=${answer}&t=${linkToken("feedback", leadId)}`;
 }
 
 export function unsubscribeUrl(leadId: string) {
@@ -268,4 +286,23 @@ export async function unsubscribeLead(leadId: string) {
     method: "PATCH", headers: db.headers, body: JSON.stringify({ payload: { ...(row.payload || {}), unsubscribed: new Date().toISOString() } }), cache: "no-store",
   });
   return saved.ok;
+}
+
+/** Saves "was the checklist useful?" on the lead, and adds a note the studio sees in Inquiries when the answer is new. */
+export async function recordChecklistFeedback(leadId: string, answer: ChecklistFeedback) {
+  const db = supabase();
+  const response = await fetch(`${db.url}/rest/v1/leads?id=eq.${encodeURIComponent(leadId)}&source=eq.venue_checklist&select=payload`, { headers: db.headers, cache: "no-store" });
+  const [row] = await response.json() as { payload: Record<string, unknown> | null }[];
+  if (!row) return false;
+  const payload = row.payload || {};
+  if ((payload.feedback as { answer?: string } | undefined)?.answer === answer) return true;
+  const saved = await fetch(`${db.url}/rest/v1/leads?id=eq.${encodeURIComponent(leadId)}`, {
+    method: "PATCH", headers: db.headers, body: JSON.stringify({ payload: { ...payload, feedback: { answer, at: new Date().toISOString() } } }), cache: "no-store",
+  });
+  if (!saved.ok) return false;
+  await fetch(`${db.url}/rest/v1/lead_notes`, {
+    method: "POST", headers: db.headers, cache: "no-store",
+    body: JSON.stringify({ lead_id: leadId, author_name: "Venue checklist email", body: `Was the checklist useful? ${FEEDBACK_LABELS[answer]}.` }),
+  }).catch(() => undefined);
+  return true;
 }

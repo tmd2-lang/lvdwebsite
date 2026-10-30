@@ -66,6 +66,12 @@ Most couples ask about capacity and catering. Far fewer ask about the hours befo
 
 These are the questions our planning team asks on every tour. If you'd rather we handled them for you, **[See how we plan]**.
 
+One quick question: was the checklist useful?
+
+**[Yes, it helped]** **[Not really]**
+
+*(Each answer is saved on her lead and shows up as a note in Inquiries. The thank-you page asks "Not really" answers to reply with what was missing.)*
+
 Warmly,
 Irene
 
