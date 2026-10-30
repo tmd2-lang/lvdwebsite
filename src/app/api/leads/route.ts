@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import nodemailer from "nodemailer";
 import { after } from "next/server";
 import { attributionColumns } from "@/lib/attribution";
-import { sendChecklistEmail } from "@/lib/checklist-emails";
+import { sendChecklistEmail, tourPath } from "@/lib/checklist-emails";
 import { isMarketingSolicitation, type LeadNotification } from "@/lib/lead-quality";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -269,7 +269,10 @@ ${attachmentsList}
     }
 
     // SMTP runs later; never claim delivery before the attempt has happened.
-    return Response.json({ leadId, notificationSent: false, notificationStatus, trackingEligible: !solicitation });
+    return Response.json({
+      leadId, notificationSent: false, notificationStatus, trackingEligible: !solicitation,
+      ...(source === "venue_checklist" && leadId ? { tourPath: tourPath(leadId) } : {}),
+    });
   } catch (error) {
     console.error("Lead submission failed:", error);
     return Response.json({ error: "Could not submit your inquiry. Please try again." }, { status: 400 });

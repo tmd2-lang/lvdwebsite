@@ -25,7 +25,7 @@ export type LeadSubmission = {
   payload?: Record<string, unknown>;
 };
 
-type SubmissionResult = { leadId: string; notificationSent: false; notificationStatus: "queued" | "not_configured"; trackingEligible: boolean };
+type SubmissionResult = { leadId: string; notificationSent: false; notificationStatus: "queued" | "not_configured"; trackingEligible: boolean; tourPath?: string };
 const pendingSubmissions = new Map<string, Promise<SubmissionResult>>();
 
 /** A double click while a save is in flight shares the original request. */

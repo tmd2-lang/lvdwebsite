@@ -73,6 +73,8 @@ function copyFor(step: ChecklistStep, lead: ChecklistLead): Copy {
       { p: `Hi ${firstName},` },
       { p: "Your venue checklist is ready! You can download it here:" },
       { button: ["Download your checklist", PDF[multicultural ? "multicultural" : "standard"]] },
+      { p: "Prefer your phone? This version lets you tap through the questions on the tour, and your answers save as you go:" },
+      { button: ["Open it on your phone", tourUrl(lead.id)] },
       { p: `${booked ? "One tip as you work through the details with your venue" : "One tip before your next tour"}: you don’t need to ask every question.` },
       { p: "Cross out what doesn’t apply, and get the answers that matter most confirmed in writing." },
       { p: "If you remember only one thing: “We’re flexible” is not a yes." },
@@ -192,11 +194,13 @@ function unsubscribeSecret() {
   return secret;
 }
 
-function linkToken(purpose: "unsubscribe" | "feedback", leadId: string) {
+type LinkPurpose = "unsubscribe" | "feedback" | "tour";
+
+function linkToken(purpose: LinkPurpose, leadId: string) {
   return createHmac("sha256", unsubscribeSecret()).update(`checklist-${purpose}:${leadId}`).digest("hex").slice(0, 32);
 }
 
-function validLinkToken(purpose: "unsubscribe" | "feedback", leadId: string, token: string) {
+function validLinkToken(purpose: LinkPurpose, leadId: string, token: string) {
   const expected = Buffer.from(linkToken(purpose, leadId));
   const given = Buffer.from(token);
   return given.length === expected.length && timingSafeEqual(given, expected);
@@ -205,6 +209,14 @@ function validLinkToken(purpose: "unsubscribe" | "feedback", leadId: string, tok
 export const unsubscribeToken = (leadId: string) => linkToken("unsubscribe", leadId);
 export const validUnsubscribeToken = (leadId: string, token: string) => validLinkToken("unsubscribe", leadId, token);
 export const validFeedbackToken = (leadId: string, token: string) => validLinkToken("feedback", leadId, token);
+
+export const validTourToken = (leadId: string, token: string) => validLinkToken("tour", leadId, token);
+
+/** The couple's private link to the phone checklist; their progress is saved on their lead. */
+export function tourPath(leadId: string) {
+  return `/venue-checklist/tour?id=${encodeURIComponent(leadId)}&t=${linkToken("tour", leadId)}`;
+}
+export const tourUrl = (leadId: string) => `${SITE}${tourPath(leadId)}`;
 
 export function feedbackUrl(leadId: string, answer: ChecklistFeedback) {
   return `${SITE}/venue-checklist/feedback?id=${encodeURIComponent(leadId)}&a=${answer}&t=${linkToken("feedback", leadId)}`;

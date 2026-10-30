@@ -29,6 +29,8 @@ Hi [Name],
 
 Your venue checklist is ready! You can download it here: **[Download your checklist]**
 
+Prefer your phone? This version lets you tap through the questions on the tour, and your answers save as you go: **[Open it on your phone]**
+
 - *Still looking:* One tip before your next tour:
 - *Already booked:* One tip as you work through the details with your venue:
 

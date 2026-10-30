@@ -32,6 +32,7 @@ function setup() {
       if (name === 'nodemailer') return {};
       if (name === 'next/server') return { after() { effects.notifications++; } };
       if (name === '@/lib/attribution') return { attributionColumns: () => ({}) };
+      if (name === '@/lib/checklist-emails') return { sendChecklistEmail: async () => true, tourPath: id => `/venue-checklist/tour?id=${id}` };
       if (name === '@/lib/lead-quality') {
         const quality = { exports: {} };
         vm.runInNewContext(ts.transpileModule(fs.readFileSync('src/lib/lead-quality.ts', 'utf8'), {

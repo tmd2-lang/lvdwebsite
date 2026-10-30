@@ -86,6 +86,7 @@ export default function ChecklistForm() {
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
   const [leadId, setLeadId] = useState("");
+  const [tourPath, setTourPath] = useState("");
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
@@ -111,6 +112,7 @@ export default function ChecklistForm() {
         payload: { edition, venueStatus: venue, weddingMonth: dateUnsure ? null : month },
       });
       setLeadId(saved.leadId);
+      setTourPath(saved.tourPath || "");
     } catch (saveError) {
       // The download matters more than the record: never hold the guide back over a failed save.
       console.error("Venue checklist signup was not saved:", saveError);
@@ -129,12 +131,24 @@ export default function ChecklistForm() {
         <p className="font-body text-sm text-ink/70 leading-relaxed max-w-sm mx-auto mb-8">
           {edition === "multicultural"
             ? "Here is the Multicultural Edition, with a chapter for multiple ceremonies, sacred traditions, and processions."
-            : "Save it to your phone or print it before your next venue tour."}
+            : tourPath ? "Use it on your phone during the tour, or download the printable PDF." : "Save it to your phone or print it before your next venue tour."}
         </p>
-        <a href={PDF[edition]} download
-          className="inline-flex items-center gap-3 bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 rounded-full hover:bg-gold hover:text-ink transition-colors">
-          Download the checklist
-        </a>
+        {tourPath ? (
+          <div className="flex flex-col items-center gap-4">
+            <a href={tourPath}
+              className="inline-flex items-center gap-3 bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 rounded-full hover:bg-gold hover:text-ink transition-colors">
+              Open it on your phone
+            </a>
+            <a href={PDF[edition]} download className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/70 border-b border-ink/25 pb-1 hover:text-gold hover:border-gold transition-colors">
+              Download the PDF
+            </a>
+          </div>
+        ) : (
+          <a href={PDF[edition]} download
+            className="inline-flex items-center gap-3 bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 rounded-full hover:bg-gold hover:text-ink transition-colors">
+            Download the checklist
+          </a>
+        )}
         <p className="font-body text-xs text-ink/55 leading-relaxed max-w-sm mx-auto mt-6">
           We’ve also emailed you a copy. If you don’t see it, check your Promotions or spam folder.
         </p>
