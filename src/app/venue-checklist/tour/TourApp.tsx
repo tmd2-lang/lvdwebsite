@@ -174,10 +174,15 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
         </div>
         <div className="max-w-2xl mx-auto px-5 pb-3 flex gap-2 overflow-x-auto [scrollbar-width:none]">
           {tour.venues.map((v) => (
-            <button key={v.id} onClick={() => setVenueId(v.id)}
-              className={`shrink-0 rounded-full border px-4 py-2 font-body text-sm ${v.id === venue.id ? "bg-ink text-white border-ink" : "border-ink/25 text-ink/75"}`}>
-              {v.name.trim() || "Untitled venue"}
-            </button>
+            <span key={v.id} className={`shrink-0 flex items-center rounded-full border font-body text-sm ${v.id === venue.id ? "bg-ink text-white border-ink" : "border-ink/25 text-ink/75"}`}>
+              <button onClick={() => setVenueId(v.id)} className={`py-2 ${v.id === venue.id && tour.venues.length > 1 ? "pl-4 pr-1" : "px-4"}`}>
+                {v.name.trim() || "Untitled venue"}
+              </button>
+              {/* Delete straight from the tab, for a venue added by mistake. */}
+              {v.id === venue.id && tour.venues.length > 1 && (
+                <button onClick={removeVenue} aria-label={`Delete ${v.name.trim() || "this venue"}`} className="pl-1 pr-3 py-2 text-white/70 text-base leading-none">×</button>
+              )}
+            </span>
           ))}
           {tour.venues.length < MAX_VENUES && (
             <button onClick={addVenue} className="shrink-0 rounded-full border border-dashed border-ink/40 px-4 py-2 font-body text-sm text-ink/70">+ Add venue</button>
@@ -199,7 +204,7 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
             </svg>
           </label>
           <div className="flex items-center justify-between gap-4 mt-2">
-            <p className="font-body text-[13px] text-gold">{/^Venue \d+$/.test(venue.name.trim()) ? "Tap the name to call it by the real venue." : ""}</p>
+            <p className="font-body text-[13px] text-gold">{/^Venue \d+$/.test(venue.name.trim()) ? "Tap the name to rename it." : ""}</p>
             <button onClick={removeVenue} className="shrink-0 font-body text-[12px] text-ink/50 underline underline-offset-4">
               {tour.venues.length > 1 ? "Remove venue" : "Start over"}
             </button>
@@ -222,16 +227,20 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
         </nav>
 
         {view === "checklist" && (<>
-          <div className="flex items-center justify-between gap-3 mb-6 p-4 rounded-xl bg-ink/[0.04] font-body text-[13px]">
-            <span className="flex items-center gap-2"><Box size={20} />Not asked</span>
-            <span className="flex items-center gap-2"><Box mark="slash" size={20} />Told yes</span>
-            <span className="flex items-center gap-2"><Box mark="check" size={20} />In writing</span>
+          <div className="mb-4 p-4 rounded-xl bg-ink/[0.04] font-body text-[13px] text-ink/70">
+            <div className="flex items-center justify-between gap-3 text-ink">
+              <span className="flex items-center gap-2"><Box size={18} />Not asked</span>
+              <span className="flex items-center gap-2"><Box mark="slash" size={18} />Told yes</span>
+              <span className="flex items-center gap-2"><Box mark="check" size={18} />In writing</span>
+            </div>
+            <p className="mt-3">Tap a box to change it. Skip anything that doesn’t apply.</p>
           </div>
-          <button onClick={() => { setOnlyStars((on) => !on); if (!onlyStars) setOpen(Object.fromEntries(sections.map((s) => [s.id, true]))); }}
-            className={`w-full mb-5 rounded-xl border px-4 py-3.5 text-left font-body text-[14px] ${onlyStars ? "border-ink bg-ink text-white" : "border-ink/20"}`}>
-            <span className="text-gold mr-1.5">★</span>{onlyStars ? "Showing just the 10 dealbreakers · show everything" : "Short on time? Show just the 10 dealbreakers"}
-          </button>
-          <p className="font-body text-sm text-ink/70 mb-6 leading-relaxed">Tap a box to change it. Tap <b className="font-medium">Skip</b> on anything that doesn’t apply. For <span className="text-gold">★</span> dealbreakers, write down the answer and who said it.</p>
+          <label className="flex items-center justify-between gap-4 mb-8 px-1 font-body text-[14px] cursor-pointer">
+            <span><span className="text-gold mr-1.5">★</span>Just the 10 dealbreakers</span>
+            <input type="checkbox" role="switch" checked={onlyStars} className="sr-only peer"
+              onChange={() => { setOnlyStars((on) => !on); if (!onlyStars) setOpen(Object.fromEntries(sections.map((s) => [s.id, true]))); }} />
+            <span aria-hidden="true" className="relative w-11 h-6 rounded-full bg-ink/20 peer-checked:bg-ink transition-colors after:absolute after:top-0.5 after:left-0.5 after:w-5 after:h-5 after:rounded-full after:bg-white after:transition-transform peer-checked:after:translate-x-5" />
+          </label>
 
           {sections.map((section) => {
             if (onlyStars && !section.questions.some((q) => q.star)) return null;
@@ -243,7 +252,7 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
               <section key={section.id} className="border-t border-ink/15">
                 <button onClick={() => setOpen((o) => ({ ...o, [section.id]: !o[section.id] }))} aria-expanded={!!isOpen}
                   className="w-full flex items-center gap-3 py-5 text-left">
-                  <span className="font-display italic text-ink/55 w-7">{section.num}</span>
+                  <span className="font-body text-xs text-ink/45 w-6 tabular-nums">{section.num}</span>
                   <span className="flex-1 font-display text-[1.3rem] leading-snug">{section.title}</span>
                   {verdict && <span className={`rounded-full border px-2.5 py-1 font-body text-[11px] ${VERDICT_STYLE[verdict]}`}>{VERDICTS.find(([k]) => k === verdict)?.[1]}</span>}
                   <span className="font-body text-xs text-ink/55 tabular-nums">{done}/{live.length}</span>
@@ -251,13 +260,13 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
                 </button>
                 {isOpen && (
                   <div className="pb-7">
-                    {section.why && <p className="font-display italic text-[1.05rem] text-ink/70 mb-4 leading-snug">{section.why}</p>}
+                    {section.why && <p className="font-body text-[14px] text-ink/60 mb-2 leading-relaxed">{section.why}</p>}
                     <ul>
                       {section.questions.filter((q) => !onlyStars || q.star).map((q) => {
                         const mark = venue.marks[q.id];
                         const skipped = mark === "na";
                         return (
-                          <li key={q.id} className="py-3.5 border-b border-ink/10">
+                          <li key={q.id} className="py-5 border-b border-ink/10">
                             <div className="flex gap-3.5 items-start">
                               <button onClick={() => cycle(q.id)} disabled={skipped} className="shrink-0 -m-1 p-1 disabled:opacity-30"
                                 aria-label={`${q.text} ${mark === "check" ? "confirmed in writing" : mark === "slash" ? "told yes" : "not asked"}. Tap to change.`}>
@@ -265,14 +274,14 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
                               </button>
                               <p className={`flex-1 font-body text-[15px] leading-relaxed pt-0.5 ${skipped ? "line-through text-ink/35" : ""}`}>
                                 {q.star && <span className="text-gold mr-1.5">★</span>}{q.text}
-                                {(q.why || q.tip) && !skipped && <span className="block font-display italic text-[1.02rem] text-ink/70 mt-1 leading-snug">{q.why || q.tip}</span>}
+                                {(q.why || q.tip) && !skipped && <span className="block font-body text-[13px] text-ink/55 mt-1.5 leading-snug">{q.why || q.tip}</span>}
                               </p>
                               <button onClick={() => toggleNa(q.id)} className="shrink-0 font-body text-[11px] uppercase tracking-[0.12em] text-ink/45 pt-1.5">
                                 {skipped ? "Undo" : "Skip"}
                               </button>
                             </div>
-                            {q.star && !skipped && (
-                              <div className="ml-[2.9rem] mt-2 grid grid-cols-[1fr_8rem] gap-3">
+                            {q.star && !skipped && (mark || venue.answers[q.id]) && (
+                              <div className="ml-[2.9rem] mt-3 grid grid-cols-[1fr_8rem] gap-3">
                                 <input className={input} value={venue.answers[q.id]?.answer || ""} onChange={(e) => setAnswer(q.id, "answer", e.target.value)} placeholder="Answer" aria-label="Answer" />
                                 <input className={input} value={venue.answers[q.id]?.who || ""} onChange={(e) => setAnswer(q.id, "who", e.target.value)} placeholder="Who said it" aria-label="Who said it" />
                               </div>
@@ -323,7 +332,7 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
               <ol className="border-t border-ink/15 mb-7">
                 {chase.map((q, i) => (
                   <li key={q.id} className="flex gap-3.5 py-3.5 border-b border-ink/10">
-                    <span className="font-display italic text-ink/55 w-5">{i + 1}</span>
+                    <span className="font-body text-sm text-ink/45 w-5 tabular-nums">{i + 1}</span>
                     <div className="flex-1">
                       <p className="font-body text-[15px] leading-relaxed">{q.text}</p>
                       {venue.answers[q.id]?.answer && <p className="font-body text-sm text-ink/60 mt-1">They said: {venue.answers[q.id].answer}{venue.answers[q.id].who ? ` (${venue.answers[q.id].who})` : ""}</p>}

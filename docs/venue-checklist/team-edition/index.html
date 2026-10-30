@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Venue Vetting Checklist, Team Edition | Lady Victoria Designs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=block" rel="stylesheet">
+<style>
+/* Letter-size print layout, matching the client lead magnet (Cormorant Garamond, Jost, ivory/ink/gold). */
+:root{--paper:#F7F4EE;--ink:#14120F;--gold:#A8894E;--ecru:#EDE7DB;--line:#D8D1C5;--muted:#5F5A52;--display:'Cormorant Garamond',Georgia,serif;--body:'Jost',Arial,sans-serif}
+@page{size:8.5in 11in;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#d9d4cb}
+body{font:300 9.6pt/1.62 var(--body);color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{width:8.5in;height:11in;position:relative;overflow:hidden;background:var(--paper);break-after:page;margin:0 auto}
+@media screen{.page{margin:24px auto;box-shadow:0 6px 30px #14120f22}}
+.pad{padding:.85in .85in .8in;display:flex;flex-direction:column}
+img{display:block;width:100%;height:100%;object-fit:cover}
+
+/* type */
+.kicker{font:500 7pt/1 var(--body);letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:12pt}
+h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:-.005em}
+h2{font-size:28pt;line-height:1.08;margin-bottom:12pt}
+h2 em{font-style:italic}
+.lead{font-size:10.2pt;line-height:1.7;color:var(--muted);margin-bottom:14pt}
+.muted{color:var(--muted)}
+.label{font:500 6.6pt/1.3 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+b{font-weight:500}
+
+/* internal marker, bottom of every inside page */
+.internal{position:absolute;left:.85in;right:.85in;bottom:.4in;display:flex;justify-content:space-between;font:500 6pt/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:#9A9286}
+
+/* checklist sections */
+.sec{break-inside:avoid}
+.sec+.sec{margin-top:20pt}
+.sec h3{display:grid;grid-template-columns:.42in 1fr;align-items:baseline;font-size:16.5pt;line-height:1.2;padding-bottom:7pt;border-bottom:.75pt solid var(--ink)}
+.sec h3 span{font:italic 400 13pt/1 var(--display);color:var(--gold)}
+.checks{list-style:none}
+.checks li{position:relative;padding:6.2pt 0 6.2pt .42in;border-bottom:.5pt solid var(--line);font-size:9.3pt;line-height:1.5}
+.checks li::before{content:"";position:absolute;left:0;top:9pt;width:8pt;height:8pt;border:.75pt solid var(--gold)}
+
+/* ruled notes that fill the rest of a page */
+.notes{flex:1;min-height:.9in;margin-top:22pt;display:flex;flex-direction:column}
+.notes .label{color:var(--gold);margin-bottom:2pt}
+.notes div{flex:1;overflow:hidden}
+.notes i{display:block;height:24pt;border-bottom:.5pt solid var(--line)}
+
+/* callouts */
+.note{margin-top:16pt;padding:13pt 16pt 14pt;background:#EDE7DB99;border-left:1.5pt solid var(--gold)}
+.note p{font:italic 400 13pt/1.45 var(--display);color:var(--ink)}
+.note p.label{font:500 6.6pt/1.3 var(--body);color:var(--gold);margin-bottom:6pt}
+.note.plain p:not(.label){font:300 9.4pt/1.6 var(--body)}
+
+/* how-to list */
+.steps{list-style:none;border-top:.5pt solid var(--line)}
+.steps li{position:relative;padding:8pt 0 8pt .42in;border-bottom:.5pt solid var(--line);font-size:9.4pt;line-height:1.55}
+.steps li span{position:absolute;left:0;top:7pt;font:italic 400 12pt/1.3 var(--display);color:var(--gold)}
+
+/* write-in fields */
+.field{border-bottom:.5pt solid #BDB4A6;padding:15pt 0 5pt}
+.field.tall{padding-bottom:30pt}
+.fields-2{display:grid;grid-template-columns:1fr 1fr;column-gap:24pt}
+.recs .field{padding:24pt 0 14pt}
+.recs .field.tall{padding-bottom:48pt}
+.choice{display:flex;gap:26pt;padding:15pt 0 7pt;border-bottom:.5pt solid #BDB4A6;align-items:center}
+.choice .label{margin-right:auto}
+.choice span.opt{position:relative;padding-left:15pt;font-size:9.4pt}
+.choice span.opt::before{content:"";position:absolute;left:0;top:3.5pt;width:8pt;height:8pt;border:.75pt solid var(--gold)}
+
+/* logo lockup, as in the website footer */
+.mark{display:inline-grid;justify-items:center;line-height:.85}
+.mark span{font:500 1em/.9 var(--display);letter-spacing:-.02em;text-transform:uppercase;white-space:nowrap}
+.mark em{font:italic 400 1em/.95 var(--display);color:var(--gold)}
+
+/* cover */
+.cover-photo{position:absolute;left:0;right:0;top:0;height:6.9in}
+.cover-photo img{object-position:50% 50%}
+.cover-band{position:absolute;left:0;right:0;bottom:0;height:4.1in;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 .9in}
+.cover-band .mark{font-size:18pt;margin-bottom:24pt}
+.cover-band h1{font-size:38pt;line-height:1.02;margin-bottom:12pt}
+.cover-band .tag{font:italic 400 14pt/1.4 var(--display);color:var(--gold)}
+.cover-band .meta{margin-top:22pt;display:flex;gap:18pt}
+.cover-band .meta .label+.label{padding-left:18pt;border-left:.5pt solid var(--line)}
+</style>
+</head>
+<body>
+
+<!-- Cover -->
+<section class="page">
+  <div class="cover-photo"><img src="assets/cover-ballroom.jpg" alt=""></div>
+  <div class="cover-band">
+    <div class="mark"><span>Lady Victoria</span><em>designs</em></div>
+    <h1>Venue Vetting Checklist</h1>
+    <p class="tag">Before Booking + Multicultural Requirements</p>
+    <div class="meta"><p class="label">Team Edition</p><p class="label">Track: Planning</p><p class="label">Internal team use</p></div>
+  </div>
+</section>
+
+<!-- How to use -->
+<section class="page pad">
+  <p class="kicker">Track: Planning</p>
+  <h2>How to Use <em>This Checklist</em></h2>
+  <p class="lead">This is the <b>before-booking</b> vetting tool. Use it on every venue tour — before the couple signs — to decide whether the venue can support the celebration, the décor installation, and the production plan.</p>
+  <ul class="steps">
+    <li><span>01</span>Record the <b>exact answer</b>, the venue contact, the evidence, the cost impact, the risk, and the follow-up for every question.</li>
+    <li><span>02</span>Ask only what matches the couple’s actual traditions — and name each ceremony, procession, cooking method, fire element, attire change, language need, and family role.</li>
+    <li><span>03</span>Anything that affects the ceremony, décor, food, music, parking, guest count, budget, installation, or timeline must be confirmed <b>in writing</b> in the venue contract.</li>
+  </ul>
+  <div class="note" style="margin-top:22pt"><p class="label">Golden rule</p><p>“Flexible” is not a written approval. If it is not in the contract, it is not confirmed.</p></div>
+  <div class="note plain"><p class="label">Carry it forward</p><p>Post-booking detail lives in the <b>Venue Evaluation &amp; Walkthrough workbook (Final Walkthrough)</b>. Carry the answers recorded here into that workbook — do not re-ask them — so the team never answers the same freight questions twice.</p></div>
+  <div style="position:absolute;left:0;right:0;bottom:0;height:3.55in"><img src="assets/howto-chandeliers.jpg" alt="" style="object-position:50% 45%"></div>
+</section>
+
+
+<!-- Review record + 01 -->
+<section class="page pad">
+  <p class="kicker">Fill in on the tour</p>
+  <h2>Venue Review Record</h2>
+  <div class="fields-2">
+    <div class="field"><span class="label">Venue</span></div>
+    <div class="field"><span class="label">Tour date</span></div>
+    <div class="field"><span class="label">Venue representative</span></div>
+    <div class="field"><span class="label">Wedding date</span></div>
+    <div class="field"><span class="label">Guest count</span></div>
+    <div class="field"><span class="label">Planner</span></div>
+    <div class="field"><span class="label">Wedding year</span></div>
+    <div class="field"><span class="label">Overall wedding budget (range)</span></div>
+  </div>
+  <div class="field tall"><span class="label">Cultural or religious requirements</span></div>
+  <div class="sec" style="margin-top:30pt">
+    <h3><span>01</span>Date, Hours &amp; Curfew</h3>
+    <ul class="checks">
+      <li>What time may vendors begin load-in, and when must setup be complete?</li>
+      <li>What time must music, alcohol service, guest activity, and vendor load-out end?</li>
+      <li>What overtime fees apply to event time, staff, security, cleanup, or late strike?</li>
+      <li>Is there a local noise ordinance or amplified-sound limit that ends outdoor music earlier than the venue curfew?</li>
+    </ul>
+  </div>
+  <div class="notes"><p class="label">Notes · answers, contacts, costs, follow-ups</p><div></div></div>
+  <div class="internal"><span>Venue Vetting Checklist · Team Edition</span><span>Internal team use</span></div>
+</section>
+
+<!-- 02–04 -->
+<section class="page pad">
+  <div class="sec">
+    <h3><span>02</span>Real Capacity &amp; Layout</h3>
+    <ul class="checks">
+      <li>What is the realistic seated capacity with tables, stage, dance floor, entertainment, bars, food stations, lounge furniture, and cultural structures?</li>
+      <li>Can the full guest count fit in the weather-backup space?</li>
+      <li>If weather forces a change, by what time must the call be made, and are tents, sidewalls, heaters, or ground flooring permitted?</li>
+      <li>Does capacity change for multiple ceremonies or room flips?</li>
+    </ul>
+  </div>
+  <div class="sec">
+    <h3><span>03</span>Alcohol, Bar &amp; Certificates</h3>
+    <ul class="checks">
+      <li>Does the venue hold the required liquor license, or is a temporary permit needed?</li>
+      <li>Who obtains the permit, licensed bartenders, security, liquor-liability coverage, and certificate of insurance?</li>
+      <li>Must the venue be named as an additional insured?</li>
+      <li>What time must alcohol service end, and what bar fees apply?</li>
+    </ul>
+  </div>
+  <div class="sec">
+    <h3><span>04</span>Catering &amp; Kitchen Rules</h3>
+    <ul class="checks">
+      <li>Is catering exclusive, preferred-list only, or open to outside cultural caterers?</li>
+      <li>May caterers cook on-site, and are tandoors, grills, fryers, woks, propane, refrigeration, water, ice, and waste disposal permitted?</li>
+      <li>Can halal, kosher, Jain, vegetarian, vegan, allergy, fasting, and cross-contact requirements be supported?</li>
+    </ul>
+  </div>
+  <div class="notes"><p class="label">Notes · answers, contacts, costs, follow-ups</p><div></div></div>
+  <div class="internal"><span>Venue Vetting Checklist · Team Edition</span><span>Internal team use</span></div>
+</section>
+
+<!-- 05 -->
+<section class="page pad">
+  <div class="sec">
+    <h3><span>05</span>In-House Rentals</h3>
+    <ul class="checks">
+      <li>Which tables, chairs, linens, tabletop items, bars, staging, dance floors, lounge pieces, and cocktail tables are included?</li>
+      <li>What quantities, sizes, colors, and conditions are guaranteed?</li>
+      <li>Are delivery, setup, breakdown, cleaning, reset, and damage fees included?</li>
+      <li>May the dance floor be wrapped or covered with a custom vinyl wrap or overlay? What adhesive, installation, removal, and floor-protection rules apply, and who is liable for damage to the floor beneath?</li>
+    </ul>
+  </div>
+  <div class="notes"><p class="label">Notes · answers, contacts, costs, follow-ups</p><div></div></div>
+  <div class="internal"><span>Venue Vetting Checklist · Team Edition</span><span>Internal team use</span></div>
+</section>
+
+<!-- 06 -->
+<section class="page pad">
+  <div class="sec">
+    <h3><span>06</span>Décor Setup, Load-In &amp; Breakdown Access</h3>
+    <ul class="checks">
+      <li>Exactly how many hours are allowed for décor setup before guest arrival?</li>
+      <li>Exactly how many hours are allowed for décor breakdown and load-out?</li>
+      <li>Can installation begin the day before, and may décor remain overnight?</li>
+      <li>Is the space on the same level as the loading entrance?</li>
+      <li>Is there a loading dock, same-level entry, ramp, or service entrance for large pieces?</li>
+      <li>What are the freight-elevator interior dimensions, door opening, weight limit, and reservation rules?</li>
+      <li>Can oversized backdrops, stages, floral installations, carts, and rental furniture fit through every door, hallway, turn, and elevator?</li>
+      <li>How far is the loading point from the event space, and are there stairs, narrow corridors, carpet, or guest areas on the route?</li>
+      <li>Are dock times assigned, and can multiple vendors load in together?</li>
+      <li>Where may décor trucks and production vehicles park after unloading?</li>
+      <li>Are union labor, venue engineers, security, or venue staff required?</li>
+      <li>What carts, dollies, lifts, ladders, scissor lifts, forklifts, or pallet jacks are allowed?</li>
+      <li>When must the room be guest-ready, and who approves room release?</li>
+      <li>What happens if access is delayed by the venue or a prior event?</li>
+      <li>What dock, elevator, storage, cleanup, overtime, or late-strike fees apply?</li>
+      <li>Where may boxes, tools, floral buckets, packaging, and production cases be stored?</li>
+      <li>Who performs the final walkthrough, and how are damages recorded?</li>
+      <li>Are real-flame candles permitted (including floating and votive candles), and what glass-enclosure or venue approval rules apply?</li>
+      <li>What may be attached to walls, ceilings, and floors — and are tape, pins, hooks, confetti, loose petals, or sparklers restricted?</li>
+    </ul>
+  </div>
+  <div class="notes"><p class="label">Notes</p><div></div></div>
+  <div class="internal"><span>Venue Vetting Checklist · Team Edition</span><span>Internal team use</span></div>
+</section>
+
+<!-- 07 -->
+<section class="page pad">
+  <div class="sec">
+    <h3><span>07</span>Power, Rigging &amp; Effects</h3>
+    <ul class="checks">
+      <li>How much electrical power is available for lighting, entertainment, catering, and production, and where are the circuits and outlets located?</li>
+      <li>Are dedicated circuits, a power drop, or a generator required or provided, and what do they cost?</li>
+      <li>May chandeliers, florals, draping, or installations be hung from the ceiling? What rigging points, weight limits, and rigger requirements apply?</li>
+      <li>Are cold-spark machines permitted for entrances and first-dance moments, and what fire-marshal, insurance, or venue approvals apply?</li>
+      <li>Is a low-lying cloud effect (dry ice) permitted for the first dance? What rules apply to dry-ice delivery, storage, and handling, ventilation, and fire-alarm or smoke-detector sensitivity?</li>
+      <li>Is atmospheric haze permitted for lighting and photography effects?</li>
+      <li>If the venue loses power, is there backup power, and what happens to the event?</li>
+    </ul>
+  </div>
+  <div class="notes"><p class="label">Notes · answers, contacts, costs, follow-ups</p><div></div></div>
+  <div class="internal"><span>Venue Vetting Checklist · Team Edition</span><span>Internal team use</span></div>
+</section>
+
+<!-- 08–09 -->
+<section class="page pad">
+  <div class="sec">
+    <h3><span>08</span>Guest Parking, Valet &amp; Arrival</h3>
+    <ul class="checks">
+      <li>How many guest parking spaces are available?</li>
+      <li>Is parking complimentary, validated, or paid by guests?</li>
+      <li>Is valet required or optional, and what are the fee, minimum, staffing, hours, and gratuity rules?</li>
+      <li>Where are the guest drop-off, accessible drop-off, shuttle, bus, limousine, and rideshare areas?</li>
+      <li>Is overflow parking available, and is a shuttle required?</li>
+      <li>Can vendor vehicles park separately from guests?</li>
+      <li>Are there garage height limits, operating hours, traffic restrictions, or overnight-parking rules?</li>
+      <li>Is the path from parking safe, accessible, and well lit in bad weather?</li>
+      <li>Can a cultural procession occur without blocking valet, guest parking, traffic, or emergency access?</li>
+    </ul>
+  </div>
+  <div class="sec">
+    <h3><span>09</span>Total Cost &amp; Contract</h3>
+    <ul class="checks">
+      <li>Does the quote include rental, service charges, taxes, staffing, security, cleaning, rentals, parking, valet, power, elevators, docks, overtime, and damage deposits?</li>
+      <li>Does the contract list setup and breakdown hours, loading access, parking, curfew, catering, alcohol, weather, and overtime terms?</li>
+      <li>Will every important approval be placed in writing?</li>
+      <li>What deposit and payment schedule does the venue require, and what are the cancellation and postponement terms?</li>
+      <li>What insurance certificates must each vendor provide, and when are they due to the venue?</li>
+    </ul>
+  </div>
+  <div class="notes"><p class="label">Notes</p><div></div></div>
+  <div class="internal"><span>Venue Vetting Checklist · Team Edition</span><span>Internal team use</span></div>
+</section>
+
+<!-- 10: multicultural requirements -->
+<section class="page pad">
+  <p class="kicker">Section 10</p>
+  <h2>Multicultural <em>Wedding Requirements</em></h2>
+  <div class="note" style="margin:0 0 20pt"><p>Ask only what matches the couple’s actual traditions. Name each ceremony, procession, cooking method, fire element, attire change, language need, and family role.</p></div>
+  <div class="sec">
+    <h3><span>i</span>Multiple Ceremonies &amp; Spaces</h3>
+    <ul class="checks">
+      <li>Can the venue host two or more ceremonies, room transformations, rehearsals, and cultural leaders?</li>
+      <li>Is a prayer, preparation, or ceremonial holding room available?</li>
+    </ul>
+  </div>
+  <div class="sec">
+    <h3><span>ii</span>Sacred Fire &amp; Ritual Materials</h3>
+    <ul class="checks">
+      <li>Are sacred fire, incense, oil lamps, candles, smoke, rice, petals, powders, water, oils, and ceremonial foods permitted?</li>
+      <li>What fire-marshal approval, permits, ventilation, protective materials, insurance, cleanup, or staffing are required?</li>
+    </ul>
+  </div>
+  <div class="sec">
+    <h3><span>iii</span>Processions &amp; Grand Entrances</h3>
+    <ul class="checks">
+      <li>Can the property support a baraat or other cultural procession, musicians, dancers, animals, or specialty transportation?</li>
+      <li>What route, staging, timing, noise, rain, parking, valet, permit, insurance, and security requirements apply?</li>
+    </ul>
+  </div>
+  <div class="notes"><p class="label">Notes · the couple’s named traditions</p><div></div></div>
+  <div class="internal"><span>Venue Vetting Checklist · Team Edition</span><span>Internal team use</span></div>
+</section>
+
+<!-- 10 continued -->
+<section class="page pad">
+  <div class="sec">
+    <h3><span>iv</span>Attire, Language &amp; Family Needs</h3>
+    <ul class="checks">
+      <li>Are there enough private rooms for attire changes, stylists, family, elders, performers, prayer, nursing, and quiet breaks?</li>
+      <li>Can programs, signs, screens, ceremonies, interpreters, and announcements use multiple languages?</li>
+    </ul>
+  </div>
+  <div class="sec">
+    <h3><span>v</span>Extended Timeline &amp; Guest Experience</h3>
+    <ul class="checks">
+      <li>Is the rental window long enough for every ceremony, attire change, meal, performance, photo period, room flip, and rest break?</li>
+      <li>Where will guests wait during transitions, and can refreshments be served?</li>
+      <li>Can décor and ceremonial structures remain overnight with secure storage?</li>
+    </ul>
+  </div>
+  <div class="notes"><p class="label">Notes · answers, contacts, costs, follow-ups</p><div></div></div>
+  <div class="internal"><span>Venue Vetting Checklist · Team Edition</span><span>Internal team use</span></div>
+</section>
+
+<!-- Red flags + recommendation -->
+<section class="page pad">
+  <div class="sec">
+    <h3><span>11</span>Venue Red Flags</h3>
+    <ul class="checks">
+      <li>Décor access is too short for the approved installation.</li>
+      <li>The freight path or elevator cannot accommodate the structures.</li>
+      <li>Guest parking or valet capacity is insufficient.</li>
+      <li>Vendor parking, dock access, or elevator use is not guaranteed in writing.</li>
+      <li>The weather backup cannot support the guest count and traditions.</li>
+      <li>Hanging installations or chandeliers are not permitted, or no rigging points exist.</li>
+      <li>Power is insufficient for the approved lighting, entertainment, and catering plan.</li>
+      <li>Cold sparks, the cloud effect, or a dance floor wrap is not permitted when the approved design includes it.</li>
+    </ul>
+  </div>
+  <div class="sec recs">
+    <h3><span>12</span>Recommendation</h3>
+    <div class="choice"><span class="label">Overall fit</span><span class="opt">Recommend</span><span class="opt">Conditional</span><span class="opt">Decline</span></div>
+    <div class="field"><span class="label">Décor access and freight risk</span></div>
+    <div class="field"><span class="label">Guest parking and valet plan</span></div>
+    <div class="field"><span class="label">Required approvals and contract changes</span></div>
+    <div class="field tall"><span class="label">Lead planner recommendation</span></div>
+    <div class="field"><span class="label">Client decision and date</span></div>
+  </div>
+  <div class="internal"><span>Venue Vetting Checklist · Team Edition</span><span>Internal team use</span></div>
+</section>
+
+<script>
+// Rule each notes area; overflow:hidden trims the extra lines to fit the page.
+document.querySelectorAll('.notes div').forEach(d => { d.innerHTML = '<i></i>'.repeat(40) });
+</script>
+</body>
+</html>
