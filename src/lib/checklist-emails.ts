@@ -29,7 +29,9 @@ export type ChecklistLead = {
   payload: Record<string, unknown> | null;
 };
 
-type Copy = { subject: string; preview: string; blocks: Block[] };
+// plain: written like a personal note (no header, card, or button) so Gmail is
+// more likely to put it in Primary instead of Promotions.
+type Copy = { subject: string; preview: string; blocks: Block[]; plain?: boolean };
 type Block = { p: string } | { list: [bold: string, rest: string][] } | { button: [label: string, href: string] }
   | { feedback: [question: string, yesHref: string, noHref: string] };
 export type ChecklistFeedback = "yes" | "no";
@@ -66,9 +68,10 @@ function copyFor(step: ChecklistStep, lead: ChecklistLead): Copy {
   if (step === 1) return {
     subject: multicultural ? "Your multicultural venue checklist is here" : "Your venue checklist is here",
     preview: booked ? "Use it before the details are final." : "Bring it to your next tour.",
+    plain: true,
     blocks: [
       { p: `Hi ${firstName},` },
-      { p: "Your venue checklist is ready!" },
+      { p: "Your venue checklist is ready! You can download it here:" },
       { button: ["Download your checklist", PDF[multicultural ? "multicultural" : "standard"]] },
       { p: `${booked ? "One tip as you work through the details with your venue" : "One tip before your next tour"}: you don’t need to ask every question.` },
       { p: "Cross out what doesn’t apply, and get the answers that matter most confirmed in writing." },
@@ -116,6 +119,7 @@ const escapeHtml = (value: string) => value.replace(/[&<>"]/g, (c) => ({ "&": "&
 
 /** Email-safe HTML (tables and inline styles) in the site's ivory, ink, and gold. */
 function render(copy: Copy, unsubscribeUrl: string) {
+  if (copy.plain) return renderPlain(copy, unsubscribeUrl);
   const serif = "'Bodoni 72', 'Didot', Georgia, 'Times New Roman', serif";
   const sans = "'Helvetica Neue', Helvetica, Arial, sans-serif";
   const body = copy.blocks.map((block) => {
@@ -155,6 +159,30 @@ You’re receiving this because you downloaded the venue checklist at ladyvictor
     "Warmly,\nIrene\nIrene Ntiako, Founder & Creative Director, Lady Victoria Designs",
     `Unsubscribe: ${unsubscribeUrl}`,
   ].join("\n\n");
+  return { html, text };
+}
+
+/** A personal-looking note: plain paragraphs and a text link, like an email Irene typed herself. */
+function renderPlain(copy: Copy, unsubscribeUrl: string) {
+  const font = "font:15px/1.6 Arial, Helvetica, sans-serif;color:#222222";
+  const body = copy.blocks.map((block) => {
+    if ("p" in block) return `<p style="margin:0 0 14px">${escapeHtml(block.p)}</p>`;
+    if ("button" in block) return `<p style="margin:0 0 14px"><a href="${escapeHtml(block.button[1])}" style="color:#1a4fa0">${escapeHtml(block.button[0])}</a></p>`;
+    return "";
+  }).join("");
+  const html = `<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(copy.subject)}</title></head>
+<body style="margin:0;padding:16px;${font}">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0">${escapeHtml(copy.preview)}</div>
+<div style="max-width:600px">
+${body}
+<p style="margin:0 0 24px">Warmly,<br>Irene<br>Lady Victoria Designs</p>
+<p style="margin:0;font-size:12px;color:#888888">You’re receiving this because you downloaded the venue checklist at ladyvictoriadesigns.com. <a href="${escapeHtml(unsubscribeUrl)}" style="color:#888888">Unsubscribe</a></p>
+</div></body></html>`;
+  const text = [
+    ...copy.blocks.map((block) => "p" in block ? block.p : "button" in block ? block.button[1] : ""),
+    "Warmly,\nIrene\nLady Victoria Designs",
+    `Unsubscribe: ${unsubscribeUrl}`,
+  ].filter(Boolean).join("\n\n");
   return { html, text };
 }
 

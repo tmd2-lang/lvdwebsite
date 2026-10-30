@@ -91,6 +91,9 @@ export default function ChecklistForm() {
           className="inline-flex items-center gap-3 bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 rounded-full hover:bg-gold hover:text-ink transition-colors">
           Download the checklist
         </a>
+        <p className="font-body text-xs text-ink/55 leading-relaxed max-w-sm mx-auto mt-6">
+          We’ve also emailed you a copy. If you don’t see it, check your Promotions or spam folder.
+        </p>
       </div>
     );
   }

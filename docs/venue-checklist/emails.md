@@ -15,6 +15,8 @@ Still to confirm with Irene:
 
 ## Email 1: right away
 
+Sent as a plain personal note (no logo, card, or button, just a text link) so Gmail is more likely to put it in Primary instead of Promotions.
+
 **Subject:**
 - *Standard:* Your venue checklist is here
 - *Multicultural:* Your multicultural venue checklist is here
@@ -25,7 +27,7 @@ Still to confirm with Irene:
 
 Hi [Name],
 
-Your venue checklist is ready! **[Download your checklist]**
+Your venue checklist is ready! You can download it here: **[Download your checklist]**
 
 - *Still looking:* One tip before your next tour:
 - *Already booked:* One tip as you work through the details with your venue:
