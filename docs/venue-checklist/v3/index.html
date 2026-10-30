@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Before You Book the Venue | Lady Victoria Designs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=block" rel="stylesheet">
+<script>
+// One source, two editions: add ?edition=multicultural for the multicultural edition.
+if (new URLSearchParams(location.search).get('edition') === 'multicultural') document.documentElement.classList.add('mc');
+</script>
+<style>
+/* Letter-size print layout, in the planning guide's look (Cormorant Garamond, Jost, ivory/ink/gold). */
+:root{--paper:#F7F4EE;--ink:#14120F;--gold:#A8894E;--ecru:#EDE7DB;--line:#D8D1C5;--muted:#5F5A52;--display:'Cormorant Garamond',Georgia,serif;--body:'Jost',Arial,sans-serif}
+@page{size:8.5in 11in;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#d9d4cb}
+body{font:300 9.6pt/1.62 var(--body);color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{width:8.5in;height:11in;position:relative;overflow:hidden;background:var(--paper);break-after:page;margin:0 auto}
+@media screen{.page{margin:24px auto;box-shadow:0 6px 30px #14120f22}}
+.pad{padding:.85in .85in .75in;display:flex;flex-direction:column}
+img{display:block;width:100%;height:100%;object-fit:cover}
+b{font-weight:500}
+
+/* editions */
+.mc-only{display:none}
+.mc .mc-only{display:block}
+.mc .std-only{display:none}
+.mc section.mc-only{display:block}
+.mc section.mc-only.pad{display:flex}
+.mc li.mc-only{display:grid}
+
+/* type */
+.kicker{font:500 7pt/1 var(--body);letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:12pt}
+h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:-.005em}
+h2{font-size:28pt;line-height:1.08;margin-bottom:14pt}
+h2 em{font-style:italic}
+.lead{font-size:10.2pt;line-height:1.7;color:var(--muted);margin-bottom:14pt}
+.muted{color:var(--muted)}
+.label{font:500 6.6pt/1.3 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+p+p{margin-top:9pt}
+
+/* checklist sections: two boxes per question, "Asked" and "Confirmed" */
+.sec{break-inside:avoid}
+.sec+.sec{margin-top:18pt}
+.sec h3{display:grid;grid-template-columns:.42in 1fr;align-items:baseline;font-size:16.5pt;line-height:1.2}
+.sec h3 span{font:italic 400 13pt/1 var(--display);color:var(--gold)}
+.why{margin:3pt 0 8pt .42in;font:italic 400 12pt/1.4 var(--display);color:var(--muted);max-width:5.4in}
+.cols{display:grid;grid-template-columns:1fr .55in .62in;padding:0 0 4pt .42in;border-bottom:.75pt solid var(--ink)}
+.cols span{font:500 5.8pt/1.2 var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);text-align:center}
+.q{list-style:none}
+.q li{display:grid;grid-template-columns:1fr .55in .62in;align-items:start;padding:5.6pt 0 5.6pt .42in;border-bottom:.5pt solid var(--line);font-size:9.2pt;line-height:1.48}
+.q li::after,.q li::before{content:"";width:8pt;height:8pt;border:.75pt solid var(--gold);justify-self:center;margin-top:2.5pt;grid-row:1}
+.q li::before{grid-column:2}
+.q li::after{grid-column:3}
+.cont{font:italic 400 11pt/1 var(--display);color:var(--gold)}
+
+/* ruled notes that fill the rest of a page */
+.notes{flex:1;min-height:.8in;margin-top:18pt;display:flex;flex-direction:column}
+.notes .label{color:var(--gold);margin-bottom:2pt}
+.notes div{flex:1;overflow:hidden}
+.notes i{display:block;height:24pt;border-bottom:.5pt solid var(--line)}
+
+/* callouts */
+.note{margin-top:18pt;padding:14pt 18pt 15pt;background:#EDE7DB99;border-left:1.5pt solid var(--gold)}
+.note p{font:italic 400 13.5pt/1.45 var(--display);color:var(--ink)}
+.note p.label{font:500 6.6pt/1.3 var(--body);color:var(--gold);margin-bottom:6pt}
+
+/* numbered steps */
+.steps{list-style:none;border-top:.75pt solid var(--ink)}
+.steps li{display:grid;grid-template-columns:.42in 1fr;padding:9pt 0;border-bottom:.5pt solid var(--line);font-size:9.4pt;line-height:1.55}
+.steps li span{font:italic 400 13pt/1.25 var(--display);color:var(--gold)}
+.steps li b{display:block;font:400 13pt/1.25 var(--display);margin-bottom:2pt}
+
+/* legend */
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:16pt;margin-top:18pt}
+.legend div{display:grid;grid-template-columns:16pt 1fr;align-items:start;font-size:9pt;line-height:1.5}
+.legend div::before{content:"";width:8pt;height:8pt;border:.75pt solid var(--gold);margin-top:3pt}
+.legend b{display:block;font:500 6.6pt/1.6 var(--body);letter-spacing:.2em;text-transform:uppercase}
+
+/* simple bullet list */
+.bring{list-style:none;columns:2;column-gap:24pt;border-top:.75pt solid var(--ink);padding-top:4pt}
+.bring li{break-inside:avoid;padding:6pt 0 6pt 14pt;position:relative;border-bottom:.5pt solid var(--line);font-size:9.2pt;line-height:1.45}
+.bring li::before{content:"";position:absolute;left:0;top:12pt;width:5pt;height:.75pt;background:var(--gold)}
+
+/* red flags */
+.flags{list-style:none;border-top:.75pt solid var(--ink)}
+.flags li{display:grid;grid-template-columns:.42in 1fr;padding:7pt 0;border-bottom:.5pt solid var(--line);font-size:9.3pt;line-height:1.5}
+.flags li::before{content:"—";color:var(--gold);font-family:var(--display)}
+
+/* photo placements */
+.split{display:grid;height:100%}
+.split.l{grid-template-columns:3.1in 1fr}
+.split.r{grid-template-columns:1fr 3in}
+.split .pad{padding:.85in .65in .75in}
+.band-top{position:absolute;left:0;right:0;top:0}
+.band-bottom{position:absolute;left:0;right:0;bottom:0}
+
+/* logo lockup, as in the website footer */
+.mark{display:inline-grid;justify-items:center;line-height:.85}
+.mark span{font:500 1em/.9 var(--display);letter-spacing:-.02em;text-transform:uppercase;white-space:nowrap}
+.mark em{font:italic 400 1em/.95 var(--display);color:var(--gold)}
+
+/* cover */
+.cover-photo{position:absolute;left:0;right:0;top:0;height:6.9in}
+.cover-photo img{object-position:50% 45%}
+.cover-band{position:absolute;left:0;right:0;bottom:0;height:4.1in;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 .9in}
+.cover-band .mark{font-size:18pt;margin-bottom:26pt}
+.cover-band h1{font-size:38pt;line-height:1.02;margin-bottom:12pt}
+.cover-band .tag{font:italic 400 14pt/1.4 var(--display);color:var(--gold)}
+.cover-band .label{margin-top:24pt}
+
+/* letter */
+.letter p:not(.kicker):not(.label):not(.signature):not(.open){font-size:10pt;line-height:1.75;color:var(--muted)}
+.letter p.open{font:italic 400 15pt/1.4 var(--display);color:var(--ink);margin-bottom:6pt}
+.sign{display:grid;grid-template-columns:.9in 1fr;gap:14pt;align-items:center;margin-top:22pt}
+.sign .portrait{height:1.05in;border-radius:50%;overflow:hidden;width:.9in}
+.sign .portrait img{object-position:50% 25%}
+.signature{font:italic 400 19pt/1.2 var(--display)}
+
+/* contents page */
+.contents{justify-content:center}
+.contents ol{list-style:none;border-top:.75pt solid var(--ink)}
+.contents li{display:grid;grid-template-columns:.45in 1fr;padding:8pt 0;border-bottom:.5pt solid var(--line);font:400 13.5pt/1.25 var(--display)}
+.contents li span{font:italic 400 12pt/1.4 var(--display);color:var(--gold)}
+.contents li.mc-only{display:none}
+.mc .contents li.mc-only{display:grid}
+
+/* before you sign */
+.final{margin-top:20pt;padding:15pt 18pt 6pt;background:var(--ecru)}
+.final h3{font-size:18pt;line-height:1.2;margin-bottom:8pt}
+.final .steps li:last-child{border-bottom:0}
+
+/* closing */
+.closing{display:flex;flex-direction:column;justify-content:center}
+.closing .mark{font-size:22pt;margin-bottom:30pt;align-self:flex-start}
+.invite{margin:22pt 0;padding:16pt 0;border-top:.5pt solid var(--line);border-bottom:.5pt solid var(--line)}
+.invite p{font:italic 400 15pt/1.42 var(--display)}
+.contact{display:grid;grid-template-columns:.95in 1fr;row-gap:7pt;font-size:9.6pt}
+.contact .label{padding-top:2pt}
+.endcard{margin-top:26pt;padding:16pt 20pt 18pt;border:.75pt solid var(--gold);border-radius:14pt}
+/* v3: one large box per question (empty / slash / check), starred dealbreakers, a verdict per section */
+.sec h3{margin-bottom:0}
+.why{margin-bottom:7pt}
+.q{border-top:.75pt solid var(--ink);margin-left:.42in}
+.q li{grid-template-columns:24pt 1fr;padding:6.2pt 0;column-gap:8pt}
+.q li::before{content:"";grid-column:1;width:13pt;height:13pt;border:1pt solid var(--ink);margin-top:0;justify-self:start}
+.q li::after{display:none}
+.q li>.t{grid-column:2}
+.q li.s>.t::before{content:"★";color:var(--gold);margin-right:5pt;font-size:8.6pt}
+.ans{grid-column:2;display:grid;grid-template-columns:auto 1fr auto 1.35in;column-gap:7pt;align-items:end;margin-top:6pt}
+.ans span{font:500 5.8pt/1 var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.ans i{border-bottom:.5pt solid var(--muted);height:11pt}
+.verdict{display:flex;align-items:center;gap:16pt;margin:9pt 0 0 .42in;padding:8pt 12pt;background:#EDE7DB99}
+.verdict .label{color:var(--gold);margin-right:4pt}
+.verdict span{display:flex;align-items:center;gap:6pt;font-size:8.8pt}
+.verdict span::before{content:"";width:9pt;height:9pt;border:.75pt solid var(--ink);border-radius:50%}
+.designer{margin:8pt 0 0 .42in;font:italic 400 11.5pt/1.4 var(--display);color:var(--muted)}
+.designer b{font-style:normal;font-weight:500;color:var(--ink)}
+/* legend on the how-to page */
+.boxes{display:grid;grid-template-columns:repeat(3,1fr);gap:14pt;margin-top:16pt;padding:14pt 0;border-top:.75pt solid var(--ink);border-bottom:.5pt solid var(--line)}
+.boxes div{display:grid;grid-template-columns:22pt 1fr;align-items:start;font-size:8.9pt;line-height:1.45}
+.boxes svg{width:14pt;height:14pt;margin-top:1pt}
+.boxes b{display:block;font:500 6.6pt/1.6 var(--body);letter-spacing:.2em;text-transform:uppercase}
+.extra{display:grid;grid-template-columns:1fr 1fr;gap:14pt;padding:11pt 0 0;font-size:8.9pt;line-height:1.45}
+.extra b{display:block;font:500 6.6pt/1.6 var(--body);letter-spacing:.2em;text-transform:uppercase}
+.extra .star{color:var(--gold)}
+/* start here */
+.start .steps li{padding:6.5pt 0;font-size:8.9pt;line-height:1.5}
+.start .steps li b{font-size:12pt}
+.fill{margin-top:14pt;padding:12pt 16pt 10pt;border:.75pt solid var(--gold)}
+.fill .kicker{margin-bottom:6pt}
+.fill div{display:grid;grid-template-columns:1.45in 1fr;align-items:end;padding:7pt 0;border-bottom:.5pt solid var(--line);font:400 11.5pt/1.2 var(--display)}
+.fill div:last-child{border-bottom:0}
+.fill div em{font:300 8.6pt/1.2 var(--body);font-style:normal;color:var(--muted);display:flex;gap:14pt}
+.fill div em span{display:flex;align-items:center;gap:5pt}
+.fill div em span::before{content:"";width:8pt;height:8pt;border:.75pt solid var(--ink);border-radius:50%}
+/* chase list */
+.chase{width:100%;border-collapse:collapse;margin-top:6pt}
+.chase th{font:500 5.8pt/1.2 var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);text-align:left;padding:0 0 5pt;border-bottom:.75pt solid var(--ink)}
+.chase th:last-child,.chase td:last-child{text-align:center;width:.8in}
+.chase th:nth-child(2){width:1.5in}
+.chase td{height:25pt;border-bottom:.5pt solid var(--line)}
+.chase td:last-child::before{content:"";display:inline-block;width:12pt;height:12pt;border:1pt solid var(--ink);vertical-align:middle}
+</style>
+</head>
+<body>
+
+<!-- Cover -->
+<section class="page">
+  <div class="cover-photo"><img class="std-only" src="assets/cover-arch-reception.jpg" alt="">
+      <img class="mc-only" src="assets/mc-cover-chuppah.jpg" alt="" style="object-position:50% 40%"></div>
+  <div class="cover-band">
+    <div class="mark"><span>Lady Victoria</span><em>designs</em></div>
+    <h1>Before You Book the Venue</h1>
+    <p class="tag std-only">The Essential Wedding Venue Checklist</p>
+    <p class="tag mc-only">The Essential Multicultural Wedding Checklist</p>
+    <p class="label std-only">A complimentary guide from Lady Victoria Designs</p>
+    <p class="label mc-only">Multicultural Edition</p>
+  </div>
+</section>
+
+<!-- Letter from Irene -->
+<section class="page">
+  <div class="split l">
+    <div class="photo"><img class="std-only" src="assets/intro-ceremony-aisle.jpg" alt="">
+      <img class="mc-only" src="assets/mc-letter-chuppah.jpg" alt="" style="object-position:40% 50%"></div>
+    <div class="pad letter" style="justify-content:center">
+      <p class="kicker">A note before you tour</p>
+      <h2>The venue comes <em>first</em></h2>
+      <p class="open">The venue is the first big decision you make, and nearly every decision after it depends on it.</p>
+      <p>Your guest count, your menu, your décor, your timeline, even the way your guests arrive: all of it has to fit inside the rules of the room you choose. A venue can be breathtaking on a tour and still be unable to support the celebration you are planning.</p>
+      <p>This checklist holds the questions our planners ask on every venue tour. Take it with you, ask the ones that apply, and do not pay a deposit until the answers that matter are in writing.</p>
+      <p class="mc-only">If your celebration brings together more than one culture, more than one ceremony, or traditions with specific needs — sacred fire, a procession, cultural catering, attire changes — the venue matters even more. The final chapter is written for you.</p>
+      <div class="sign">
+        <div class="portrait"><img src="assets/irene.jpg" alt=""></div>
+        <div><p class="signature">With care, Irene</p><p class="label" style="margin-top:4pt">Irene Ntiako · Founder &amp; Creative Director</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Start here (Irene's five steps) -->
+<section class="page pad start">
+  <p class="kicker">Start here</p>
+  <h2>Before you contact <em>a single venue</em></h2>
+  <p class="lead" style="margin-bottom:10pt">The venue search goes wrong when couples start by touring. Start by deciding. These five steps will save you weeks, and tours of venues that were never right for you.</p>
+  <ol class="steps">
+    <li><span>01</span><div><b>Choose your months, then your dates</b>Pick two months you would be happy to marry in, then two or three dates inside them. Every venue conversation then starts with availability, not guesswork.</div></li>
+    <li><span>02</span><div><b>Choose your area, wider than you think</b>Pick a region, not a single city. In the DMV, that might mean Maryland, Washington DC, and Virginia. Two or three states multiply your options.</div></li>
+    <li><span>03</span><div><b>Decide your style</b>A hotel ballroom, a standalone ballroom, an industrial space, a barn, an estate or garden. And decide whether you want a space that is already beautiful, or an empty canvas to transform.</div></li>
+    <li><span>04</span><div><b>Decide how your day flows</b>Ceremony, cocktail hour, and reception all in one place? A church ceremony, then a reception venue nearby? An outdoor ceremony? These answers change which venues can work.</div></li>
+    <li><span>05</span><div><b>Build your shortlist, then email, don’t tour</b>List five to ten venues that fit. Email each one with your guest count and ask for two things: a rough estimate of the total cost, and a video walkthrough of the ballroom.</div></li>
+  </ol>
+  <div class="fill">
+    <p class="kicker">Your starting point</p>
+    <div>My two months<i></i></div>
+    <div>My dates<i></i></div>
+    <div>My area<i></i></div>
+    <div>My style<i></i></div>
+    <div>My flow<em><span>All in one venue</span><span>Church + reception</span><span>Outdoor ceremony</span></em></div>
+    <div>My shortlist<i></i></div>
+  </div>
+  <div class="note"><p class="label">Then narrow with facts</p><p>The estimates and the videos will cut your list to two or three serious contenders. Tour only those, in person, with this checklist in hand.</p></div>
+</section>
+
+<!-- The one rule -->
+<section class="page">
+  <div class="pad" style="padding-bottom:0">
+    <p class="kicker">The one rule</p>
+    <h2>“We’re flexible” <em>is not a yes</em></h2>
+    <p class="lead" style="max-width:5.9in">Here is how it usually happens. On the tour, you mention that your caterer will cook on-site, and the coordinator smiles and says, “We’re very flexible.” Months later, the contract arrives, and it says outside food must arrive fully prepared. Nothing was promised in writing, so nothing was promised.</p>
+    <div class="note" style="margin-top:4pt"><p class="label">Before you sign</p><p>If a promise affects your ceremony, décor, food, music, parking, guest count, budget, installation, or timeline, request written confirmation in the contract.</p></div>
+  </div>
+  <div class="band-bottom" style="height:6.35in"><img src="assets/rule-floral-arch.jpg" alt="" style="object-position:50% 55%"></div>
+</section>
+
+<!-- How to use + what to bring -->
+<section class="page pad">
+  <p class="kicker">How to use this checklist</p>
+  <h2>One box, <em>three marks</em></h2>
+  <ol class="steps">
+    <li><span>01</span><div><b>Before the tour</b>Read it through and cross out anything that does not apply to your wedding.</div></li>
+    <li><span>02</span><div><b>On the tour</b>Ask each question and mark its box. For starred questions, write down the answer and who said it.</div></li>
+    <li><span>03</span><div><b>After the tour</b>Copy every slash onto the Chase List at the back, and email it to the venue to confirm in writing.</div></li>
+    <li><span>04</span><div><b>Before you sign</b>Anything still not in writing becomes a change to request in the contract, or a reason to keep looking.</div></li>
+  </ol>
+  <div class="boxes">
+    <div><svg viewBox="0 0 14 14"><rect x=".5" y=".5" width="13" height="13" fill="none" stroke="#14120F"/></svg><p><b>Empty</b>Not asked yet.</p></div>
+    <div><svg viewBox="0 0 14 14"><rect x=".5" y=".5" width="13" height="13" fill="none" stroke="#14120F"/><path d="M3 11 11 3" stroke="#14120F" stroke-width="1.4"/></svg><p><b>Slash</b>Asked, and told yes out loud.</p></div>
+    <div><svg viewBox="0 0 14 14"><rect x=".5" y=".5" width="13" height="13" fill="none" stroke="#14120F"/><path d="M3 7.5 6 10.5 11.5 3.5" fill="none" stroke="#14120F" stroke-width="1.4"/></svg><p><b>Check</b>Confirmed by email or in the contract.</p></div>
+  </div>
+  <div class="extra">
+    <p><b><span class="star">★</span> Dealbreakers</b>The questions that can end a venue. Get the answer and the name of the person who gave it.</p>
+    <p><b>Verdict</b>At the end of each section, circle Clear, Needs follow-up, or Dealbreaker. Flip through later and see where you stand.</p>
+  </div>
+  <p class="kicker" style="margin-top:24pt">What to bring to the tour</p>
+  <ul class="bring">
+    <li>Your guest count, and the most it could grow to</li>
+    <li>Your wedding date, or the dates you are considering</li>
+    <li>Your budget range for the venue</li>
+    <li>Photos of your design inspiration</li>
+    <li>A list of your ceremonies, traditions, and must-haves</li>
+    <li>Your phone, for photos and video of every room, door, and entrance</li>
+    <li>This checklist and a pen</li>
+    <li>Your planner or designer, if you have one</li>
+  </ul>
+  <div class="band-bottom" style="height:2.2in"><img src="assets/howto-white-room.jpg" alt="" style="object-position:50% 55%"></div>
+</section>
+
+<!-- 01–02 -->
+<section class="page pad">
+  <div class="sec">
+    <h3><span>01</span>Date, Hours &amp; Curfew</h3>
+    <p class="why">Setup, the celebration, and cleanup all come out of the same rental hours.</p>
+    <ul class="q">
+      <li><span class="t">What time may vendors begin load-in, and when must setup be complete?</span></li>
+      <li class="s"><span class="t">What time must music, alcohol service, guest activity, and vendor load-out end?</span><div class="ans"><span>Answer</span><i></i><span>Who said it</span><i></i></div></li>
+      <li><span class="t">What overtime fees apply to event time, staff, security, cleanup, or late strike?</span></li>
+      <li><span class="t">Is there a local noise ordinance that ends outdoor music earlier than the venue curfew?</span></li>
+    </ul>
+    <div class="verdict"><p class="label">Verdict</p><span>Clear</span><span>Needs follow-up</span><span>Dealbreaker</span></div>
+  </div>
+  <div class="sec">
+    <h3><span>02</span>Real Capacity &amp; Layout</h3>
+    <p class="why">The capacity on the brochure is usually for an empty room. Your dance floor, stage, bars, and décor all take seats away.</p>
+    <ul class="q">
+      <li class="s"><span class="t">What is the realistic seated capacity with tables, stage, dance floor, bars, food stations, and lounge furniture?</span><div class="ans"><span>Answer</span><i></i><span>Who said it</span><i></i></div></li>
+      <li class="s"><span class="t">Can the full guest count fit in the weather-backup space?</span><div class="ans"><span>Answer</span><i></i><span>Who said it</span><i></i></div></li>
+      <li><span class="t">If weather forces a change, by what time must the call be made, and are tents, sidewalls, heaters, or ground flooring permitted?</span></li>
+      <li><span class="t">Does capacity change for room flips?</span></li>
+    </ul>
+    <div class="verdict"><p class="label">Verdict</p><span>Clear</span><span>Needs follow-up</span><span>Dealbreaker</span></div>
+  </div>
+  <div class="notes"><p class="label">Notes</p><div></div></div>
+</section>
+
+<!-- 03–05 -->
+<section class="page pad">
+  <div class="sec">
+    <h3><span>03</span>Alcohol, Bar &amp; Certificates</h3>
+    <p class="why">Whoever holds the license decides who pours, who is insured, and when the bar closes.</p>
+    <ul class="q">
+      <li><span class="t">Does the venue hold the required liquor license, or is a temporary permit needed?</span></li>
+      <li><span class="t">Who obtains the permit, licensed bartenders, security, liquor-liability coverage, and certificate of insurance?</span></li>
+      <li><span class="t">Must the venue be named as an additional insured?</span></li>
+      <li><span class="t">What time must alcohol service end, and what bar fees apply?</span></li>
+    </ul>
+    <div class="verdict"><p class="label">Verdict</p><span>Clear</span><span>Needs follow-up</span><span>Dealbreaker</span></div>
+  </div>
+  <div class="sec">
+    <h3><span>04</span>Catering &amp; Kitchen Rules</h3>
+    <p class="why">If your caterer cannot cook the way your menu needs, the meal you are picturing may not be possible here.</p>
+    <ul class="q">
+      <li class="s"><span class="t">Is catering exclusive, preferred-list only, or open to outside caterers?</span><div class="ans"><span>Answer</span><i></i><span>Who said it</span><i></i></div></li>
+      <li><span class="t">May caterers cook on-site?</span></li>
+      <li><span class="t">Can dietary and allergy needs be supported?</span></li>
+    </ul>
+    <div class="verdict"><p class="label">Verdict</p><span>Clear</span><span>Needs follow-up</span><span>Dealbreaker</span></div>
+  </div>
+  <div class="sec">
+    <h3><span>05</span>In-House Rentals</h3>
+    <p class="why">“Included” can mean anything. Ask exactly what, how many, and in what condition.</p>
+    <ul class="q">
+      <li><span class="t">Which tables, chairs, linens, tabletop items, bars, staging, dance floors, lounge pieces, and cocktail tables are included?</span></li>
+      <li><span class="t">What quantities, sizes, colors, and conditions are guaranteed?</span></li>
+      <li><span class="t">Are delivery, setup, breakdown, cleaning, reset, and damage fees included?</span></li>
+      <li><span class="t">May the dance floor be wrapped or covered?</span></li>
+    </ul>
+    <div class="verdict"><p class="label">Verdict</p><span>Clear</span><span>Needs follow-up</span><span>Dealbreaker</span></div>
+  </div>
+</section>
+
+<!-- 06 -->
+<section class="page pad">
+  <div class="sec">
+    <h3><span>06</span>Décor Setup &amp; Load-In</h3>
+    <p class="why">Your design is only as good as the hours and the access you get to install it.</p>
+    <ul class="q">
+      <li class="s"><span class="t">Exactly how many hours are allowed for décor setup before guest arrival?</span><div class="ans"><span>Answer</span><i></i><span>Who said it</span><i></i></div></li>
+      <li><span class="t">Exactly how many hours are allowed for décor breakdown and load-out?</span></li>
+      <li><span class="t">Can installation begin the day before, and may décor remain overnight?</span></li>
+      <li><span class="t">Is the space on the same level as the loading entrance?</span></li>
+      <li><span class="t">Is there a loading dock, same-level entry, ramp, or service entrance for large pieces?</span></li>
+      <li class="s"><span class="t">Can large installations get into the room?</span><div class="ans"><span>Answer</span><i></i><span>Who said it</span><i></i></div></li>
+      <li><span class="t">Is load-in easy for large pieces, or are there stairs and tight turns?</span></li>
+      <li><span class="t">What time must the room be guest-ready?</span></li>
+      <li><span class="t">Are real-flame candles allowed, and what enclosure rule applies?</span></li>
+      <li><span class="t">What may be attached to walls, ceilings, and floors, and are tape, pins, hooks, confetti, loose petals, or sparklers restricted?</span></li>
+    </ul>
+    <p class="designer"><b>Leave the technical side to your designer.</b> Measuring the load-in path, rigging, power, and freight are their job, not yours on a tour.</p>
+    <div class="verdict"><p class="label">Verdict</p><span>Clear</span><span>Needs follow-up</span><span>Dealbreaker</span></div>
+  </div>
+  <div class="notes"><p class="label">Notes</p><div></div></div>
+</section>
+
+<!-- 07 -->
+<section class="page">
+  <div class="pad" style="height:6.6in">
+    <div class="sec">
+      <h3><span>07</span>Power, Rigging &amp; Effects</h3>
+      <p class="why">Lighting, music, chandeliers, and first-dance effects all need power and permission.</p>
+      <ul class="q">
+        <li><span class="t">How much electrical power is available for lighting, entertainment, catering, and production?</span></li>
+        <li class="s"><span class="t">May chandeliers, florals, draping, or installations be hung from the ceiling?</span><div class="ans"><span>Answer</span><i></i><span>Who said it</span><i></i></div></li>
+        <li><span class="t">Are cold-spark machines permitted?</span></li>
+        <li><span class="t">Is a low-lying cloud effect permitted for the first dance?</span></li>
+        <li><span class="t">Is atmospheric haze permitted for lighting and photography effects?</span></li>
+        <li><span class="t">Is there backup power?</span></li>
+      </ul>
+      <div class="verdict"><p class="label">Verdict</p><span>Clear</span><span>Needs follow-up</span><span>Dealbreaker</span></div>
+    </div>
+  </div>
+  <div class="band-bottom" style="height:4.4in"><img src="assets/effects-cloud-chandelier.jpg" alt="" style="object-position:50% 45%"></div>
+</section>
+
+<!-- 08–09 -->
+<section class="page pad">
+  <div class="sec">
+    <h3><span>08</span>Guest Parking, Valet &amp; Arrival</h3>
+    <p class="why">Arrival is your guests’ first impression. A long walk in the rain is hard to undo.</p>
+    <ul class="q">
+      <li><span class="t">How many guest parking spaces are available?</span></li>
+      <li><span class="t">Is parking complimentary, validated, or paid by guests?</span></li>
+      <li><span class="t">Is valet required or optional, and what is the fee?</span></li>
+      <li><span class="t">Where are the guest drop-off, accessible drop-off, shuttle, bus, limousine, and rideshare areas?</span></li>
+      <li><span class="t">Is overflow parking available, and is a shuttle required?</span></li>
+      <li><span class="t">Is the path from parking safe, accessible, and well lit in bad weather?</span></li>
+    </ul>
+    <div class="verdict"><p class="label">Verdict</p><span>Clear</span><span>Needs follow-up</span><span>Dealbreaker</span></div>
+  </div>
+  <div class="sec">
+    <h3><span>09</span>Total Cost &amp; Contract</h3>
+    <p class="why">The quote is rarely the total. Every fee you do not ask about shows up later.</p>
+    <ul class="q">
+      <li class="s"><span class="t">Does the quote include the venue fee, service charges, taxes, staffing, security, cleaning, rentals, parking, valet, power, overtime, and damage deposits?</span><div class="ans"><span>Answer</span><i></i><span>Who said it</span><i></i></div></li>
+      <li><span class="t">Does the contract list setup and breakdown hours, loading access, parking, curfew, catering, alcohol, weather, and overtime terms?</span></li>
+      <li><span class="t">Will every important approval be placed in writing?</span></li>
+      <li class="s"><span class="t">What deposit and payment schedule does the venue require, and what are the cancellation and postponement terms?</span><div class="ans"><span>Answer</span><i></i><span>Who said it</span><i></i></div></li>
+    </ul>
+    <div class="verdict"><p class="label">Verdict</p><span>Clear</span><span>Needs follow-up</span><span>Dealbreaker</span></div>
+  </div>
+  <div class="notes"><p class="label">Notes</p><div></div></div>
+</section>
+
+<!-- Multicultural chapter, part one (multicultural edition only) -->
+<section class="page mc-only">
+  <div class="band-top" style="height:2.8in"><img src="assets/mc-chapter-couple.jpg" alt="" style="object-position:50% 22%"></div>
+  <div class="pad" style="padding-top:3.15in;height:100%">
+    <p class="kicker">Section 10 · For multicultural weddings</p>
+    <h2>Questions for <em>Multicultural Weddings</em></h2>
+    <p class="lead" style="margin-bottom:10pt">Ask only what matches your traditions, and name each one. “A cultural ceremony” is easy for a venue to agree to; “sacred fire, indoors, for forty minutes” gets a real answer.</p>
+    <div class="sec">
+      <h3><span>i</span>Ceremonies &amp; Spaces</h3>
+      <ul class="q" style="margin-top:6pt">
+        <li class="s"><span class="t">Can the venue host two or more ceremonies, room transformations, rehearsals, and cultural leaders?</span><div class="ans"><span>Answer</span><i></i><span>Who said it</span><i></i></div></li>
+        <li><span class="t">Does capacity change for multiple ceremonies or room flips, and how much time is needed between them?</span></li>
+        <li><span class="t">Does the realistic seated capacity still hold with your cultural structures in the room?</span></li>
+        <li><span class="t">Is a prayer, preparation, or ceremonial holding room available?</span></li>
+      </ul>
+    </div>
+    <div class="sec">
+      <h3><span>ii</span>Sacred Fire &amp; Ritual Materials</h3>
+      <ul class="q" style="margin-top:6pt">
+        <li class="s"><span class="t">Are sacred fire, incense, oil lamps, candles, smoke, rice, petals, powders, water, oils, and ceremonial foods permitted?</span><div class="ans"><span>Answer</span><i></i><span>Who said it</span><i></i></div></li>
+        <li><span class="t">What fire-marshal approval, permits, ventilation, protective materials, insurance, cleanup, or staffing are required?</span></li>
+      </ul>
+    </div>
+    <div class="verdict"><p class="label">Verdict</p><span>Clear</span><span>Needs follow-up</span><span>Dealbreaker</span></div>
+    <div class="notes"><p class="label">Notes</p><div></div></div>
+  </div>
+</section>
+
+<!-- Multicultural chapter, part two (multicultural edition only) -->
+<section class="page pad mc-only">
+  <div class="sec">
+    <h3><span>iii</span>Cultural Cuisine</h3>
+    <ul class="q" style="margin-top:6pt">
+      <li><span class="t">May caterers cook on-site, and are tandoors, grills, fryers, woks, propane, refrigeration, water, ice, and waste disposal permitted?</span></li>
+      <li><span class="t">Can halal, kosher, Jain, vegetarian, vegan, allergy, fasting, and cross-contact requirements be supported?</span></li>
+    </ul>
+  </div>
+  <div class="sec">
+    <h3><span>iv</span>Processions, Attire &amp; Language</h3>
+    <ul class="q" style="margin-top:6pt">
+      <li><span class="t">Can the property support a baraat or other cultural procession, musicians, dancers, animals, or specialty transportation, without blocking valet, parking, traffic, or emergency access?</span></li>
+      <li><span class="t">Are there enough private rooms for attire changes, stylists, family, elders, performers, prayer, nursing, and quiet breaks?</span></li>
+      <li><span class="t">Can programs, signs, screens, ceremonies, interpreters, and announcements use multiple languages?</span></li>
+    </ul>
+  </div>
+  <div class="sec">
+    <h3><span>v</span>Extended Timeline &amp; Guest Experience</h3>
+    <ul class="q" style="margin-top:6pt">
+      <li><span class="t">Is the rental window long enough for every ceremony, attire change, meal, performance, photo period, room flip, and rest break?</span></li>
+      <li><span class="t">Where will guests wait during transitions, and can refreshments be served?</span></li>
+      <li><span class="t">Can décor and ceremonial structures remain overnight with secure storage?</span></li>
+    </ul>
+  </div>
+  <div class="verdict"><p class="label">Verdict</p><span>Clear</span><span>Needs follow-up</span><span>Dealbreaker</span></div>
+  <div class="notes"><p class="label">Notes · your traditions and what the venue said</p><div></div></div>
+</section>
+
+<!-- Chase list -->
+<section class="page pad">
+  <p class="kicker">After the tour</p>
+  <h2>Your <em>Chase List</em></h2>
+  <p class="lead" style="margin-bottom:12pt">Copy every question you marked with a slash: asked, but not yet in writing. Email the list to the venue and ask them to confirm each answer. Check each one off as it comes back.</p>
+  <table class="chase">
+    <thead><tr><th>Question</th><th>Who said it</th><th>In writing</th></tr></thead>
+    <tbody></tbody>
+  </table>
+  <div class="note"><p class="label">To send with it</p><p>“Thank you for the tour. Before we move forward, could you confirm the following by email?”</p></div>
+</section>
+
+<!-- Red flags + before you sign -->
+<section class="page pad">
+  <p class="kicker">If you hear this, slow down</p>
+  <h2>Venue <em>Red Flags</em></h2>
+  <ul class="flags">
+    <li>“We’re flexible,” with no written detail behind it.</li>
+    <li>Only an hour or two to set up décor before guests arrive.</li>
+    <li>No one can tell you if large installations can get in and be set up in time.</li>
+    <li>The weather-backup space cannot hold your full guest count.</li>
+    <li>The quote leaves out service charges, tax, security, or overtime.</li>
+    <li>Guest parking or valet cannot handle your guest count.</li>
+    <li>Hanging installations, candles, or effects in your design are not permitted.</li>
+    <li>The venue will not put an approval in the contract.</li>
+  </ul>
+  <div class="final">
+    <p class="kicker" style="margin-bottom:8pt">The last step</p>
+    <h3>Before You Sign</h3>
+    <ol class="steps">
+      <li><span>01</span><div>Request a complete itemized proposal.</div></li>
+      <li><span>02</span><div>Have your designer walk and measure the load-in path from the truck to the room.</div></li>
+      <li><span>03</span><div>Confirm setup and breakdown hours in the contract.</div></li>
+      <li><span>04</span><div>Confirm guest parking, valet, accessible drop-off, rideshare, shuttle, and vendor parking.</div></li>
+      <li><span>05</span><div>Review the venue with your planner, caterer, designer, and entertainment team.</div></li>
+    </ol>
+  </div>
+  <div class="band-bottom" style="height:2.1in"><img src="assets/timeline-couple.jpg" alt="" style="object-position:50% 30%"></div>
+</section>
+
+<!-- Closing -->
+<section class="page">
+  <div class="split r">
+    <div class="pad closing">
+      <div class="mark"><span>Lady Victoria</span><em>designs</em></div>
+      <p class="muted">Lady Victoria Designs provides luxury wedding planning and full-room event design with thoughtful logistics, strong client advocacy, refined aesthetics, and celebrations that honor each couple’s priorities and traditions.</p>
+      <div class="invite">
+        <p class="std-only">Touring venues and want a second set of eyes? We invite you to schedule a design consultation.</p>
+        <p class="mc-only">Planning a multicultural, multi-ceremony, or culturally detailed wedding? We invite you to schedule a design consultation.</p>
+      </div>
+      <p class="muted">Bring this checklist and your venue contract — we will review the answers with you and help you confirm the venue can support the celebration you are envisioning.</p>
+      <div class="endcard">
+        <p class="kicker">Schedule a consultation</p>
+        <div class="contact">
+          <span class="label">Text</span><span>(301) 312-0332</span>
+          <span class="label">Online</span><span>ladyvictoriadesigns.com</span>
+        </div>
+      </div>
+    </div>
+    <div class="photo"><img class="std-only" src="assets/closing-first-dance.jpg" alt="" style="object-position:58% 50%">
+      <img class="mc-only" src="assets/mc-closing-jenny.jpg" alt="" style="object-position:22% 35%"></div>
+  </div>
+</section>
+
+<script>
+// Rule each notes area; overflow:hidden trims the extra lines to fit the page.
+document.querySelectorAll('.notes div').forEach(d => { d.innerHTML = '<i></i>'.repeat(40) });
+document.querySelector('.chase tbody').innerHTML = '<tr><td></td><td></td><td></td></tr>'.repeat(17);
+</script>
+</body>
+</html>
