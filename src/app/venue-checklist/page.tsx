@@ -15,12 +15,12 @@ function GuidePreview() {
     <div className="relative mx-auto w-full max-w-[340px] sm:max-w-[400px] aspect-[3/3.1]">
       <div className="absolute left-[2%] top-[9%] w-[60%] rotate-[-7deg]">
         <div className={`${styles.settle} ${styles.fromLeft} shadow-[0_18px_40px_rgba(20,18,15,0.18)]`}>
-          <Image src="/venue-checklist/v3-questions.jpg" alt="" width={1100} height={1424} sizes="240px" className="w-full h-auto" />
+          <Image src="/venue-checklist/v3-questions-bw.jpg" alt="" width={1100} height={1424} sizes="240px" className="w-full h-auto" />
         </div>
       </div>
       <div className="absolute right-[2%] top-[9%] w-[60%] rotate-[7deg]">
         <div className={`${styles.settle} ${styles.fromRight} shadow-[0_18px_40px_rgba(20,18,15,0.18)]`}>
-          <Image src="/venue-checklist/v3-start-here.jpg" alt="" width={1100} height={1424} sizes="240px" className="w-full h-auto" />
+          <Image src="/venue-checklist/v3-start-here-bw.jpg" alt="" width={1100} height={1424} sizes="240px" className="w-full h-auto" />
         </div>
       </div>
       <div className="absolute left-1/2 top-0 w-[66%] -translate-x-1/2">

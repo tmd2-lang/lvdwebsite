@@ -186,6 +186,13 @@ p+p{margin-top:9pt}
 .chase th:nth-child(2){width:1.5in}
 .chase td{height:25pt;border-bottom:.5pt solid var(--line)}
 .chase td:last-child::before{content:"";display:inline-block;width:12pt;height:12pt;border:1pt solid var(--ink);vertical-align:middle}
+/* Readability (Irene, Oct 30): black text on white. Gold stays only on lines, stars, and the logo. */
+:root{--paper:#FFFFFF;--muted:#14120F}
+body{font-weight:400}
+.kicker,.sec h3 span,.steps li span,.cover-band .tag,.notes .label,.note p.label,.ans span,.verdict .label,.flags li::before,.contents li span{color:var(--ink)}
+.fill div em{font-weight:400}
+.note,.verdict{background:#F3F1EC}
+.final{background:#F3F1EC}
 </style>
 </head>
 <body>
