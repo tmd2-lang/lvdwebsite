@@ -1,10 +1,34 @@
-# Venue checklist lead magnet: how it all fits together
+# Venue checklist: start here
 
-Last updated Oct 30, 2026. Everything below is live on ladyvictoriadesigns.com.
+The free "Before You Book the Venue" checklist is LVD's lead magnet. Couples sign up on `/venue-checklist`, download the PDF, get three follow-up emails, and are offered a complimentary consultation. This page maps everything in this folder and what's still open. Status as of **Oct 30, 2026**.
 
-Irene's free "Before You Book the Venue" checklist, offered from Meta ads. A couple signs up, gets the guide (PDF and a phone version), and receives three follow-up emails that lead to a complimentary 20-minute consultation.
+## What's live
 
-## The pieces
+- **Checklist v4** (`v4/`): 43 questions, 57 in the multicultural edition. The questions live in `src/lib/venue-checklist-questions.ts`, which the PDF build and the phone checklist (`/venue-checklist/tour`) both read. Old-vs-new list: `v4-question-list.md`.
+- **Landing page:** `src/app/venue-checklist/` (signup form, PDF download, preview images in `public/venue-checklist/`). The confirmation screen tells couples to check Promotions or spam for the email.
+- **Emails** (`emails.md`, code in `src/lib/checklist-emails.ts`): Email 1 right away, Email 2 on day 3, Email 3 on day 7, sent from **hello@ladyvictoriadesigns.com**. Vercel needs `CHECKLIST_GMAIL_USER` and `CHECKLIST_GMAIL_APP_PASSWORD` (a Google App Password for hello@). Both are set, and a test send arrived. SPF, DKIM and DMARC all pass. Email 1 is a plain personal note from Irene so Gmail is more likely to file it in Primary rather than Promotions.
+
+## Folders
+
+| Folder | What it is |
+|---|---|
+| `v4/` | **Live** PDF checklist (standard + multicultural). |
+| `v3/`, `v2/`, `lead-magnet/` | Earlier versions, kept for reference. |
+| `team-edition/` | Internal venue vetting checklist for the team. Never sent to clients. |
+| `ads/` | Meta ads for the checklist: 8 statics, a magazine cover and a 14-second video, in feed and story sizes. Copy, setup and how to re-render are in `ads/README.md`. |
+| `emails.md` | Copy for the 3-email sequence. |
+
+Related notes for Irene and her assistant Muse are in `../muse-handoff/`. The most relevant ones are `venue-checklist-update-2026-10-30.md` and `venue-research-2026-10-30.md` (what brides say about venue searching, from 10 Reddit threads, with ad angles).
+
+## Open items
+
+1. **Irene to OK the ad photos.** They're real couples and rooms from the site gallery.
+2. **Meta tracking:** checklist signups fire the same standard `Lead` event as real inquiries (`src/lib/meta-pixel.ts`, `content_name: venue_checklist`). Give checklist signups their own event, or make a custom conversion, before running inquiry-optimized campaigns. Otherwise Meta will chase cheap downloads.
+3. **Ads, round 1** (`ads/README.md`): one ad set with the 3 general angles × 2 images, about $30–50/day for 7–10 days. Judge by cost per download per angle, then by consultations booked.
+4. **Still to make:** the multicultural ad set ("'Yes, we host multicultural weddings' isn't enough" and "More than one ceremony?"), and a round 2 video of Irene talking to camera for the winning angle.
+5. **Keep the ads in sync with the checklist.** They quote "43 questions" and specific questions. If the checklist changes, update the ads (see `ads/README.md`).
+
+## How each piece works (code map)
 
 | Piece | Where | Notes |
 |---|---|---|
@@ -40,13 +64,7 @@ Irene's free "Before You Book the Venue" checklist, offered from Meta ads. A cou
   - the regret list
   - the planner angle, for retargeting and Email 3
 
-## History
-
-- `lead-magnet/`, `team-edition/`, `v2/`, `v3/`: earlier versions, kept for reference. v3 has the full v2 → v3 change list.
-- `v4-question-list.md`: every question, old vs new, as approved.
-- The Muse/Irene running log is in `docs/muse-handoff/notes.md` and `docs/muse-handoff/venue-checklist-update-2026-10-30.md`.
-
-## Still open / ideas
+## Phone checklist: still open
 
 - The phone checklist hasn't been tested on a real phone by the studio yet.
 - Later: let Irene see a couple's venues and dealbreakers before the consultation (it's already saved on the lead; we'd need to show it in Inquiries, and the app tells couples their answers are saved with LVD).
