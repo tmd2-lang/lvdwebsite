@@ -6,10 +6,7 @@ Three emails: right away, day 3, and day 7. Each signup gets the version that ma
 
 Lines marked *Standard*, *Multicultural*, *Still looking*, or *Already booked* swap in automatically. Everything else is the same for everyone. "[Name]" is her first name.
 
-Still to confirm with Irene:
-1. Is the 20-minute consultation free? If so, Email 3 should say "complimentary."
-2. Which inbox should replies go to?
-3. Should "See how we plan" link to the /planning page or the inquiry form?
+Confirmed by Irene (Oct 30): the 20-minute consultation is complimentary, replies go to hello@, and "See how we plan" links to the planning page.
 
 ---
 
@@ -75,7 +72,7 @@ One quick question: was the checklist useful?
 **[Yes, it helped]** **[Not really]**
 
 *(Each button opens a page on the site (/venue-checklist/feedback) that saves her answer as a note on her lead in Inquiries.*
-*Yes: "So glad it helped," with a 20-minute consultation to book, "See how we plan," and the checklist to download again.*
+*Yes: "So glad it helped," with a complimentary 20-minute consultation to book, "See how we plan," and the checklist to download again.*
 *Not really: "What was missing?" with a box she can type into; what she writes is saved as a note too. Below it, a consultation offer.)*
 
 Warmly,
@@ -89,14 +86,14 @@ Irene
 - *Standard:* Want a second set of eyes on your venue?
 - *Multicultural:* Bringing two traditions into one celebration
 
-**Preview:** A 20-minute call about your venue and your plans.
+**Preview:** A complimentary 20-minute call about your venue and your plans.
 
 Hi [Name],
 
 - *Still looking:* By now you may have toured a venue or two, and maybe one is starting to feel right.
 - *Already booked:* Now that you've chosen your venue, the next step is making sure it can hold the celebration you're imagining.
 
-If you'd like a second set of eyes, book a 20-minute consultation with me. Bring your checklist and what the venue has told you, and we'll go through it together: what's confirmed, what's still only a promise, and what to ask before anything is final.
+If you'd like a second set of eyes, book a complimentary 20-minute consultation with me. Bring your checklist and what the venue has told you, and we'll go through it together: what's confirmed, what's still only a promise, and what to ask before anything is final.
 
 *Multicultural only:* If you're bringing more than one culture or ceremony together, we'll also talk through how the day can flow so every tradition has its moment.
 

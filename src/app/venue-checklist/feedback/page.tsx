@@ -67,7 +67,7 @@ export default async function ChecklistFeedbackPage({ searchParams }: { searchPa
                   : "When one venue starts to feel right, a second set of eyes can save you from an expensive surprise."}
               </p>
               <div className="bg-white/60 border border-ink/10 rounded-2xl p-6 sm:p-8 shadow-[0_20px_60px_rgba(20,18,15,0.08)] max-w-xl">
-                <h2 className="font-display text-2xl sm:text-3xl mb-3">A 20-minute venue consultation</h2>
+                <h2 className="font-display text-2xl sm:text-3xl mb-3">A complimentary 20-minute venue consultation</h2>
                 <p className="font-body text-sm md:text-base text-ink/65 leading-relaxed mb-7">
                   Bring your checklist and what the venue has told you. Irene will go through it with you: what’s confirmed, what’s still only a promise, and what to ask before anything is final.
                 </p>
