@@ -1,0 +1,8 @@
+{
+  "name": "venue-checklist-ad-renderer",
+  "private": true,
+  "description": "Renders the venue checklist ads (index.html, video.html) to PNG and MP4 frames. See ../README.md.",
+  "dependencies": {
+    "puppeteer-core": "23.11.1"
+  }
+}

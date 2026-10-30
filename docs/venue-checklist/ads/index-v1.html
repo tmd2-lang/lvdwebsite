@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Venue checklist ads</title>
+<link rel="stylesheet" href="../v3/fonts/fonts.css">
+<!--
+  Static Meta ads for the venue checklist. One ad per page load:
+  index.html?ad=first-photo&size=feed   (feed = 1080x1350, story = 1080x1920)
+  Exported to PNG by render.js. Copy and angles: README.md.
+-->
+<style>
+:root{--paper:#F7F4EE;--white:#FFFFFF;--ink:#14120F;--gold:#A8894E;--ecru:#EDE7DB;--line:#D8D1C5;--muted:#5F5A52;
+  --display:'Cormorant Garamond',Georgia,serif;--body:'Jost',Arial,sans-serif;--w:1080px;--h:1350px;--pad:84px}
+:root[data-size=story]{--h:1920px;--pad:96px}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:var(--w);height:var(--h);background:var(--paper);overflow:hidden}
+.ad{position:relative;width:var(--w);height:var(--h);overflow:hidden;color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+.ad[hidden]{display:none}
+
+/* Brand mark, as on the checklist cover */
+.mark{display:inline-grid;justify-items:center;line-height:.85;font-size:34px}
+.mark span{font:500 1em/.9 var(--display);letter-spacing:-.02em;text-transform:uppercase;white-space:nowrap}
+.mark em{font:italic 400 1em/.95 var(--display);color:var(--gold)}
+.light .mark{text-shadow:0 2px 18px rgba(0,0,0,.45)}
+.light .mark span{color:#fff}
+.light .mark em{color:#E3CC9A}
+
+.kicker{font:500 22px/1.3 var(--body);letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+.light .kicker{color:#E8D3A4;text-shadow:0 1px 10px rgba(0,0,0,.5)}
+.head{font:400 92px/1.02 var(--display);letter-spacing:-.01em}
+.head em{font-style:italic;color:var(--gold)}
+.light .head{color:#fff}
+.light .head em{color:#E3CC9A}
+.sub{font:400 34px/1.4 var(--body);color:var(--muted)}
+.light .sub{color:rgba(255,255,255,.9)}
+.cta{display:inline-flex;align-items:center;gap:18px;font:500 22px/1 var(--body);letter-spacing:.22em;text-transform:uppercase;padding:26px 40px;border-radius:999px;background:var(--ink);color:var(--paper)}
+.light .cta{background:#fff;color:var(--ink)}
+.cta i{font-style:normal;font-size:26px;letter-spacing:0}
+.foot{font:400 24px/1.4 var(--body);color:var(--muted);letter-spacing:.02em}
+.light .foot{color:rgba(255,255,255,.85)}
+
+.photo{position:absolute;inset:0;background-size:cover;background-position:center}
+.shade-bottom::after,.shade-top::after{content:"";position:absolute;inset:0}
+.shade-bottom::after{background:linear-gradient(180deg,rgba(20,18,15,.78) 0%,rgba(20,18,15,.25) 14%,rgba(20,18,15,0) 24%,rgba(20,18,15,0) 30%,rgba(20,18,15,.42) 52%,rgba(20,18,15,.9) 100%)}
+.shade-top::after{background:linear-gradient(180deg,rgba(20,18,15,.82) 0%,rgba(20,18,15,.45) 30%,rgba(20,18,15,0) 52%,rgba(20,18,15,0) 72%,rgba(20,18,15,.6) 100%)}
+.layer{position:absolute;inset:var(--pad);display:flex;flex-direction:column}
+.grow{flex:1}
+/* Stories: keep text clear of the profile bar (top ~250px) and the CTA button (bottom ~340px) */
+:root[data-size=story] .layer{inset:250px var(--pad) 340px}
+:root[data-size=story] .tag{top:250px !important}
+:root[data-size=story] .split-bottom{padding-bottom:340px}
+
+/* Checklist box, as in the PDF: empty / slash / check */
+.box{flex:none;width:46px;height:46px;border:2.5px solid var(--ink);border-radius:4px;position:relative;margin-top:4px}
+.box.slash::after{content:"";position:absolute;left:50%;top:-6px;bottom:-6px;width:3px;background:var(--ink);transform:translateX(-50%) rotate(40deg)}
+.box.check::after{content:"";position:absolute;left:12px;top:3px;width:13px;height:25px;border:solid var(--ink);border-width:0 4px 4px 0;transform:rotate(42deg)}
+.qs{list-style:none;display:grid;gap:34px}
+.qs li{display:flex;gap:30px;align-items:flex-start;font:400 38px/1.3 var(--body)}
+.rule{height:1.5px;background:var(--gold);opacity:.7}
+
+/* 1B notes card */
+.card{background:var(--white);border-radius:28px;box-shadow:0 30px 80px rgba(20,18,15,.14),0 2px 6px rgba(20,18,15,.06);padding:64px 64px 70px}
+.notes-title{font:600 40px/1.2 -apple-system,'Helvetica Neue',Arial,sans-serif;margin-bottom:8px}
+.notes-date{font:400 24px/1 -apple-system,'Helvetica Neue',Arial,sans-serif;color:#8a847a;margin-bottom:44px}
+.notes li{display:flex;align-items:center;gap:26px;font:400 38px/1.25 -apple-system,'Helvetica Neue',Arial,sans-serif;padding:20px 0;border-bottom:1.5px solid #eee9e0}
+.tick{flex:none;width:44px;height:44px;border-radius:50%;background:var(--gold);position:relative}
+.tick::after{content:"";position:absolute;left:15px;top:8px;width:10px;height:20px;border:solid #fff;border-width:0 4px 4px 0;transform:rotate(42deg)}
+.notes .open{border:0;padding-top:34px}
+.notes .open .ring{flex:none;width:44px;height:44px;border-radius:50%;border:2.5px dashed var(--gold)}
+.notes .open span{font:italic 500 46px/1.15 var(--display);color:var(--gold)}
+
+/* 2B split */
+.split-photo{position:absolute;left:0;right:0;top:0;height:54%;background-size:cover;background-position:center 40%}
+:root[data-size=story] .split-photo{height:50%}
+.tag{position:absolute;left:var(--pad);font:500 20px/1 var(--body);letter-spacing:.24em;text-transform:uppercase;padding:16px 22px;background:rgba(255,255,255,.94);color:var(--ink);border-radius:4px}
+.split-bottom{position:absolute;left:0;right:0;bottom:0;top:54%;background:var(--white);padding:62px var(--pad) var(--pad);display:flex;flex-direction:column}
+:root[data-size=story] .split-bottom{top:50%;padding-top:80px}
+.fine{list-style:none;margin-top:30px;display:grid;gap:4px}
+.fine li{font:400 31px/1.45 var(--display);color:#3a3631;padding:10px 0;border-bottom:1px solid var(--line);display:flex;gap:18px}
+.fine b{font:500 19px/2.4 var(--body);letter-spacing:.18em;text-transform:uppercase;color:var(--muted);min-width:170px}
+
+/* 3A card on photo */
+.float-card{background:rgba(255,255,255,.97);border-radius:6px;padding:52px 54px 56px;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+.float-card .kicker{text-shadow:none}
+.float-card .qs{gap:26px;margin-top:30px}
+.float-card .qs li{font-size:33px}
+.float-card .box{width:40px;height:40px}
+
+/* 4 document preview */
+.fan{position:relative;height:720px;margin:0 auto;width:100%}
+:root[data-size=story] .fan{height:1000px}
+.page{position:absolute;top:50%;left:50%;width:440px;aspect-ratio:1100/1423;background-size:cover;background-position:top;border-radius:3px;
+  box-shadow:0 30px 70px rgba(20,18,15,.22),0 3px 8px rgba(20,18,15,.1)}
+:root[data-size=story] .page{width:560px}
+.page.l{transform:translate(-50%,-50%) translateX(-260px) translateY(30px) rotate(-8deg)}
+.page.r{transform:translate(-50%,-50%) translateX(260px) translateY(30px) rotate(8deg)}
+.page.c{transform:translate(-50%,-50%) scale(1.08);z-index:2}
+:root[data-size=story] .page.l{transform:translate(-50%,-50%) translateX(-250px) translateY(40px) rotate(-8deg)}
+:root[data-size=story] .page.r{transform:translate(-50%,-50%) translateX(250px) translateY(40px) rotate(8deg)}
+.points{display:flex;justify-content:center;gap:0;font:500 21px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.points span+span::before{content:"·";margin:0 22px;color:var(--gold)}
+.center{text-align:center;align-items:center}
+</style>
+</head>
+<body>
+
+<!-- 1A · First-time bride · photo -->
+<section class="ad light" data-ad="first-photo">
+  <div class="photo shade-bottom" style="background-image:url(assets/aisle.jpg);background-position:center 30%"></div>
+  <div class="layer">
+    <div class="mark"><span>Lady Victoria</span><em>designs</em></div>
+    <div class="grow"></div>
+    <p class="kicker" style="margin-bottom:28px">The free venue checklist</p>
+    <h1 class="head">You’ve never booked a venue before.</h1>
+    <p class="sub" style="margin:28px 0 48px">So how would you know what to ask?</p>
+    <div><span class="cta">Get the checklist <i>→</i></span></div>
+  </div>
+</section>
+
+<!-- 1B · First-time bride · tour notes -->
+<section class="ad" data-ad="first-notes">
+  <div class="layer">
+    <div class="mark" style="align-self:center"><span>Lady Victoria</span><em>designs</em></div>
+    <div class="grow"></div>
+    <div class="card">
+      <p class="notes-title">Venue tour: questions</p>
+      <p class="notes-date">Saturday, 11:00 am</p>
+      <ul class="notes" style="list-style:none">
+        <li><span class="tick"></span>How much is it?</li>
+        <li><span class="tick"></span>Is our date open?</li>
+        <li><span class="tick"></span>How many guests fit?</li>
+        <li class="open"><span class="ring"></span><span>…and the ones you didn’t know to ask.</span></li>
+      </ul>
+    </div>
+    <div class="grow"></div>
+    <p class="foot" style="text-align:center;margin-bottom:28px">The questions our planners ask on every tour.</p>
+    <div style="text-align:center"><span class="cta">Free venue checklist <i>→</i></span></div>
+  </div>
+</section>
+
+<!-- 2A · Before you fall in love · photo -->
+<section class="ad light" data-ad="love-photo">
+  <div class="photo shade-top" style="background-image:url(assets/arch.jpg)"></div>
+  <div class="layer">
+    <div class="mark"><span>Lady Victoria</span><em>designs</em></div>
+    <h1 class="head" style="margin-top:56px">Before you fall in love with a venue,<br><em>ask these first.</em></h1>
+    <div class="grow"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <p class="foot">The free venue checklist</p>
+      <span class="cta">Download <i>→</i></span>
+    </div>
+  </div>
+</section>
+
+<!-- 2B · Before you fall in love · tour vs. contract -->
+<section class="ad" data-ad="love-split">
+  <div class="split-photo" style="background-image:url(assets/ballroom.jpg)"></div>
+  <span class="tag" style="top:var(--pad)">What you see on the tour</span>
+  <div class="split-bottom">
+    <p class="kicker">What’s in the contract</p>
+    <ul class="fine">
+      <li><b>Candles</b>Enclosed flames only.</li>
+      <li><b>Music</b>Ends at 10:00 pm.</li>
+      <li><b>Rain plan</b>Tent, at additional cost.</li>
+      <li><b>Setup</b>Vendor access from 2:00 pm.</li>
+    </ul>
+    <div class="grow"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:30px">
+      <p class="head" style="font-size:54px;line-height:1.05">Ask before<br><em>you sign.</em></p>
+      <span class="cta">Free checklist <i>→</i></span>
+    </div>
+  </div>
+</section>
+
+<!-- 3A · What brides wish they'd asked · photo -->
+<section class="ad light" data-ad="wish-photo">
+  <div class="photo shade-bottom" style="background-image:url(assets/staircase.jpg);background-position:center 18%"></div>
+  <div class="layer">
+    <div class="mark"><span>Lady Victoria</span><em>designs</em></div>
+    <div class="grow"></div>
+    <div class="float-card">
+      <p class="kicker" style="color:var(--gold)">What brides wish they’d asked</p>
+      <ul class="qs">
+        <li><span class="box"></span>What’s not included?</li>
+        <li><span class="box"></span>If it rains, where does everything go?</li>
+        <li><span class="box"></span>When does the music have to stop?</li>
+      </ul>
+      <div class="rule" style="margin:40px 0 34px"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <p style="font:italic 500 38px/1.1 var(--display)">All 45 questions, free.</p>
+        <span class="cta" style="background:var(--ink);color:var(--paper);padding:22px 32px">Download <i>→</i></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3B · What brides wish they'd asked · checklist page -->
+<section class="ad" data-ad="wish-list" style="background:var(--white)">
+  <div class="layer">
+    <div class="mark" style="align-self:flex-start"><span>Lady Victoria</span><em>designs</em></div>
+    <div class="grow"></div>
+    <p class="kicker">Before you book the venue</p>
+    <h1 class="head" style="margin:22px 0 54px;font-size:84px">What brides wish they’d <em>asked</em> their venue</h1>
+    <ul class="qs">
+      <li><span class="box"></span>What’s not included in this quote?</li>
+      <li><span class="box"></span>If it rains, where does everything go?</li>
+      <li><span class="box"></span>When does the music have to stop?</li>
+      <li><span class="box"></span>Are real candles allowed?</li>
+      <li><span class="box"></span>What time can our vendors get in?</li>
+    </ul>
+    <div class="grow"></div>
+    <div class="rule" style="margin-bottom:44px"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <p style="font:italic 500 44px/1.1 var(--display)">All 45 questions, free.</p>
+      <span class="cta">Download <i>→</i></span>
+    </div>
+  </div>
+</section>
+
+<!-- 4 · The document itself -->
+<section class="ad" data-ad="doc-preview" style="background:var(--ecru)">
+  <div class="layer center">
+    <div class="mark"><span>Lady Victoria</span><em>designs</em></div>
+    <h1 class="head" style="margin-top:44px;font-size:86px">The questions to ask <em>before you book</em></h1>
+    <div class="grow"></div>
+    <div class="fan">
+      <div class="page l" style="background-image:url(assets/page-start.jpg)"></div>
+      <div class="page r" style="background-image:url(assets/page-questions.jpg)"></div>
+      <div class="page c" style="background-image:url(assets/page-cover.jpg)"></div>
+    </div>
+    <div class="grow"></div>
+    <p class="points" style="margin-bottom:40px"><span>45 questions</span><span>Red flags</span><span>What to get in writing</span></p>
+    <span class="cta">Free download <i>→</i></span>
+  </div>
+</section>
+
+<script>
+  const q = new URLSearchParams(location.search);
+  const size = q.get("size") === "story" ? "story" : "feed";
+  document.documentElement.dataset.size = size;
+  const ad = q.get("ad");
+  if (ad) for (const el of document.querySelectorAll(".ad")) el.hidden = el.dataset.ad !== ad;
+</script>
+</body>
+</html>
