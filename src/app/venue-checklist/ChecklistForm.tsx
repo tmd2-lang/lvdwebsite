@@ -20,6 +20,48 @@ const label = "font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 font
 const field =
   "w-full bg-transparent border-b border-ink/20 pb-3 pt-2 font-body text-base text-ink outline-none focus:border-gold transition-colors placeholder:text-ink/25";
 
+// After the download: an optional "text me" for couples who want to hear from Irene.
+function TextMe({ leadId }: { leadId: string }) {
+  const [phone, setPhone] = useState("");
+  const [state, setState] = useState<"idle" | "saving" | "done">("idle");
+  const [error, setError] = useState("");
+
+  const save = async (event: FormEvent) => {
+    event.preventDefault();
+    if (state === "saving") return;
+    if (phone.replace(/\D/g, "").length < 10) return setError("Please enter a full phone number.");
+    setError("");
+    setState("saving");
+    const response = await fetch("/api/venue-checklist/phone", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ leadId, phone }),
+    }).catch(() => null);
+    const result = await response?.json().catch(() => ({})) as { error?: string } | undefined;
+    if (response?.ok) return setState("done");
+    setError(result?.error || "That didn’t save. Please try again.");
+    setState("idle");
+  };
+
+  if (state === "done") return (
+    <p className="font-display text-xl leading-snug">Perfect. Irene will text you soon.</p>
+  );
+
+  return (
+    <form onSubmit={save} noValidate>
+      <p className="font-display text-xl sm:text-2xl leading-snug mb-1">Want a quick text from Irene?</p>
+      <p className="font-body text-xs text-ink/55 leading-relaxed mb-5">Optional. A personal note as you start touring, never a sales list.</p>
+      <div className="flex gap-3 items-end">
+        <input className={field} type="tel" inputMode="tel" autoComplete="tel" value={phone}
+          onChange={(e) => setPhone(e.target.value)} placeholder="Your mobile number" aria-label="Your mobile number" />
+        <button type="submit" disabled={state === "saving"}
+          className="shrink-0 border border-ink text-ink font-body text-[10px] uppercase tracking-[0.2em] px-6 py-3 rounded-full hover:bg-ink hover:text-ivory transition-colors disabled:opacity-50">
+          {state === "saving" ? "Saving…" : "Text me"}
+        </button>
+      </div>
+      {error && <p className="font-body text-sm text-[#9a3b2e] mt-3" role="alert">{error}</p>}
+    </form>
+  );
+}
+
 function Choice({ name, value, current, onPick, children }: {
   name: string; value: string; current: string; onPick: (value: string) => void; children: React.ReactNode;
 }) {
@@ -43,6 +85,7 @@ export default function ChecklistForm() {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
+  const [leadId, setLeadId] = useState("");
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
@@ -55,7 +98,7 @@ export default function ChecklistForm() {
     const edition = multicultural === "yes" ? "multicultural" : "standard";
     try {
       // Mapped onto the inquiry columns the studio already sees: celebration, date, venue, budget.
-      await submitLead({
+      const saved = await submitLead({
         source: "venue_checklist",
         name: name.trim(),
         email: email.trim(),
@@ -67,6 +110,7 @@ export default function ChecklistForm() {
         investment: budget,
         payload: { edition, venueStatus: venue, weddingMonth: dateUnsure ? null : month },
       });
+      setLeadId(saved.leadId);
     } catch (saveError) {
       // The download matters more than the record: never hold the guide back over a failed save.
       console.error("Venue checklist signup was not saved:", saveError);
@@ -94,6 +138,7 @@ export default function ChecklistForm() {
         <p className="font-body text-xs text-ink/55 leading-relaxed max-w-sm mx-auto mt-6">
           We’ve also emailed you a copy. If you don’t see it, check your Promotions or spam folder.
         </p>
+        {leadId && <div className="text-left border-t border-ink/10 mt-8 pt-7"><TextMe leadId={leadId} /></div>}
       </div>
     );
   }
