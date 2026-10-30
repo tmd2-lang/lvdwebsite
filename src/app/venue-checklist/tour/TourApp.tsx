@@ -113,8 +113,11 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
     if (marks[qid] === "na") delete marks[qid]; else marks[qid] = "na";
     return { ...v, marks };
   });
+  // Writing down an answer means it was asked: an unmarked box becomes "told yes".
   const setAnswer = (qid: string, field: "answer" | "who", value: string) => editVenue((v) => ({
-    ...v, answers: { ...v.answers, [qid]: { ...(v.answers[qid] || { answer: "", who: "" }), [field]: value } },
+    ...v,
+    answers: { ...v.answers, [qid]: { ...(v.answers[qid] || { answer: "", who: "" }), [field]: value } },
+    marks: v.marks[qid] || !value.trim() ? v.marks : { ...v.marks, [qid]: "slash" },
   }));
   const setVerdict = (sid: string, verdict: Verdict) => editVenue((v) => {
     const verdicts = { ...v.verdicts };
@@ -338,9 +341,11 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
         {view === "chase" && (
           <section>
             <h2 className="font-display text-3xl mb-3">Your Chase List</h2>
-            <p className="font-body text-[15px] text-ink/75 leading-relaxed mb-6">
-              Everything {venueLabel} told you yes to out loud, but hasn’t put in writing. Send it to them and mark each one as a check when it comes back.
-            </p>
+            {chase.length > 0 && (
+              <p className="font-body text-[15px] text-ink/75 leading-relaxed mb-6">
+                Everything {venueLabel} told you yes to out loud, but hasn’t put in writing. Send it to them and tap “Got it” as each one comes back.
+              </p>
+            )}
             {chase.length === 0 ? (
               <p className="font-body text-[15px] p-5 rounded-xl bg-ink/[0.04]">Nothing to chase yet. Questions you mark with a slash show up here.</p>
             ) : (<>
