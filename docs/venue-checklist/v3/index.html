@@ -3,9 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Before You Book the Venue | Lady Victoria Designs</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=block" rel="stylesheet">
+<link href="fonts/fonts.css" rel="stylesheet">
 <script>
 // One source, two editions: add ?edition=multicultural for the multicultural edition.
 if (new URLSearchParams(location.search).get('edition') === 'multicultural') document.documentElement.classList.add('mc');
@@ -114,9 +112,7 @@ p+p{margin-top:9pt}
 /* letter */
 .letter p:not(.kicker):not(.label):not(.signature):not(.open){font-size:10pt;line-height:1.75;color:var(--muted)}
 .letter p.open{font:italic 400 15pt/1.4 var(--display);color:var(--ink);margin-bottom:6pt}
-.letter h2{font-size:34pt}
-.letter p.open{font-size:17pt}
-.letter p:not(.kicker):not(.label):not(.signature):not(.open){font-size:11pt}
+
 .sign{display:grid;grid-template-columns:.9in 1fr;gap:14pt;align-items:center;margin-top:22pt}
 .sign .portrait{height:1.05in;border-radius:50%;overflow:hidden;width:.9in}
 .sign .portrait img{object-position:50% 25%}
@@ -193,6 +189,28 @@ body{font-weight:400}
 .fill div em{font-weight:400}
 .note,.verdict{background:#F3F1EC}
 .final{background:#F3F1EC}
+/* Bigger type and more air on the text pages (TJ, Oct 30): phones shrink the whole page. */
+.letter{justify-content:flex-start!important;padding-top:2.1in!important}
+.letter .kicker{margin-bottom:16pt}
+.letter h2{font-size:40pt;margin-bottom:24pt}
+.letter p.open{font-size:19pt;line-height:1.45;margin-bottom:26pt}
+.letter p:not(.kicker):not(.label):not(.signature):not(.open){font-size:12.5pt;line-height:1.8}
+.letter p+p{margin-top:16pt}
+.letter .sign{margin-top:48pt;grid-template-columns:1.05in 1fr;gap:18pt}
+.letter .sign .portrait{width:1.05in;height:1.05in}
+.letter .signature{font-size:23pt}
+.lead{font-size:11.5pt;line-height:1.7}
+.start .steps li{font-size:10.2pt;line-height:1.55;padding:8pt 0}
+.start .steps li b{font-size:13.5pt;margin-bottom:3pt}
+.steps li{font-size:10.4pt}
+.steps li b{font-size:14pt}
+.boxes div,.extra{font-size:9.8pt}
+.bring li{font-size:10pt}
+.start{padding-top:.7in!important;padding-bottom:.6in!important}
+.start .steps li{padding:6pt 0}
+.start .fill{margin-top:12pt}
+.start .fill div{padding:5pt 0}
+.start .note{margin-top:12pt}
 </style>
 </head>
 <body>
@@ -292,7 +310,7 @@ body{font-weight:400}
     <li>This checklist and a pen</li>
     <li>Your planner or designer, if you have one</li>
   </ul>
-  <div class="band-bottom" style="height:2.2in"><img src="assets/howto-white-room.jpg" alt="" style="object-position:50% 55%"></div>
+  <div class="band-bottom" style="height:1.35in"><img src="assets/howto-white-room.jpg" alt="" style="object-position:50% 55%"></div>
 </section>
 
 <!-- 01–02 -->
