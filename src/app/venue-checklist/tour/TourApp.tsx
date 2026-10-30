@@ -126,9 +126,11 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
     setVenueId(added.id);
     setView("checklist");
   };
+  // With one venue left there is nothing to switch to, so "remove" starts it over instead.
   const removeVenue = () => {
-    if (tour.venues.length < 2 || !window.confirm(`Remove ${venue.name || "this venue"} and its answers?`)) return;
-    const rest = tour.venues.filter((v) => v.id !== venue.id);
+    const only = tour.venues.length < 2;
+    if (!window.confirm(only ? "Clear every answer and start this checklist over?" : `Remove ${venue.name.trim() || "this venue"} and all its answers?`)) return;
+    const rest = only ? [newVenue("Venue 1")] : tour.venues.filter((v) => v.id !== venue.id);
     update((t) => ({ ...t, venues: rest }));
     setVenueId(rest[0].id);
   };
@@ -186,11 +188,22 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
       <div className="max-w-2xl mx-auto px-5 pb-24">
         <section className="pt-8 pb-6">
           <p className={`${kicker} mb-3`}>Your venue checklist{firstName ? `, ${firstName}` : ""}</p>
-          <label className="block">
+          {/* Looks editable on purpose: couples rename "Venue 1" to the real venue. */}
+          <label className="flex items-center gap-3 border-b border-dashed border-ink/30 focus-within:border-gold focus-within:border-solid">
             <span className="sr-only">Venue name</span>
             <input value={venue.name} onChange={(e) => editVenue((v) => ({ ...v, name: e.target.value }))} placeholder="Name this venue"
-              className="w-full bg-transparent font-display text-[2rem] leading-tight outline-none border-b border-transparent focus:border-gold placeholder:text-ink/30" />
+              onFocus={(e) => { if (/^Venue \d+$/.test(venue.name)) e.target.select(); }}
+              className="flex-1 min-w-0 bg-transparent font-display text-[2rem] leading-tight py-1 outline-none placeholder:text-ink/30" />
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="shrink-0 text-ink/45" aria-hidden="true">
+              <path d="M4 20h4L19 9l-4-4L4 16v4Z" /><path d="m13.5 6.5 4 4" />
+            </svg>
           </label>
+          <div className="flex items-center justify-between gap-4 mt-2">
+            <p className="font-body text-[13px] text-gold">{/^Venue \d+$/.test(venue.name.trim()) ? "Tap the name to call it by the real venue." : ""}</p>
+            <button onClick={removeVenue} className="shrink-0 font-body text-[12px] text-ink/50 underline underline-offset-4">
+              {tour.venues.length > 1 ? "Remove venue" : "Start over"}
+            </button>
+          </div>
           <p className="font-body text-sm text-ink/70 mt-3">
             {progress.asked} of {progress.total} asked · {progress.confirmed} confirmed in writing
           </p>
@@ -295,9 +308,6 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
             <textarea value={venue.notes} onChange={(e) => editVenue((v) => ({ ...v, notes: e.target.value }))} rows={5}
               placeholder="Anything else you noticed on the tour…"
               className="w-full border border-ink/20 rounded-xl p-4 font-body text-[15px] outline-none focus:border-gold resize-y" />
-            {tour.venues.length > 1 && (
-              <button onClick={removeVenue} className="mt-4 font-body text-xs text-ink/50 underline underline-offset-4">Remove {venueLabel}</button>
-            )}
           </section>
         </>)}
 
