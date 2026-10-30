@@ -88,7 +88,7 @@ function copyFor(step: ChecklistStep, lead: ChecklistLead): Copy {
       { p: booked ? "Three to confirm with your venue before the details are final:" : "Three to add to your next tour:" },
       { list: [
         ["How many hours do we get to set up?", "If the answer is two, the design you’re picturing may not fit."],
-        ["Will our décor fit through the doors and freight elevator?", "Ask for the measurements, not “it should be fine.”"],
+        ["Can large installations get into the room?", "Ask how they get in, not just whether. “It should be fine” is not an answer."],
         ["What’s the true total?", "Service charges, tax, security, and overtime are rarely in the first quote."],
         ...(multicultural ? [["Can we have exactly what our traditions need?", "Name it: “sacred fire, indoors, for forty minutes” gets a real answer."] as [string, string]] : []),
       ] },

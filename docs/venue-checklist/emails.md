@@ -60,7 +60,7 @@ Most couples ask about capacity and catering. Far fewer ask about the hours befo
 - *Already booked:* Three to confirm with your venue before the details are final:
 
 1. **How many hours do we get to set up?** If the answer is two, the design you're picturing may not fit.
-2. **Will our décor fit through the doors and freight elevator?** Ask for the measurements, not "it should be fine."
+2. **Can large installations get into the room?** Ask how they get in, not just whether. "It should be fine" is not an answer.
 3. **What's the true total?** Service charges, tax, security, and overtime are rarely in the first quote.
 4. *Multicultural only:* **Can we have exactly what our traditions need?** Name it: "sacred fire, indoors, for forty minutes" gets a real answer.
 
