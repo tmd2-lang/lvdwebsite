@@ -18,7 +18,7 @@ Written for Irene's Muse, from TJ's side, so it can see what has been built from
 | 7 | Studio calendar + alerts | **Deployed and verified.** Month/agenda, filters, in-portal alerts. Email reminders not built. |
 | 8 | Team logins + roles | **Deferred by TJ.** Detailed team roles, per-client assignments and My tasks are not built. Existing owner/planner/inquiry-staff access remains. |
 | 9 | Documents / images finishing | **Deployed and verified; SQL active.** Default documents, Design album links, photographer gallery + checklist sync. Versioned couple approval flow implemented; deployment in progress. |
-| 10 | Marketing dashboard data | **Skipped for now.** Only studio owners can open those pages, so nobody outside the studio sees the unfinished parts. |
+| 10 | Marketing dashboard data | **Started (TJ only).** Reddit CSV import plus matching inquiries by ad link tag. Meta, Google and Pinterest tabs are still empty shells. |
 
 ## Irene's confirmed decisions (emails supplied by TJ, Oct 25)
 
@@ -38,6 +38,49 @@ Connecting the Wave business that holds Irene's main invoices, then matching inv
 
 ## Log
 
+### Oct 30, 2026: Meta ads for the venue checklist (drafts, not running)
+
+Full write-up: `../venue-checklist/ads/README.md`. Overview of all checklist work: `../venue-checklist/README.md`.
+
+- **Round 1 drafts** in the website's editorial style (Bodoni headlines): three angles with two images each ("You've never booked a venue before", "Before you fall in love with a venue, ask these first", "What brides wish they'd asked their venue").
+- **Extras:** a document preview, a magazine cover ("LADY VICTORIA · The venue issue", lead story "43 questions to ask on the tour") and a 14-second silent video. All in feed and story sizes.
+- **Need from Irene:** OK the photos. They're real couples and rooms from the site gallery.
+- **Not done yet:** the multicultural ad set, and separating checklist signups from real inquiries in Meta tracking.
+
+### Oct 30, 2026: What brides say about venue searching (research, no changes made)
+
+Full write-up: `venue-research-2026-10-30.md`.
+
+- Read 10 Reddit threads on finding a venue and what to ask on tours, before and after booking.
+- **Before booking, brides worry about finding a venue. After, their regrets are about vetting it:** money surprises, the guest count trap, rules that broke their plans, the rain plan, and who was in charge.
+- **10 possible checklist additions** that v3 doesn't seem to cover, such as food and beverage minimums, lowering the guest count after signing, restrooms and getting-ready space. **Not added. Irene decides.**
+- Ad angles for the lead magnet are listed for Irene to react to.
+
+### Oct 30, 2026: Venue checklist v3 (simpler PDF), Irene's notes, Email 2 feedback
+
+Full write-up: `venue-checklist-update-2026-10-30.md`.
+
+- **PDF v3 is live:** 70 questions down to 45 (59 in multicultural). Adds Irene's Start Here page, one box per question (empty / slash / check), 9 starred dealbreakers, a verdict per section and a Chase List. Technical questions now go to the designer. Source: `docs/venue-checklist/v3/`.
+- **Irene's notes are done:** a better photo of the multicultural couple, the photo removed from the letter page, the phone number opens a text, black text on white, and bigger text on the opening pages.
+- **Landing page** uses the v3 PDFs and previews. After downloading, couples can leave a phone number for "a quick text from Irene". It saves to the lead and the studio gets a "Wants a text" email.
+- **Email 2** ends with "Was the checklist useful?". Each button opens a page on the site: Yes offers a consultation, Not really asks what was missing. Answers save as notes on the lead. Email 2's load-in tip now matches the PDF.
+- **hello@ is connected** (TJ). Emails landed in Promotions, so they're being made plain (separate session).
+- **Phone version of the checklist is live** (`/venue-checklist/tour`, private link per signup, from the thank-you screen and Email 1). It has tap-to-mark boxes, dealbreaker answers, verdicts, one checklist per venue, a Chase List that writes the email to the venue, and a compare view. Progress saves in the lead's payload, with a copy kept on the phone for tours with no signal. The questions live in `src/lib/venue-checklist-questions.ts`, and a test fails if they drift from the PDF.
+- **Irene answered (Oct 30):** the consultation is complimentary (now said in Email 3, the thank-you page and the phone checklist), replies stay at hello@, and "See how we plan" goes to the planning page.
+- **v4 question list drafted** from the Reddit research and Irene's 7 picks: `docs/venue-checklist/v4-question-list.md`. It goes from 45 to 42 questions, 10 stars on a front page, technical items moved to "For your planner" notes. **Approved and live (Oct 30):** both PDFs and the phone version now use v4 (43 questions after Irene's notes: "listen for" tips on 8 questions, plus travel distance in Start Here and a hotels/airport question). The phone version adds the "why" lines, "For your planner" notes, and a "Just the 10 dealbreakers" switch. Source: `docs/venue-checklist/v4/`.
+
+
+### Oct 29, 2026: Venue checklist lead magnet is live (landing page, signups, emails)
+
+Built from Irene's final venue checklist set (lead magnet, Team Edition, Email Marketing Kit). Full email copy, every version: `venue-checklist-emails-2026-10-29.html`.
+
+- **Landing page:** ladyvictoriadesigns.com/venue-checklist, in the main site's style with no menu. The headline is "Touring venues? Start here." The form asks name, email, wedding month (or not sure yet), full budget, venue status, and multicultural yes/no.
+- **Two PDF editions:** the standard edition has the 64 questions every wedding needs. The multicultural edition has all 75 plus the multicultural chapter and multicultural wedding photos. The form gives each couple the right one.
+- **Signups are saved** in the admin inquiries list as "Venue checklist," with budget, date, venue status, and which ad they came from. Irene and Tanah get a "Venue Checklist Download" email for each one.
+- **Three emails go out automatically:** right away, day 3, and day 7, in four versions (edition × still looking/booked), with an unsubscribe link.
+
+**Waiting on Irene:** copy approval, whether the 20-minute consultation is complimentary, which inbox gets replies, and where "See how we plan" should link.
+
 ### Oct 28, 2026: Irene's portal re-check (8 items)
 
 - **1 Wave:** **connected (Oct 28 evening), read-only.** Details in the Wave section below. Open question for Irene: which Wave business holds her main invoices.
@@ -56,6 +99,28 @@ Connecting the Wave business that holds Irene's main invoices, then matching inv
 - First import worked: **5 invoices** (#1, #4, #5, #7, #8). Amounts match Wave. #5 is a draft, so it stays out of couple totals.
 - **Open question for Irene:** her examples **#528, #491 and #514 aren't in this business**, which only goes up to #8. Her main invoices are probably in a different Wave business, likely under a different Wave login. Once we know which one, it's a reconnect plus a name change on our side.
 - Nothing is matched to couples yet. Each invoice still needs the studio to choose its event, track and signing date.
+
+### Oct 28, 2026: Marketing > Uploads and Reddit Ads tab (start of Build 10)
+
+Built and tested locally, **not yet deployed**. Run `supabase/ad-platform-stats-schema.sql` first; until then the Reddit tab says the SQL is missing and nothing else changes. Owner-only, and inquiry columns only for marketing viewers (TJ).
+
+- **Uploads tab now works.** Upload Reddit's per-ad CSV, check the preview, confirm the report dates, import. Re-importing replaces numbers for the same ads.
+- **Reddit Ads tab** shows spend, impressions, clicks, CTR and CPC per ad, with inquiries, $20k+, consults, booked and cost per inquiry from our own leads, matched by each ad link's `utm_content` tag. The tag can be edited per ad.
+- No effect on Irene's or couples' screens.
+
+### Oct 26, 2026: Audit fixes, round 3 (findings #14 and #18)
+
+Built and tested locally, **not yet deployed**. `supabase/activity-log-schema.sql` should be run in Supabase before deploying. Unlike rounds 1 and 2, the site keeps working without it; events simply aren't recorded and the Activity screens say the SQL is missing.
+
+- **Design + Florals budget category (#14).** A new category for LVD's own design & florals contract, listed right after Planning & Management. Outside florists stay in Floral & Decor. The "Add LVD lines" button and Wave invoice projections for the Design track now use it. Existing lines keep their category; the demo's design line can be moved with Edit.
+- **Category targets work visibly (#14).** They were always saveable, but only by typing into an unlabeled "—" box and clicking away, so they looked unset. Now the section explains how to set them, Enter saves, empty boxes read "Set %", the running total of targets shows (flagged above 100%, with a reminder if the approved budget is $0), and a target can be set for a category before it has any lines.
+- **Activity & access log (#18).** One append-only table (`portal_activity`), reachable only by the site server. Recorded: every document opened, by studio or couple (the access log); document and image uploads, visibility changes, removals, restores and permanent deletes; moodboard shares, production notes and approvals; checklist changes; every budget action; timeline saves, confirmations and resets; guest changes by studio or couple, plus count locks; client create, convert, edit and delete; portal invites and access removal; standard documents and gallery links; and every studio and couple sign-in, including failed ones with the reason. Each entry has time, who, studio or couple, client, what, target and IP address. A deleted client's history stays in the log.
+  - Client record → **Activity** tab (owners and planners): that celebration's history.
+  - Studio menu → **Activity** (owners only): everything, with filters for sign-ins, failed sign-ins and documents opened. It warns when there are 5 or more failed sign-ins in 24 hours.
+  - Recording never blocks the action. If the log can't be written, the action still completes and the server notes the failure.
+  - Not recorded: couples simply viewing pages (only document opens count), the old hidden Tasks tab, inquiry/marketing screens, and sign-outs.
+
+Validation: TypeScript, production build and lint on the changed files pass (older lint errors in the public leads form are unchanged). 101 tests pass, including new tests for writing and reading the log, and a check that only an actually opened document is recorded. The 5 PostgreSQL tests were skipped (no local database).
 
 ### Oct 26, 2026: Audit fixes, round 2 (findings #5, #8, #9, #11, #12, #13, #15, #16)
 
