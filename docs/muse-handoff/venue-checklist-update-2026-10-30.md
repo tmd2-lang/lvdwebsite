@@ -48,14 +48,14 @@ Source and full change list: `docs/venue-checklist/v3/` (README.md).
 ## 4. Emails
 
 - **"Was the checklist useful?"** (Irene's idea) is at the end of **Email 2** (day 3), with two buttons:
-  - **Yes, it helped** opens a thank-you page in the site's style. It offers the 20-minute consultation (name and email pre-filled), "See how we plan", and the checklist to download again.
+  - **Yes, it helped** opens a thank-you page in the site's style. It offers the 30-minute consultation (name and email pre-filled), "See how we plan", and the checklist to download again.
   - **Not really** opens a page asking "What was missing?" with a box to type into. What she writes goes to Irene, plus a softer consultation offer.
   - Her answer, and anything she types, is saved as a **note on her lead in Inquiries**.
 - **Email 2's second tip** now matches the simpler PDF: "Can large installations get into the room? Ask how they get in, not just whether."
 - **Sending from hello@:** TJ has connected it. Test emails landed in **Promotions**, so the emails are being changed to look like a plain personal email from Irene: no designed card, links instead of buttons. That work is happening in a separate session.
 
 **Still waiting on Irene (from Oct 29):**
-1. Is the 20-minute consultation complimentary? If so, Email 3 and the thank-you page should say so.
+1. Is the 30-minute consultation complimentary? If so, Email 3 and the thank-you page should say so.
 2. Which inbox should replies go to? (Right now they go to hello@.)
 3. Should "See how we plan" link to the planning page or the inquiry form?
 

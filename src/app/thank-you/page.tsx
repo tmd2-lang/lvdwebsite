@@ -46,7 +46,7 @@ export default function ThankYouPage() {
             Select Your Private Design Session Time
           </h2>
           <p className="font-body text-xs sm:text-sm text-ink/70 max-w-xl mx-auto mb-6 leading-relaxed">
-            Reserve a 20-minute design consultation directly on Irene’s private calendar below:
+            Reserve a 30-minute design consultation directly on Irene’s private calendar below:
           </p>
 
           {/* Embedded Calendly Scheduler */}

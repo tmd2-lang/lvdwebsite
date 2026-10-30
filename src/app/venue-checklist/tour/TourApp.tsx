@@ -422,7 +422,7 @@ export default function TourApp({ leadId, token, firstName, sections, initialTou
 
         <section className="mt-14 p-6 rounded-2xl bg-ecru/60">
           <p className="font-display text-2xl leading-snug mb-2">Want a second set of eyes?</p>
-          <p className="font-body text-[15px] text-ink/75 leading-relaxed mb-5">Book a complimentary 20-minute consultation with Irene. Bring this checklist and we’ll go through what’s confirmed and what’s still only a promise.</p>
+          <p className="font-body text-[15px] text-ink/75 leading-relaxed mb-5">Book a complimentary 30-minute consultation with Irene. Bring this checklist and we’ll go through what’s confirmed and what’s still only a promise.</p>
           <a href={consultationUrl} className="inline-flex bg-ink text-white font-body text-[11px] uppercase tracking-[0.2em] px-7 py-4 rounded-full">Book a consultation</a>
         </section>
 

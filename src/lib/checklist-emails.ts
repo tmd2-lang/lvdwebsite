@@ -104,13 +104,13 @@ function copyFor(step: ChecklistStep, lead: ChecklistLead): Copy {
   };
   return {
     subject: multicultural ? "Bringing two traditions into one celebration" : "Want a second set of eyes on your venue?",
-    preview: "A complimentary 20-minute call about your venue and your plans.",
+    preview: "A complimentary 30-minute call about your venue and your plans.",
     blocks: [
       { p: `Hi ${firstName},` },
       { p: booked
         ? "Now that you’ve chosen your venue, the next step is making sure it can hold the celebration you’re imagining."
         : "By now you may have toured a venue or two, and maybe one is starting to feel right." },
-      { p: "If you’d like a second set of eyes, book a complimentary 20-minute consultation with me. Bring your checklist and what the venue has told you, and we’ll go through it together: what’s confirmed, what’s still only a promise, and what to ask before anything is final." },
+      { p: "If you’d like a second set of eyes, book a complimentary 30-minute consultation with me. Bring your checklist and what the venue has told you, and we’ll go through it together: what’s confirmed, what’s still only a promise, and what to ask before anything is final." },
       ...(multicultural ? [{ p: "If you’re bringing more than one culture or ceremony together, we’ll also talk through how the day can flow so every tradition has its moment." }] : []),
       { button: ["Book your consultation", bookingUrl(lead)] },
     ],
