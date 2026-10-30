@@ -114,6 +114,9 @@ p+p{margin-top:9pt}
 /* letter */
 .letter p:not(.kicker):not(.label):not(.signature):not(.open){font-size:10pt;line-height:1.75;color:var(--muted)}
 .letter p.open{font:italic 400 15pt/1.4 var(--display);color:var(--ink);margin-bottom:6pt}
+.letter h2{font-size:34pt}
+.letter p.open{font-size:17pt}
+.letter p:not(.kicker):not(.label):not(.signature):not(.open){font-size:11pt}
 .sign{display:grid;grid-template-columns:.9in 1fr;gap:14pt;align-items:center;margin-top:22pt}
 .sign .portrait{height:1.05in;border-radius:50%;overflow:hidden;width:.9in}
 .sign .portrait img{object-position:50% 25%}
@@ -203,10 +206,7 @@ p+p{margin-top:9pt}
 
 <!-- Letter from Irene -->
 <section class="page">
-  <div class="split l">
-    <div class="photo"><img class="std-only" src="assets/intro-ceremony-aisle.jpg" alt="">
-      <img class="mc-only" src="assets/mc-letter-chuppah.jpg" alt="" style="object-position:40% 50%"></div>
-    <div class="pad letter" style="justify-content:center">
+  <div class="pad letter" style="height:100%;justify-content:center;padding-left:1.35in;padding-right:1.35in">
       <p class="kicker">A note before you tour</p>
       <h2>The venue comes <em>first</em></h2>
       <p class="open">The venue is the first big decision you make, and nearly every decision after it depends on it.</p>
@@ -217,7 +217,6 @@ p+p{margin-top:9pt}
         <div class="portrait"><img src="assets/irene.jpg" alt=""></div>
         <div><p class="signature">With care, Irene</p><p class="label" style="margin-top:4pt">Irene Ntiako · Founder &amp; Creative Director</p></div>
       </div>
-    </div>
   </div>
 </section>
 
@@ -535,7 +534,7 @@ p+p{margin-top:9pt}
       <div class="endcard">
         <p class="kicker">Schedule a consultation</p>
         <div class="contact">
-          <span class="label">Text</span><span>(301) 312-0332</span>
+          <span class="label">Text</span><a href="sms:+13013120332" style="color:inherit;text-decoration:none">(301) 312-0332</a>
           <span class="label">Online</span><span>ladyvictoriadesigns.com</span>
         </div>
       </div>
