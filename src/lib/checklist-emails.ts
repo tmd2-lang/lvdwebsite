@@ -33,9 +33,9 @@ type Copy = { subject: string; preview: string; blocks: Block[] };
 type Block = { p: string } | { list: [bold: string, rest: string][] } | { button: [label: string, href: string] }
   | { feedback: [question: string, yesHref: string, noHref: string] };
 export type ChecklistFeedback = "yes" | "no";
-const FEEDBACK_LABELS: Record<ChecklistFeedback, string> = { yes: "Yes, it helped", no: "Not really" };
+export const FEEDBACK_LABELS: Record<ChecklistFeedback, string> = { yes: "Yes, it helped", no: "Not really" };
 
-function readLead(lead: ChecklistLead) {
+export function readLead(lead: ChecklistLead) {
   const payload = lead.payload || {};
   return {
     firstName: (lead.name || "").trim().split(/\s+/)[0] || "there",
@@ -52,7 +52,7 @@ function trackedUrl(href: string, step: ChecklistStep) {
   return url.toString();
 }
 
-function bookingUrl(lead: ChecklistLead) {
+export function bookingUrl(lead: ChecklistLead) {
   // utm_content lets the Calendly webhook match the booking back to this lead.
   const url = new URL(CONSULTATION_URL);
   url.searchParams.set("utm_content", `lvd_lead_${lead.id}`);
@@ -179,11 +179,15 @@ export const validUnsubscribeToken = (leadId: string, token: string) => validLin
 export const validFeedbackToken = (leadId: string, token: string) => validLinkToken("feedback", leadId, token);
 
 export function feedbackUrl(leadId: string, answer: ChecklistFeedback) {
-  return `${SITE}/api/venue-checklist/feedback?id=${encodeURIComponent(leadId)}&a=${answer}&t=${linkToken("feedback", leadId)}`;
+  return `${SITE}/venue-checklist/feedback?id=${encodeURIComponent(leadId)}&a=${answer}&t=${linkToken("feedback", leadId)}`;
 }
 
 export function unsubscribeUrl(leadId: string) {
   return `${SITE}/api/venue-checklist/unsubscribe?id=${encodeURIComponent(leadId)}&t=${unsubscribeToken(leadId)}`;
+}
+
+export function checklistPdfUrl(lead: ChecklistLead) {
+  return PDF[readLead(lead).multicultural ? "multicultural" : "standard"];
 }
 
 /** The email for one step, for sending or for previewing. */
@@ -305,4 +309,22 @@ export async function recordChecklistFeedback(leadId: string, answer: ChecklistF
     body: JSON.stringify({ lead_id: leadId, author_name: "Venue checklist email", body: `Was the checklist useful? ${FEEDBACK_LABELS[answer]}.` }),
   }).catch(() => undefined);
   return true;
+}
+
+export async function getChecklistLead(leadId: string) {
+  const db = supabase();
+  const response = await fetch(`${db.url}/rest/v1/leads?id=eq.${encodeURIComponent(leadId)}&source=eq.venue_checklist&select=id,name,email,created_at,payload`, { headers: db.headers, cache: "no-store" });
+  if (!response.ok) return null;
+  const [lead] = await response.json() as ChecklistLead[];
+  return lead || null;
+}
+
+/** "What was missing?" from the feedback page, saved as a note in Inquiries. */
+export async function recordChecklistComment(leadId: string, comment: string) {
+  const db = supabase();
+  const saved = await fetch(`${db.url}/rest/v1/lead_notes`, {
+    method: "POST", headers: db.headers, cache: "no-store",
+    body: JSON.stringify({ lead_id: leadId, author_name: "Venue checklist email", body: `What was missing from the checklist: “${comment}”` }),
+  });
+  return saved.ok;
 }

@@ -70,7 +70,9 @@ One quick question: was the checklist useful?
 
 **[Yes, it helped]** **[Not really]**
 
-*(Each answer is saved on her lead and shows up as a note in Inquiries. The thank-you page asks "Not really" answers to reply with what was missing.)*
+*(Each button opens a page on the site (/venue-checklist/feedback) that saves her answer as a note on her lead in Inquiries.*
+*Yes: "So glad it helped," with a 20-minute consultation to book, "See how we plan," and the checklist to download again.*
+*Not really: "What was missing?" with a box she can type into; what she writes is saved as a note too. Below it, a consultation offer.)*
 
 Warmly,
 Irene
