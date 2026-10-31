@@ -73,8 +73,6 @@ function copyFor(step: ChecklistStep, lead: ChecklistLead): Copy {
       { p: `Hi ${firstName},` },
       { p: "Your venue checklist is ready! You can download it here:" },
       { button: ["Download your checklist", PDF[multicultural ? "multicultural" : "standard"]] },
-      { p: "Prefer your phone? This version lets you tap through the questions on the tour, and your answers save as you go:" },
-      { button: ["Open it on your phone", tourUrl(lead.id)] },
       { p: `${booked ? "One tip as you work through the details with your venue" : "One tip before your next tour"}: you don’t need to ask every question.` },
       { p: "Cross out what doesn’t apply, and get the answers that matter most confirmed in writing." },
       { p: "If you remember only one thing: “We’re flexible” is not a yes." },
@@ -216,7 +214,6 @@ export const validTourToken = (leadId: string, token: string) => validLinkToken(
 export function tourPath(leadId: string) {
   return `/venue-checklist/tour?id=${encodeURIComponent(leadId)}&t=${linkToken("tour", leadId)}`;
 }
-export const tourUrl = (leadId: string) => `${SITE}${tourPath(leadId)}`;
 
 export function feedbackUrl(leadId: string, answer: ChecklistFeedback) {
   return `${SITE}/venue-checklist/feedback?id=${encodeURIComponent(leadId)}&a=${answer}&t=${linkToken("feedback", leadId)}`;

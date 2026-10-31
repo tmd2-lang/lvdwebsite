@@ -4,12 +4,15 @@ import { useState, type FormEvent } from "react";
 import { submitLead } from "@/lib/lead-submit";
 
 const BUDGETS = [
-  "Under $60,000",
   "$60,000–$100,000",
   "$100,000–$150,000",
   "$150,000–$200,000",
   "$200,000+",
 ];
+
+// Irene (Oct 31): ask the year only. This year and the next three.
+const THIS_YEAR = new Date().getFullYear();
+const YEARS = [0, 1, 2, 3].map((n) => String(THIS_YEAR + n));
 
 const PDF = {
   standard: "/venue-checklist/before-you-book-the-venue.pdf",
@@ -77,8 +80,7 @@ function Choice({ name, value, current, onPick, children }: {
 export default function ChecklistForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [month, setMonth] = useState("");
-  const [dateUnsure, setDateUnsure] = useState(false);
+  const [year, setYear] = useState("");
   const [budget, setBudget] = useState("");
   const [venue, setVenue] = useState("");
   const [multicultural, setMulticultural] = useState("");
@@ -86,33 +88,31 @@ export default function ChecklistForm() {
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
   const [leadId, setLeadId] = useState("");
-  const [tourPath, setTourPath] = useState("");
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
     if (saving) return;
     if (!name.trim() || !/^\S+@\S+\.\S+$/.test(email.trim())) return setError("Please add your name and a valid email.");
-    if (!month && !dateUnsure) return setError("Please add your wedding month, or tick “Not sure yet.”");
-    if (!budget || !venue || !multicultural) return setError("Please answer each question so we can send the right edition.");
+    if (!year || !budget || !venue || !multicultural) return setError("Please answer each question so we can send the right edition.");
     setError("");
     setSaving(true);
     const edition = multicultural === "yes" ? "multicultural" : "standard";
     try {
-      // Mapped onto the inquiry columns the studio already sees: celebration, date, venue, budget.
+      // Mapped onto the inquiry columns the studio already sees: celebration, venue, budget.
+      // Only the year is asked, so the date stays open and the year goes in the notes.
       const saved = await submitLead({
         source: "venue_checklist",
         name: name.trim(),
         email: email.trim(),
         phone: "",
         celebrationType: edition === "multicultural" ? "Multicultural wedding" : "Wedding",
-        date: dateUnsure ? undefined : `${month}-01`,
-        dateUndecided: dateUnsure,
+        dateUndecided: true,
+        vision: `Wedding year: ${year}`,
         venue: venue === "booked" ? "Already booked (not named)" : undefined,
         investment: budget,
-        payload: { edition, venueStatus: venue, weddingMonth: dateUnsure ? null : month },
+        payload: { edition, venueStatus: venue, weddingYear: year },
       });
       setLeadId(saved.leadId);
-      setTourPath(saved.tourPath || "");
     } catch (saveError) {
       // The download matters more than the record: never hold the guide back over a failed save.
       console.error("Venue checklist signup was not saved:", saveError);
@@ -131,24 +131,13 @@ export default function ChecklistForm() {
         <p className="font-body text-sm text-ink/70 leading-relaxed max-w-sm mx-auto mb-8">
           {edition === "multicultural"
             ? "Here is the Multicultural Edition, with a chapter for multiple ceremonies, sacred traditions, and processions."
-            : tourPath ? "Use it on your phone during the tour, or download the printable PDF." : "Save it to your phone or print it before your next venue tour."}
+            : "Save it to your phone or print it before your next venue tour."}
         </p>
-        {tourPath ? (
-          <div className="flex flex-col items-center gap-4">
-            <a href={tourPath}
-              className="inline-flex items-center gap-3 bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 rounded-full hover:bg-gold hover:text-ink transition-colors">
-              Open it on your phone
-            </a>
-            <a href={PDF[edition]} download className="font-body text-[10px] uppercase tracking-[0.2em] text-ink/70 border-b border-ink/25 pb-1 hover:text-gold hover:border-gold transition-colors">
-              Download the PDF
-            </a>
-          </div>
-        ) : (
-          <a href={PDF[edition]} download
-            className="inline-flex items-center gap-3 bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 rounded-full hover:bg-gold hover:text-ink transition-colors">
-            Download the checklist
-          </a>
-        )}
+        {/* PDF only for now (Irene, Oct 31). The phone checklist stays built at /venue-checklist/tour. */}
+        <a href={PDF[edition]} download
+          className="inline-flex items-center gap-3 bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 rounded-full hover:bg-gold hover:text-ink transition-colors">
+          Download the checklist
+        </a>
         <p className="font-body text-xs text-ink/55 leading-relaxed max-w-sm mx-auto mt-6">
           We’ve also emailed you a copy. If you don’t see it, check your Promotions or spam folder.
         </p>
@@ -170,17 +159,13 @@ export default function ChecklistForm() {
         </label>
       </div>
 
-      <div className="flex flex-col gap-1">
-        <span className={label}>Wedding date</span>
-        <div className="flex items-end gap-5">
-          <input className={`${field} ${dateUnsure ? "opacity-40" : ""}`} type="month" value={month} disabled={dateUnsure}
-            onChange={(e) => setMonth(e.target.value)} aria-label="Wedding month" />
-          <label className="flex items-center gap-2 pb-3 font-body text-sm text-ink/70 whitespace-nowrap cursor-pointer">
-            <input type="checkbox" checked={dateUnsure} onChange={(e) => setDateUnsure(e.target.checked)} className="accent-[#A8894E] w-4 h-4" />
-            Not sure yet
-          </label>
-        </div>
-      </div>
+      <label className="flex flex-col gap-1">
+        <span className={label}>Wedding year</span>
+        <select className={`${field} cursor-pointer ${year ? "" : "text-ink/40"}`} value={year} onChange={(e) => setYear(e.target.value)}>
+          <option value="" disabled>Choose a year</option>
+          {YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
+        </select>
+      </label>
 
       <label className="flex flex-col gap-1">
         <span className={label}>Estimated full wedding budget</span>
