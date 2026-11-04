@@ -47,7 +47,9 @@ Irene
 
 ## Email 2: day 3
 
-**Subject:** The three questions couples forget to ask
+**Subject:**
+- *Standard:* The three questions couples forget to ask
+- *Multicultural:* The four questions couples forget to ask
 
 **Preview:** Most of them happen before your guests arrive.
 
@@ -55,8 +57,8 @@ Hi [Name],
 
 Most couples ask about capacity and catering. Far fewer ask about the hours before guests arrive, and that's where beautiful plans quietly fall apart.
 
-- *Still looking:* Three to add to your next tour:
-- *Already booked:* Three to confirm with your venue before the details are final:
+- *Still looking:* Three to add to your next tour: (*Multicultural:* "Four to add…")
+- *Already booked:* Three to confirm with your venue before the details are final: (*Multicultural:* "Four to confirm…")
 
 1. **How many hours do we get to set up?** If the answer is two, the design you're picturing may not fit.
 2. **Can large installations get into the room?** Ask how they get in, not just whether. "It should be fine" is not an answer.

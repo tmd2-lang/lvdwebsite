@@ -83,12 +83,12 @@ function copyFor(step: ChecklistStep, lead: ChecklistLead): Copy {
     ],
   };
   if (step === 2) return {
-    subject: "The three questions couples forget to ask",
+    subject: `The ${multicultural ? "four" : "three"} questions couples forget to ask`,
     preview: "Most of them happen before your guests arrive.",
     blocks: [
       { p: `Hi ${firstName},` },
       { p: "Most couples ask about capacity and catering. Far fewer ask about the hours before guests arrive, and that’s where beautiful plans quietly fall apart." },
-      { p: booked ? "Three to confirm with your venue before the details are final:" : "Three to add to your next tour:" },
+      { p: `${multicultural ? "Four" : "Three"} ${booked ? "to confirm with your venue before the details are final:" : "to add to your next tour:"}` },
       { list: [
         ["How many hours do we get to set up?", "If the answer is two, the design you’re picturing may not fit."],
         ["Can large installations get into the room?", "Ask how they get in, not just whether. “It should be fine” is not an answer."],
