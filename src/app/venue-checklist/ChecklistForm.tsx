@@ -1,7 +1,11 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import Image from "next/image";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { createPortal } from "react-dom";
 import { submitLead } from "@/lib/lead-submit";
+import { trackMetaChecklistDownload } from "@/lib/meta-pixel";
+import styles from "./venue-checklist.module.css";
 
 const BUDGETS = [
   "$60,000–$100,000",
@@ -17,6 +21,11 @@ const YEARS = [0, 1, 2, 3].map((n) => String(THIS_YEAR + n));
 const PDF = {
   standard: "/venue-checklist/before-you-book-the-venue.pdf",
   multicultural: "/venue-checklist/before-you-book-the-venue-multicultural.pdf",
+};
+
+const COVER = {
+  standard: "/venue-checklist/cover-standard.jpg",
+  multicultural: "/venue-checklist/cover-multicultural.jpg",
 };
 
 const label = "font-body text-[10px] uppercase tracking-[0.2em] text-ink/50 font-semibold";
@@ -62,6 +71,83 @@ function TextMe({ leadId }: { leadId: string }) {
       </div>
       {error && <p className="font-body text-sm text-[#9a3b2e] mt-3" role="alert">{error}</p>}
     </form>
+  );
+}
+
+// Takes over the whole screen after signup so the download can't be missed.
+// Rendered on <body> because the form card's sticky position would trap it behind later sections.
+function ReadyScreen({ firstName, edition, leadId }: { firstName: string; edition: "standard" | "multicultural"; leadId: string }) {
+  const heading = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    heading.current?.focus({ preventScroll: true });
+    return () => { document.body.style.overflow = previous; };
+  }, []);
+
+  return createPortal(
+    <div role="dialog" aria-modal="true" aria-labelledby="checklist-ready"
+      className="fixed inset-0 z-[100] overflow-y-auto overscroll-contain bg-ivory text-ink">
+      <div className="min-h-full flex flex-col">
+        <div className="px-6 md:px-12 pt-6 md:pt-7 font-display italic text-lg md:text-xl">Lady Victoria Designs</div>
+
+        <div className="flex-1 w-full max-w-6xl mx-auto px-6 md:px-12 py-6 lg:py-10 grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
+          <div className="relative mx-auto h-[33svh] min-h-[220px] max-h-[300px] lg:h-auto lg:max-h-none lg:w-[min(100%,66svh)] aspect-[1/1]">
+            <div className="absolute left-[3%] top-[8%] h-[88%] aspect-[1100/1424] rotate-[-7deg]">
+              <div className={`${styles.fanLeft} shadow-[0_18px_40px_rgba(20,18,15,0.18)]`}>
+                <Image src="/venue-checklist/v4-questions-tips.jpg" alt="" width={1100} height={1424} sizes="(min-width: 1024px) 380px, 200px" className="w-full h-auto" />
+              </div>
+            </div>
+            <div className="absolute right-[3%] top-[8%] h-[88%] aspect-[1100/1424] rotate-[7deg]">
+              <div className={`${styles.fanRight} shadow-[0_18px_40px_rgba(20,18,15,0.18)]`}>
+                <Image src="/venue-checklist/v4-top10.jpg" alt="" width={1100} height={1424} sizes="(min-width: 1024px) 380px, 200px" className="w-full h-auto" />
+              </div>
+            </div>
+            <div className="absolute left-1/2 top-0 h-full aspect-[1100/1424] -translate-x-1/2">
+              <div className={`${styles.land} shadow-[0_24px_50px_rgba(20,18,15,0.25)]`}>
+                <Image src={COVER[edition]} alt="The cover of your venue checklist" width={1100} height={1424} priority
+                  sizes="(min-width: 1024px) 430px, 230px" className="w-full h-auto" />
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center lg:text-left w-full max-w-md mx-auto lg:mx-0">
+            <div className={styles.rise}>
+              <p className="font-body text-[10px] uppercase tracking-[0.25em] text-gold font-semibold mb-3">Your checklist is ready</p>
+              <h2 id="checklist-ready" ref={heading} tabIndex={-1} className="font-display text-[clamp(2.4rem,7vw,3.75rem)] leading-[1.05] tracking-tight mb-3 outline-none">
+                It’s yours, {firstName}.
+              </h2>
+              <p className="font-body text-sm md:text-base text-ink/70 leading-relaxed mb-6">
+                {edition === "multicultural"
+                  ? "Here is the Multicultural Edition, with a chapter for multiple ceremonies, sacred traditions, and processions."
+                  : "Save it to your phone or print it before your next venue tour."}
+              </p>
+            </div>
+            {/* PDF only for now (Irene, Oct 31). The phone checklist stays built at /venue-checklist/tour. */}
+            <a href={PDF[edition]} download onClick={() => trackMetaChecklistDownload(edition)}
+              className={`${styles.rise} ${styles.riseNow} flex items-center justify-center gap-2.5 w-full bg-ink text-ivory font-body text-[13px] sm:text-sm uppercase tracking-[0.12em] font-semibold px-4 py-5 rounded-full shadow-[0_14px_30px_rgba(20,18,15,0.22)] hover:bg-gold hover:text-ink transition-colors`}>
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 3v12" /><path d="m7 11 5 5 5-5" /><path d="M5 21h14" />
+              </svg>
+              Download the checklist
+            </a>
+            <div className={styles.rise}>
+              {/* No saved lead means no email went out, so don't promise one. */}
+              {leadId && (
+                <>
+                  <p className="font-body text-xs text-ink/55 leading-relaxed mt-4">
+                    We’ve also emailed you a copy. If you don’t see it, check your Promotions or spam folder.
+                  </p>
+                  <div className="text-left border-t border-ink/10 mt-7 pt-6"><TextMe leadId={leadId} /></div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>,
+    document.body,
   );
 }
 
@@ -124,26 +210,7 @@ export default function ChecklistForm() {
   if (done) {
     const firstName = name.trim().split(/\s+/)[0];
     const edition = multicultural === "yes" ? "multicultural" : "standard";
-    return (
-      <div className="text-center py-6">
-        <p className="font-body text-[10px] uppercase tracking-[0.25em] text-gold font-semibold mb-4">Your checklist is ready</p>
-        <h2 className="font-display text-3xl sm:text-4xl leading-tight mb-4">It’s yours, {firstName}.</h2>
-        <p className="font-body text-sm text-ink/70 leading-relaxed max-w-sm mx-auto mb-8">
-          {edition === "multicultural"
-            ? "Here is the Multicultural Edition, with a chapter for multiple ceremonies, sacred traditions, and processions."
-            : "Save it to your phone or print it before your next venue tour."}
-        </p>
-        {/* PDF only for now (Irene, Oct 31). The phone checklist stays built at /venue-checklist/tour. */}
-        <a href={PDF[edition]} download
-          className="inline-flex items-center gap-3 bg-ink text-ivory font-body text-[10px] uppercase tracking-[0.2em] px-10 py-4 rounded-full hover:bg-gold hover:text-ink transition-colors">
-          Download the checklist
-        </a>
-        <p className="font-body text-xs text-ink/55 leading-relaxed max-w-sm mx-auto mt-6">
-          We’ve also emailed you a copy. If you don’t see it, check your Promotions or spam folder.
-        </p>
-        {leadId && <div className="text-left border-t border-ink/10 mt-8 pt-7"><TextMe leadId={leadId} /></div>}
-      </div>
-    );
+    return <ReadyScreen firstName={firstName} edition={edition} leadId={leadId} />;
   }
 
   return (

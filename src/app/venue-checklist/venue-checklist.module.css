@@ -39,6 +39,63 @@
   to { opacity: 1; transform: none; }
 }
 
+/* Download screen: the cover lands, the pages fan out from behind it, then the words rise. Under a second in all. */
+.land,
+.fanLeft,
+.fanRight,
+.rise {
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: both;
+}
+
+.land {
+  animation-name: land;
+  animation-duration: 0.8s;
+}
+
+.fanLeft,
+.fanRight {
+  animation-duration: 0.8s;
+  animation-delay: 0.15s;
+}
+
+.fanLeft { animation-name: fan-left; }
+.fanRight { animation-name: fan-right; }
+
+.rise {
+  animation-name: rise;
+  animation-duration: 0.6s;
+  animation-delay: 0.2s;
+}
+
+/* The button is usable from the first frame, so a slow phone never waits on it. */
+.riseNow { animation-delay: 0s; }
+
+@keyframes land {
+  from { opacity: 0; transform: translateY(24px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Each page starts squared up behind the cover, undoing the rotation on its wrapper. */
+@keyframes fan-left {
+  from { opacity: 0; transform: translateX(26%) rotate(7deg); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes fan-right {
+  from { opacity: 0; transform: translateX(-26%) rotate(-7deg); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .settle { animation: none; }
+  .settle,
+  .land,
+  .fanLeft,
+  .fanRight,
+  .rise { animation: none; }
 }

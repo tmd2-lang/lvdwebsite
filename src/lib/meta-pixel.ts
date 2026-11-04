@@ -23,6 +23,13 @@ export function trackMetaPageView() {
   return true;
 }
 
+/** A custom event, so a download never counts as a Lead. Shows in Events Manager as ChecklistDownload. */
+export function trackMetaChecklistDownload(edition: string) {
+  if (!publicProductionPage() || typeof window.fbq !== "function") return false;
+  window.fbq("trackSingleCustom", META_PIXEL_ID, "ChecklistDownload", { content_name: "venue_checklist", edition });
+  return true;
+}
+
 /** Only call with an ID returned after a successful database save. */
 export function trackMetaLead(source: MetaLeadSource, leadId: string) {
   if (!publicProductionPage() || typeof window.fbq !== "function" || !leadId) return false;
